@@ -1,0 +1,852 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="ja" original="../BpmnRuleMessages.resx">
+    <body>
+      <trans-unit id="CT-001">
+        <source>An element cannot both own local flow elements and reference a called element.</source>
+        <target state="translated">要素がローカルのフロー要素を所有しつつ、呼び出し先要素を参照することはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-001.Native">
+        <source>An element cannot both own local flow elements and reference a called element.</source>
+        <target state="translated">要素がローカルのフロー要素を所有しつつ、呼び出し先要素を参照することはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-001.Native.2">
+        <source>A Call Activity never owns local flow elements; its content lives in the called Process.</source>
+        <target state="translated">呼び出しアクティビティはローカルのフロー要素を所有しません。その内容は呼び出し先のプロセスにあります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-005">
+        <source>Only a Boundary Event may declare an attachment to a host Activity.</source>
+        <target state="translated">ホストアクティビティへのアタッチを宣言できるのは境界イベントのみです。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-005.Native">
+        <source>Only a Boundary Event may declare an attachment to a host Activity.</source>
+        <target state="translated">ホストアクティビティへのアタッチを宣言できるのは境界イベントのみです。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-005.Native.2">
+        <source>A Boundary Event must be attached to exactly one Activity.</source>
+        <target state="translated">境界イベントは、ちょうど 1 つのアクティビティにアタッチされている必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-005.Native.3">
+        <source>Boundary Event host '{0}' does not resolve to a flow node.</source>
+        <target state="translated">境界イベントのホスト '{0}' がフローノードに解決されません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-007">
+        <source>A collapsed Sub-Process or Call Activity has visible embedded process-content cells in the active plane.</source>
+        <target state="translated">折りたたまれたサブプロセスまたは呼び出しアクティビティが、アクティブなプレーン上に埋め込みのプロセスコンテンツセルを表示しています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-007.Detail">
+        <source>It is drawn collapsed on '{0}', which also draws '{1}' from inside it.</source>
+        <target state="translated">'{0}' では折りたたまれて描画されていますが、その内部の '{1}' も描画されています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-009">
+        <source>A Sub-Process expansion state disagrees with BPMNShape.isExpanded, or a collapsed Sub-Process exposes active nested visual cells/tools.</source>
+        <target state="translated">サブプロセスの展開状態が BPMNShape.isExpanded と一致していないか、折りたたまれたサブプロセスがアクティブな入れ子のビジュアルセル/ツールを公開しています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-009.Detail">
+        <source>It is drawn expanded on '{0}' and its content is also drawn on '{1}'.</source>
+        <target state="translated">'{0}' では展開されて描画されており、その内容は '{1}' にも描画されています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-012">
+        <source>A Lane subdivides a Pool, so its LaneSet's Process must be referenced by a Participant.</source>
+        <target state="translated">レーンはプールを細分化するため、その LaneSet のプロセスは参加者から参照されている必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-012.Detail">
+        <source>No Participant references '{0}'.</source>
+        <target state="translated">'{0}' を参照している参加者はありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D001">
+        <source>Every Start Event has 0 incoming Sequence Flow.</source>
+        <target state="translated">すべての開始イベントは、入るシーケンスフローが 0 本です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D001.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">{0} には {1} 本あります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D002">
+        <source>Every End Event has 0 outgoing Sequence Flow.</source>
+        <target state="translated">すべての終了イベントは、出るシーケンスフローが 0 本です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D002.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">{0} には {1} 本あります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D003">
+        <source>Every Boundary Event has 0 incoming Sequence Flow and is attached to exactly one Activity.</source>
+        <target state="translated">すべての境界イベントは、入るシーケンスフローが 0 本で、ちょうど 1 つのアクティビティにアタッチされています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D003.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">{0} には {1} 本あります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D003.Detail.2">
+        <source>{0} is attached to nothing.</source>
+        <target state="translated">{0} はどこにもアタッチされていません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D003.Detail.3">
+        <source>{0} is attached to {1}, which is not an Activity.</source>
+        <target state="translated">{0} は {1} にアタッチされていますが、これはアクティビティではありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D004">
+        <source>Product lint: Exclusive/Inclusive split has exactly one flow flagged isDefault OR every non-default flow has a conditionExpression.</source>
+        <target state="translated">プロダクトのリント: 排他/包含の分岐には、isDefault が付いたフローがちょうど 1 本あるか、すべての非デフォルトフローに conditionExpression があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D004.Detail">
+        <source>{0} has {1} default flows.</source>
+        <target state="translated">{0} にはデフォルトフローが {1} 本あります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D004.Detail.2">
+        <source>{0} has {1} branches with neither a conditionExpression nor the default flag.</source>
+        <target state="translated">{0} には、conditionExpression もデフォルトフラグもない分岐が {1} 本あります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D005">
+        <source>Parallel/Complex/Inclusive gateway used as merge only synchronizes declared incoming flows (redundant gateway if incoming count = 1).</source>
+        <target state="translated">マージとして使用される並列/複雑/包含ゲートウェイは、宣言された入力フローを同期するだけです (入力数が 1 の場合は冗長なゲートウェイです)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D005.Detail">
+        <source>{0} merges a single flow.</source>
+        <target state="translated">{0} は単一のフローをマージしています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D006">
+        <source>Event-Based Gateway: all outgoing targets are catch-events/receive-tasks, none carry conditions.</source>
+        <target state="translated">イベント基準ゲートウェイ: すべての出力先はキャッチイベントまたは受信タスクで、いずれも条件を持ちません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D006.Detail">
+        <source>A branch carries a condition.</source>
+        <target state="translated">条件を持つ分岐があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D006.Detail.2">
+        <source>{0} is neither a catching Event nor a Receive Task.</source>
+        <target state="translated">{0} はキャッチイベントでも受信タスクでもありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D007">
+        <source>No Sequence Flow crosses a Pool boundary.</source>
+        <target state="translated">プールの境界をまたぐシーケンスフローはありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D007.Detail">
+        <source>{0} and {1} are in different Pools.</source>
+        <target state="translated">{0} と {1} は異なるプールにあります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D008">
+        <source>Every Message Flow crosses exactly one Pool boundary.</source>
+        <target state="translated">すべてのメッセージフローは、ちょうど 1 つのプール境界をまたぎます。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D008.Detail">
+        <source>One of its ends is not in a Pool.</source>
+        <target state="translated">一方の端がプール内にありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D008.Detail.2">
+        <source>Both of its ends are in the same Pool.</source>
+        <target state="translated">両端が同じプール内にあります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D009">
+        <source>Every node is reachable from some Start Event (no orphan nodes) and every Start Event can reach some End Event (no dead ends).</source>
+        <target state="translated">すべてのノードはいずれかの開始イベントから到達可能であり (孤立ノードなし)、すべての開始イベントはいずれかの終了イベントに到達できます (行き止まりなし)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D009.Detail">
+        <source>{0} cannot be reached from any Start Event.</source>
+        <target state="translated">{0} にはどの開始イベントからも到達できません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D009.Detail.2">
+        <source>{0} cannot reach any End Event.</source>
+        <target state="translated">{0} からどの終了イベントにも到達できません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D010">
+        <source>Event Sub-Process start event is typed (not None) and has no drawn Sequence Flow in/out.</source>
+        <target state="translated">イベントサブプロセスの開始イベントは型付き (なし以外) で、描画されたシーケンスフローの入出力がありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D010.Detail">
+        <source>{0} has {1} Sequence Flow crossing its boundary.</source>
+        <target state="translated">{0} の境界をまたぐシーケンスフローが {1} 本あります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D010.Detail.2">
+        <source>{0} has {1} Start Events; it needs exactly one.</source>
+        <target state="translated">{0} には開始イベントが {1} 個あります。ちょうど 1 個必要です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D010.Detail.3">
+        <source>An untyped Start Event can never trigger it.</source>
+        <target state="translated">型なしの開始イベントでは起動できません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D011">
+        <source>Link Intermediate throw and catch Events pair one-to-one within a Process.</source>
+        <target state="translated">リンク中間スローイベントとキャッチイベントは、プロセス内で 1 対 1 に対応します。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D011.Detail">
+        <source>'{0}' is caught {1} times; a Link has one destination.</source>
+        <target state="translated">'{0}' が {1} 回キャッチされています。リンクの宛先は 1 つです。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D011.Detail.2">
+        <source>'{0}' is thrown but never caught.</source>
+        <target state="translated">'{0}' はスローされていますが、キャッチされていません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D011.Detail.3">
+        <source>'{0}' is caught but never thrown.</source>
+        <target state="translated">'{0}' はキャッチされていますが、スローされていません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D012">
+        <source>A Compensation Boundary Event handler is not reached by ordinary Sequence Flow.</source>
+        <target state="translated">補償境界イベントのハンドラーには、通常のシーケンスフローで到達しません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D012.Detail">
+        <source>It has {0} incoming Sequence Flow.</source>
+        <target state="translated">入るシーケンスフローが {0} 本あります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D013">
+        <source>An End Event with outgoing Message Flow has a Message result, or Multiple when it has more than one.</source>
+        <target state="translated">出るメッセージフローを持つ終了イベントの結果はメッセージです。複数ある場合は複数です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D013.Detail">
+        <source>{0} sends {1} message(s) but its result is {2}.</source>
+        <target state="translated">{0} は {1} 件のメッセージを送信しますが、結果は {2} です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D014">
+        <source>Event-Based Gateway targets are homogeneous and have no other incoming Sequence Flow.</source>
+        <target state="translated">イベント基準ゲートウェイの出力先は同種で、他の入るシーケンスフローを持ちません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D014.Detail">
+        <source>{0} also has {1} incoming Sequence Flow from elsewhere.</source>
+        <target state="translated">{0} には、他から入るシーケンスフローが {1} 本あります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D014.Detail.2">
+        <source>Its branches mix catching Events and Receive Tasks.</source>
+        <target state="translated">分岐にキャッチイベントと受信タスクが混在しています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015">
+        <source>Every BPMNEdge has at least two waypoints, every BPMNShape has positive bounds, and every DI element resolves to a semantic element.</source>
+        <target state="translated">すべての BPMNEdge には 2 つ以上のウェイポイントがあり、すべての BPMNShape の境界は正の値で、すべての DI 要素はセマンティック要素に解決されます。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015.Detail">
+        <source>Its bounds are {0} by {1}.</source>
+        <target state="translated">境界は {0} x {1} です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015.Detail.2">
+        <source>Shape '{0}' draws an element this document does not have.</source>
+        <target state="translated">図形 '{0}' は、このドキュメントに存在しない要素を描画しています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015.Detail.3">
+        <source>Its route has {0} waypoint(s).</source>
+        <target state="translated">経路のウェイポイントは {0} 個です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015.Detail.4">
+        <source>Edge '{0}' draws a connector this document does not have.</source>
+        <target state="translated">エッジ '{0}' は、このドキュメントに存在しないコネクタを描画しています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D017">
+        <source>Every required reference resolves to an object of the permitted BPMN type.</source>
+        <target state="translated">必須の参照はすべて、許可された BPMN 型のオブジェクトに解決されます。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D017.Detail">
+        <source>{0} points at '{1}', which is not in this document.</source>
+        <target state="translated">{0} は '{1}' を指していますが、これはこのドキュメントにありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D017.Detail.2">
+        <source>{0} points at a {1}, which it may not.</source>
+        <target state="translated">{0} は {1} を指していますが、これは許可されていません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D018">
+        <source>Every semantic object has a unique XML-safe ID within the document.</source>
+        <target state="translated">すべてのセマンティックオブジェクトは、ドキュメント内で一意の XML セーフな ID を持ちます。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D018.Detail">
+        <source>'{0}' is not a valid XML NCName.</source>
+        <target state="translated">'{0}' は有効な XML NCName ではありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D018.Detail.2">
+        <source>'{0}' is used more than once.</source>
+        <target state="translated">'{0}' が複数回使用されています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019">
+        <source>Every FlowNode belongs to exactly one container, and Lane membership agrees with its LaneSet.</source>
+        <target state="translated">すべての FlowNode はちょうど 1 つのコンテナーに属し、レーンのメンバーシップは LaneSet と一致します。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail">
+        <source>{0} names container '{1}', which is not one.</source>
+        <target state="translated">{0} はコンテナー '{1}' を指定していますが、これはコンテナーではありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail.2">
+        <source>Its lane set '{0}' is not declared.</source>
+        <target state="translated">そのレーンセット '{0}' は宣言されていません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail.3">
+        <source>It claims '{0}', which does not exist.</source>
+        <target state="translated">存在しない '{0}' を要求しています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail.4">
+        <source>It claims {0}, which belongs to '{1}'.</source>
+        <target state="translated">'{1}' に属する {0} を要求しています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail.5">
+        <source>It is claimed by {0} Lanes.</source>
+        <target state="translated">{0} 個のレーンから要求されています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D020">
+        <source>Event definitions are legal for their context and direction.</source>
+        <target state="translated">イベント定義は、コンテキストと方向に対して有効です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D020.Detail">
+        <source>{0} is a {1} carrying a {2} trigger.</source>
+        <target state="translated">{0} は {2} トリガーを持つ {1} です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D020.Detail.2">
+        <source>{0} is a {1} with an invalid interruption state for {2}.</source>
+        <target state="translated">{0} は {1} であり、{2} に対して無効な割り込み状態です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D020.Detail.3">
+        <source>{0} has an invalid container or Boundary host context.</source>
+        <target state="translated">{0} のコンテナーまたは境界ホストのコンテキストが無効です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021">
+        <source>Definitions has a targetNamespace and namespace-qualified references use resolvable, consistent QNames.</source>
+        <target state="translated">Definitions には targetNamespace があり、名前空間修飾された参照は解決可能で一貫した QName を使用します。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail">
+        <source>Definitions/@targetNamespace is required and must not be empty.</source>
+        <target state="translated">Definitions/@targetNamespace は必須であり、空にできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.2">
+        <source>calledElement value '{0}' has an invalid QName local name.</source>
+        <target state="translated">calledElement の値 '{0}' のローカル名が QName として無効です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.3">
+        <source>calledElement QName '{0}' has an undeclared prefix or no resolved namespace.</source>
+        <target state="translated">calledElement の QName '{0}' のプレフィックスが宣言されていないか、名前空間が解決されていません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.4">
+        <source>calledElement QName '{0}' was projected as a local reference although its namespace differs from targetNamespace.</source>
+        <target state="translated">calledElement の QName '{0}' は、名前空間が targetNamespace と異なるにもかかわらず、ローカル参照として投影されました。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.5">
+        <source>xsi:type QName '{0}' has an undeclared prefix or no resolved namespace.</source>
+        <target state="translated">xsi:type の QName '{0}' のプレフィックスが宣言されていないか、名前空間が解決されていません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.6">
+        <source>xsi:type value '{0}' is not a valid QName.</source>
+        <target state="translated">xsi:type の値 '{0}' は有効な QName ではありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022">
+        <source>Every plane has a diagram owner, each element is drawn at most once per diagram, and label and style references resolve.</source>
+        <target state="translated">すべてのプレーンにはダイアグラムの所有者があり、各要素はダイアグラムごとに最大 1 回描画され、ラベルとスタイルの参照は解決されます。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022.Detail">
+        <source>It is drawn more than once on '{0}'.</source>
+        <target state="translated">'{0}' で複数回描画されています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022.Detail.2">
+        <source>Its label references style '{0}', which is not declared.</source>
+        <target state="translated">そのラベルはスタイル '{0}' を参照していますが、宣言されていません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022.Detail.3">
+        <source>Plane '{0}' names no BPMN element.</source>
+        <target state="translated">プレーン '{0}' はどの BPMN 要素も指していません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022.Detail.4">
+        <source>Plane '{0}' is owned by '{1}', which does not exist.</source>
+        <target state="translated">プレーン '{0}' の所有者 '{1}' は存在しません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D023">
+        <source>Global definitions referenced by the document exist and have the expected type.</source>
+        <target state="translated">ドキュメントが参照するグローバル定義は存在し、期待される型を持ちます。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D023.Detail">
+        <source>{0} calls QName '{1}' in namespace '{2}', which this document does not resolve.</source>
+        <target state="translated">{0} は名前空間 '{2}' の QName '{1}' を呼び出していますが、このドキュメントでは解決されません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D023.Detail.2">
+        <source>{0} calls '{1}', which this document does not declare as a Process or Global Task.</source>
+        <target state="translated">{0} は '{1}' を呼び出していますが、このドキュメントではプロセスまたはグローバルタスクとして宣言されていません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-002">
+        <source>Group cannot be a connector endpoint (visual grouping only).</source>
+        <target state="translated">グループはコネクタの端点にできません (視覚的なグループ化のみ)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-002b">
+        <source>Group cannot be a connector endpoint (visual grouping only).</source>
+        <target state="translated">グループはコネクタの端点にできません (視覚的なグループ化のみ)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-003">
+        <source>Text Annotation connects only via (undirected) Association, never Data Association.</source>
+        <target state="translated">テキスト注釈は (方向のない) 関連でのみ接続でき、データ関連では接続できません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-004">
+        <source>Data Object/Data Store connect only via Data Association, never a plain Association.</source>
+        <target state="translated">データオブジェクト/データストアはデータ関連でのみ接続でき、通常の関連では接続できません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-005">
+        <source>Data Input Association direction is Data Object/Store/Property to an Activity or Throwing Event input.</source>
+        <target state="translated">データ入力関連の方向は、データオブジェクト/データストア/プロパティから、アクティビティまたはスローイベントの入力へ向かう必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-006">
+        <source>Data Output Association direction is an Activity or Catching Event output to a Data Object/Store/Property.</source>
+        <target state="translated">データ出力関連の方向は、アクティビティまたはキャッチイベントの出力から、データオブジェクト/データストア/プロパティへ向かう必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-001">
+        <source>Every BPMNShape must have positive width and height.</source>
+        <target state="translated">すべての BPMNShape は正の幅と高さを持つ必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-001.Native">
+        <source>Every BPMNShape must have positive width and height.</source>
+        <target state="translated">すべての BPMNShape は正の幅と高さを持つ必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-002">
+        <source>Every BPMNEdge must have at least two waypoints.</source>
+        <target state="translated">すべての BPMNEdge は 2 つ以上のウェイポイントを持つ必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-002.Native">
+        <source>Every BPMNEdge must have at least two waypoints.</source>
+        <target state="translated">すべての BPMNEdge は 2 つ以上のウェイポイントを持つ必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-007">
+        <source>isHorizontal is defined only on Pool and Lane shapes.</source>
+        <target state="translated">isHorizontal はプールとレーンの図形にのみ定義されます。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-007.Native">
+        <source>isHorizontal is defined only on Pool and Lane shapes.</source>
+        <target state="translated">isHorizontal はプールとレーンの図形にのみ定義されます。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-001">
+        <source>Extension content has no resolvable namespace URI (spec §6.1.2 expanded-name identity).</source>
+        <target state="translated">拡張コンテンツに解決可能な名前空間 URI がありません (仕様 §6.1.2 展開名の同一性)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-001.Detail">
+        <source>&lt;{0}&gt; is in no namespace.</source>
+        <target state="translated">&lt;{0}&gt; はどの名前空間にも属していません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-002">
+        <source>Extension namespace prefix mapping is inconsistent within the document.</source>
+        <target state="translated">拡張の名前空間プレフィックスのマッピングが、ドキュメント内で一貫していません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-003">
+        <source>The document could not be parsed (malformed XML).</source>
+        <target state="translated">ドキュメントを解析できませんでした (XML の形式が正しくありません)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-004">
+        <source>A registered profile emitted a rule id outside its own declared catalog; the violation was rejected.</source>
+        <target state="translated">登録されたプロファイルが、自身で宣言したカタログ外のルール ID を出力したため、この違反は拒否されました。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-005">
+        <source>A profile-declared reference attribute in extension content does not resolve to any element in this document.</source>
+        <target state="translated">拡張コンテンツ内のプロファイル宣言の参照属性が、このドキュメント内のどの要素にも解決されません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-006">
+        <source>A registered profile attempted to emit a core BPMN rule id; the override attempt was rejected.</source>
+        <target state="translated">登録されたプロファイルが BPMN コアのルール ID を出力しようとしたため、上書きの試行は拒否されました。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-007">
+        <source>An extension SVG decoration was suppressed.</source>
+        <target state="translated">拡張の SVG 装飾が抑止されました。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-008">
+        <source>Schema or external-resource access for extension content was blocked.</source>
+        <target state="translated">拡張コンテンツのスキーマまたは外部リソースへのアクセスがブロックされました。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010">
+        <source>Extension content carries active markup or a script URL, which cannot be exported (spec §5.5 layer 1: quarantine unsafe external content).</source>
+        <target state="translated">拡張コンテンツにアクティブなマークアップまたはスクリプト URL が含まれているため、エクスポートできません (仕様 §5.5 レイヤー 1: 安全でない外部コンテンツの隔離)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010.Detail">
+        <source>{0}: {1}.</source>
+        <target state="translated">{0}: {1}。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010.Detail.Handler">
+        <source>{0}/@{1}: '{1}' is an event handler.</source>
+        <target state="translated">{0}/@{1}: '{1}' はイベントハンドラーです。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010.Detail.Markup">
+        <source>{0}: &lt;{1}&gt; in the {2} namespace is active markup.</source>
+        <target state="translated">{0}: {2} 名前空間の &lt;{1}&gt; はアクティブなマークアップです。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010.Detail.Url">
+        <source>{0}: the attribute value is a '{1}' URL.</source>
+        <target state="translated">{0}: 属性値は '{1}' URL です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-001">
+        <source>Source and target must be InteractionNodes: Participant/Pool, Activity, or Event.</source>
+        <target state="translated">始点と終点は InteractionNode (参加者/プール、アクティビティ、イベント) である必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-002">
+        <source>Source and target must be in different Participants/Pools.</source>
+        <target state="translated">始点と終点は異なる参加者/プールに属している必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-003">
+        <source>Gateways are never Message Flow endpoints.</source>
+        <target state="translated">ゲートウェイはメッセージフローの端点にできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-003.Detail">
+        <source>{0} is a Gateway.</source>
+        <target state="translated">{0} はゲートウェイです。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-004">
+        <source>Lanes, Data Objects, Groups, and Text Annotations are never Message Flow endpoints.</source>
+        <target state="translated">レーン、データオブジェクト、グループ、テキスト注釈はメッセージフローの端点にできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-006">
+        <source>Target must not be an End Event.</source>
+        <target state="translated">終点を終了イベントにすることはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-006.Detail">
+        <source>{0} is an End Event.</source>
+        <target state="translated">{0} は終了イベントです。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-007">
+        <source>Source Event must be message-throwing (Message Intermediate Throw, Message End, or Multiple with a message result).</source>
+        <target state="translated">始点のイベントはメッセージをスローするものである必要があります (メッセージ中間スロー、メッセージ終了、またはメッセージ結果を持つ複数)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-007.Detail">
+        <source>{0} does not throw messages.</source>
+        <target state="translated">{0} はメッセージをスローしません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-008">
+        <source>Target Event must be message-catching (Message Start, Message Intermediate Catch, Message Boundary, or Multiple/Parallel Multiple with a message trigger).</source>
+        <target state="translated">終点のイベントはメッセージをキャッチするものである必要があります (メッセージ開始、メッセージ中間キャッチ、メッセージ境界、またはメッセージトリガーを持つ複数/並列複数)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-008.Detail">
+        <source>{0} does not catch messages.</source>
+        <target state="translated">{0} はメッセージをキャッチしません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-000">
+        <source>The '{0}' profile reported nothing usable: {1}.</source>
+        <target state="translated">'{0}' プロファイルは使用可能な結果を報告しませんでした: {1}。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-000.Detail.Failed">
+        <source>The '{0}' profile reported nothing usable: it failed: {1}.</source>
+        <target state="translated">'{0}' プロファイルは使用可能な結果を報告しませんでした。失敗しました: {1}。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-000.Detail.InvalidId">
+        <source>The '{0}' profile reported nothing usable: '{1}' is not a PROF-nnn rule id.</source>
+        <target state="translated">'{0}' プロファイルは使用可能な結果を報告しませんでした。'{1}' は PROF-nnn 形式のルール ID ではありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101">
+        <source>Template property constraints must be satisfied.</source>
+        <target state="translated">テンプレートのプロパティ制約を満たす必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail">
+        <source>{0} must not be empty.</source>
+        <target state="translated">{0} は空にできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.2">
+        <source>{0} must contain at least {1} characters.</source>
+        <target state="translated">{0} は {1} 文字以上である必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.3">
+        <source>{0} must contain at most {1} characters.</source>
+        <target state="translated">{0} は {1} 文字以下である必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.4">
+        <source>{0} has an invalid or excessively complex pattern.</source>
+        <target state="translated">{0} のパターンが無効、または複雑すぎます。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.Custom">
+        <source>{0}</source>
+        <target state="translated">{0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.Pattern">
+        <source>{0} does not match the required pattern.</source>
+        <target state="translated">{0} は必要なパターンに一致しません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-102">
+        <source>Template property requires a FEEL expression starting with '='.</source>
+        <target state="translated">テンプレートのプロパティには、'=' で始まる FEEL 式が必要です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-102.Detail">
+        <source>{0} requires a FEEL expression starting with '='.</source>
+        <target state="translated">{0} には、'=' で始まる FEEL 式が必要です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-103">
+        <source>Template not found: '{0}' version {1}.</source>
+        <target state="translated">テンプレートが見つかりません: '{0}' バージョン {1}。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-104">
+        <source>Template '{0}' is deprecated.</source>
+        <target state="translated">テンプレート '{0}' は非推奨です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-104.Detail.Custom">
+        <source>{0}</source>
+        <target state="translated">{0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-105">
+        <source>Template '{0}' version {1} is available.</source>
+        <target state="translated">テンプレート '{0}' のバージョン {1} が利用可能です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-111">
+        <source>Script Task {0} has no scriptFormat, so no engine knows how to run it.</source>
+        <target state="translated">スクリプトタスク {0} に scriptFormat がないため、どのエンジンも実行方法を判断できません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-112">
+        <source>Script Task {0} uses scriptFormat '{1}', which the engine does not run.</source>
+        <target state="translated">スクリプトタスク {0} は scriptFormat '{1}' を使用していますが、エンジンはこれを実行しません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-113">
+        <source>Script Task {0} has no script.</source>
+        <target state="translated">スクリプトタスク {0} にスクリプトがありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-114">
+        <source>Script Task {0} has a script of {1} characters; the limit is {2}.</source>
+        <target state="translated">スクリプトタスク {0} のスクリプトは {1} 文字で、上限は {2} 文字です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-115">
+        <source>No syntax validator is registered for scriptFormat '{0}' (Script Task {1}).</source>
+        <target state="translated">scriptFormat '{0}' に登録された構文検証ツールがありません (スクリプトタスク {1})。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-116">
+        <source>Script Task {0}, line {1}, column {2}: {3}</source>
+        <target state="translated">スクリプトタスク {0}、{1} 行目、{2} 列目: {3}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-117">
+        <source>The '{0}' script validator failed on Script Task {1}: {2}.</source>
+        <target state="translated">スクリプト検証ツール '{0}' がスクリプトタスク {1} で失敗しました: {2}。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-118">
+        <source>Script Task {0} nests brackets deeper than {1} levels.</source>
+        <target state="translated">スクリプトタスク {0} のかっこの入れ子が {1} 階層を超えています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-001">
+        <source>Sequence Flow source and target must be a FlowNode (Event, Activity, or Gateway).</source>
+        <target state="translated">シーケンスフローの始点と終点は FlowNode (イベント、アクティビティ、ゲートウェイ) である必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-002">
+        <source>Source must not be an End Event.</source>
+        <target state="translated">始点を終了イベントにすることはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-003">
+        <source>Target must not be a Start Event.</source>
+        <target state="translated">終点を開始イベントにすることはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-004">
+        <source>Target must not be a Boundary Event.</source>
+        <target state="translated">終点を境界イベントにすることはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-005">
+        <source>Source/target must not be an Event Sub-Process — it has no external Sequence Flow.</source>
+        <target state="translated">始点/終点をイベントサブプロセスにすることはできません。外部へのシーケンスフローはありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-006">
+        <source>Sequence Flow must not cross a Pool/Participant boundary (poolId mismatch).</source>
+        <target state="translated">シーケンスフローはプール/参加者の境界をまたげません (poolId の不一致)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-007">
+        <source>Sequence Flow must not cross a Sub-Process containment boundary (containerId mismatch).</source>
+        <target state="translated">シーケンスフローはサブプロセスの包含境界をまたげません (containerId の不一致)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-007.Detail">
+        <source>{0} is in '{1}' and {2} in '{3}'.</source>
+        <target state="translated">{0} は '{1}' に、{2} は '{3}' にあります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-008">
+        <source>Source must not be a Compensation Boundary Event (use an Association to the handler instead).</source>
+        <target state="translated">始点を補償境界イベントにすることはできません (代わりにハンドラーへの関連を使用してください)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-009">
+        <source>Source/target must not be a compensation Activity (isForCompensation=true) reached via normal flow.</source>
+        <target state="translated">始点/終点を、通常のフローで到達する補償アクティビティ (isForCompensation=true) にすることはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-011">
+        <source>Event-Based Gateway outgoing target must be a catching Message/Timer/Signal/Conditional event or a Receive Task.</source>
+        <target state="translated">イベント基準ゲートウェイから出る終点は、メッセージ/タイマー/シグナル/条件のキャッチイベント、または受信タスクである必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-012">
+        <source>Event-Based Gateway outgoing Sequence Flow must not carry a condition expression.</source>
+        <target state="translated">イベント基準ゲートウェイから出るシーケンスフローに条件式を持たせることはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-013">
+        <source>Parallel Gateway outgoing Sequence Flow must not carry a condition.</source>
+        <target state="translated">並列ゲートウェイから出るシーケンスフローに条件を持たせることはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-014">
+        <source>isDefault may only be set on a flow sourced from an Activity, or an Exclusive/Inclusive/Complex Gateway.</source>
+        <target state="translated">isDefault は、アクティビティ、または排他/包含/複雑ゲートウェイを始点とするフローにのみ設定できます。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-015">
+        <source>Conditional Sequence Flow from an Activity requires at least one other outgoing Sequence Flow from that Activity.</source>
+        <target state="translated">アクティビティから出る条件付きシーケンスフローには、そのアクティビティから出る別のシーケンスフローが少なくとも 1 本必要です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-016">
+        <source>Conditional Sequence Flow must not be sourced from a Parallel or Event-Based Gateway.</source>
+        <target state="translated">条件付きシーケンスフローの始点を並列ゲートウェイまたはイベント基準ゲートウェイにすることはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-017">
+        <source>Source must not be a Link Intermediate Throw Event — it continues at its paired Link catch, not by Sequence Flow.</source>
+        <target state="translated">始点をリンク中間スローイベントにすることはできません。対応するリンクキャッチで継続し、シーケンスフローでは継続しません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-017.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">{0} には {1} があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-018">
+        <source>Target must not be a Link Intermediate Catch Event — it is reached from its paired Link throw, not by Sequence Flow.</source>
+        <target state="translated">終点をリンク中間キャッチイベントにすることはできません。対応するリンクスローから到達し、シーケンスフローでは到達しません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-018.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">{0} には {1} があります。</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

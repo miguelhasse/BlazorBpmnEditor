@@ -1,0 +1,342 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="de" original="../FluentBpmnEditorStrings.resx">
+    <body>
+      <trans-unit id="CalledElementPicker.Cancel">
+        <source>Cancel</source>
+        <target state="translated">Abbrechen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.Diagram">
+        <source>Diagram</source>
+        <target state="translated">Diagramm</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.Open">
+        <source>Open</source>
+        <target state="translated">Öffnen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FeelEntry.Toggle">
+        <source>Toggle FEEL expression</source>
+        <target state="translated">FEEL-Ausdruck umschalten</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Cancel">
+        <source>Cancel</source>
+        <target state="translated">Abbrechen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Changed">
+        <source>Changed</source>
+        <target state="translated">Geändert</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.ChangedCount">
+        <source>{0} item(s) this editor reads differently</source>
+        <target state="translated">{0} Element(e), die dieser Editor anders liest</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Diagrams">
+        <source>Diagrams</source>
+        <target state="translated">Diagramme</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.ElementCounts">
+        <source>{0} flow nodes, {1} connectors</source>
+        <target state="translated">{0} Flussknoten, {1} Konnektoren</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Elements">
+        <source>Elements</source>
+        <target state="translated">Elemente</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Error">
+        <source>This file could not be read: {0}</source>
+        <target state="translated">Diese Datei konnte nicht gelesen werden: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.NoProblems">
+        <source>None</source>
+        <target state="translated">Keine</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.NotKept">
+        <source>Not kept</source>
+        <target state="translated">Nicht beibehalten</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.NotKeptCount">
+        <source>{0} item(s) this editor cannot represent</source>
+        <target state="translated">{0} Element(e), die dieser Editor nicht darstellen kann</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Note">
+        <source>Opening this file replaces what is on screen, including its undo history.</source>
+        <target state="translated">Beim Öffnen dieser Datei wird der aktuelle Inhalt einschließlich seines Rückgängig-Verlaufs ersetzt.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Open">
+        <source>Open</source>
+        <target state="translated">Öffnen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.ProblemCounts">
+        <source>{0} error(s), {1} warning(s)</source>
+        <target state="translated">{0} Fehler, {1} Warnung(en)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Problems">
+        <source>Problems</source>
+        <target state="translated">Probleme</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Schema">
+        <source>XML Schema</source>
+        <target state="translated">XML-Schema</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.SchemaFailed">
+        <source>{0} violation(s) against the supplied schema set; content remains available to edit</source>
+        <target state="translated">{0} Verstoß/Verstöße gegen die bereitgestellten Schemas; der Inhalt bleibt bearbeitbar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.SchemaPassed">
+        <source>Passed the supplied schema set</source>
+        <target state="translated">Bereitgestellte Schemas bestanden</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.SchemaSkipped">
+        <source>Not validated (no schema set supplied)</source>
+        <target state="translated">Nicht validiert (keine Schemas bereitgestellt)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Title">
+        <source>Open {0}</source>
+        <target state="translated">{0} öffnen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.Actions">
+        <source>Actions</source>
+        <target state="translated">Aktionen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.Add">
+        <source>Add row</source>
+        <target state="translated">Zeile hinzufügen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.CellLabel">
+        <source>{0}, row {1}</source>
+        <target state="translated">{0}, Zeile {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.MoveDown">
+        <source>Move row {0} down</source>
+        <target state="translated">Zeile {0} nach unten verschieben</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.MoveUp">
+        <source>Move row {0} up</source>
+        <target state="translated">Zeile {0} nach oben verschieben</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.Remove">
+        <source>Remove</source>
+        <target state="translated">Entfernen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.RemoveLabel">
+        <source>Remove row {0}</source>
+        <target state="translated">Zeile {0} entfernen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Container">
+        <source>Container</source>
+        <target state="translated">Container</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.ElementId">
+        <source>Element id</source>
+        <target state="translated">Element-ID</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Empty">
+        <source>Select an element to edit its properties.</source>
+        <target state="translated">Wählen Sie ein Element aus, um seine Eigenschaften zu bearbeiten.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Extensions">
+        <source>Extensions</source>
+        <target state="translated">Erweiterungen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.ExtensionsNote">
+        <source>Structure is preserved exactly on export.</source>
+        <target state="translated">Die Struktur wird beim Export exakt beibehalten.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Id">
+        <source>Id</source>
+        <target state="translated">ID</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Lane">
+        <source>Lane</source>
+        <target state="translated">Lane</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Pool">
+        <source>Pool</source>
+        <target state="translated">Pool</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Problems">
+        <source>Problems</source>
+        <target state="translated">Probleme</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceBrowser.Empty">
+        <source>Nothing refers to this element.</source>
+        <target state="translated">Nichts verweist auf dieses Element.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilPanel.NoTemplates">
+        <source>No matching templates.</source>
+        <target state="translated">Keine passenden Vorlagen.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilPanel.SearchTemplates">
+        <source>Search templates</source>
+        <target state="translated">Vorlagen suchen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilPanel.Templates">
+        <source>Templates</source>
+        <target state="translated">Vorlagen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Applicable">
+        <source>Applicable templates</source>
+        <target state="translated">Anwendbare Vorlagen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.AriaLabel">
+        <source>Element template</source>
+        <target state="translated">Elementvorlage</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Cancel">
+        <source>Cancel</source>
+        <target state="translated">Abbrechen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.NoMatches">
+        <source>No matching templates.</source>
+        <target state="translated">Keine passenden Vorlagen.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.NotFound">
+        <source>Template not found</source>
+        <target state="translated">Vorlage nicht gefunden</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Remove">
+        <source>Remove</source>
+        <target state="translated">Entfernen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Search">
+        <source>Search templates</source>
+        <target state="translated">Vorlagen suchen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Select">
+        <source>Select template</source>
+        <target state="translated">Vorlage auswählen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Unlink">
+        <source>Unlink</source>
+        <target state="translated">Verknüpfung lösen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Update">
+        <source>Update</source>
+        <target state="translated">Aktualisieren</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Version">
+        <source>Version {0}</source>
+        <target state="translated">Version {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Fit">
+        <source>Fit to content</source>
+        <target state="translated">An Inhalt anpassen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Fit.Text">
+        <source>Fit</source>
+        <target state="translated">Anpassen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Fit.Title">
+        <source>Fit the diagram to the viewport</source>
+        <target state="translated">Diagramm an den Ansichtsbereich anpassen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Redo">
+        <source>Redo</source>
+        <target state="translated">Wiederholen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Reset">
+        <source>Reset zoom</source>
+        <target state="translated">Zoom zurücksetzen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Reset.Text">
+        <source>Reset</source>
+        <target state="translated">Zurücksetzen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Reset.Title">
+        <source>Reset zoom to 100%</source>
+        <target state="translated">Zoom auf 100 % zurücksetzen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Shortcuts">
+        <source>Show keyboard shortcuts</source>
+        <target state="translated">Tastenkombinationen anzeigen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Undo">
+        <source>Undo</source>
+        <target state="translated">Rückgängig</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.ZoomIn">
+        <source>Zoom in</source>
+        <target state="translated">Vergrößern</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.ZoomIn.Title">
+        <source>Zoom in</source>
+        <target state="translated">Vergrößern</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.ZoomOut">
+        <source>Zoom out</source>
+        <target state="translated">Verkleinern</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.ZoomOut.Title">
+        <source>Zoom out</source>
+        <target state="translated">Verkleinern</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

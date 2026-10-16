@@ -1,0 +1,119 @@
+# EditorConfig — https://editorconfig.org
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{ts,mjs,js,json,jsonc,razor,css,html,yml,yaml}]
+indent_size = 2
+
+[*.{csproj,esproj,props,targets,slnx,xml}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+# ---------------------------------------------------------------------------
+# C#
+# ---------------------------------------------------------------------------
+[*.cs]
+indent_size = 4
+
+# Language policy (implementation plan §5 "Code quality, refactoring, and language policy")
+csharp_style_namespace_declarations = file_scoped:error
+csharp_using_directive_placement = outside_namespace:warning
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = false
+dotnet_style_require_accessibility_modifiers = always:error
+
+csharp_prefer_braces = true:suggestion
+csharp_style_prefer_primary_constructors = true:suggestion
+csharp_style_prefer_pattern_matching = true:suggestion
+csharp_style_prefer_switch_expression = true:suggestion
+csharp_style_prefer_not_pattern = true:suggestion
+csharp_style_expression_bodied_properties = true:suggestion
+csharp_style_expression_bodied_accessors = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_namespace_declarations = file_scoped:error
+csharp_prefer_simple_using_statement = true:suggestion
+csharp_style_prefer_readonly_struct = true:suggestion
+csharp_style_prefer_readonly_struct_member = true:suggestion
+
+dotnet_style_collection_initializer = true:suggestion
+dotnet_style_prefer_collection_expression = true:suggestion
+dotnet_style_object_initializer = true:suggestion
+dotnet_style_prefer_conditional_expression_over_assignment = true:suggestion
+dotnet_style_prefer_conditional_expression_over_return = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_readonly_field = true:suggestion
+
+# Formatting must be enforceable: `dotnet format --verify-no-changes` is a CI gate.
+dotnet_diagnostic.IDE0055.severity = warning
+
+# ConfigureAwait(false) is wrong in Blazor component code — there is no sync context to avoid.
+dotnet_diagnostic.CA2007.severity = none
+
+# Setting a component parameter outside its own component is always a bug.
+dotnet_diagnostic.BL0005.severity = error
+
+# --- naming -----------------------------------------------------------------
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+dotnet_naming_style.camel_case.capitalization = camel_case
+dotnet_naming_style.underscore_camel_case.capitalization = camel_case
+dotnet_naming_style.underscore_camel_case.required_prefix = _
+dotnet_naming_style.i_prefixed.capitalization = pascal_case
+dotnet_naming_style.i_prefixed.required_prefix = I
+dotnet_naming_style.async_suffixed.capitalization = pascal_case
+dotnet_naming_style.async_suffixed.required_suffix = Async
+
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+dotnet_naming_rule.interfaces_are_i_prefixed.symbols = interfaces
+dotnet_naming_rule.interfaces_are_i_prefixed.style = i_prefixed
+dotnet_naming_rule.interfaces_are_i_prefixed.severity = warning
+
+# Constants and static readonly fields are PascalCase. Declared before the instance-field rule
+# because the first matching rule wins, and they would otherwise be caught by it.
+dotnet_naming_symbols.const_fields.applicable_kinds = field
+dotnet_naming_symbols.const_fields.required_modifiers = const
+dotnet_naming_rule.const_fields_are_pascal.symbols = const_fields
+dotnet_naming_rule.const_fields_are_pascal.style = pascal_case
+dotnet_naming_rule.const_fields_are_pascal.severity = warning
+
+dotnet_naming_symbols.static_readonly_fields.applicable_kinds = field
+dotnet_naming_symbols.static_readonly_fields.required_modifiers = static,readonly
+dotnet_naming_rule.static_readonly_fields_are_pascal.symbols = static_readonly_fields
+dotnet_naming_rule.static_readonly_fields_are_pascal.style = pascal_case
+dotnet_naming_rule.static_readonly_fields_are_pascal.severity = warning
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_rule.private_fields_are_underscore_camel.symbols = private_fields
+dotnet_naming_rule.private_fields_are_underscore_camel.style = underscore_camel_case
+dotnet_naming_rule.private_fields_are_underscore_camel.severity = warning
+
+dotnet_naming_symbols.public_members.applicable_kinds = property,method,event,namespace,class,struct,enum,delegate
+dotnet_naming_symbols.public_members.applicable_accessibilities = public,internal,protected,protected_internal
+dotnet_naming_rule.public_members_are_pascal.symbols = public_members
+dotnet_naming_rule.public_members_are_pascal.style = pascal_case
+dotnet_naming_rule.public_members_are_pascal.severity = warning
+
+dotnet_naming_symbols.async_methods.applicable_kinds = method
+dotnet_naming_symbols.async_methods.required_modifiers = async
+dotnet_naming_rule.async_methods_end_in_async.symbols = async_methods
+dotnet_naming_rule.async_methods_end_in_async.style = async_suffixed
+dotnet_naming_rule.async_methods_end_in_async.severity = warning
+
+# ---------------------------------------------------------------------------
+# Generated / vendored — never linted or formatted by hand.
+# ---------------------------------------------------------------------------
+[src/Bpmn.Scripts/src/BuildConstants.ts]
+generated_code = true
+
+[**/{bin,obj,dist,node_modules}/**]
+generated_code = true

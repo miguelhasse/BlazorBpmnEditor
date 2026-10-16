@@ -1,0 +1,694 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <data name="PropertyEntry.ToggleFeel" xml:space="preserve"><value>Toggle FEEL expression</value></data>
+  <data name="Expression.Warnings" xml:space="preserve"><value>FEEL warnings ({0}): {1}</value></data>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data name="AccessibleTree.AriaLabel" xml:space="preserve">
+    <value>Diagram contents</value>
+  </data>
+  <data name="LabelEditor.AriaLabel" xml:space="preserve">
+    <value>Edit label</value>
+  </data>
+  <data name="AccessibleTree.Empty" xml:space="preserve">
+    <value>This diagram has no elements.</value>
+  </data>
+  <data name="CalledElementPicker.Empty" xml:space="preserve">
+    <value>This document has no global Process or Global Task to call. Create one first.</value>
+  </data>
+  <data name="CalledElementPicker.Title" xml:space="preserve">
+    <value>Call which definition?</value>
+  </data>
+  <data name="ContextMenu.CanvasTitle" xml:space="preserve">
+    <value>Canvas</value>
+  </data>
+  <data name="ContextMenu.Commands" xml:space="preserve">
+    <value>Commands</value>
+  </data>
+  <data name="ContextMenu.Empty" xml:space="preserve">
+    <value>Nothing to do here</value>
+  </data>
+  <data name="ContextMenu.Findings" xml:space="preserve">
+    <value>Validation findings</value>
+  </data>
+  <data name="ContextMenu.Properties" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="ContextMenu.SwitchType" xml:space="preserve">
+    <value>Switch type</value>
+  </data>
+  <data name="ContextMenu.Command.EditLabel" xml:space="preserve">
+    <value>Edit label</value>
+  </data>
+  <data name="ContextMenu.Command.Cut" xml:space="preserve">
+    <value>Cut</value>
+  </data>
+  <data name="ContextMenu.Command.Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="ContextMenu.Command.Paste" xml:space="preserve">
+    <value>Paste</value>
+  </data>
+  <data name="ContextMenu.Command.Duplicate" xml:space="preserve">
+    <value>Duplicate</value>
+  </data>
+  <data name="ContextMenu.Command.Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ContextMenu.Command.SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="ContextMenu.Command.FitToContent" xml:space="preserve">
+    <value>Fit to content</value>
+  </data>
+  <data name="ContextMenu.Command.Undo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="ContextMenu.Command.Redo" xml:space="preserve">
+    <value>Redo</value>
+  </data>
+  <data name="ContextualActions.AriaLabel" xml:space="preserve">
+    <value>Quick actions</value>
+  </data>
+  <data name="ContextualActions.Append.Task" xml:space="preserve">
+    <value>Append Task</value>
+  </data>
+  <data name="ContextualActions.Append.ExclusiveGateway" xml:space="preserve">
+    <value>Append Exclusive Gateway</value>
+  </data>
+  <data name="ContextualActions.Append.EndEvent" xml:space="preserve">
+    <value>Append End Event</value>
+  </data>
+  <data name="ContextualActions.EditLabel" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="ContextualActions.Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ContextualActions.OpenMenu" xml:space="preserve">
+    <value>More actions</value>
+  </data>
+  <data name="DiagramNavigator.AriaLabel" xml:space="preserve">
+    <value>Diagrams</value>
+  </data>
+  <data name="DiagramNavigator.Nested" xml:space="preserve">
+    <value>(nested)</value>
+  </data>
+  <data name="DiagramNavigator.Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="DiagramNavigator.OpenTarget" xml:space="preserve">
+    <value>Open {0}</value>
+  </data>
+  <data name="DiagramNavigator.NothingToOpen" xml:space="preserve">
+    <value>Select a Call Activity or a collapsed Sub-Process.</value>
+  </data>
+  <data name="ImportOffer.AriaLabel" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="ImportOffer.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ImportOffer.Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="PropertyPanel.AriaLabel" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="PropertyPanel.BulkEdit" xml:space="preserve">
+    <value>Set {0} on {1} elements</value>
+  </data>
+  <data name="PropertyPanel.Elements" xml:space="preserve">
+    <value>{0} elements</value>
+  </data>
+  <data name="PropertyPanel.NoCommonProperties" xml:space="preserve">
+    <value>These elements have no properties in common.</value>
+  </data>
+  <data name="PropertyPanel.NoProperties" xml:space="preserve">
+    <value>This element has no editable properties.</value>
+  </data>
+  <data name="ReferenceBrowser.Heading" xml:space="preserve">
+    <value>Used by</value>
+  </data>
+  <data name="ShortcutHelp.Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ShortcutHelp.Empty" xml:space="preserve">
+    <value>No keyboard shortcuts are configured.</value>
+  </data>
+  <data name="ShortcutHelp.Or" xml:space="preserve">
+    <value>or</value>
+  </data>
+  <data name="ShortcutHelp.Title" xml:space="preserve">
+    <value>Keyboard shortcuts</value>
+  </data>
+  <data name="StencilPanel.AriaLabel" xml:space="preserve">
+    <value>Element stencil</value>
+  </data>
+  <data name="StencilPanel.Empty" xml:space="preserve">
+    <value>Nothing can be created here.</value>
+  </data>
+  <data name="StencilPanel.Unavailable" xml:space="preserve">
+    <value>{0} — unavailable here ({1})</value>
+  </data>
+  <data name="TemplateChooser.Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Toolbar.AriaLabel" xml:space="preserve">
+    <value>Diagram tools</value>
+  </data>
+  <data name="ValidationPanel.AriaLabel" xml:space="preserve">
+    <value>Validation</value>
+  </data>
+  <data name="ValidationPanel.Error" xml:space="preserve">
+    <value>error</value>
+  </data>
+  <data name="ValidationPanel.Errors" xml:space="preserve">
+    <value>errors</value>
+  </data>
+  <data name="ValidationPanel.Warning" xml:space="preserve">
+    <value>warning</value>
+  </data>
+  <data name="ValidationPanel.Warnings" xml:space="preserve">
+    <value>warnings</value>
+  </data>
+  <data name="ValidationPanel.Exportable" xml:space="preserve">
+    <value>Exportable</value>
+  </data>
+  <data name="ValidationPanel.NotExportable" xml:space="preserve">
+    <value>Not exportable</value>
+  </data>
+  <data name="ValidationPanel.Clean" xml:space="preserve">
+    <value>No problems found</value>
+  </data>
+  <data name="Editor.AriaLabel" xml:space="preserve"><value>BPMN editor</value></data>
+  <data name="Editor.CanvasLabel" xml:space="preserve"><value>BPMN diagram canvas</value></data>
+  <data name="Editor.StencilLabel" xml:space="preserve"><value>Element stencil</value></data>
+  <data name="Editor.PanelLabel" xml:space="preserve"><value>Diagram properties</value></data>
+  <data name="PropertyForm.AriaLabel" xml:space="preserve"><value>Properties</value></data>
+  <data name="PropertyGroup.general" xml:space="preserve"><value>General</value></data>
+  <data name="PropertyGroup.extensions" xml:space="preserve"><value>Extensions</value></data>
+  <data name="TypeOption.Event" xml:space="preserve"><value>{0} {1}</value></data>
+  <data name="Property.RawText" xml:space="preserve"><value>{0} text</value></data>
+  <data name="Property.documentation" xml:space="preserve"><value>Documentation</value></data>
+  <data name="Property.text" xml:space="preserve"><value>Text</value></data>
+  <data name="Property.conditionExpression" xml:space="preserve"><value>Condition</value></data>
+  <data name="Property.activationCondition" xml:space="preserve"><value>Activation condition</value></data>
+  <data name="Property.activationCondition.language" xml:space="preserve"><value>Activation condition language</value></data>
+  <data name="Property.activationCondition.type" xml:space="preserve"><value>Activation condition type</value></data>
+  <data name="Property.associationDirection" xml:space="preserve"><value>Direction</value></data>
+  <data name="Property.calledElementRef" xml:space="preserve"><value>Calls</value></data>
+  <data name="Property.categoryValueRef" xml:space="preserve"><value>Category</value></data>
+  <data name="Property.conditionLanguage" xml:space="preserve"><value>Condition language</value></data>
+  <data name="Property.dataObjectRef" xml:space="preserve"><value>Data Object</value></data>
+  <data name="Property.dataStoreRef" xml:space="preserve"><value>Data Store</value></data>
+  <data name="Property.defaultFlowRef" xml:space="preserve"><value>Default flow</value></data>
+  <data name="Property.eventDefinition" xml:space="preserve"><value>Trigger</value></data>
+  <data name="Property.isClosed" xml:space="preserve"><value>Closed</value></data>
+  <data name="Property.isCollection" xml:space="preserve"><value>Collection</value></data>
+  <data name="Property.isDefault" xml:space="preserve"><value>Default flow</value></data>
+  <data name="Property.isExecutable" xml:space="preserve"><value>Executable</value></data>
+  <data name="Property.isForCompensation" xml:space="preserve"><value>Compensation handler</value></data>
+  <data name="Property.isInterrupting" xml:space="preserve"><value>Interrupting</value></data>
+  <data name="Property.loopCharacteristics" xml:space="preserve"><value>Loop</value></data>
+  <data name="Property.messageRef" xml:space="preserve"><value>Message</value></data>
+  <data name="Property.multiInstance.behavior" xml:space="preserve"><value>Multi-instance behavior</value></data>
+  <data name="Property.multiInstance.completionCondition" xml:space="preserve"><value>Completion condition</value></data>
+  <data name="Property.multiInstance.completionCondition.language" xml:space="preserve"><value>Completion condition language</value></data>
+  <data name="Property.multiInstance.completionCondition.type" xml:space="preserve"><value>Completion condition type</value></data>
+  <data name="Property.multiInstance.isSequential" xml:space="preserve"><value>Sequential</value></data>
+  <data name="Property.multiInstance.loopCardinality" xml:space="preserve"><value>Loop cardinality</value></data>
+  <data name="Property.multiInstance.loopCardinality.language" xml:space="preserve"><value>Loop cardinality language</value></data>
+  <data name="Property.multiInstance.loopCardinality.type" xml:space="preserve"><value>Loop cardinality type</value></data>
+  <data name="Property.multiInstance.loopDataInputRef" xml:space="preserve"><value>Loop data input reference</value></data>
+  <data name="Property.multiInstance.loopDataOutputRef" xml:space="preserve"><value>Loop data output reference</value></data>
+  <data name="Property.name" xml:space="preserve"><value>Name</value></data>
+  <data name="Property.processType" xml:space="preserve"><value>Process type</value></data>
+  <data name="Property.standardLoop.loopCondition" xml:space="preserve"><value>Loop condition</value></data>
+  <data name="Property.standardLoop.loopCondition.language" xml:space="preserve"><value>Loop condition language</value></data>
+  <data name="Property.standardLoop.loopCondition.type" xml:space="preserve"><value>Loop condition type</value></data>
+  <data name="Property.standardLoop.loopMaximum" xml:space="preserve"><value>Loop maximum</value></data>
+  <data name="Property.standardLoop.testBefore" xml:space="preserve"><value>Test before</value></data>
+  <data name="Property.state" xml:space="preserve"><value>State</value></data>
+  <data name="Property.textFormat" xml:space="preserve"><value>Text format</value></data>
+  <data name="Property.multiInstance.inputDataItem.id" xml:space="preserve"><value>Input data item id</value></data>
+  <data name="Property.multiInstance.inputDataItem.name" xml:space="preserve"><value>Input data item name</value></data>
+  <data name="Property.multiInstance.inputDataItem.itemSubjectRef" xml:space="preserve"><value>Input data item item subject reference</value></data>
+  <data name="Property.multiInstance.inputDataItem.isCollection" xml:space="preserve"><value>Input data item is collection</value></data>
+  <data name="Property.multiInstance.outputDataItem.id" xml:space="preserve"><value>Output data item id</value></data>
+  <data name="Property.multiInstance.outputDataItem.name" xml:space="preserve"><value>Output data item name</value></data>
+  <data name="Property.multiInstance.outputDataItem.itemSubjectRef" xml:space="preserve"><value>Output data item item subject reference</value></data>
+  <data name="Property.multiInstance.outputDataItem.isCollection" xml:space="preserve"><value>Output data item is collection</value></data>
+  <data name="Property.multiInstance.complexBehavior.event" xml:space="preserve"><value>Complex behavior {0} event</value></data>
+  <data name="Property.multiInstance.complexBehavior.condition" xml:space="preserve"><value>Complex behavior {0} condition</value></data>
+  <data name="Property.multiInstance.complexBehavior.condition.language" xml:space="preserve"><value>Complex behavior {0} condition language</value></data>
+  <data name="Property.multiInstance.complexBehavior.condition.type" xml:space="preserve"><value>Complex behavior {0} condition type</value></data>
+  <data name="Property.assignment.from" xml:space="preserve"><value>Assignment {0} from</value></data>
+  <data name="Property.assignment.from.language" xml:space="preserve"><value>Assignment {0} from language</value></data>
+  <data name="Property.assignment.from.type" xml:space="preserve"><value>Assignment {0} from type</value></data>
+  <data name="Property.assignment.to" xml:space="preserve"><value>Assignment {0} to</value></data>
+  <data name="Property.assignment.to.language" xml:space="preserve"><value>Assignment {0} to language</value></data>
+  <data name="Property.assignment.to.type" xml:space="preserve"><value>Assignment {0} to type</value></data>
+  <data name="PropertyChoice.Empty" xml:space="preserve"><value>(none)</value></data>
+  <data name="PropertyChoice.loopCharacteristics.none" xml:space="preserve"><value>None</value></data>
+  <data name="PropertyChoice.loopCharacteristics.standard" xml:space="preserve"><value>Loop</value></data>
+  <data name="PropertyChoice.loopCharacteristics.multiInstanceSequential" xml:space="preserve"><value>Multi-instance (sequential)</value></data>
+  <data name="PropertyChoice.loopCharacteristics.multiInstanceParallel" xml:space="preserve"><value>Multi-instance (parallel)</value></data>
+  <data name="PropertyChoice.multiInstance.behavior.All" xml:space="preserve"><value>All</value></data>
+  <data name="PropertyChoice.multiInstance.behavior.One" xml:space="preserve"><value>One</value></data>
+  <data name="PropertyChoice.multiInstance.behavior.None" xml:space="preserve"><value>None</value></data>
+  <data name="PropertyChoice.multiInstance.behavior.Complex" xml:space="preserve"><value>Complex</value></data>
+  <data name="PropertyChoice.associationDirection.none" xml:space="preserve"><value>None</value></data>
+  <data name="PropertyChoice.associationDirection.one" xml:space="preserve"><value>One</value></data>
+  <data name="PropertyChoice.associationDirection.both" xml:space="preserve"><value>Both</value></data>
+  <data name="PropertyChoice.processType.None" xml:space="preserve"><value>None</value></data>
+  <data name="PropertyChoice.processType.Public" xml:space="preserve"><value>Public</value></data>
+  <data name="PropertyChoice.processType.Private" xml:space="preserve"><value>Private</value></data>
+  <data name="ElementType.startEvent" xml:space="preserve"><value>Start Event</value></data>
+  <data name="ElementType.endEvent" xml:space="preserve"><value>End Event</value></data>
+  <data name="ElementType.intermediateCatchEvent" xml:space="preserve"><value>Catch Event</value></data>
+  <data name="ElementType.intermediateThrowEvent" xml:space="preserve"><value>Throw Event</value></data>
+  <data name="ElementType.boundaryEvent" xml:space="preserve"><value>Boundary Event</value></data>
+  <data name="ElementType.task" xml:space="preserve"><value>Task</value></data>
+  <data name="ElementType.userTask" xml:space="preserve"><value>User Task</value></data>
+  <data name="ElementType.serviceTask" xml:space="preserve"><value>Service Task</value></data>
+  <data name="ElementType.scriptTask" xml:space="preserve"><value>Script Task</value></data>
+  <data name="ElementType.manualTask" xml:space="preserve"><value>Manual Task</value></data>
+  <data name="ElementType.businessRuleTask" xml:space="preserve"><value>Business Rule Task</value></data>
+  <data name="ElementType.sendTask" xml:space="preserve"><value>Send Task</value></data>
+  <data name="ElementType.receiveTask" xml:space="preserve"><value>Receive Task</value></data>
+  <data name="ElementType.subProcess" xml:space="preserve"><value>Sub-Process</value></data>
+  <data name="ElementType.eventSubProcess" xml:space="preserve"><value>Event Sub-Process</value></data>
+  <data name="ElementType.transaction" xml:space="preserve"><value>Transaction</value></data>
+  <data name="ElementType.adHocSubProcess" xml:space="preserve"><value>Ad-Hoc Sub-Process</value></data>
+  <data name="ElementType.callActivity" xml:space="preserve"><value>Call Activity</value></data>
+  <data name="ElementType.exclusiveGateway" xml:space="preserve"><value>Exclusive Gateway</value></data>
+  <data name="ElementType.inclusiveGateway" xml:space="preserve"><value>Inclusive Gateway</value></data>
+  <data name="ElementType.parallelGateway" xml:space="preserve"><value>Parallel Gateway</value></data>
+  <data name="ElementType.complexGateway" xml:space="preserve"><value>Complex Gateway</value></data>
+  <data name="ElementType.eventBasedGateway" xml:space="preserve"><value>Event-Based Gateway</value></data>
+  <data name="ElementType.pool" xml:space="preserve"><value>Pool</value></data>
+  <data name="ElementType.participant" xml:space="preserve"><value>Pool</value></data>
+  <data name="ElementType.lane" xml:space="preserve"><value>Lane</value></data>
+  <data name="ElementType.process" xml:space="preserve"><value>Process</value></data>
+  <data name="ElementType.collaboration" xml:space="preserve"><value>Collaboration</value></data>
+  <data name="ElementType.sequenceFlow" xml:space="preserve"><value>Sequence Flow</value></data>
+  <data name="ElementType.messageFlow" xml:space="preserve"><value>Message Flow</value></data>
+  <data name="ElementType.association" xml:space="preserve"><value>Association</value></data>
+  <data name="ElementType.dataInputAssociation" xml:space="preserve"><value>Data Input Association</value></data>
+  <data name="ElementType.dataOutputAssociation" xml:space="preserve"><value>Data Output Association</value></data>
+  <data name="ElementType.textAnnotation" xml:space="preserve"><value>Text Annotation</value></data>
+  <data name="ElementType.group" xml:space="preserve"><value>Group</value></data>
+  <data name="ElementType.dataObjectReference" xml:space="preserve"><value>Data Object Reference</value></data>
+  <data name="ElementType.dataStoreReference" xml:space="preserve"><value>Data Store Reference</value></data>
+  <data name="EventTrigger.None" xml:space="preserve"><value>None</value></data>
+  <data name="EventTrigger.Message" xml:space="preserve"><value>Message</value></data>
+  <data name="EventTrigger.Timer" xml:space="preserve"><value>Timer</value></data>
+  <data name="EventTrigger.Error" xml:space="preserve"><value>Error</value></data>
+  <data name="EventTrigger.Escalation" xml:space="preserve"><value>Escalation</value></data>
+  <data name="EventTrigger.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="EventTrigger.Compensation" xml:space="preserve"><value>Compensation</value></data>
+  <data name="EventTrigger.Conditional" xml:space="preserve"><value>Conditional</value></data>
+  <data name="EventTrigger.Link" xml:space="preserve"><value>Link</value></data>
+  <data name="EventTrigger.Signal" xml:space="preserve"><value>Signal</value></data>
+  <data name="EventTrigger.Terminate" xml:space="preserve"><value>Terminate</value></data>
+  <data name="EventTrigger.Multiple" xml:space="preserve"><value>Multiple</value></data>
+  <data name="EventTrigger.ParallelMultiple" xml:space="preserve"><value>Parallel Multiple</value></data>
+  <data name="StencilGroup.Start" xml:space="preserve"><value>Start</value></data>
+  <data name="StencilGroup.Events" xml:space="preserve"><value>Events</value></data>
+  <data name="StencilGroup.Activities" xml:space="preserve"><value>Activities</value></data>
+  <data name="StencilGroup.Gateways" xml:space="preserve"><value>Gateways</value></data>
+  <data name="StencilGroup.Data" xml:space="preserve"><value>Data</value></data>
+  <data name="StencilGroup.Swimlanes" xml:space="preserve"><value>Swimlanes</value></data>
+  <data name="StencilGroup.Artifacts" xml:space="preserve"><value>Artifacts</value></data>
+  <data name="StencilGroup.OtherTemplates" xml:space="preserve"><value>Other templates</value></data>
+  <data name="StencilEntry.PoolOrLane" xml:space="preserve"><value>Pool / Lane</value></data>
+  <data name="StencilEntry.StartEvent" xml:space="preserve"><value>Start Event</value></data>
+  <data name="StencilEntry.IntermediateBoundaryEvent" xml:space="preserve"><value>Intermediate / Boundary Event</value></data>
+  <data name="StencilEntry.EndEvent" xml:space="preserve"><value>End Event</value></data>
+  <data name="StencilEntry.Task" xml:space="preserve"><value>Task</value></data>
+  <data name="StencilEntry.SubProcess" xml:space="preserve"><value>Sub-Process</value></data>
+  <data name="StencilEntry.CallActivity" xml:space="preserve"><value>Call Activity</value></data>
+  <data name="StencilEntry.ExclusiveGateway" xml:space="preserve"><value>Gateway</value></data>
+  <data name="StencilEntry.DataObject" xml:space="preserve"><value>Data Object Reference</value></data>
+  <data name="StencilEntry.DataStore" xml:space="preserve"><value>Data Store Reference</value></data>
+  <data name="StencilEntry.TextAnnotation" xml:space="preserve"><value>Text Annotation</value></data>
+  <data name="StencilEntry.Group" xml:space="preserve"><value>Group</value></data>
+  <data name="StencilReason.CT-001" xml:space="preserve"><value>This container does not permit this element.</value></data>
+  <data name="StencilReason.EV-004" xml:space="preserve"><value>An Event Sub-Process requires a typed Start Event.</value></data>
+  <data name="DiagramNavigator.NotDrillable" xml:space="preserve"><value>Only a Call Activity or a collapsed Sub-Process opens a diagram.</value></data>
+  <data name="DiagramNavigator.NothingCalled" xml:space="preserve"><value>This Call Activity does not say what it calls.</value></data>
+  <data name="DiagramNavigator.NoCalledDiagram" xml:space="preserve"><value>'{0}' is called from here but is not drawn in this file.</value></data>
+  <data name="DiagramNavigator.NoSubProcessDiagram" xml:space="preserve"><value>This Sub-Process has no diagram of its own; its content is drawn in place.</value></data>
+  <data name="AccessibleTree.Named" xml:space="preserve"><value>{0} {1}</value></data>
+  <data name="AccessibleTree.Expanded" xml:space="preserve"><value>{0}, expanded.</value></data>
+  <data name="AccessibleTree.Collapsed" xml:space="preserve"><value>{0}, collapsed.</value></data>
+  <data name="AccessibleTree.Container" xml:space="preserve"><value>{0}.</value></data>
+  <data name="AccessibleTree.Unassociated" xml:space="preserve"><value>{0}. Not associated with anything.</value></data>
+  <data name="AccessibleTree.Associated" xml:space="preserve"><value>{0}. Associated with {1}.</value></data>
+  <data name="AccessibleTree.NoIncoming" xml:space="preserve"><value>no incoming</value></data>
+  <data name="AccessibleTree.NoOutgoing" xml:space="preserve"><value>no outgoing</value></data>
+  <data name="AccessibleTree.Incoming" xml:space="preserve"><value>{0} incoming</value></data>
+  <data name="AccessibleTree.Outgoing" xml:space="preserve"><value>{0} outgoing</value></data>
+  <data name="AccessibleTree.Connections" xml:space="preserve"><value>{0}. {1}, {2}.</value></data>
+  <data name="AccessibleType.startEvent" xml:space="preserve"><value>Start event</value></data>
+  <data name="AccessibleType.endEvent" xml:space="preserve"><value>End event</value></data>
+  <data name="AccessibleType.intermediateCatchEvent" xml:space="preserve"><value>Intermediate catch event</value></data>
+  <data name="AccessibleType.intermediateThrowEvent" xml:space="preserve"><value>Intermediate throw event</value></data>
+  <data name="AccessibleType.boundaryEvent" xml:space="preserve"><value>Boundary event</value></data>
+  <data name="AccessibleType.task" xml:space="preserve"><value>Task</value></data>
+  <data name="AccessibleType.userTask" xml:space="preserve"><value>User task</value></data>
+  <data name="AccessibleType.serviceTask" xml:space="preserve"><value>Service task</value></data>
+  <data name="AccessibleType.scriptTask" xml:space="preserve"><value>Script task</value></data>
+  <data name="AccessibleType.manualTask" xml:space="preserve"><value>Manual task</value></data>
+  <data name="AccessibleType.businessRuleTask" xml:space="preserve"><value>Business rule task</value></data>
+  <data name="AccessibleType.sendTask" xml:space="preserve"><value>Send task</value></data>
+  <data name="AccessibleType.receiveTask" xml:space="preserve"><value>Receive task</value></data>
+  <data name="AccessibleType.subProcess" xml:space="preserve"><value>Sub process</value></data>
+  <data name="AccessibleType.eventSubProcess" xml:space="preserve"><value>Event sub process</value></data>
+  <data name="AccessibleType.transaction" xml:space="preserve"><value>Transaction</value></data>
+  <data name="AccessibleType.adHocSubProcess" xml:space="preserve"><value>Ad hoc sub process</value></data>
+  <data name="AccessibleType.callActivity" xml:space="preserve"><value>Call activity</value></data>
+  <data name="AccessibleType.exclusiveGateway" xml:space="preserve"><value>Exclusive gateway</value></data>
+  <data name="AccessibleType.inclusiveGateway" xml:space="preserve"><value>Inclusive gateway</value></data>
+  <data name="AccessibleType.parallelGateway" xml:space="preserve"><value>Parallel gateway</value></data>
+  <data name="AccessibleType.complexGateway" xml:space="preserve"><value>Complex gateway</value></data>
+  <data name="AccessibleType.eventBasedGateway" xml:space="preserve"><value>Event based gateway</value></data>
+  <data name="AccessibleType.pool" xml:space="preserve"><value>Pool</value></data>
+  <data name="AccessibleType.lane" xml:space="preserve"><value>Lane</value></data>
+  <data name="AccessibleType.textAnnotation" xml:space="preserve"><value>Text annotation</value></data>
+  <data name="AccessibleType.group" xml:space="preserve"><value>Group</value></data>
+  <data name="AccessibleType.dataObjectReference" xml:space="preserve"><value>Data object reference</value></data>
+  <data name="AccessibleType.dataStoreReference" xml:space="preserve"><value>Data store reference</value></data>
+  <data name="Expression.Warning" xml:space="preserve"><value>{0} warning: {1}</value></data>
+  <data name="Expression.Feel" xml:space="preserve"><value>FEEL</value></data>
+  <data name="Expression.Juel" xml:space="preserve"><value>JUEL</value></data>
+  <data name="Expression.Function" xml:space="preserve"><value>fx</value></data>
+  <data name="Shortcut.ZoomIn" xml:space="preserve"><value>Zoom in</value></data>
+  <data name="Shortcut.ZoomOut" xml:space="preserve"><value>Zoom out</value></data>
+  <data name="Shortcut.ResetZoom" xml:space="preserve"><value>Reset zoom to 100%</value></data>
+  <data name="Shortcut.FitToContent" xml:space="preserve"><value>Fit the diagram to the view</value></data>
+  <data name="Shortcut.PanLeft" xml:space="preserve"><value>Pan left</value></data>
+  <data name="Shortcut.PanRight" xml:space="preserve"><value>Pan right</value></data>
+  <data name="Shortcut.PanUp" xml:space="preserve"><value>Pan up</value></data>
+  <data name="Shortcut.PanDown" xml:space="preserve"><value>Pan down</value></data>
+  <data name="Shortcut.SelectAll" xml:space="preserve"><value>Select everything</value></data>
+  <data name="Shortcut.ClearSelection" xml:space="preserve"><value>Clear the selection</value></data>
+  <data name="Shortcut.Delete" xml:space="preserve"><value>Delete the selection</value></data>
+  <data name="Shortcut.Undo" xml:space="preserve"><value>Undo</value></data>
+  <data name="Shortcut.Redo" xml:space="preserve"><value>Redo</value></data>
+  <data name="Shortcut.Copy" xml:space="preserve"><value>Copy the selection</value></data>
+  <data name="Shortcut.Cut" xml:space="preserve"><value>Cut the selection</value></data>
+  <data name="Shortcut.Paste" xml:space="preserve"><value>Paste</value></data>
+  <data name="Shortcut.Duplicate" xml:space="preserve"><value>Duplicate the selection</value></data>
+  <data name="Shortcut.ShowShortcuts" xml:space="preserve"><value>Show keyboard shortcuts</value></data>
+  <data name="ShortcutKey.Ctrl" xml:space="preserve"><value>Ctrl</value></data>
+  <data name="ShortcutKey.Cmd" xml:space="preserve"><value>Cmd</value></data>
+  <data name="ShortcutKey.Alt" xml:space="preserve"><value>Alt</value></data>
+  <data name="ShortcutKey.Shift" xml:space="preserve"><value>Shift</value></data>
+  <data name="ShortcutKey.ArrowLeft" xml:space="preserve"><value>ArrowLeft</value></data>
+  <data name="ShortcutKey.ArrowRight" xml:space="preserve"><value>ArrowRight</value></data>
+  <data name="ShortcutKey.ArrowUp" xml:space="preserve"><value>ArrowUp</value></data>
+  <data name="ShortcutKey.ArrowDown" xml:space="preserve"><value>ArrowDown</value></data>
+  <data name="ShortcutKey.Escape" xml:space="preserve"><value>Escape</value></data>
+  <data name="ShortcutKey.Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Schema.task-definition" xml:space="preserve"><value>Task definition</value></data>
+  <data name="Schema.type" xml:space="preserve"><value>Type</value></data>
+  <data name="Schema.retries" xml:space="preserve"><value>Retries</value></data>
+  <data name="Schema.inputs" xml:space="preserve"><value>Inputs</value></data>
+  <data name="Schema.outputs" xml:space="preserve"><value>Outputs</value></data>
+  <data name="Schema.target" xml:space="preserve"><value>Target</value></data>
+  <data name="Schema.source" xml:space="preserve"><value>Source</value></data>
+  <data name="Schema.headers" xml:space="preserve"><value>Headers</value></data>
+  <data name="Schema.key" xml:space="preserve"><value>Key</value></data>
+  <data name="Schema.value" xml:space="preserve"><value>Value</value></data>
+  <data name="Schema.called-element" xml:space="preserve"><value>Called element</value></data>
+  <data name="Schema.processId" xml:space="preserve"><value>Process ID</value></data>
+  <data name="Schema.propagateAllChildVariables" xml:space="preserve"><value>Propagate all child variables</value></data>
+  <data name="Schema.propagateAllParentVariables" xml:space="preserve"><value>Propagate all parent variables</value></data>
+  <data name="Schema.properties" xml:space="preserve"><value>Extension properties</value></data>
+  <data name="Schema.name" xml:space="preserve"><value>Name</value></data>
+  <data name="Schema.multi-instance" xml:space="preserve"><value>Multi-instance</value></data>
+  <data name="Schema.inputCollection" xml:space="preserve"><value>Input collection</value></data>
+  <data name="Schema.inputElement" xml:space="preserve"><value>Input element</value></data>
+  <data name="Schema.outputCollection" xml:space="preserve"><value>Output collection</value></data>
+  <data name="Schema.outputElement" xml:space="preserve"><value>Output element</value></data>
+  <data name="Schema.camunda:implementation" xml:space="preserve"><value>Implementation</value></data>
+  <data name="Schema.camunda:class" xml:space="preserve"><value>Java class</value></data>
+  <data name="Schema.camunda:delegateExpression" xml:space="preserve"><value>Delegate expression</value></data>
+  <data name="Schema.camunda:expression" xml:space="preserve"><value>Expression</value></data>
+  <data name="Schema.camunda:resultVariable" xml:space="preserve"><value>Result variable</value></data>
+  <data name="Schema.camunda:type" xml:space="preserve"><value>Type</value></data>
+  <data name="Schema.camunda:topic" xml:space="preserve"><value>Topic</value></data>
+  <data name="Schema.camunda:async" xml:space="preserve"><value>Asynchronous continuations</value></data>
+  <data name="Schema.camunda:asyncBefore" xml:space="preserve"><value>Before</value></data>
+  <data name="Schema.camunda:asyncAfter" xml:space="preserve"><value>After</value></data>
+  <data name="Schema.camunda:exclusive" xml:space="preserve"><value>Exclusive</value></data>
+  <data name="Schema.camunda:inputs" xml:space="preserve"><value>Inputs</value></data>
+  <data name="Schema.camunda:outputs" xml:space="preserve"><value>Outputs</value></data>
+  <data name="Schema.camunda:name" xml:space="preserve"><value>Name</value></data>
+  <data name="Schema.camunda:#text" xml:space="preserve"><value>Value</value></data>
+  <data name="Schema.camunda:properties" xml:space="preserve"><value>Extension properties</value></data>
+  <data name="Schema.camunda:value" xml:space="preserve"><value>Value</value></data>
+  <data name="Schema.camunda:fields" xml:space="preserve"><value>Field injections</value></data>
+  <data name="Schema.camunda:stringValue" xml:space="preserve"><value>String value</value></data>
+  <data name="Schema.camunda:execution-listeners" xml:space="preserve"><value>Execution listeners</value></data>
+  <data name="Schema.camunda:event" xml:space="preserve"><value>Event</value></data>
+  <data name="Schema.camunda:in" xml:space="preserve"><value>In mappings</value></data>
+  <data name="Schema.camunda:out" xml:space="preserve"><value>Out mappings</value></data>
+  <data name="Schema.camunda:source" xml:space="preserve"><value>Source</value></data>
+  <data name="Schema.camunda:sourceExpression" xml:space="preserve"><value>Source expression</value></data>
+  <data name="Schema.camunda:target" xml:space="preserve"><value>Target</value></data>
+  <data name="Schema.camunda:variables" xml:space="preserve"><value>Variables</value></data>
+  <data name="Schema.camunda:local" xml:space="preserve"><value>Local</value></data>
+  <data name="Schema.camunda:businessKey" xml:space="preserve"><value>Business key</value></data>
+  <data name="Schema.camunda:called-element" xml:space="preserve"><value>Called element</value></data>
+  <data name="Schema.camunda:calledElementBinding" xml:space="preserve"><value>Binding</value></data>
+  <data name="Schema.camunda:calledElementVersion" xml:space="preserve"><value>Version</value></data>
+  <data name="Schema.camunda:calledElementVersionTag" xml:space="preserve"><value>Version tag</value></data>
+  <data name="Schema.camunda:calledElementTenantId" xml:space="preserve"><value>Tenant ID</value></data>
+  <data name="Schema.camunda:connector" xml:space="preserve"><value>Connector</value></data>
+  <data name="Schema.camunda:connectorId" xml:space="preserve"><value>Connector ID</value></data>
+  <data name="Schema.camunda:assignment" xml:space="preserve"><value>User assignment</value></data>
+  <data name="Schema.camunda:assignee" xml:space="preserve"><value>Assignee</value></data>
+  <data name="Schema.camunda:candidateUsers" xml:space="preserve"><value>Candidate users</value></data>
+  <data name="Schema.camunda:candidateGroups" xml:space="preserve"><value>Candidate groups</value></data>
+  <data name="Schema.camunda:dueDate" xml:space="preserve"><value>Due date</value></data>
+  <data name="Schema.camunda:followUpDate" xml:space="preserve"><value>Follow-up date</value></data>
+  <data name="Schema.camunda:priority" xml:space="preserve"><value>Priority</value></data>
+  <data name="Schema.camunda:forms" xml:space="preserve"><value>Forms</value></data>
+  <data name="Schema.camunda:formKey" xml:space="preserve"><value>Form key</value></data>
+  <data name="Schema.Structured" xml:space="preserve"><value>Structured value (preserved): {0}</value></data>
+  <data name="Icon.ad-hoc-marker" xml:space="preserve"><value>Ad hoc marker</value></data>
+  <data name="Icon.business-rule" xml:space="preserve"><value>Business rule</value></data>
+  <data name="Icon.compensation-marker" xml:space="preserve"><value>Compensation marker</value></data>
+  <data name="Icon.end-event-cancel" xml:space="preserve"><value>End event cancel</value></data>
+  <data name="Icon.end-event-compensation" xml:space="preserve"><value>End event compensation</value></data>
+  <data name="Icon.end-event-error" xml:space="preserve"><value>End event error</value></data>
+  <data name="Icon.end-event-escalation" xml:space="preserve"><value>End event escalation</value></data>
+  <data name="Icon.end-event-message" xml:space="preserve"><value>End event message</value></data>
+  <data name="Icon.end-event-multiple" xml:space="preserve"><value>End event multiple</value></data>
+  <data name="Icon.end-event-signal" xml:space="preserve"><value>End event signal</value></data>
+  <data name="Icon.end-event-terminate" xml:space="preserve"><value>End event terminate</value></data>
+  <data name="Icon.gateway-complex" xml:space="preserve"><value>Gateway complex</value></data>
+  <data name="Icon.gateway-eventbased" xml:space="preserve"><value>Gateway eventbased</value></data>
+  <data name="Icon.gateway-or" xml:space="preserve"><value>Gateway or</value></data>
+  <data name="Icon.gateway-parallel" xml:space="preserve"><value>Gateway parallel</value></data>
+  <data name="Icon.gateway-xor" xml:space="preserve"><value>Gateway xor</value></data>
+  <data name="Icon.intermediate-event-catch-cancel" xml:space="preserve"><value>Intermediate event catch cancel</value></data>
+  <data name="Icon.intermediate-event-catch-compensation" xml:space="preserve"><value>Intermediate event catch compensation</value></data>
+  <data name="Icon.intermediate-event-catch-condition" xml:space="preserve"><value>Intermediate event catch condition</value></data>
+  <data name="Icon.intermediate-event-catch-error" xml:space="preserve"><value>Intermediate event catch error</value></data>
+  <data name="Icon.intermediate-event-catch-escalation" xml:space="preserve"><value>Intermediate event catch escalation</value></data>
+  <data name="Icon.intermediate-event-catch-link" xml:space="preserve"><value>Intermediate event catch link</value></data>
+  <data name="Icon.intermediate-event-catch-message" xml:space="preserve"><value>Intermediate event catch message</value></data>
+  <data name="Icon.intermediate-event-catch-multiple" xml:space="preserve"><value>Intermediate event catch multiple</value></data>
+  <data name="Icon.intermediate-event-catch-non-interrupting-condition" xml:space="preserve"><value>Intermediate event catch non interrupting condition</value></data>
+  <data name="Icon.intermediate-event-catch-non-interrupting-escalation" xml:space="preserve"><value>Intermediate event catch non interrupting escalation</value></data>
+  <data name="Icon.intermediate-event-catch-non-interrupting-message" xml:space="preserve"><value>Intermediate event catch non interrupting message</value></data>
+  <data name="Icon.intermediate-event-catch-non-interrupting-multiple" xml:space="preserve"><value>Intermediate event catch non interrupting multiple</value></data>
+  <data name="Icon.intermediate-event-catch-non-interrupting-parallel-multiple" xml:space="preserve"><value>Intermediate event catch non interrupting parallel multiple</value></data>
+  <data name="Icon.intermediate-event-catch-non-interrupting-signal" xml:space="preserve"><value>Intermediate event catch non interrupting signal</value></data>
+  <data name="Icon.intermediate-event-catch-non-interrupting-timer" xml:space="preserve"><value>Intermediate event catch non interrupting timer</value></data>
+  <data name="Icon.intermediate-event-catch-parallel-multiple" xml:space="preserve"><value>Intermediate event catch parallel multiple</value></data>
+  <data name="Icon.intermediate-event-catch-signal" xml:space="preserve"><value>Intermediate event catch signal</value></data>
+  <data name="Icon.intermediate-event-catch-timer" xml:space="preserve"><value>Intermediate event catch timer</value></data>
+  <data name="Icon.intermediate-event-throw-compensation" xml:space="preserve"><value>Intermediate event throw compensation</value></data>
+  <data name="Icon.intermediate-event-throw-escalation" xml:space="preserve"><value>Intermediate event throw escalation</value></data>
+  <data name="Icon.intermediate-event-throw-link" xml:space="preserve"><value>Intermediate event throw link</value></data>
+  <data name="Icon.intermediate-event-throw-message" xml:space="preserve"><value>Intermediate event throw message</value></data>
+  <data name="Icon.intermediate-event-throw-multiple" xml:space="preserve"><value>Intermediate event throw multiple</value></data>
+  <data name="Icon.intermediate-event-throw-signal" xml:space="preserve"><value>Intermediate event throw signal</value></data>
+  <data name="Icon.loop-marker" xml:space="preserve"><value>Loop marker</value></data>
+  <data name="Icon.manual" xml:space="preserve"><value>Manual</value></data>
+  <data name="Icon.parallel-mi-marker" xml:space="preserve"><value>Parallel mi marker</value></data>
+  <data name="Icon.receive" xml:space="preserve"><value>Receive</value></data>
+  <data name="Icon.script" xml:space="preserve"><value>Script</value></data>
+  <data name="Icon.send" xml:space="preserve"><value>Send</value></data>
+  <data name="Icon.sequential-mi-marker" xml:space="preserve"><value>Sequential mi marker</value></data>
+  <data name="Icon.service" xml:space="preserve"><value>Service</value></data>
+  <data name="Icon.start-event-condition" xml:space="preserve"><value>Start event condition</value></data>
+  <data name="Icon.start-event-message" xml:space="preserve"><value>Start event message</value></data>
+  <data name="Icon.start-event-multiple" xml:space="preserve"><value>Start event multiple</value></data>
+  <data name="Icon.start-event-non-interrupting-condition" xml:space="preserve"><value>Start event non interrupting condition</value></data>
+  <data name="Icon.start-event-non-interrupting-message" xml:space="preserve"><value>Start event non interrupting message</value></data>
+  <data name="Icon.start-event-non-interrupting-multiple" xml:space="preserve"><value>Start event non interrupting multiple</value></data>
+  <data name="Icon.start-event-non-interrupting-parallel-multiple" xml:space="preserve"><value>Start event non interrupting parallel multiple</value></data>
+  <data name="Icon.start-event-non-interrupting-signal" xml:space="preserve"><value>Start event non interrupting signal</value></data>
+  <data name="Icon.start-event-non-interrupting-timer" xml:space="preserve"><value>Start event non interrupting timer</value></data>
+  <data name="Icon.start-event-parallel-multiple" xml:space="preserve"><value>Start event parallel multiple</value></data>
+  <data name="Icon.start-event-signal" xml:space="preserve"><value>Start event signal</value></data>
+  <data name="Icon.start-event-timer" xml:space="preserve"><value>Start event timer</value></data>
+  <data name="Icon.sub-process-marker" xml:space="preserve"><value>Sub process marker</value></data>
+  <data name="Icon.user" xml:space="preserve"><value>User</value></data>
+  <data name="Schema.Generic.zeebe:AdHoc" xml:space="preserve"><value>Ad Hoc</value></data>
+  <data name="Schema.Generic.zeebe:AgentDefinition" xml:space="preserve"><value>Agent Definition</value></data>
+  <data name="Schema.Generic.zeebe:AssignmentDefinition" xml:space="preserve"><value>Assignment Definition</value></data>
+  <data name="Schema.Generic.zeebe:CalledDecision" xml:space="preserve"><value>Called Decision</value></data>
+  <data name="Schema.Generic.zeebe:CalledElement" xml:space="preserve"><value>Called Element</value></data>
+  <data name="Schema.Generic.zeebe:ConditionalFilter" xml:space="preserve"><value>Conditional Filter</value></data>
+  <data name="Schema.Generic.zeebe:ExecutionListener" xml:space="preserve"><value>Execution Listener</value></data>
+  <data name="Schema.Generic.zeebe:ExecutionListeners" xml:space="preserve"><value>Execution Listeners</value></data>
+  <data name="Schema.Generic.zeebe:FormDefinition" xml:space="preserve"><value>Form Definition</value></data>
+  <data name="Schema.Generic.zeebe:Header" xml:space="preserve"><value>Header</value></data>
+  <data name="Schema.Generic.zeebe:Input" xml:space="preserve"><value>Input</value></data>
+  <data name="Schema.Generic.zeebe:InputOutputParameter" xml:space="preserve"><value>Input Output Parameter</value></data>
+  <data name="Schema.Generic.zeebe:IoMapping" xml:space="preserve"><value>Io Mapping</value></data>
+  <data name="Schema.Generic.zeebe:JobPriorityDefinition" xml:space="preserve"><value>Job Priority Definition</value></data>
+  <data name="Schema.Generic.zeebe:LinkedResource" xml:space="preserve"><value>Linked Resource</value></data>
+  <data name="Schema.Generic.zeebe:LinkedResources" xml:space="preserve"><value>Linked Resources</value></data>
+  <data name="Schema.Generic.zeebe:LoopCharacteristics" xml:space="preserve"><value>Loop Characteristics</value></data>
+  <data name="Schema.Generic.zeebe:Output" xml:space="preserve"><value>Output</value></data>
+  <data name="Schema.Generic.zeebe:PriorityDefinition" xml:space="preserve"><value>Priority Definition</value></data>
+  <data name="Schema.Generic.zeebe:Properties" xml:space="preserve"><value>Properties</value></data>
+  <data name="Schema.Generic.zeebe:Property" xml:space="preserve"><value>Property</value></data>
+  <data name="Schema.Generic.zeebe:Script" xml:space="preserve"><value>Script</value></data>
+  <data name="Schema.Generic.zeebe:Subscription" xml:space="preserve"><value>Subscription</value></data>
+  <data name="Schema.Generic.zeebe:TaskDefinition" xml:space="preserve"><value>Task Definition</value></data>
+  <data name="Schema.Generic.zeebe:TaskHeaders" xml:space="preserve"><value>Task Headers</value></data>
+  <data name="Schema.Generic.zeebe:TaskListener" xml:space="preserve"><value>Task Listener</value></data>
+  <data name="Schema.Generic.zeebe:TaskListeners" xml:space="preserve"><value>Task Listeners</value></data>
+  <data name="Schema.Generic.zeebe:TaskSchedule" xml:space="preserve"><value>Task Schedule</value></data>
+  <data name="Schema.Generic.zeebe:UserTask" xml:space="preserve"><value>User Task</value></data>
+  <data name="Schema.Generic.zeebe:UserTaskForm" xml:space="preserve"><value>User Task Form</value></data>
+  <data name="Schema.Generic.zeebe:VersionTag" xml:space="preserve"><value>Version Tag</value></data>
+  <data name="Schema.Generic.zeebe:activeElementsCollection" xml:space="preserve"><value>active Elements Collection</value></data>
+  <data name="Schema.Generic.zeebe:agentType" xml:space="preserve"><value>agent Type</value></data>
+  <data name="Schema.Generic.zeebe:assignee" xml:space="preserve"><value>assignee</value></data>
+  <data name="Schema.Generic.zeebe:businessId" xml:space="preserve"><value>business Id</value></data>
+  <data name="Schema.Generic.zeebe:candidateGroups" xml:space="preserve"><value>candidate Groups</value></data>
+  <data name="Schema.Generic.zeebe:candidateUsers" xml:space="preserve"><value>candidate Users</value></data>
+  <data name="Schema.Generic.zeebe:correlationKey" xml:space="preserve"><value>correlation Key</value></data>
+  <data name="Schema.Generic.zeebe:decisionId" xml:space="preserve"><value>decision Id</value></data>
+  <data name="Schema.Generic.zeebe:dueDate" xml:space="preserve"><value>due Date</value></data>
+  <data name="Schema.Generic.zeebe:eventType" xml:space="preserve"><value>event Type</value></data>
+  <data name="Schema.Generic.zeebe:expression" xml:space="preserve"><value>expression</value></data>
+  <data name="Schema.Generic.zeebe:externalReference" xml:space="preserve"><value>external Reference</value></data>
+  <data name="Schema.Generic.zeebe:followUpDate" xml:space="preserve"><value>follow Up Date</value></data>
+  <data name="Schema.Generic.zeebe:formId" xml:space="preserve"><value>form Id</value></data>
+  <data name="Schema.Generic.zeebe:formKey" xml:space="preserve"><value>form Key</value></data>
+  <data name="Schema.Generic.zeebe:id" xml:space="preserve"><value>id</value></data>
+  <data name="Schema.Generic.zeebe:inputCollection" xml:space="preserve"><value>input Collection</value></data>
+  <data name="Schema.Generic.zeebe:inputElement" xml:space="preserve"><value>input Element</value></data>
+  <data name="Schema.Generic.zeebe:key" xml:space="preserve"><value>key</value></data>
+  <data name="Schema.Generic.zeebe:linkName" xml:space="preserve"><value>link Name</value></data>
+  <data name="Schema.Generic.zeebe:name" xml:space="preserve"><value>name</value></data>
+  <data name="Schema.Generic.zeebe:outputCollection" xml:space="preserve"><value>output Collection</value></data>
+  <data name="Schema.Generic.zeebe:outputElement" xml:space="preserve"><value>output Element</value></data>
+  <data name="Schema.Generic.zeebe:priority" xml:space="preserve"><value>priority</value></data>
+  <data name="Schema.Generic.zeebe:processId" xml:space="preserve"><value>process Id</value></data>
+  <data name="Schema.Generic.zeebe:processIdExpression" xml:space="preserve"><value>process Id Expression</value></data>
+  <data name="Schema.Generic.zeebe:propagateAllChildVariables" xml:space="preserve"><value>propagate All Child Variables</value></data>
+  <data name="Schema.Generic.zeebe:propagateAllParentVariables" xml:space="preserve"><value>propagate All Parent Variables</value></data>
+  <data name="Schema.Generic.zeebe:resourceId" xml:space="preserve"><value>resource Id</value></data>
+  <data name="Schema.Generic.zeebe:resourceType" xml:space="preserve"><value>resource Type</value></data>
+  <data name="Schema.Generic.zeebe:resultVariable" xml:space="preserve"><value>result Variable</value></data>
+  <data name="Schema.Generic.zeebe:retries" xml:space="preserve"><value>retries</value></data>
+  <data name="Schema.Generic.zeebe:source" xml:space="preserve"><value>source</value></data>
+  <data name="Schema.Generic.zeebe:target" xml:space="preserve"><value>target</value></data>
+  <data name="Schema.Generic.zeebe:type" xml:space="preserve"><value>type</value></data>
+  <data name="Schema.Generic.zeebe:value" xml:space="preserve"><value>value</value></data>
+  <data name="Schema.Generic.zeebe:variableEvents" xml:space="preserve"><value>variable Events</value></data>
+  <data name="Schema.Generic.zeebe:variableNames" xml:space="preserve"><value>variable Names</value></data>
+  <data name="Schema.Generic.camunda:Connector" xml:space="preserve"><value>Connector</value></data>
+  <data name="Schema.Generic.camunda:Constraint" xml:space="preserve"><value>Constraint</value></data>
+  <data name="Schema.Generic.camunda:Entry" xml:space="preserve"><value>Entry</value></data>
+  <data name="Schema.Generic.camunda:ErrorEventDefinition" xml:space="preserve"><value>Error Event Definition</value></data>
+  <data name="Schema.Generic.camunda:ExecutionListener" xml:space="preserve"><value>Execution Listener</value></data>
+  <data name="Schema.Generic.camunda:FailedJobRetryTimeCycle" xml:space="preserve"><value>Failed Job Retry Time Cycle</value></data>
+  <data name="Schema.Generic.camunda:Field" xml:space="preserve"><value>Field</value></data>
+  <data name="Schema.Generic.camunda:FormData" xml:space="preserve"><value>Form Data</value></data>
+  <data name="Schema.Generic.camunda:FormField" xml:space="preserve"><value>Form Field</value></data>
+  <data name="Schema.Generic.camunda:FormProperty" xml:space="preserve"><value>Form Property</value></data>
+  <data name="Schema.Generic.camunda:In" xml:space="preserve"><value>In</value></data>
+  <data name="Schema.Generic.camunda:InOutBinding" xml:space="preserve"><value>In Out Binding</value></data>
+  <data name="Schema.Generic.camunda:InputOutput" xml:space="preserve"><value>Input Output</value></data>
+  <data name="Schema.Generic.camunda:InputOutputParameter" xml:space="preserve"><value>Input Output Parameter</value></data>
+  <data name="Schema.Generic.camunda:InputOutputParameterDefinition" xml:space="preserve"><value>Input Output Parameter Definition</value></data>
+  <data name="Schema.Generic.camunda:InputParameter" xml:space="preserve"><value>Input Parameter</value></data>
+  <data name="Schema.Generic.camunda:List" xml:space="preserve"><value>List</value></data>
+  <data name="Schema.Generic.camunda:Map" xml:space="preserve"><value>Map</value></data>
+  <data name="Schema.Generic.camunda:Out" xml:space="preserve"><value>Out</value></data>
+  <data name="Schema.Generic.camunda:OutputParameter" xml:space="preserve"><value>Output Parameter</value></data>
+  <data name="Schema.Generic.camunda:PotentialStarter" xml:space="preserve"><value>Potential Starter</value></data>
+  <data name="Schema.Generic.camunda:Properties" xml:space="preserve"><value>Properties</value></data>
+  <data name="Schema.Generic.camunda:Property" xml:space="preserve"><value>Property</value></data>
+  <data name="Schema.Generic.camunda:Script" xml:space="preserve"><value>Script</value></data>
+  <data name="Schema.Generic.camunda:TaskListener" xml:space="preserve"><value>Task Listener</value></data>
+  <data name="Schema.Generic.camunda:Validation" xml:space="preserve"><value>Validation</value></data>
+  <data name="Schema.Generic.camunda:Value" xml:space="preserve"><value>Value</value></data>
+  <data name="Schema.Generic.camunda:businessKey" xml:space="preserve"><value>business Key</value></data>
+  <data name="Schema.Generic.camunda:class" xml:space="preserve"><value>class</value></data>
+  <data name="Schema.Generic.camunda:config" xml:space="preserve"><value>config</value></data>
+  <data name="Schema.Generic.camunda:datePattern" xml:space="preserve"><value>date Pattern</value></data>
+  <data name="Schema.Generic.camunda:default" xml:space="preserve"><value>default</value></data>
+  <data name="Schema.Generic.camunda:defaultValue" xml:space="preserve"><value>default Value</value></data>
+  <data name="Schema.Generic.camunda:delegateExpression" xml:space="preserve"><value>delegate Expression</value></data>
+  <data name="Schema.Generic.camunda:event" xml:space="preserve"><value>event</value></data>
+  <data name="Schema.Generic.camunda:expression" xml:space="preserve"><value>expression</value></data>
+  <data name="Schema.Generic.camunda:id" xml:space="preserve"><value>id</value></data>
+  <data name="Schema.Generic.camunda:key" xml:space="preserve"><value>key</value></data>
+  <data name="Schema.Generic.camunda:label" xml:space="preserve"><value>label</value></data>
+  <data name="Schema.Generic.camunda:local" xml:space="preserve"><value>local</value></data>
+  <data name="Schema.Generic.camunda:name" xml:space="preserve"><value>name</value></data>
+  <data name="Schema.Generic.camunda:readable" xml:space="preserve"><value>readable</value></data>
+  <data name="Schema.Generic.camunda:required" xml:space="preserve"><value>required</value></data>
+  <data name="Schema.Generic.camunda:resource" xml:space="preserve"><value>resource</value></data>
+  <data name="Schema.Generic.camunda:scriptFormat" xml:space="preserve"><value>script Format</value></data>
+  <data name="Schema.Generic.camunda:source" xml:space="preserve"><value>source</value></data>
+  <data name="Schema.Generic.camunda:sourceExpression" xml:space="preserve"><value>source Expression</value></data>
+  <data name="Schema.Generic.camunda:stringValue" xml:space="preserve"><value>string Value</value></data>
+  <data name="Schema.Generic.camunda:target" xml:space="preserve"><value>target</value></data>
+  <data name="Schema.Generic.camunda:type" xml:space="preserve"><value>type</value></data>
+  <data name="Schema.Generic.camunda:variable" xml:space="preserve"><value>variable</value></data>
+  <data name="Schema.Generic.camunda:variables" xml:space="preserve"><value>variables</value></data>
+  <data name="Schema.Generic.camunda:writable" xml:space="preserve"><value>writable</value></data>
+  <data name="ReferenceBrowser.OwnerTitle" xml:space="preserve"><value>{0} {1}</value></data>
+  <data name="ReferenceKind.Flownode" xml:space="preserve"><value>Flow node</value></data>
+  <data name="ReferenceKind.SequenceFlow" xml:space="preserve"><value>Sequence Flow</value></data>
+  <data name="ReferenceKind.MessageFlow" xml:space="preserve"><value>Message Flow</value></data>
+  <data name="ReferenceKind.Association" xml:space="preserve"><value>Association</value></data>
+  <data name="ReferenceKind.DataAssociation" xml:space="preserve"><value>Data Association</value></data>
+  <data name="ReferenceKind.TextAnnotation" xml:space="preserve"><value>Text Annotation</value></data>
+  <data name="ReferenceKind.Group" xml:space="preserve"><value>Group</value></data>
+  <data name="ReferenceKind.DataObjectReference" xml:space="preserve"><value>Data Object Reference</value></data>
+  <data name="ReferenceKind.DataStoreReference" xml:space="preserve"><value>Data Store Reference</value></data>
+  <data name="ReferenceKind.DataObject" xml:space="preserve"><value>Data Object</value></data>
+  <data name="ReferenceKind.Participant" xml:space="preserve"><value>Participant</value></data>
+  <data name="ReferenceKind.Laneset" xml:space="preserve"><value>Lane set</value></data>
+  <data name="ReferenceKind.Lane" xml:space="preserve"><value>Lane</value></data>
+  <data name="ReferenceKind.Plane" xml:space="preserve"><value>Plane</value></data>
+  <data name="ReferenceKind.Shape" xml:space="preserve"><value>Shape</value></data>
+  <data name="ReferenceKind.Edge" xml:space="preserve"><value>Edge</value></data>
+  <data name="StencilReason.WithCode" xml:space="preserve"><value>{0}: {1}</value></data>
+</root>

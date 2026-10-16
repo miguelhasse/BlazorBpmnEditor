@@ -1,0 +1,112 @@
+{
+  "$schema": "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
+  "version": 1,
+  "appliesTo": [
+    "bpmn:Task"
+  ],
+  "elementType": {
+    "value": "bpmn:ServiceTask"
+  },
+  "engines": {
+    "camunda": ">=8.6.0 <9.0.0"
+  },
+  "category": {
+    "id": "demo",
+    "name": "Demo connectors"
+  },
+  "id": "demo.http",
+  "name": "HTTP request",
+  "description": "Sample HTTP worker with conditional authentication.",
+  "icon": {
+    "contents": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Ccircle cx='9' cy='9' r='8' fill='%230b6bcb'/%3E%3Cpath d='M1 9h16M9 1c3 3 3 13 0 16M9 1c-3 3-3 13 0 16' stroke='white' stroke-width='1.2' fill='none'/%3E%3C/svg%3E"
+  },
+  "groups": [
+    {
+      "id": "request",
+      "label": "Request",
+      "tooltip": "Configure HTTP request",
+      "openByDefault": true
+    },
+    {
+      "id": "auth",
+      "label": "Authentication",
+      "openByDefault": false
+    }
+  ],
+  "properties": [
+    {
+      "type": "Hidden",
+      "value": "demo-http",
+      "binding": {
+        "type": "zeebe:taskDefinition",
+        "property": "type"
+      }
+    },
+    {
+      "id": "url",
+      "label": "URL",
+      "group": "request",
+      "type": "String",
+      "value": "https://example.invalid",
+      "constraints": {
+        "notEmpty": true,
+        "pattern": {
+          "value": "^https?://",
+          "message": "Use an HTTP or HTTPS URL."
+        }
+      },
+      "binding": {
+        "type": "zeebe:input",
+        "name": "url"
+      }
+    },
+    {
+      "id": "authentication",
+      "label": "Authentication",
+      "group": "auth",
+      "type": "Dropdown",
+      "value": "none",
+      "choices": [
+        {
+          "name": "None",
+          "value": "none"
+        },
+        {
+          "name": "API key",
+          "value": "key"
+        }
+      ],
+      "binding": {
+        "type": "zeebe:input",
+        "name": "authentication"
+      }
+    },
+    {
+      "id": "apiKey",
+      "label": "API key",
+      "group": "auth",
+      "type": "String",
+      "condition": {
+        "property": "authentication",
+        "equals": "key"
+      },
+      "constraints": {
+        "notEmpty": true
+      },
+      "binding": {
+        "type": "zeebe:input",
+        "name": "apiKey"
+      }
+    },
+    {
+      "type": "Hidden",
+      "generatedValue": {
+        "type": "uuid"
+      },
+      "binding": {
+        "type": "zeebe:taskHeader",
+        "key": "request-id"
+      }
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="ru" original="../DemoStrings.resx">
+    <body>
+      <trans-unit id="Error.Description">
+        <source>An error occurred while processing your request.</source>
+        <target state="translated">При обработке запроса произошла ошибка.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.DevelopmentDetails">
+        <source>Swapping to the {0} environment will display more detailed information about the error that occurred.</source>
+        <target state="translated">Переключение на среду {0} отобразит более подробные сведения о возникшей ошибке.</target>
+        <note>{0} is the invariant environment name Development.</note>
+      </trans-unit>
+      <trans-unit id="Error.DevelopmentMode">
+        <source>Development Mode</source>
+        <target state="translated">Режим разработки</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.DevelopmentWarning">
+        <source>The {0} environment shouldn't be enabled for deployed applications.</source>
+        <target state="translated">Среду {0} не следует включать в развёрнутых приложениях.</target>
+        <note>{0} is the invariant environment name Development.</note>
+      </trans-unit>
+      <trans-unit id="Error.Heading">
+        <source>Error.</source>
+        <target state="translated">Ошибка.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.LocalDebugging">
+        <source>For local debugging, enable the {0} environment by setting the {1} environment variable to {0} and restarting the app.</source>
+        <target state="translated">Для локальной отладки включите среду {0}, задав переменной среды {1} значение {0}, и перезапустите приложение.</target>
+        <note>{0} is Development; {1} is ASPNETCORE_ENVIRONMENT. Do not translate these argument values.</note>
+      </trans-unit>
+      <trans-unit id="Error.RequestId">
+        <source>Request ID:</source>
+        <target state="translated">Идентификатор запроса:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.SensitiveInformation">
+        <source>It can result in displaying sensitive information from exceptions to end users.</source>
+        <target state="translated">Это может привести к отображению конфиденциальной информации об исключениях конечным пользователям.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.Title">
+        <source>Error</source>
+        <target state="translated">Ошибка</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.AboutBlazor">
+        <source>About Blazor</source>
+        <target state="translated">О Blazor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Dismiss">
+        <source>Dismiss</source>
+        <target state="translated">Закрыть</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Documentation">
+        <source>Documentation and demos</source>
+        <target state="translated">Документация и демонстрации</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Reload">
+        <source>Reload</source>
+        <target state="translated">Перезагрузить</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Title">
+        <source>BPMN Demo</source>
+        <target state="translated">Демо BPMN</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.UnhandledError">
+        <source>An unhandled error has occurred.</source>
+        <target state="translated">Произошла необработанная ошибка.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NotFound.Description">
+        <source>Sorry, the content you are looking for does not exist.</source>
+        <target state="translated">К сожалению, запрашиваемое содержимое не существует.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NotFound.Title">
+        <source>Not Found</source>
+        <target state="translated">Не найдено</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Failed">
+        <source>Failed to rejoin. Please retry or reload the page.</source>
+        <target state="translated">Не удалось подключиться повторно. Повторите попытку или перезагрузите страницу.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Paused">
+        <source>The session has been paused by the server.</source>
+        <target state="translated">Сеанс приостановлен сервером.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Rejoining">
+        <source>Rejoining the server...</source>
+        <target state="translated">Повторное подключение к серверу...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Resume">
+        <source>Resume</source>
+        <target state="translated">Возобновить</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.ResumeFailed">
+        <source>Failed to resume the session. Please reload the page.</source>
+        <target state="translated">Не удалось возобновить сеанс. Перезагрузите страницу.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Retry">
+        <source>Retry</source>
+        <target state="translated">Повторить</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.RetryIn">
+        <source>Rejoin failed... trying again in {0} seconds.</source>
+        <target state="translated">Не удалось подключиться повторно... следующая попытка через {0} с.</target>
+        <note>{0} is replaced by the live countdown element; preserve the placeholder.</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

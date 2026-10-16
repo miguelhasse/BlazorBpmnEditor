@@ -1,0 +1,40 @@
+%% Build and asset pipeline
+%% dotnet build invokes both JavaScript SDK projects; dotnet pack ships the RCL static web assets.
+%% Both esproj files: DebugAssetsDirectory = dist/; BuildCommand = npm run build -- --build-mode=$(Configuration).
+%% icons:verify is a separate verification command (also in npm check), not part of the normal npm prebuild.
+flowchart TB
+    npm["Bpmn.Scripts<br/>JavaScript SDK project<br/>npm prebuild: tsc + eslint<br/>Build: esbuild + bundle checks"]:::js
+    dist["Bpmn.Scripts/dist/<br/>Core JS + CSS + manifest"]:::data
+    source["StaticWebAssetSourceId<br/>Hasseware.AspNetCore.<br/>Components.Bpmn"]:::data
+    core["Bpmn<br/>Razor class library<br/>_content/Hasseware.AspNetCore.<br/>Components.Bpmn/..."]:::cs
+    fnpm["Bpmn.Feel.Scripts<br/>JavaScript SDK project<br/>npm prebuild: tsc + eslint<br/>Build: esbuild + license notices"]:::js
+    fdist["Bpmn.Feel.Scripts/dist/<br/>feel-editor.js"]:::data
+    fsource["StaticWebAssetSourceId<br/>Hasseware.AspNetCore.<br/>Components.Bpmn.Feel"]:::data
+    feel["Bpmn.Feel<br/>Razor class library<br/>_content/Hasseware.AspNetCore.<br/>Components.Bpmn.Feel/..."]:::cs
+    rules["rules/bpmn-rules.json<br/>AdditionalFiles + TS import"]:::data
+    generator["Bpmn.RulesGenerator<br/>BpmnRulesGenerator<br/>Roslyn source generator<br/>BpmnRules.g.cs"]:::cs
+    pack["dotnet build / pack<br/>RCL assemblies + assets<br/>NuGet consumption: no npm"]:::cs
+    kits["Standard + Fluent editor RCLs<br/>Independent Core references<br/>Kit markup + styles"]:::cs
+    resources["RESX + XLIFF resources<br/>Microsoft.DotNet.XliffTasks<br/>Core + both UI kits"]:::data
+    icons["icons/<br/>Glyph sources + manifest"]:::data
+    verify["npm run icons:verify<br/>Generated manifest check<br/>C# embeds / TS imports JSON"]:::js
+    npm --> dist
+    dist --> source
+    source --> core
+    fnpm --> fdist
+    fdist --> fsource
+    fsource --> feel
+    rules --> generator
+    generator --> core
+    core --> pack
+    feel --> pack
+    core --> kits
+    kits --> pack
+    resources --> core
+    resources --> kits
+    icons --> verify
+    icons -.->|"generated manifest input"| npm
+    classDef cs fill:#a5d8ff,stroke:#343a40,color:#212529
+    classDef js fill:#ffec99,stroke:#343a40,color:#212529
+    classDef data fill:#b2f2bb,stroke:#343a40,color:#212529
+    classDef test fill:#e9ecef,stroke:#343a40,color:#212529

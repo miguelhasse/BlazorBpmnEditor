@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1170" role="img" aria-labelledby="title desc">
+  <title id="title">Import and export</title>
+  <desc id="desc">XML and JSON readers produce a preview and validation report. A kit dialog accepts or rejects import through the session. Writers export the immutable document as BPMN XML or versioned JSON.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="140%"><feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity=".13"/></filter>
+    <style>
+      text { font-family: Segoe UI, Arial, sans-serif; font-size: 16px; } text:not([fill]) { fill: #1e293b; }
+      .cs { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.5; filter: url(#shadow); }
+      .kit { fill: #fdf4ff; stroke: #7c3aed; stroke-width: 1.5; filter: url(#shadow); }
+      .data { fill: #f0fdf4; stroke: #059669; stroke-width: 1.5; filter: url(#shadow); }
+      .edge { fill: none; stroke: #2563eb; stroke-width: 2; marker-end: url(#arrow); }
+      .heading { font-size: 24px; font-weight: 700; } .name { font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="1100" height="1170" fill="#f8fafc"/>
+  <text x="550" y="38" text-anchor="middle" class="heading">Import and export</text>
+  <text x="550" y="64" text-anchor="middle" fill="#64748b">Preview first. Accepting import replaces document and resets edit history.</text>
+  <line x1="40" y1="84" x2="1060" y2="84" stroke="#e2e8f0" stroke-width="1.5"/>
+  <path class="edge" d="M550 200V225H290V250"/>
+  <path class="edge" d="M550 200V225H810V250"/>
+  <path class="edge" d="M290 350V380H550V410"/>
+  <path class="edge" d="M810 350V380H550V410"/>
+  <path class="edge" d="M550 530V575"/>
+  <path class="edge" d="M760 625H815V700H740V730"/>
+  <text x="825" y="706">accept</text>
+  <path class="edge" d="M790 780H1030V885H1020"/>
+  <path class="edge" d="M580 830V885H340"/>
+  <path class="edge" d="M210 950V1000"/>
+  <path class="edge" d="M890 950V1000"/>
+  <g transform="translate(340 110)"><rect class="cs" width="420" height="90" rx="8"/>
+    <text x="210" y="32" text-anchor="middle"><tspan class="name">BpmnFileFormats.Detect</tspan><tspan x="210" dy="26">Content first; extension fallback</tspan></text>
+  </g>
+  <g transform="translate(80 250)"><rect class="cs" width="420" height="100" rx="8"/>
+    <text x="210" y="31" text-anchor="middle"><tspan class="name">BpmnXmlReader</tspan><tspan x="210" dy="26">BPMN XML</tspan><tspan x="210" dy="26">Optional preloaded XSD</tspan></text>
+  </g>
+  <g transform="translate(600 250)"><rect class="cs" width="420" height="100" rx="8"/>
+    <text x="210" y="31" text-anchor="middle"><tspan class="name">BpmnJsonReader</tspan><tspan x="210" dy="26">Default limit: 64 MiB</tspan><tspan x="210" dy="26">Maximum depth: 256</tspan></text>
+  </g>
+  <g transform="translate(340 410)"><rect class="cs" width="420" height="120" rx="8"/>
+    <text x="210" y="29" text-anchor="middle"><tspan class="name">BpmnEditorSession (Core)</tspan><tspan x="210" dy="25">BpmnImportPreview</tspan><tspan x="210" dy="25">Document and import diagnostics</tspan><tspan x="210" dy="25">BpmnValidator report</tspan></text>
+  </g>
+  <g transform="translate(340 575)"><rect class="kit" width="420" height="100" rx="8"/>
+    <text x="210" y="31" text-anchor="middle"><tspan class="name">Standard / Fluent import dialog</tspan><tspan x="210" dy="26">BpmnImportOfferBase</tspan><tspan x="210" dy="26">Accept / reject via session</tspan></text>
+  </g>
+  <g transform="translate(370 730)"><rect class="data" width="420" height="100" rx="8"/>
+    <text x="210" y="31" text-anchor="middle"><tspan class="name">BpmnDocument</tspan><tspan x="210" dy="26">Immutable semantic + BPMNDI model</tspan><tspan x="210" dy="26">Source of truth for export</tspan></text>
+  </g>
+  <g transform="translate(80 855)"><rect class="cs" width="260" height="95" rx="8"/>
+    <text x="130" y="32" text-anchor="middle"><tspan class="name">BpmnJsonWriter</tspan><tspan x="130" dy="26">Versioned JSON envelope</tspan></text>
+  </g>
+  <g transform="translate(760 855)"><rect class="cs" width="260" height="95" rx="8"/>
+    <text x="130" y="32" text-anchor="middle"><tspan class="name">BpmnXmlWriter</tspan><tspan x="130" dy="26">Canonical / Fidelity</tspan></text>
+  </g>
+  <g transform="translate(80 1000)"><rect class="data" width="420" height="110" rx="8"/>
+    <text x="210" y="29" text-anchor="middle"><tspan class="name">JSON interchange</tspan><tspan x="210" dy="25">format: hasseware.bpmn</tspan><tspan x="210" dy="25">version: 1.0 · document</tspan></text>
+  </g>
+  <g transform="translate(600 1000)"><rect class="data" width="420" height="110" rx="8"/>
+    <text x="210" y="29" text-anchor="middle"><tspan class="name">BPMN 2.0 XML</tspan><tspan x="210" dy="25">BpmnExportResult diagnostics</tspan><tspan x="210" dy="25">Fidelity fallback is diagnosed</tspan></text>
+  </g>
+</svg>

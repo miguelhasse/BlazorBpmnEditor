@@ -1,0 +1,31 @@
+<Solution>
+  <Folder Name="/Components/">
+    <Project Path="src/Bpmn.Feel.Scripts/Hasseware.AspNetCore.Components.Bpmn.Feel.Scripts.esproj">
+      <Build />
+      <Deploy />
+    </Project>
+    <Project Path="src/Bpmn.Feel/Hasseware.AspNetCore.Components.Bpmn.Feel.csproj" />
+    <Project Path="src/Bpmn.RulesGenerator/Hasseware.AspNetCore.Components.Bpmn.RulesGenerator.csproj" />
+    <Project Path="src/Bpmn.Scripts/Hasseware.AspNetCore.Components.Bpmn.Scripts.esproj">
+      <Build />
+      <Deploy />
+    </Project>
+    <Project Path="src/Bpmn/Hasseware.AspNetCore.Components.Bpmn.csproj" />
+    <Project Path="src/Bpmn.Scripting.CSharp/Hasseware.AspNetCore.Components.Bpmn.Scripting.CSharp.csproj" />
+    <Project Path="src/Bpmn.Scripting.JavaScript/Hasseware.AspNetCore.Components.Bpmn.Scripting.JavaScript.csproj" />
+    <Project Path="src/Bpmn.Scripting.Lua/Hasseware.AspNetCore.Components.Bpmn.Scripting.Lua.csproj" />
+    <Project Path="src/BpmnEditor/Hasseware.AspNetCore.Components.BpmnEditor.csproj" />
+    <Project Path="src/FluentUI.BpmnEditor/Hasseware.FluentUI.AspNetCore.Components.BpmnEditor.csproj" />
+  </Folder>
+  <Folder Name="/Playground/">
+    <Project Path="playground/Bpmn.Demo.Client/Bpmn.Demo.Client.csproj" />
+    <Project Path="playground/Bpmn.Demo/Bpmn.Demo.csproj" />
+  </Folder>
+  <Folder Name="/Testing/">
+    <Project Path="tests/Bpmn.Benchmarks/Hasseware.AspNetCore.Components.Bpmn.Benchmarks.csproj" />
+    <Project Path="tests/Bpmn.E2E.Tests/Hasseware.AspNetCore.Components.Bpmn.E2E.Tests.csproj" />
+    <Project Path="tests/Bpmn.Editor.Tests/Hasseware.AspNetCore.Components.BpmnEditor.Tests.csproj" />
+    <Project Path="tests/Bpmn.FluentEditor.Tests/Hasseware.FluentUI.AspNetCore.Components.BpmnEditor.Tests.csproj" />
+    <Project Path="tests/Bpmn.Tests/Hasseware.AspNetCore.Components.Bpmn.Tests.csproj" />
+  </Folder>
+</Solution>

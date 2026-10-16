@@ -1,0 +1,53 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnShortcutHelpBase
+
+@*
+    Its own overlay rather than a Fluent UI dialog. A service-backed dialog needs the host to have
+    added FluentDialogProvider to its layout, and when it has not the call fails silently — a
+    library component that disappears depending on the host's layout is worse than one that owns
+    its own markup.
+*@
+@if (IsVisible)
+{
+    <div class="@CssClass("bpmn-shortcut-help")" @attributes="AdditionalAttributes" @onkeydown="HandleKeyDownAsync" @onkeydown:stopPropagation="true">
+        <div class="bpmn-shortcut-help__backdrop" @onclick="CloseAsync"></div>
+
+        <div class="bpmn-shortcut-help__panel"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="@($"{Id}-title")">
+            <h2 class="bpmn-shortcut-help__title" id="@($"{Id}-title")">@EffectiveTitle</h2>
+
+            @if (Groups.Count == 0)
+            {
+                <p class="bpmn-shortcut-help__empty">@EmptyMessage</p>
+            }
+            else
+            {
+                <dl class="bpmn-shortcut-help__list">
+                    @foreach (var group in Groups)
+                    {
+                        <div class="bpmn-shortcut-help__row">
+                            <dt>
+                                @foreach (var (keys, index) in group.Keys.Select((k, i) => (k, i)))
+                                {
+                                    @if (index > 0)
+                                    {
+                                        <span class="bpmn-shortcut-help__or"> @OrText </span>
+                                    }
+                                    <kbd>@keys</kbd>
+                                }
+                            </dt>
+                            <dd>@group.Description</dd>
+                        </div>
+                    }
+                </dl>
+            }
+
+            <button type="button"
+                    class="bpmn-shortcut-help__close"
+                    @ref="CloseButton"
+                    @onclick="CloseAsync">@CloseText</button>
+        </div>
+    </div>
+}

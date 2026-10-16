@@ -1,0 +1,437 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file datatype="xml" source-language="en" target-language="zh-Hant" original="../BpmnCanvasStrings.resx">
+    <body>
+      <trans-unit id="AriaLabel">
+        <source>BPMN diagram canvas</source>
+        <target state="translated">BPMN 圖表畫布</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ConnectionNotAllowed">
+        <source>This connection is not allowed.</source>
+        <target state="translated">不允許此連線。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Connector.Many">
+        <source>{0} connectors</source>
+        <target state="translated">{0} 條連接線</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Connector.One">
+        <source>{0} connector</source>
+        <target state="translated">{0} 條連接線</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Diagram">
+        <source>Diagram</source>
+        <target state="translated">圖表</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementName">
+        <source>{0}: {1}</source>
+        <target state="translated">{0}：{1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Expand">
+        <source>Expand sub-process</source>
+        <target state="translated">展開子流程</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExpandNamed">
+        <source>Expand sub-process {0}</source>
+        <target state="translated">展開子流程 {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Incident.Many">
+        <source>{0} incidents</source>
+        <target state="translated">{0} 個事件單</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Incident.One">
+        <source>{0} incident</source>
+        <target state="translated">{0} 個事件單</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="IncidentMessage">
+        <source>{0}: {1}</source>
+        <target state="translated">{0}：{1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListSeparator">
+        <source>, </source>
+        <target state="translated">、</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-002">
+        <source>Group cannot be a connector endpoint (visual grouping only).</source>
+        <target state="translated">群組不能作為連接線端點（僅用於視覺分組）。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-002b">
+        <source>Group cannot be a connector endpoint (visual grouping only).</source>
+        <target state="translated">群組不能作為連接線端點（僅用於視覺分組）。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-003">
+        <source>Text Annotation connects only via (undirected) Association, never Data Association.</source>
+        <target state="translated">文字註解只能透過（無方向的）關聯連接，不能使用資料關聯。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-004">
+        <source>Data Object/Data Store connect only via Data Association, never a plain Association.</source>
+        <target state="translated">資料物件／資料儲存只能透過資料關聯連接，不能使用一般關聯。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-005">
+        <source>Data Input Association direction is Data Object/Store/Property to an Activity or Throwing Event input.</source>
+        <target state="translated">資料輸入關聯的方向必須是從資料物件／資料儲存／屬性到活動或拋出事件的輸入。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-006">
+        <source>Data Output Association direction is an Activity or Catching Event output to a Data Object/Store/Property.</source>
+        <target state="translated">資料輸出關聯的方向必須是從活動或捕捉事件的輸出到資料物件／資料儲存／屬性。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-001">
+        <source>Source and target must be InteractionNodes: Participant/Pool, Activity, or Event.</source>
+        <target state="translated">來源與目標必須是互動節點：參與者／池、活動或事件。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-002">
+        <source>Source and target must be in different Participants/Pools.</source>
+        <target state="translated">來源與目標必須位於不同的參與者／池。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-003">
+        <source>Gateways are never Message Flow endpoints.</source>
+        <target state="translated">閘道不能作為訊息流的端點。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-004">
+        <source>Lanes, Data Objects, Groups, and Text Annotations are never Message Flow endpoints.</source>
+        <target state="translated">泳道、資料物件、群組與文字註解不能作為訊息流的端點。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-006">
+        <source>Target must not be an End Event.</source>
+        <target state="translated">目標不能是結束事件。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-007">
+        <source>Source Event must be message-throwing (Message Intermediate Throw, Message End, or Multiple with a message result).</source>
+        <target state="translated">來源事件必須是訊息拋出型（訊息中間拋出、訊息結束，或結果為訊息的多重事件）。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-008">
+        <source>Target Event must be message-catching (Message Start, Message Intermediate Catch, Message Boundary, or Multiple/Parallel Multiple with a message trigger).</source>
+        <target state="translated">目標事件必須是訊息捕捉型（訊息開始、訊息中間捕捉、訊息邊界，或觸發類型為訊息的多重／平行多重事件）。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-001">
+        <source>Sequence Flow source and target must be a FlowNode (Event, Activity, or Gateway).</source>
+        <target state="translated">順序流的來源與目標必須是流程節點（事件、活動或閘道）。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-002">
+        <source>Source must not be an End Event.</source>
+        <target state="translated">來源不能是結束事件。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-003">
+        <source>Target must not be a Start Event.</source>
+        <target state="translated">目標不能是開始事件。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-004">
+        <source>Target must not be a Boundary Event.</source>
+        <target state="translated">目標不能是邊界事件。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-005">
+        <source>Source/target must not be an Event Sub-Process — it has no external Sequence Flow.</source>
+        <target state="translated">來源／目標不能是事件子流程 — 它沒有外部順序流。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-006">
+        <source>Sequence Flow must not cross a Pool/Participant boundary (poolId mismatch).</source>
+        <target state="translated">順序流不能跨越池／參與者邊界（poolId 不符）。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-007">
+        <source>Sequence Flow must not cross a Sub-Process containment boundary (containerId mismatch).</source>
+        <target state="translated">順序流不能跨越子流程的包含邊界（containerId 不符）。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-008">
+        <source>Source must not be a Compensation Boundary Event (use an Association to the handler instead).</source>
+        <target state="translated">來源不能是補償邊界事件（請改用關聯連到處理常式）。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-009">
+        <source>Source/target must not be a compensation Activity (isForCompensation=true) reached via normal flow.</source>
+        <target state="translated">來源／目標不能是透過一般流程到達的補償活動（isForCompensation=true）。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-011">
+        <source>Event-Based Gateway outgoing target must be a catching Message/Timer/Signal/Conditional event or a Receive Task.</source>
+        <target state="translated">事件型閘道的外送目標必須是捕捉型的訊息／計時器／訊號／條件事件，或接收任務。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-012">
+        <source>Event-Based Gateway outgoing Sequence Flow must not carry a condition expression.</source>
+        <target state="translated">事件型閘道的外送順序流不能帶有條件運算式。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-013">
+        <source>Parallel Gateway outgoing Sequence Flow must not carry a condition.</source>
+        <target state="translated">平行閘道的外送順序流不能帶有條件。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-014">
+        <source>isDefault may only be set on a flow sourced from an Activity, or an Exclusive/Inclusive/Complex Gateway.</source>
+        <target state="translated">isDefault 只能設定在來源為活動，或互斥／包容／複雜閘道的流上。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-016">
+        <source>Conditional Sequence Flow must not be sourced from a Parallel or Event-Based Gateway.</source>
+        <target state="translated">條件順序流的來源不能是平行閘道或事件型閘道。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-017">
+        <source>Source must not be a Link Intermediate Throw Event — it continues at its paired Link catch, not by Sequence Flow.</source>
+        <target state="translated">來源不能是連結中間拋出事件 — 它會在與之配對的連結捕捉處繼續，而非透過順序流。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-018">
+        <source>Target must not be a Link Intermediate Catch Event — it is reached from its paired Link throw, not by Sequence Flow.</source>
+        <target state="translated">目標不能是連結中間捕捉事件 — 它是從與之配對的連結拋出處到達，而非透過順序流。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shape.Many">
+        <source>{0} shapes</source>
+        <target state="translated">{0} 個圖形</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shape.One">
+        <source>{0} shape</source>
+        <target state="translated">{0} 個圖形</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Active">
+        <source>Active</source>
+        <target state="translated">作用中</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Canceled">
+        <source>Canceled</source>
+        <target state="translated">已取消</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Completed">
+        <source>Completed</source>
+        <target state="translated">已完成</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Failed">
+        <source>Failed</source>
+        <target state="translated">失敗</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Waiting">
+        <source>Waiting</source>
+        <target state="translated">等待中</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Summary">
+        <source>{0}: {1}, {2}.</source>
+        <target state="translated">{0}：{1}，{2}。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Token.Many">
+        <source>{0} tokens</source>
+        <target state="translated">{0} 個權杖</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Token.One">
+        <source>{0} token</source>
+        <target state="translated">{0} 個權杖</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.adHocSubProcess">
+        <source>Ad Hoc Sub Process</source>
+        <target state="translated">臨機子流程</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.association">
+        <source>Association</source>
+        <target state="translated">關聯</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.boundaryEvent">
+        <source>Boundary Event</source>
+        <target state="translated">邊界事件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.businessRuleTask">
+        <source>Business Rule Task</source>
+        <target state="translated">商業規則任務</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.callActivity">
+        <source>Call Activity</source>
+        <target state="translated">呼叫活動</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.complexGateway">
+        <source>Complex Gateway</source>
+        <target state="translated">複雜閘道</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.connector">
+        <source>Connector</source>
+        <target state="translated">連接線</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.dataAssociation">
+        <source>Data Association</source>
+        <target state="translated">資料關聯</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.dataObjectReference">
+        <source>Data Object Reference</source>
+        <target state="translated">資料物件參照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.dataStoreReference">
+        <source>Data Store Reference</source>
+        <target state="translated">資料儲存參照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.element">
+        <source>Element</source>
+        <target state="translated">元素</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.endEvent">
+        <source>End Event</source>
+        <target state="translated">結束事件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.eventBasedGateway">
+        <source>Event Based Gateway</source>
+        <target state="translated">事件型閘道</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.eventSubProcess">
+        <source>Event Sub Process</source>
+        <target state="translated">事件子流程</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.exclusiveGateway">
+        <source>Exclusive Gateway</source>
+        <target state="translated">互斥閘道</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.group">
+        <source>Group</source>
+        <target state="translated">群組</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.inclusiveGateway">
+        <source>Inclusive Gateway</source>
+        <target state="translated">包容閘道</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.intermediateCatchEvent">
+        <source>Intermediate Catch Event</source>
+        <target state="translated">中間捕捉事件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.intermediateThrowEvent">
+        <source>Intermediate Throw Event</source>
+        <target state="translated">中間拋出事件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.lane">
+        <source>Lane</source>
+        <target state="translated">泳道</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.manualTask">
+        <source>Manual Task</source>
+        <target state="translated">手動任務</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.messageFlow">
+        <source>Message Flow</source>
+        <target state="translated">訊息流</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.parallelGateway">
+        <source>Parallel Gateway</source>
+        <target state="translated">平行閘道</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.pool">
+        <source>Pool</source>
+        <target state="translated">池</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.receiveTask">
+        <source>Receive Task</source>
+        <target state="translated">接收任務</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.scriptTask">
+        <source>Script Task</source>
+        <target state="translated">指令碼任務</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.sendTask">
+        <source>Send Task</source>
+        <target state="translated">傳送任務</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.sequenceFlow">
+        <source>Sequence Flow</source>
+        <target state="translated">順序流</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.serviceTask">
+        <source>Service Task</source>
+        <target state="translated">服務任務</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.startEvent">
+        <source>Start Event</source>
+        <target state="translated">開始事件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.subProcess">
+        <source>Sub Process</source>
+        <target state="translated">子流程</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.task">
+        <source>Task</source>
+        <target state="translated">任務</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.textAnnotation">
+        <source>Text Annotation</source>
+        <target state="translated">文字註解</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.transaction">
+        <source>Transaction</source>
+        <target state="translated">交易</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.userTask">
+        <source>User Task</source>
+        <target state="translated">使用者任務</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

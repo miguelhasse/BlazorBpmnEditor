@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Every global definition in specification section 1.0 that this editor types, each one actually
+     referenced by something drawn, so a round trip that loses one leaves a dangling reference. -->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_GlobalCatalog" targetNamespace="http://hasseware.dev/bpmn" expressionLanguage="http://www.w3.org/1999/XPath" typeLanguage="http://www.w3.org/2001/XMLSchema">
+  <itemDefinition id="Item_Order" structureRef="acme:Order" itemKind="Information" />
+  <itemDefinition id="Item_Lines" structureRef="acme:OrderLine" isCollection="true" />
+  <message id="Message_OrderPlaced" name="Order Placed" itemRef="Item_Order" />
+  <message id="Message_Confirmed" name="Confirmed" />
+  <signal id="Signal_Cancelled" name="Cancelled" structureRef="Item_Order" />
+  <error id="Error_OutOfStock" name="Out Of Stock" errorCode="STOCK-01" structureRef="Item_Order" />
+  <escalation id="Escalation_Delayed" name="Delayed" escalationCode="ESC-07" />
+  <dataStore id="DataStore_Orders" name="Orders" capacity="1000" isUnlimited="false" itemSubjectRef="Item_Order" />
+  <category id="Category_Fulfilment" name="Fulfilment">
+    <categoryValue id="CategoryValue_Picking" value="Picking" />
+  </category>
+  <resource id="Resource_Picker" name="Picker" />
+  <interface id="Interface_Warehouse" name="Warehouse" implementationRef="##WebService">
+    <operation id="Operation_Reserve" name="reserve">
+      <inMessageRef>Message_OrderPlaced</inMessageRef>
+      <outMessageRef>Message_Confirmed</outMessageRef>
+    </operation>
+  </interface>
+  <globalUserTask id="GlobalTask_Approve" name="Approve Manually" />
+  <process id="Process_Catalog" name="Catalogue" isExecutable="false" processType="Private" isClosed="false">
+    <dataObject id="DataObject_Lines" name="Order Lines" isCollection="true" itemSubjectRef="Item_Lines" />
+    <dataObjectReference id="DataObjectReference_Lines" name="Order Lines" dataObjectRef="DataObject_Lines">
+      <dataState name="validated" />
+    </dataObjectReference>
+    <dataStoreReference id="DataStoreReference_Orders" name="Orders" dataStoreRef="DataStore_Orders" />
+    <startEvent id="Event_Start" name="Order Placed">
+      <messageEventDefinition id="MessageDefinition_Start" messageRef="Message_OrderPlaced" />
+    </startEvent>
+    <exclusiveGateway id="Gateway_Stock" name="In stock?" default="Flow_GatewayToApprove" />
+    <callActivity id="CallActivity_Approve" name="Approve" calledElement="GlobalTask_Approve" />
+    <boundaryEvent id="Event_OutOfStock" name="Out of stock" attachedToRef="CallActivity_Approve" cancelActivity="true">
+      <errorEventDefinition id="ErrorDefinition_Stock" errorRef="Error_OutOfStock" />
+    </boundaryEvent>
+    <intermediateCatchEvent id="Event_Wait" name="Wait">
+      <timerEventDefinition id="TimerDefinition_Wait">
+        <timeDuration>PT30M</timeDuration>
+      </timerEventDefinition>
+    </intermediateCatchEvent>
+    <intermediateThrowEvent id="Event_Escalate" name="Escalate">
+      <escalationEventDefinition id="EscalationDefinition_Late" escalationRef="Escalation_Delayed" />
+    </intermediateThrowEvent>
+    <endEvent id="Event_End" name="Cancelled">
+      <signalEventDefinition id="SignalDefinition_End" signalRef="Signal_Cancelled" />
+    </endEvent>
+    <group id="Group_Picking" categoryValueRef="CategoryValue_Picking" />
+    <textAnnotation id="Annotation_1" textFormat="text/plain">
+      <text>Catalogue coverage fixture</text>
+    </textAnnotation>
+    <association id="Association_1" sourceRef="Annotation_1" targetRef="Gateway_Stock" associationDirection="One" />
+    <sequenceFlow id="Flow_StartToGateway" sourceRef="Event_Start" targetRef="Gateway_Stock" />
+    <sequenceFlow id="Flow_GatewayToApprove" sourceRef="Gateway_Stock" targetRef="CallActivity_Approve" />
+    <sequenceFlow id="Flow_GatewayToWait" name="No" sourceRef="Gateway_Stock" targetRef="Event_Wait">
+      <conditionExpression xsi:type="tFormalExpression" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">${stock == 0}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_WaitToEscalate" sourceRef="Event_Wait" targetRef="Event_Escalate" />
+    <sequenceFlow id="Flow_EscalateToEnd" sourceRef="Event_Escalate" targetRef="Event_End" />
+    <sequenceFlow id="Flow_ApproveToEnd" sourceRef="CallActivity_Approve" targetRef="Event_End" />
+  </process>
+  <bpmndi:BPMNDiagram id="Diagram_Catalog">
+    <bpmndi:BPMNPlane id="Plane_Catalog" bpmnElement="Process_Catalog">
+      <bpmndi:BPMNShape id="Shape_Start" bpmnElement="Event_Start">
+        <dc:Bounds x="140" y="180" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway" bpmnElement="Gateway_Stock" isMarkerVisible="true">
+        <dc:Bounds x="240" y="173" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Approve" bpmnElement="CallActivity_Approve">
+        <dc:Bounds x="350" y="158" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_OutOfStock" bpmnElement="Event_OutOfStock">
+        <dc:Bounds x="382" y="220" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Wait" bpmnElement="Event_Wait">
+        <dc:Bounds x="247" y="300" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Escalate" bpmnElement="Event_Escalate">
+        <dc:Bounds x="382" y="300" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_End" bpmnElement="Event_End">
+        <dc:Bounds x="520" y="180" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lines" bpmnElement="DataObjectReference_Lines">
+        <dc:Bounds x="152" y="300" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Orders" bpmnElement="DataStoreReference_Orders">
+        <dc:Bounds x="145" y="400" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Group" bpmnElement="Group_Picking">
+        <dc:Bounds x="120" y="140" width="460" height="340" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Annotation" bpmnElement="Annotation_1">
+        <dc:Bounds x="600" y="150" width="140" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_Association" bpmnElement="Association_1">
+        <di:waypoint x="600" y="170" />
+        <di:waypoint x="290" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_StartToGateway" bpmnElement="Flow_StartToGateway">
+        <di:waypoint x="176" y="198" />
+        <di:waypoint x="240" y="198" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_GatewayToApprove" bpmnElement="Flow_GatewayToApprove">
+        <di:waypoint x="290" y="198" />
+        <di:waypoint x="350" y="198" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_GatewayToWait" bpmnElement="Flow_GatewayToWait">
+        <di:waypoint x="265" y="223" />
+        <di:waypoint x="265" y="300" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="270" y="250" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_WaitToEscalate" bpmnElement="Flow_WaitToEscalate">
+        <di:waypoint x="283" y="318" />
+        <di:waypoint x="382" y="318" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_EscalateToEnd" bpmnElement="Flow_EscalateToEnd">
+        <di:waypoint x="418" y="318" />
+        <di:waypoint x="538" y="318" />
+        <di:waypoint x="538" y="216" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_ApproveToEnd" bpmnElement="Flow_ApproveToEnd">
+        <di:waypoint x="450" y="198" />
+        <di:waypoint x="520" y="198" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -1,0 +1,37 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.FluentUI.AspNetCore.Components.Bpmn.Resources.FluentBpmnEditorStrings> EditorL
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
+@inherits BpmnReferenceBrowserBase
+
+<div class="@CssClass("bpmn-usages")" @attributes="AdditionalAttributes">
+    <h3 class="bpmn-usages__heading">@EffectiveHeading</h3>
+
+    @if (Usages.Count == 0)
+    {
+
+        <p class="bpmn-usages__empty">@EditorText("ReferenceBrowser.Empty")</p>
+    }
+    else
+    {
+        <ul class="bpmn-usages__list">
+            @foreach (var usage in Usages)
+            {
+                <li class="bpmn-usages__item">
+                    <FluentButton Type="ButtonType.Button"
+                            IconStart="@(new Icons.Regular.Size20.ArrowRight())" Class="bpmn-usages__go"
+                            Title="@TitleOf(usage)"
+                            OnClick="@(() => SelectAsync(usage))">
+                        <span class="bpmn-usages__attribute">@usage.Attribute</span>
+                        <span class="bpmn-usages__owner">
+                            @usage.OwnerId
+                            @if (usage.DiagramId is { Length: > 0 } diagram)
+                            {
+
+                                <span class="bpmn-usages__diagram">@diagram</span>
+                            }
+                        </span>
+                    </FluentButton>
+                </li>
+            }
+        </ul>
+    }
+</div>

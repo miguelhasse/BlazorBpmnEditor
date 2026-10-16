@@ -1,0 +1,852 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="tr" original="../BpmnRuleMessages.resx">
+    <body>
+      <trans-unit id="CT-001">
+        <source>An element cannot both own local flow elements and reference a called element.</source>
+        <target state="translated">Bir öğe hem yerel akış öğelerine sahip olup hem de çağrılan bir öğeye başvuramaz.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-001.Native">
+        <source>An element cannot both own local flow elements and reference a called element.</source>
+        <target state="translated">Bir öğe hem yerel akış öğelerine sahip olup hem de çağrılan bir öğeye başvuramaz.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-001.Native.2">
+        <source>A Call Activity never owns local flow elements; its content lives in the called Process.</source>
+        <target state="translated">Bir Çağrı Etkinliği hiçbir zaman yerel akış öğelerine sahip olmaz; içeriği çağrılan Süreçte bulunur.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-005">
+        <source>Only a Boundary Event may declare an attachment to a host Activity.</source>
+        <target state="translated">Yalnızca bir Sınır Olayı, bir ana Etkinliğe bağlandığını bildirebilir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-005.Native">
+        <source>Only a Boundary Event may declare an attachment to a host Activity.</source>
+        <target state="translated">Yalnızca bir Sınır Olayı, bir ana Etkinliğe bağlandığını bildirebilir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-005.Native.2">
+        <source>A Boundary Event must be attached to exactly one Activity.</source>
+        <target state="translated">Bir Sınır Olayı tam olarak bir Etkinliğe bağlı olmalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-005.Native.3">
+        <source>Boundary Event host '{0}' does not resolve to a flow node.</source>
+        <target state="translated">Sınır Olayı ana öğesi '{0}' bir akış düğümüne çözümlenmiyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-007">
+        <source>A collapsed Sub-Process or Call Activity has visible embedded process-content cells in the active plane.</source>
+        <target state="translated">Daraltılmış bir Alt Süreç veya Çağrı Etkinliği, etkin düzlemde görünür gömülü süreç içeriği hücrelerine sahiptir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-007.Detail">
+        <source>It is drawn collapsed on '{0}', which also draws '{1}' from inside it.</source>
+        <target state="translated">'{0}' üzerinde daraltılmış çizilmiş; '{1}' üzerinde ise içinden öğeler de çiziliyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-009">
+        <source>A Sub-Process expansion state disagrees with BPMNShape.isExpanded, or a collapsed Sub-Process exposes active nested visual cells/tools.</source>
+        <target state="translated">Bir Alt Süreç genişletme durumu BPMNShape.isExpanded ile uyuşmuyor veya daraltılmış bir Alt Süreç etkin iç içe görsel hücreleri/araçları gösteriyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-009.Detail">
+        <source>It is drawn expanded on '{0}' and its content is also drawn on '{1}'.</source>
+        <target state="translated">'{0}' üzerinde genişletilmiş çizilmiş ve içeriği '{1}' üzerinde de çiziliyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-012">
+        <source>A Lane subdivides a Pool, so its LaneSet's Process must be referenced by a Participant.</source>
+        <target state="translated">Bir Kulvar bir Havuzu alt bölümlere ayırır; bu nedenle Kulvar Kümesinin Süreci bir Katılımcı tarafından başvurulmalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-012.Detail">
+        <source>No Participant references '{0}'.</source>
+        <target state="translated">Hiçbir Katılımcı '{0}' öğesine başvurmuyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D001">
+        <source>Every Start Event has 0 incoming Sequence Flow.</source>
+        <target state="translated">Her Başlangıç Olayının 0 gelen Sıra Akışı vardır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D001.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">{0} öğesinde {1} var.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D002">
+        <source>Every End Event has 0 outgoing Sequence Flow.</source>
+        <target state="translated">Her Bitiş Olayının 0 giden Sıra Akışı vardır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D002.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">{0} öğesinde {1} var.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D003">
+        <source>Every Boundary Event has 0 incoming Sequence Flow and is attached to exactly one Activity.</source>
+        <target state="translated">Her Sınır Olayının 0 gelen Sıra Akışı vardır ve tam olarak bir Etkinliğe bağlıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D003.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">{0} öğesinde {1} var.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D003.Detail.2">
+        <source>{0} is attached to nothing.</source>
+        <target state="translated">{0} hiçbir şeye bağlı değil.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D003.Detail.3">
+        <source>{0} is attached to {1}, which is not an Activity.</source>
+        <target state="translated">{0}, bir Etkinlik olmayan {1} öğesine bağlı.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D004">
+        <source>Product lint: Exclusive/Inclusive split has exactly one flow flagged isDefault OR every non-default flow has a conditionExpression.</source>
+        <target state="translated">Ürün denetimi: Dışlayıcı/Kapsayıcı ayrımında tam olarak bir akış isDefault olarak işaretlenmiştir VEYA varsayılan olmayan her akışın bir conditionExpression değeri vardır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D004.Detail">
+        <source>{0} has {1} default flows.</source>
+        <target state="translated">{0} öğesinde {1} varsayılan akış var.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D004.Detail.2">
+        <source>{0} has {1} branches with neither a conditionExpression nor the default flag.</source>
+        <target state="translated">{0} öğesinde ne conditionExpression ne de varsayılan işareti olan {1} dal var.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D005">
+        <source>Parallel/Complex/Inclusive gateway used as merge only synchronizes declared incoming flows (redundant gateway if incoming count = 1).</source>
+        <target state="translated">Birleştirme olarak kullanılan Paralel/Karmaşık/Kapsayıcı ağ geçidi yalnızca bildirilen gelen akışları eşzamanlar (gelen sayısı 1 ise gereksiz ağ geçidi).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D005.Detail">
+        <source>{0} merges a single flow.</source>
+        <target state="translated">{0} tek bir akışı birleştiriyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D006">
+        <source>Event-Based Gateway: all outgoing targets are catch-events/receive-tasks, none carry conditions.</source>
+        <target state="translated">Olay Tabanlı Ağ Geçidi: tüm giden hedefler yakalama olayları/alma görevleridir ve hiçbiri koşul taşımaz.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D006.Detail">
+        <source>A branch carries a condition.</source>
+        <target state="translated">Bir dal koşul taşıyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D006.Detail.2">
+        <source>{0} is neither a catching Event nor a Receive Task.</source>
+        <target state="translated">{0} ne bir Yakalama Olayı ne de bir Alma Görevi.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D007">
+        <source>No Sequence Flow crosses a Pool boundary.</source>
+        <target state="translated">Hiçbir Sıra Akışı bir Havuz sınırını geçmez.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D007.Detail">
+        <source>{0} and {1} are in different Pools.</source>
+        <target state="translated">{0} ve {1} farklı Havuzlarda.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D008">
+        <source>Every Message Flow crosses exactly one Pool boundary.</source>
+        <target state="translated">Her Mesaj Akışı tam olarak bir Havuz sınırını geçer.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D008.Detail">
+        <source>One of its ends is not in a Pool.</source>
+        <target state="translated">Uçlarından biri bir Havuzda değil.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D008.Detail.2">
+        <source>Both of its ends are in the same Pool.</source>
+        <target state="translated">Her iki ucu da aynı Havuzda.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D009">
+        <source>Every node is reachable from some Start Event (no orphan nodes) and every Start Event can reach some End Event (no dead ends).</source>
+        <target state="translated">Her düğüme bir Başlangıç Olayından ulaşılabilir (yetim düğüm yok) ve her Başlangıç Olayı bir Bitiş Olayına ulaşabilir (çıkmaz yol yok).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D009.Detail">
+        <source>{0} cannot be reached from any Start Event.</source>
+        <target state="translated">{0} öğesine hiçbir Başlangıç Olayından ulaşılamıyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D009.Detail.2">
+        <source>{0} cannot reach any End Event.</source>
+        <target state="translated">{0} hiçbir Bitiş Olayına ulaşamıyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D010">
+        <source>Event Sub-Process start event is typed (not None) and has no drawn Sequence Flow in/out.</source>
+        <target state="translated">Olay Alt Süreci başlangıç olayı türlüdür (Yok değil) ve içeri/dışarı çizilmiş Sıra Akışı yoktur.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D010.Detail">
+        <source>{0} has {1} Sequence Flow crossing its boundary.</source>
+        <target state="translated">{0} öğesinin sınırını geçen {1} Sıra Akışı var.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D010.Detail.2">
+        <source>{0} has {1} Start Events; it needs exactly one.</source>
+        <target state="translated">{0} öğesinde {1} Başlangıç Olayı var; tam olarak bir tane gerekir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D010.Detail.3">
+        <source>An untyped Start Event can never trigger it.</source>
+        <target state="translated">Türsüz bir Başlangıç Olayı onu hiçbir zaman tetikleyemez.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D011">
+        <source>Link Intermediate throw and catch Events pair one-to-one within a Process.</source>
+        <target state="translated">Bağ Ara fırlatma ve yakalama Olayları bir Süreç içinde birebir eşleşir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D011.Detail">
+        <source>'{0}' is caught {1} times; a Link has one destination.</source>
+        <target state="translated">'{0}' {1} kez yakalanıyor; bir Bağın tek bir hedefi vardır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D011.Detail.2">
+        <source>'{0}' is thrown but never caught.</source>
+        <target state="translated">'{0}' fırlatılıyor ancak hiç yakalanmıyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D011.Detail.3">
+        <source>'{0}' is caught but never thrown.</source>
+        <target state="translated">'{0}' yakalanıyor ancak hiç fırlatılmıyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D012">
+        <source>A Compensation Boundary Event handler is not reached by ordinary Sequence Flow.</source>
+        <target state="translated">Bir Telafi Sınır Olayı işleyicisine olağan Sıra Akışı ile ulaşılmaz.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D012.Detail">
+        <source>It has {0} incoming Sequence Flow.</source>
+        <target state="translated">{0} gelen Sıra Akışı var.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D013">
+        <source>An End Event with outgoing Message Flow has a Message result, or Multiple when it has more than one.</source>
+        <target state="translated">Giden Mesaj Akışı olan bir Bitiş Olayının sonucu Mesajdır; birden fazla ise Çoklu'dur.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D013.Detail">
+        <source>{0} sends {1} message(s) but its result is {2}.</source>
+        <target state="translated">{0} {1} mesaj gönderiyor ancak sonucu {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D014">
+        <source>Event-Based Gateway targets are homogeneous and have no other incoming Sequence Flow.</source>
+        <target state="translated">Olay Tabanlı Ağ Geçidi hedefleri türdeştir ve başka gelen Sıra Akışı yoktur.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D014.Detail">
+        <source>{0} also has {1} incoming Sequence Flow from elsewhere.</source>
+        <target state="translated">{0} öğesinin başka yerden gelen {1} Sıra Akışı daha var.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D014.Detail.2">
+        <source>Its branches mix catching Events and Receive Tasks.</source>
+        <target state="translated">Dalları Yakalama Olaylarını ve Alma Görevlerini karıştırıyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015">
+        <source>Every BPMNEdge has at least two waypoints, every BPMNShape has positive bounds, and every DI element resolves to a semantic element.</source>
+        <target state="translated">Her BPMNEdge en az iki yol noktasına sahiptir, her BPMNShape pozitif sınırlara sahiptir ve her DI öğesi bir anlamsal öğeye çözümlenir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015.Detail">
+        <source>Its bounds are {0} by {1}.</source>
+        <target state="translated">Sınırları {0} x {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015.Detail.2">
+        <source>Shape '{0}' draws an element this document does not have.</source>
+        <target state="translated">'{0}' şekli bu belgede bulunmayan bir öğeyi çiziyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015.Detail.3">
+        <source>Its route has {0} waypoint(s).</source>
+        <target state="translated">Güzergâhında {0} yol noktası var.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015.Detail.4">
+        <source>Edge '{0}' draws a connector this document does not have.</source>
+        <target state="translated">'{0}' kenarı bu belgede bulunmayan bir bağlantıyı çiziyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D017">
+        <source>Every required reference resolves to an object of the permitted BPMN type.</source>
+        <target state="translated">Gerekli her başvuru, izin verilen BPMN türündeki bir nesneye çözümlenir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D017.Detail">
+        <source>{0} points at '{1}', which is not in this document.</source>
+        <target state="translated">{0}, bu belgede olmayan '{1}' öğesini gösteriyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D017.Detail.2">
+        <source>{0} points at a {1}, which it may not.</source>
+        <target state="translated">{0}, göstermemesi gereken bir {1} öğesini gösteriyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D018">
+        <source>Every semantic object has a unique XML-safe ID within the document.</source>
+        <target state="translated">Her anlamsal nesnenin belge içinde benzersiz, XML'e uygun bir kimliği vardır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D018.Detail">
+        <source>'{0}' is not a valid XML NCName.</source>
+        <target state="translated">'{0}' geçerli bir XML NCName değil.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D018.Detail.2">
+        <source>'{0}' is used more than once.</source>
+        <target state="translated">'{0}' birden fazla kez kullanılıyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019">
+        <source>Every FlowNode belongs to exactly one container, and Lane membership agrees with its LaneSet.</source>
+        <target state="translated">Her Akış Düğümü tam olarak bir kapsayıcıya aittir ve Kulvar üyeliği Kulvar Kümesi ile uyumludur.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail">
+        <source>{0} names container '{1}', which is not one.</source>
+        <target state="translated">{0} öğesi, kapsayıcı olmayan '{1}' kapsayıcısını belirtiyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail.2">
+        <source>Its lane set '{0}' is not declared.</source>
+        <target state="translated">Kulvar kümesi '{0}' bildirilmemiş.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail.3">
+        <source>It claims '{0}', which does not exist.</source>
+        <target state="translated">Mevcut olmayan '{0}' öğesini talep ediyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail.4">
+        <source>It claims {0}, which belongs to '{1}'.</source>
+        <target state="translated">'{1}' öğesine ait olan {0} öğesini talep ediyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail.5">
+        <source>It is claimed by {0} Lanes.</source>
+        <target state="translated">{0} Kulvar tarafından talep ediliyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D020">
+        <source>Event definitions are legal for their context and direction.</source>
+        <target state="translated">Olay tanımları bağlamları ve yönleri için geçerlidir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D020.Detail">
+        <source>{0} is a {1} carrying a {2} trigger.</source>
+        <target state="translated">{0}, {2} tetikleyicisi taşıyan bir {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D020.Detail.2">
+        <source>{0} is a {1} with an invalid interruption state for {2}.</source>
+        <target state="translated">{0}, {2} için geçersiz kesme durumuna sahip bir {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D020.Detail.3">
+        <source>{0} has an invalid container or Boundary host context.</source>
+        <target state="translated">{0} öğesinin kapsayıcı veya Sınır ana öğesi bağlamı geçersiz.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021">
+        <source>Definitions has a targetNamespace and namespace-qualified references use resolvable, consistent QNames.</source>
+        <target state="translated">Definitions öğesinin bir targetNamespace değeri vardır ve ad alanı nitelikli başvurular çözümlenebilir, tutarlı QName'ler kullanır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail">
+        <source>Definitions/@targetNamespace is required and must not be empty.</source>
+        <target state="translated">Definitions/@targetNamespace gereklidir ve boş olmamalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.2">
+        <source>calledElement value '{0}' has an invalid QName local name.</source>
+        <target state="translated">calledElement değeri '{0}' geçersiz bir QName yerel adına sahip.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.3">
+        <source>calledElement QName '{0}' has an undeclared prefix or no resolved namespace.</source>
+        <target state="translated">calledElement QName '{0}' bildirilmemiş bir önek içeriyor veya çözümlenmiş ad alanı yok.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.4">
+        <source>calledElement QName '{0}' was projected as a local reference although its namespace differs from targetNamespace.</source>
+        <target state="translated">calledElement QName '{0}', ad alanı targetNamespace'ten farklı olmasına rağmen yerel başvuru olarak yansıtıldı.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.5">
+        <source>xsi:type QName '{0}' has an undeclared prefix or no resolved namespace.</source>
+        <target state="translated">xsi:type QName '{0}' bildirilmemiş bir önek içeriyor veya çözümlenmiş ad alanı yok.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.6">
+        <source>xsi:type value '{0}' is not a valid QName.</source>
+        <target state="translated">xsi:type değeri '{0}' geçerli bir QName değil.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022">
+        <source>Every plane has a diagram owner, each element is drawn at most once per diagram, and label and style references resolve.</source>
+        <target state="translated">Her düzlemin bir diyagram sahibi vardır, her öğe diyagram başına en fazla bir kez çizilir ve etiket ile stil başvuruları çözümlenir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022.Detail">
+        <source>It is drawn more than once on '{0}'.</source>
+        <target state="translated">'{0}' üzerinde birden fazla kez çizilmiş.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022.Detail.2">
+        <source>Its label references style '{0}', which is not declared.</source>
+        <target state="translated">Etiketi, bildirilmemiş '{0}' stiline başvuruyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022.Detail.3">
+        <source>Plane '{0}' names no BPMN element.</source>
+        <target state="translated">'{0}' düzlemi hiçbir BPMN öğesini adlandırmıyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022.Detail.4">
+        <source>Plane '{0}' is owned by '{1}', which does not exist.</source>
+        <target state="translated">'{0}' düzleminin sahibi olan '{1}' mevcut değil.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D023">
+        <source>Global definitions referenced by the document exist and have the expected type.</source>
+        <target state="translated">Belgenin başvurduğu genel tanımlar mevcuttur ve beklenen türdedir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D023.Detail">
+        <source>{0} calls QName '{1}' in namespace '{2}', which this document does not resolve.</source>
+        <target state="translated">{0}, '{2}' ad alanındaki '{1}' QName'ini çağırıyor; bu belge bunu çözümlemiyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D023.Detail.2">
+        <source>{0} calls '{1}', which this document does not declare as a Process or Global Task.</source>
+        <target state="translated">{0}, bu belgede Süreç veya Genel Görev olarak bildirilmemiş '{1}' öğesini çağırıyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-002">
+        <source>Group cannot be a connector endpoint (visual grouping only).</source>
+        <target state="translated">Grup, bağlantı uç noktası olamaz (yalnızca görsel gruplama).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-002b">
+        <source>Group cannot be a connector endpoint (visual grouping only).</source>
+        <target state="translated">Grup, bağlantı uç noktası olamaz (yalnızca görsel gruplama).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-003">
+        <source>Text Annotation connects only via (undirected) Association, never Data Association.</source>
+        <target state="translated">Metin Açıklaması yalnızca (yönsüz) İlişkilendirme ile bağlanır, asla Veri İlişkilendirmesi ile bağlanmaz.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-004">
+        <source>Data Object/Data Store connect only via Data Association, never a plain Association.</source>
+        <target state="translated">Veri Nesnesi/Veri Deposu yalnızca Veri İlişkilendirmesi ile bağlanır, asla düz İlişkilendirme ile bağlanmaz.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-005">
+        <source>Data Input Association direction is Data Object/Store/Property to an Activity or Throwing Event input.</source>
+        <target state="translated">Veri Girdi İlişkilendirmesinin yönü, Veri Nesnesi/Deposu/Özelliğinden bir Etkinliğin veya Fırlatma Olayının girdisine doğrudur.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-006">
+        <source>Data Output Association direction is an Activity or Catching Event output to a Data Object/Store/Property.</source>
+        <target state="translated">Veri Çıktı İlişkilendirmesinin yönü, bir Etkinliğin veya Yakalama Olayının çıktısından bir Veri Nesnesi/Deposu/Özelliğine doğrudur.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-001">
+        <source>Every BPMNShape must have positive width and height.</source>
+        <target state="translated">Her BPMNShape pozitif genişliğe ve yüksekliğe sahip olmalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-001.Native">
+        <source>Every BPMNShape must have positive width and height.</source>
+        <target state="translated">Her BPMNShape pozitif genişliğe ve yüksekliğe sahip olmalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-002">
+        <source>Every BPMNEdge must have at least two waypoints.</source>
+        <target state="translated">Her BPMNEdge en az iki yol noktasına sahip olmalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-002.Native">
+        <source>Every BPMNEdge must have at least two waypoints.</source>
+        <target state="translated">Her BPMNEdge en az iki yol noktasına sahip olmalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-007">
+        <source>isHorizontal is defined only on Pool and Lane shapes.</source>
+        <target state="translated">isHorizontal yalnızca Havuz ve Kulvar şekillerinde tanımlıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-007.Native">
+        <source>isHorizontal is defined only on Pool and Lane shapes.</source>
+        <target state="translated">isHorizontal yalnızca Havuz ve Kulvar şekillerinde tanımlıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-001">
+        <source>Extension content has no resolvable namespace URI (spec §6.1.2 expanded-name identity).</source>
+        <target state="translated">Uzantı içeriğinin çözümlenebilir bir ad alanı URI'si yok (belirtim §6.1.2 genişletilmiş ad kimliği).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-001.Detail">
+        <source>&lt;{0}&gt; is in no namespace.</source>
+        <target state="translated">&lt;{0}&gt; hiçbir ad alanında değil.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-002">
+        <source>Extension namespace prefix mapping is inconsistent within the document.</source>
+        <target state="translated">Uzantı ad alanı öneki eşlemesi belge içinde tutarsız.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-003">
+        <source>The document could not be parsed (malformed XML).</source>
+        <target state="translated">Belge ayrıştırılamadı (hatalı biçimlendirilmiş XML).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-004">
+        <source>A registered profile emitted a rule id outside its own declared catalog; the violation was rejected.</source>
+        <target state="translated">Kayıtlı bir profil, kendi bildirdiği kataloğun dışında bir kural kimliği yayımladı; ihlal reddedildi.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-005">
+        <source>A profile-declared reference attribute in extension content does not resolve to any element in this document.</source>
+        <target state="translated">Uzantı içeriğindeki, profilin bildirdiği bir başvuru özniteliği bu belgedeki hiçbir öğeye çözümlenmiyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-006">
+        <source>A registered profile attempted to emit a core BPMN rule id; the override attempt was rejected.</source>
+        <target state="translated">Kayıtlı bir profil çekirdek BPMN kural kimliği yayımlamaya çalıştı; geçersiz kılma girişimi reddedildi.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-007">
+        <source>An extension SVG decoration was suppressed.</source>
+        <target state="translated">Bir uzantı SVG süslemesi bastırıldı.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-008">
+        <source>Schema or external-resource access for extension content was blocked.</source>
+        <target state="translated">Uzantı içeriği için şema veya harici kaynak erişimi engellendi.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010">
+        <source>Extension content carries active markup or a script URL, which cannot be exported (spec §5.5 layer 1: quarantine unsafe external content).</source>
+        <target state="translated">Uzantı içeriği etkin biçimlendirme veya betik URL'si taşıyor; bu dışa aktarılamaz (belirtim §5.5 katman 1: güvenli olmayan harici içeriği karantinaya alın).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010.Detail">
+        <source>{0}: {1}.</source>
+        <target state="translated">{0}: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010.Detail.Handler">
+        <source>{0}/@{1}: '{1}' is an event handler.</source>
+        <target state="translated">{0}/@{1}: '{1}' bir olay işleyicisi.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010.Detail.Markup">
+        <source>{0}: &lt;{1}&gt; in the {2} namespace is active markup.</source>
+        <target state="translated">{0}: {2} ad alanındaki &lt;{1}&gt; etkin biçimlendirmedir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010.Detail.Url">
+        <source>{0}: the attribute value is a '{1}' URL.</source>
+        <target state="translated">{0}: öznitelik değeri bir '{1}' URL'si.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-001">
+        <source>Source and target must be InteractionNodes: Participant/Pool, Activity, or Event.</source>
+        <target state="translated">Kaynak ve hedef Etkileşim Düğümü olmalıdır: Katılımcı/Havuz, Etkinlik veya Olay.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-002">
+        <source>Source and target must be in different Participants/Pools.</source>
+        <target state="translated">Kaynak ve hedef farklı Katılımcılarda/Havuzlarda olmalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-003">
+        <source>Gateways are never Message Flow endpoints.</source>
+        <target state="translated">Ağ Geçitleri hiçbir zaman Mesaj Akışı uç noktası olamaz.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-003.Detail">
+        <source>{0} is a Gateway.</source>
+        <target state="translated">{0} bir Ağ Geçidi.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-004">
+        <source>Lanes, Data Objects, Groups, and Text Annotations are never Message Flow endpoints.</source>
+        <target state="translated">Kulvarlar, Veri Nesneleri, Gruplar ve Metin Açıklamaları hiçbir zaman Mesaj Akışı uç noktası olamaz.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-006">
+        <source>Target must not be an End Event.</source>
+        <target state="translated">Hedef bir Bitiş Olayı olmamalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-006.Detail">
+        <source>{0} is an End Event.</source>
+        <target state="translated">{0} bir Bitiş Olayı.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-007">
+        <source>Source Event must be message-throwing (Message Intermediate Throw, Message End, or Multiple with a message result).</source>
+        <target state="translated">Kaynak Olay mesaj fırlatan olmalıdır (Mesaj Ara Fırlatma, Mesaj Bitiş veya mesaj sonuçlu Çoklu).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-007.Detail">
+        <source>{0} does not throw messages.</source>
+        <target state="translated">{0} mesaj fırlatmıyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-008">
+        <source>Target Event must be message-catching (Message Start, Message Intermediate Catch, Message Boundary, or Multiple/Parallel Multiple with a message trigger).</source>
+        <target state="translated">Hedef Olay mesaj yakalayan olmalıdır (Mesaj Başlangıç, Mesaj Ara Yakalama, Mesaj Sınır veya mesaj tetikleyicili Çoklu/Paralel Çoklu).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-008.Detail">
+        <source>{0} does not catch messages.</source>
+        <target state="translated">{0} mesaj yakalamıyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-000">
+        <source>The '{0}' profile reported nothing usable: {1}.</source>
+        <target state="translated">'{0}' profili kullanılabilir bir şey bildirmedi: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-000.Detail.Failed">
+        <source>The '{0}' profile reported nothing usable: it failed: {1}.</source>
+        <target state="translated">'{0}' profili kullanılabilir bir şey bildirmedi: başarısız oldu: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-000.Detail.InvalidId">
+        <source>The '{0}' profile reported nothing usable: '{1}' is not a PROF-nnn rule id.</source>
+        <target state="translated">'{0}' profili kullanılabilir bir şey bildirmedi: '{1}' bir PROF-nnn kural kimliği değil.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101">
+        <source>Template property constraints must be satisfied.</source>
+        <target state="translated">Şablon özellik kısıtlamaları karşılanmalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail">
+        <source>{0} must not be empty.</source>
+        <target state="translated">{0} boş olmamalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.2">
+        <source>{0} must contain at least {1} characters.</source>
+        <target state="translated">{0} en az {1} karakter içermelidir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.3">
+        <source>{0} must contain at most {1} characters.</source>
+        <target state="translated">{0} en fazla {1} karakter içermelidir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.4">
+        <source>{0} has an invalid or excessively complex pattern.</source>
+        <target state="translated">{0} geçersiz veya aşırı karmaşık bir desene sahip.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.Custom">
+        <source>{0}</source>
+        <target state="translated">{0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.Pattern">
+        <source>{0} does not match the required pattern.</source>
+        <target state="translated">{0} gerekli desenle eşleşmiyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-102">
+        <source>Template property requires a FEEL expression starting with '='.</source>
+        <target state="translated">Şablon özelliği '=' ile başlayan bir FEEL ifadesi gerektirir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-102.Detail">
+        <source>{0} requires a FEEL expression starting with '='.</source>
+        <target state="translated">{0}, '=' ile başlayan bir FEEL ifadesi gerektirir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-103">
+        <source>Template not found: '{0}' version {1}.</source>
+        <target state="translated">Şablon bulunamadı: '{0}' sürüm {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-104">
+        <source>Template '{0}' is deprecated.</source>
+        <target state="translated">'{0}' şablonu kullanımdan kaldırıldı.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-104.Detail.Custom">
+        <source>{0}</source>
+        <target state="translated">{0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-105">
+        <source>Template '{0}' version {1} is available.</source>
+        <target state="translated">'{0}' şablonunun {1} sürümü kullanılabilir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-111">
+        <source>Script Task {0} has no scriptFormat, so no engine knows how to run it.</source>
+        <target state="translated">Betik Görevi {0} için scriptFormat yok, bu yüzden hiçbir motor onu nasıl çalıştıracağını bilmiyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-112">
+        <source>Script Task {0} uses scriptFormat '{1}', which the engine does not run.</source>
+        <target state="translated">Betik Görevi {0}, motorun çalıştırmadığı '{1}' scriptFormat değerini kullanıyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-113">
+        <source>Script Task {0} has no script.</source>
+        <target state="translated">Betik Görevi {0} için betik yok.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-114">
+        <source>Script Task {0} has a script of {1} characters; the limit is {2}.</source>
+        <target state="translated">Betik Görevi {0}, {1} karakterlik bir betik içeriyor; sınır {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-115">
+        <source>No syntax validator is registered for scriptFormat '{0}' (Script Task {1}).</source>
+        <target state="translated">'{0}' scriptFormat değeri için kayıtlı bir söz dizimi doğrulayıcısı yok (Betik Görevi {1}).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-116">
+        <source>Script Task {0}, line {1}, column {2}: {3}</source>
+        <target state="translated">Betik Görevi {0}, satır {1}, sütun {2}: {3}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-117">
+        <source>The '{0}' script validator failed on Script Task {1}: {2}.</source>
+        <target state="translated">'{0}' betik doğrulayıcısı Betik Görevi {1} üzerinde başarısız oldu: {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-118">
+        <source>Script Task {0} nests brackets deeper than {1} levels.</source>
+        <target state="translated">Betik Görevi {0}, parantezleri {1} düzeyden daha derin iç içe yerleştiriyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-001">
+        <source>Sequence Flow source and target must be a FlowNode (Event, Activity, or Gateway).</source>
+        <target state="translated">Sıra Akışı kaynağı ve hedefi bir Akış Düğümü olmalıdır (Olay, Etkinlik veya Ağ Geçidi).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-002">
+        <source>Source must not be an End Event.</source>
+        <target state="translated">Kaynak bir Bitiş Olayı olmamalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-003">
+        <source>Target must not be a Start Event.</source>
+        <target state="translated">Hedef bir Başlangıç Olayı olmamalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-004">
+        <source>Target must not be a Boundary Event.</source>
+        <target state="translated">Hedef bir Sınır Olayı olmamalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-005">
+        <source>Source/target must not be an Event Sub-Process — it has no external Sequence Flow.</source>
+        <target state="translated">Kaynak/hedef bir Olay Alt Süreci olmamalıdır — dışarıya Sıra Akışı yoktur.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-006">
+        <source>Sequence Flow must not cross a Pool/Participant boundary (poolId mismatch).</source>
+        <target state="translated">Sıra Akışı bir Havuz/Katılımcı sınırını geçmemelidir (poolId uyuşmazlığı).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-007">
+        <source>Sequence Flow must not cross a Sub-Process containment boundary (containerId mismatch).</source>
+        <target state="translated">Sıra Akışı bir Alt Süreç kapsama sınırını geçmemelidir (containerId uyuşmazlığı).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-007.Detail">
+        <source>{0} is in '{1}' and {2} in '{3}'.</source>
+        <target state="translated">{0} '{1}' içinde ve {2} '{3}' içinde.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-008">
+        <source>Source must not be a Compensation Boundary Event (use an Association to the handler instead).</source>
+        <target state="translated">Kaynak bir Telafi Sınır Olayı olmamalıdır (bunun yerine işleyiciye bir İlişkilendirme kullanın).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-009">
+        <source>Source/target must not be a compensation Activity (isForCompensation=true) reached via normal flow.</source>
+        <target state="translated">Kaynak/hedef, normal akışla ulaşılan bir telafi Etkinliği olmamalıdır (isForCompensation=true).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-011">
+        <source>Event-Based Gateway outgoing target must be a catching Message/Timer/Signal/Conditional event or a Receive Task.</source>
+        <target state="translated">Olay Tabanlı Ağ Geçidinin giden hedefi, yakalayan bir Mesaj/Zamanlayıcı/Sinyal/Koşullu olay veya bir Alma Görevi olmalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-012">
+        <source>Event-Based Gateway outgoing Sequence Flow must not carry a condition expression.</source>
+        <target state="translated">Olay Tabanlı Ağ Geçidinin giden Sıra Akışı koşul ifadesi taşımamalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-013">
+        <source>Parallel Gateway outgoing Sequence Flow must not carry a condition.</source>
+        <target state="translated">Paralel Ağ Geçidinin giden Sıra Akışı koşul taşımamalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-014">
+        <source>isDefault may only be set on a flow sourced from an Activity, or an Exclusive/Inclusive/Complex Gateway.</source>
+        <target state="translated">isDefault yalnızca bir Etkinlikten veya Dışlayıcı/Kapsayıcı/Karmaşık Ağ Geçidinden çıkan akışta ayarlanabilir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-015">
+        <source>Conditional Sequence Flow from an Activity requires at least one other outgoing Sequence Flow from that Activity.</source>
+        <target state="translated">Bir Etkinlikten çıkan Koşullu Sıra Akışı, o Etkinlikten çıkan en az bir başka Sıra Akışı gerektirir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-016">
+        <source>Conditional Sequence Flow must not be sourced from a Parallel or Event-Based Gateway.</source>
+        <target state="translated">Koşullu Sıra Akışı, Paralel veya Olay Tabanlı Ağ Geçidinden çıkmamalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-017">
+        <source>Source must not be a Link Intermediate Throw Event — it continues at its paired Link catch, not by Sequence Flow.</source>
+        <target state="translated">Kaynak bir Bağ Ara Fırlatma Olayı olmamalıdır — Sıra Akışı ile değil, eşleşen Bağ yakalama olayında devam eder.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-017.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">{0} öğesinde {1} var.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-018">
+        <source>Target must not be a Link Intermediate Catch Event — it is reached from its paired Link throw, not by Sequence Flow.</source>
+        <target state="translated">Hedef bir Bağ Ara Yakalama Olayı olmamalıdır — Sıra Akışı ile değil, eşleşen Bağ fırlatma olayından ulaşılır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-018.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">{0} öğesinde {1} var.</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

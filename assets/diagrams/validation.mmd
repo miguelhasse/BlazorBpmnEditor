@@ -1,0 +1,26 @@
+%% Validation layers
+%% Core document validation, import schema findings and advisory expression warnings remain distinct.
+%% Generated rules catalog supplies IDs, severity and messages; validators run over the model, not canvas SVG.
+%% Expression warnings do not enter the document report. Schema findings belong to the import offer.
+flowchart TB
+    doc["BpmnDocument<br/>Immutable model"]:::data
+    rules["Bpmn<br/>BpmnValidator<br/>Reference · containment<br/>Notation · semantics · DI"]:::cs
+    report["BpmnValidationReport<br/>Errors block export<br/>Warnings stay advisory"]:::data
+    problems["Standard / Fluent validation panel<br/>BpmnValidationPanelBase<br/>Cached ordered + localized rows"]:::cs
+    lint["Product lint D004<br/>Ambiguous split conditions<br/>Current policy: error"]:::cs
+    profiles["IBpmnProfileValidator<br/>Host profiles +<br/>BpmnElementTemplateValidator"]:::cs
+    schema["BpmnXmlReader + XmlSchemaSet<br/>Optional preloaded XSD only<br/>No bundled / fetched OMG XSD"]:::cs
+    import["SchemaError diagnostics<br/>BpmnImportPreview<br/>Kit import dialog findings"]:::data
+    expr["IBpmnExpressionValidator<br/>FEEL / JUEL syntax<br/>Advisory, not export-blocking"]:::cs
+    entries["Property entry warnings<br/>aria-invalid + warning text"]:::cs
+    doc --> rules
+    rules --> report
+    report --> problems
+    lint --> rules
+    profiles --> report
+    schema --> import
+    expr --> entries
+    classDef cs fill:#a5d8ff,stroke:#343a40,color:#212529
+    classDef js fill:#ffec99,stroke:#343a40,color:#212529
+    classDef data fill:#b2f2bb,stroke:#343a40,color:#212529
+    classDef test fill:#e9ecef,stroke:#343a40,color:#212529

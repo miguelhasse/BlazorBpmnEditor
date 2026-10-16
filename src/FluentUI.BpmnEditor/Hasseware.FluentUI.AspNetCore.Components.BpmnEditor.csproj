@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <EnableXlfLocalization>true</EnableXlfLocalization>
+    <PackageId>Hasseware.FluentUI.AspNetCore.Components.BpmnEditor</PackageId>
+    <AssemblyName>Hasseware.FluentUI.AspNetCore.Components.BpmnEditor</AssemblyName>
+    <RootNamespace>Hasseware.FluentUI.AspNetCore.Components.Bpmn</RootNamespace>
+    <Description>Fluent UI BPMN editor composition and chrome for Blazor.</Description>
+    <PackageTags>bpmn;blazor;diagram;editor;workflow;fluentui;ui-kit</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ScopedCssEnabled>false</ScopedCssEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" />
+    <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" />
+    <SupportedPlatform Include="browser" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <ProjectReference Include="..\Bpmn\Hasseware.AspNetCore.Components.Bpmn.csproj" />
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Hasseware.FluentUI.AspNetCore.Components.BpmnEditor.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+</Project>

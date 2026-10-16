@@ -1,0 +1,34 @@
+﻿<script type="module" src="@Assets["Components/Layout/ReconnectModal.razor.js"]"></script>
+
+<dialog id="components-reconnect-modal" data-nosnippet>
+    <div class="components-reconnect-container">
+        <div class="components-rejoining-animation" aria-hidden="true">
+            <div></div>
+            <div></div>
+        </div>
+        <p class="components-reconnect-first-attempt-visible">
+            @Localizer["Reconnect.Rejoining"]
+        </p>
+        <p class="components-reconnect-repeated-attempt-visible">
+            @{
+                var retryParts = Localizer["Reconnect.RetryIn"].Value.Split("{0}", 2, StringSplitOptions.None);
+            }
+            @retryParts[0]<span id="components-seconds-to-next-attempt"></span>@(retryParts.Length > 1 ? retryParts[1] : string.Empty)
+        </p>
+        <p class="components-reconnect-failed-visible">
+            @Localizer["Reconnect.Failed"]
+        </p>
+        <button id="components-reconnect-button" class="components-reconnect-failed-visible">
+            @Localizer["Reconnect.Retry"]
+        </button>
+        <p class="components-pause-visible">
+            @Localizer["Reconnect.Paused"]
+        </p>
+        <button id="components-resume-button" class="components-pause-visible">
+            @Localizer["Reconnect.Resume"]
+        </button>
+        <p class="components-resume-failed-visible">
+            @Localizer["Reconnect.ResumeFailed"]
+        </p>
+    </div>
+</dialog>

@@ -1,0 +1,84 @@
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="Definitions_LinkedProcesses" targetNamespace="http://blazor.diagrams.bpmn/schema" exporter="Blazor.Diagrams.Bpmn" exporterVersion="1.0">
+  <process id="Process_Main" name="Process_Main" isExecutable="false">
+    <startEvent id="Event_MainStart" name="Order Received">
+      <outgoing>Flow_MainStartToCall</outgoing>
+    </startEvent>
+    <callActivity id="CallActivity_HandleShipment" name="Handle Shipment" calledElement="Process_HandleShipment">
+      <incoming>Flow_MainStartToCall</incoming>
+      <outgoing>Flow_CallToMainEnd</outgoing>
+    </callActivity>
+    <endEvent id="Event_MainEnd" name="Order Complete">
+      <incoming>Flow_CallToMainEnd</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_MainStartToCall" sourceRef="Event_MainStart" targetRef="CallActivity_HandleShipment" />
+    <sequenceFlow id="Flow_CallToMainEnd" sourceRef="CallActivity_HandleShipment" targetRef="Event_MainEnd" />
+  </process>
+  <process id="Process_HandleShipment" name="Process_HandleShipment" isExecutable="false">
+    <startEvent id="Event_ShipStart" name="Start Shipment">
+      <outgoing>Flow_ShipStartToPack</outgoing>
+    </startEvent>
+    <manualTask id="Task_PackItems" name="Pack Items">
+      <incoming>Flow_ShipStartToPack</incoming>
+      <outgoing>Flow_PackToShip</outgoing>
+    </manualTask>
+    <sendTask id="Task_ShipPackage" name="Ship Package">
+      <incoming>Flow_PackToShip</incoming>
+      <outgoing>Flow_ShipToEnd</outgoing>
+    </sendTask>
+    <endEvent id="Event_ShipEnd" name="Shipped">
+      <incoming>Flow_ShipToEnd</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_ShipStartToPack" sourceRef="Event_ShipStart" targetRef="Task_PackItems" />
+    <sequenceFlow id="Flow_PackToShip" sourceRef="Task_PackItems" targetRef="Task_ShipPackage" />
+    <sequenceFlow id="Flow_ShipToEnd" sourceRef="Task_ShipPackage" targetRef="Event_ShipEnd" />
+  </process>
+  <bpmndi:BPMNDiagram id="Diagram_Main" name="Main Process Diagram">
+    <bpmndi:BPMNPlane id="Plane_Main" bpmnElement="Process_Main">
+      <bpmndi:BPMNShape id="Shape_MainStart" bpmnElement="Event_MainStart">
+        <dc:Bounds x="80" y="120" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_CallActivity" bpmnElement="CallActivity_HandleShipment">
+        <dc:Bounds x="240" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_MainEnd" bpmnElement="Event_MainEnd">
+        <dc:Bounds x="420" y="120" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_MainStartToCall" bpmnElement="Flow_MainStartToCall">
+        <di:waypoint x="120" y="140" />
+        <di:waypoint x="240" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_CallToMainEnd" bpmnElement="Flow_CallToMainEnd">
+        <di:waypoint x="340" y="140" />
+        <di:waypoint x="420" y="140" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram id="Diagram_HandleShipment" name="Handle Shipment Diagram">
+    <bpmndi:BPMNPlane id="Plane_HandleShipment" bpmnElement="Process_HandleShipment">
+      <bpmndi:BPMNShape id="Shape_ShipStart" bpmnElement="Event_ShipStart">
+        <dc:Bounds x="80" y="120" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_PackItems" bpmnElement="Task_PackItems">
+        <dc:Bounds x="220" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_ShipPackage" bpmnElement="Task_ShipPackage">
+        <dc:Bounds x="380" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_ShipEnd" bpmnElement="Event_ShipEnd">
+        <dc:Bounds x="560" y="120" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_ShipStartToPack" bpmnElement="Flow_ShipStartToPack">
+        <di:waypoint x="120" y="140" />
+        <di:waypoint x="220" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_PackToShip" bpmnElement="Flow_PackToShip">
+        <di:waypoint x="320" y="140" />
+        <di:waypoint x="380" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_ShipToEnd" bpmnElement="Flow_ShipToEnd">
+        <di:waypoint x="480" y="140" />
+        <di:waypoint x="560" y="140" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -1,0 +1,41 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.AspNetCore.Components.Bpmn.Resources.BpmnEditorStrings> EditorL
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnReferenceBrowserBase
+
+<div class="@CssClass("bpmn-usages")" @attributes="AdditionalAttributes">
+    <h3 class="bpmn-usages__heading">@EffectiveHeading</h3>
+
+    @if (Usages.Count == 0)
+    {
+        @*
+            Worth saying rather than leaving blank. "Nothing points at this" is the answer you need
+            before deleting something, and an empty area does not distinguish it from not asking.
+        *@
+        <p class="bpmn-usages__empty">@EditorText("ReferenceBrowser.Empty")</p>
+    }
+    else
+    {
+        <ul class="bpmn-usages__list">
+            @foreach (var usage in Usages)
+            {
+                <li class="bpmn-usages__item">
+                    <button type="button"
+                            class="bpmn-usages__go"
+                            title="@TitleOf(usage)"
+                            @onclick="@(() => SelectAsync(usage))">
+                        <span class="bpmn-usages__attribute">@usage.Attribute</span>
+                        <span class="bpmn-usages__owner">
+                            @usage.OwnerId
+                            @if (usage.DiagramId is { Length: > 0 } diagram)
+                            {
+                                @* Section 10.1: the same element can be drawn on more than one
+                                   plane, so a DI usage is not located until the diagram is named. *@
+                                <span class="bpmn-usages__diagram">@diagram</span>
+                            }
+                        </span>
+                    </button>
+                </li>
+            }
+        </ul>
+    }
+</div>

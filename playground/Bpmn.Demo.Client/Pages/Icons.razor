@@ -1,0 +1,31 @@
+@page "/icons"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+@inject BpmnDisplayLocalizer Display
+
+<PageTitle>@Localizer["Icons.Title"]</PageTitle>
+
+<h1>@Localizer["Icons.Title"]</h1>
+
+<p class="icons-meta">
+    @Localizer["Icons.Metadata", Registry.Icons.Count, Registry.Manifest.ManifestVersion, Registry.Manifest.ContentHash[..12]]
+</p>
+
+<p class="icons-attribution">@Registry.Manifest.Source.Attribution</p>
+
+@foreach (var (kind, title) in Families)
+{
+    var ids = AssignedIcons(kind);
+
+    <h2>@title (@ids.Count)</h2>
+    <div class="icons-grid">
+        @foreach (var icon in ids)
+        {
+            <figure class="icons-item">
+                <svg viewBox="@icon.ViewBox" width="44" height="44" role="img" aria-label="@Display.IconLabel(icon)">
+                    <path d="@icon.PathData" fill="currentColor" />
+                </svg>
+                <figcaption>@icon.IconId</figcaption>
+            </figure>
+        }
+    </div>
+}

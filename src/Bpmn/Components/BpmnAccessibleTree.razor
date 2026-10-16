@@ -1,0 +1,50 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnAccessibleTreeBase
+
+@*
+    The diagram as something that can be walked without a mouse (implementation plan M7).
+
+    Visually hidden rather than absent: it is the same diagram, told rather than drawn, so it has to
+    be in the accessible tree and in the tab order while taking no space and showing nothing.
+
+    A flat list with `aria-level` rather than nested groups. Both are valid for a tree, and the flat
+    form is what lets a reader move between two elements in different Sub-Processes without the
+    markup deciding for them which containers have to be closed on the way.
+*@
+<ul class="@CssClass("bpmn-a11y-tree")" role="tree" aria-label="@EffectiveAriaLabel" @onkeydown="HandleKeyDownAsync" @attributes="AdditionalAttributes">
+    @if (Items.Count == 0)
+    {
+        <li class="bpmn-a11y-tree__item" role="treeitem" aria-level="1" aria-selected="false" tabindex="0">
+            @EffectiveEmptyMessage
+        </li>
+    }
+
+    @foreach (var node in Items)
+    {
+        @*
+            Roving tabindex: exactly one item is reachable by Tab and the arrow keys move between
+            them. Six hundred tab stops is not navigation, it is an obstacle.
+
+            aria-expanded is absent on anything that cannot be expanded, never "false": a Task
+            with aria-expanded="false" is announced as collapsed, which would tell a reader that
+            every Task in the diagram is hiding something. Expanded() returns null for those, and
+            Blazor omits an attribute whose value is null.
+
+            No comment belongs between two attributes. One there parses without complaint and
+            renders the *previous* attribute's value under the following attribute's name — every
+            item came out aria-expanded="false", which is what aria-selected said.
+        *@
+        <li class="bpmn-a11y-tree__item"
+            role="treeitem"
+            id="@ItemId(node.ElementId)"
+            aria-level="@node.Depth"
+            aria-selected="@((node.ElementId == Here).ToString().ToLowerInvariant())"
+            aria-expanded="@Expanded(node)"
+            tabindex="@(IsTabStop(node) ? 0 : -1)"
+            @key="node.ElementId"
+            @ref="ItemRefs[node.ElementId]"
+            @onfocus="@(() => FocusAsync(node.ElementId))">
+            @Display.AccessibleName(node)
+        </li>
+    }
+</ul>

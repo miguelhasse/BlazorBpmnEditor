@@ -1,0 +1,10 @@
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
+@inherits BpmnPropertyEntryComponent
+@using System.Globalization
+
+<FluentBpmnPropertyEntryFrame Context="@Context">
+    <FluentNumberInput TValue="double?" Class="@(Block + "__text")" ReadOnly="@ReadOnly"
+                       Value="@NumberValue" AriaLabel="@Entry.Label" Placeholder="@Entry.Placeholder"
+                       aria-invalid="@(Entry.Error is not null ? "true" : null)"
+                       ValueChanged="@(value => SubmitAsync(value?.ToString(CultureInfo.InvariantCulture)))" />
+</FluentBpmnPropertyEntryFrame>

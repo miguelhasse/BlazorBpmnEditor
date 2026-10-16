@@ -1,0 +1,11 @@
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
+@using Hasseware.AspNetCore.Components.Bpmn.Editing
+@inject Microsoft.Extensions.Options.IOptions<BpmnOptions> Options
+
+@if (Context.Entry.Kind != BpmnPropertyEntryKind.Hidden)
+{
+    <BpmnPropertyScopeProvider Editors="Registry">
+        <DynamicComponent Type="@EffectiveRegistry.Resolve(Context.Entry)" Parameters="@EditorParameters"
+                          @key="@($"{Context.Entry.Id}:{Context.Revision}")" />
+    </BpmnPropertyScopeProvider>
+}

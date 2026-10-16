@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="ko" original="../DemoStrings.resx">
+    <body>
+      <trans-unit id="Error.Description">
+        <source>An error occurred while processing your request.</source>
+        <target state="translated">요청을 처리하는 동안 오류가 발생했습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.DevelopmentDetails">
+        <source>Swapping to the {0} environment will display more detailed information about the error that occurred.</source>
+        <target state="translated">{0} 환경으로 전환하면 발생한 오류에 대한 자세한 정보가 표시됩니다.</target>
+        <note>{0} is the invariant environment name Development.</note>
+      </trans-unit>
+      <trans-unit id="Error.DevelopmentMode">
+        <source>Development Mode</source>
+        <target state="translated">개발 모드</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.DevelopmentWarning">
+        <source>The {0} environment shouldn't be enabled for deployed applications.</source>
+        <target state="translated">배포된 애플리케이션에서는 {0} 환경을 활성화하면 안 됩니다.</target>
+        <note>{0} is the invariant environment name Development.</note>
+      </trans-unit>
+      <trans-unit id="Error.Heading">
+        <source>Error.</source>
+        <target state="translated">오류.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.LocalDebugging">
+        <source>For local debugging, enable the {0} environment by setting the {1} environment variable to {0} and restarting the app.</source>
+        <target state="translated">로컬 디버깅의 경우 {1} 환경 변수를 {0}(으)로 설정하고 앱을 다시 시작하여 {0} 환경을 활성화하세요.</target>
+        <note>{0} is Development; {1} is ASPNETCORE_ENVIRONMENT. Do not translate these argument values.</note>
+      </trans-unit>
+      <trans-unit id="Error.RequestId">
+        <source>Request ID:</source>
+        <target state="translated">요청 ID:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.SensitiveInformation">
+        <source>It can result in displaying sensitive information from exceptions to end users.</source>
+        <target state="translated">예외의 민감한 정보가 최종 사용자에게 표시될 수 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.Title">
+        <source>Error</source>
+        <target state="translated">오류</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.AboutBlazor">
+        <source>About Blazor</source>
+        <target state="translated">Blazor 정보</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Dismiss">
+        <source>Dismiss</source>
+        <target state="translated">닫기</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Documentation">
+        <source>Documentation and demos</source>
+        <target state="translated">설명서 및 데모</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Reload">
+        <source>Reload</source>
+        <target state="translated">새로 고침</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Title">
+        <source>BPMN Demo</source>
+        <target state="translated">BPMN 데모</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.UnhandledError">
+        <source>An unhandled error has occurred.</source>
+        <target state="translated">처리되지 않은 오류가 발생했습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NotFound.Description">
+        <source>Sorry, the content you are looking for does not exist.</source>
+        <target state="translated">죄송합니다. 찾으시는 콘텐츠가 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NotFound.Title">
+        <source>Not Found</source>
+        <target state="translated">찾을 수 없음</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Failed">
+        <source>Failed to rejoin. Please retry or reload the page.</source>
+        <target state="translated">다시 연결하지 못했습니다. 다시 시도하거나 페이지를 새로 고치세요.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Paused">
+        <source>The session has been paused by the server.</source>
+        <target state="translated">서버에서 세션을 일시 중지했습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Rejoining">
+        <source>Rejoining the server...</source>
+        <target state="translated">서버에 다시 연결하는 중...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Resume">
+        <source>Resume</source>
+        <target state="translated">재개</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.ResumeFailed">
+        <source>Failed to resume the session. Please reload the page.</source>
+        <target state="translated">세션을 재개하지 못했습니다. 페이지를 새로 고치세요.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Retry">
+        <source>Retry</source>
+        <target state="translated">다시 시도</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.RetryIn">
+        <source>Rejoin failed... trying again in {0} seconds.</source>
+        <target state="translated">다시 연결하지 못했습니다... {0}초 후에 다시 시도합니다.</target>
+        <note>{0} is replaced by the live countdown element; preserve the placeholder.</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

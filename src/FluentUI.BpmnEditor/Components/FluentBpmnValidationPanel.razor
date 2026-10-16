@@ -1,0 +1,56 @@
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
+@inherits BpmnValidationPanelBase
+@using Hasseware.AspNetCore.Components.Bpmn.Validation
+
+<div class="@CssClass("bpmn-validation")" role="region" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+    <div class="bpmn-validation__summary">
+        @if (Report.Diagnostics.Count == 0)
+        {
+            <span class="bpmn-validation__clean">@CleanText</span>
+        }
+        else
+        {
+            <span class="bpmn-validation__counts">
+                @if (Report.ErrorCount > 0)
+                {
+                    <span class="bpmn-validation__count bpmn-validation__count--error">
+                        @CountText(Report.ErrorCount, BpmnSeverity.Error)
+                    </span>
+                }
+                @if (Report.WarningCount > 0)
+                {
+                    <span class="bpmn-validation__count bpmn-validation__count--warning">
+                        @CountText(Report.WarningCount, BpmnSeverity.Warning)
+                    </span>
+                }
+            </span>
+
+            <span class="bpmn-validation__state">
+                @ExportStateText
+            </span>
+        }
+    </div>
+
+    @if (Report.Diagnostics.Count > 0)
+    {
+        <ul class="bpmn-validation__list">
+            @foreach (var diagnostic in Ordered)
+            {
+                <li class="bpmn-validation__item bpmn-validation__item--@diagnostic.Severity.ToString().ToLowerInvariant()"
+                    @key="@($"{diagnostic.RuleId}:{diagnostic.ElementId}:{diagnostic.Message}")">
+
+                    <FluentButton Type="ButtonType.Button"
+                            Class="bpmn-validation__go"
+                            IconStart="@(diagnostic.Severity == BpmnSeverity.Error ? new Icons.Regular.Size20.ErrorCircle() : (Icon)new Icons.Regular.Size20.Warning())"
+                            Disabled="@(diagnostic.ElementId is null)"
+                            Title="@MessageOf(diagnostic)"
+                            OnClick="@(() => SelectAsync(diagnostic))">
+
+                        <span class="bpmn-validation__code">@diagnostic.RuleId</span>
+                        <span class="bpmn-validation__message">@MessageOf(diagnostic)</span>
+                    </FluentButton>
+                </li>
+            }
+        </ul>
+    }
+</div>

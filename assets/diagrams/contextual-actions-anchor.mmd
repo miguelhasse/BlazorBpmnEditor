@@ -1,0 +1,19 @@
+%% Stable contextual-action placement
+%% Selection tools change SVG root bounds, not model geometry; never anchor shapes to those tools.
+%% Links retain rendered view bounds. Move/zoom gestures hide then refresh the strip.
+flowchart TB
+    selection["Single-element selection<br/>InteractionController<br/>Selection tools render on SVG"]:::js
+    geometry["BpmnCanvasInstance.anchorOf<br/>Element: cell.getBBox model bounds<br/>Link: rendered view bounds"]:::js
+    resolver["AnchorResolver<br/>Paper → client coordinates<br/>Subtract canvas host origin"]:::js
+    report["Selection event includes anchor<br/>SelectionAnchorReporter deduplicates<br/>Delayed refresh uses same geometry"]:::js
+    state["BpmnEditorSession<br/>ContextualActions overlay slice<br/>Anchor + snapshot + offered actions"]:::cs
+    widget["Standard / Fluent actions widget<br/>Top aligned; right edge + 26px gap<br/>Opening does not jump"]:::cs
+    gesture["Move / resize / pan / zoom<br/>Hide while geometry changes<br/>Refresh after release / idle"]:::js
+    selection --> geometry
+    geometry --> resolver
+    resolver --> report
+    report --> state
+    state --> widget
+    gesture --> geometry
+    classDef cs fill:#a5d8ff,stroke:#343a40,color:#212529
+    classDef js fill:#ffec99,stroke:#343a40,color:#212529

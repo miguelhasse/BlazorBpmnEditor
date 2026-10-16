@@ -1,0 +1,58 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.AspNetCore.Components.Bpmn.Resources.BpmnEditorStrings> EditorL
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnTemplateChooserBase
+@using Hasseware.AspNetCore.Components.Bpmn.Editing
+@using Hasseware.AspNetCore.Components.Bpmn.Model.Extensions.Templates
+@using Microsoft.AspNetCore.Components
+
+@if (HasContent)
+{
+    <section class="@CssClass("bpmn-templates__row")" aria-label="@EditorText("TemplateChooser.AriaLabel")" @attributes="AdditionalAttributes">
+        @if (Element.TemplateId is { } appliedId)
+        {
+            @if (Applied?.Icon is { } icon && BpmnTemplateIcons.IsSafe(icon))
+            {
+                <img class="bpmn-templates__icon" src="@icon" alt="" />
+            }
+            <span class="bpmn-templates__name">@(Applied?.Name ?? appliedId)</span>
+            @if (Element.TemplateVersion is { } version) { <span class="bpmn-templates__version">@EditorText("TemplateChooser.Version", version)</span> }
+            @if (Applied is null) { <span class="bpmn-templates__notice">@EditorText("TemplateChooser.NotFound")</span> }
+            <div class="bpmn-templates__actions">
+                <button type="button" class="bpmn-templates__unlink" disabled="@Locked" @onclick="UnlinkAsync">@EditorText("TemplateChooser.Unlink")</button>
+                @if (Applied is not null)
+                {
+                    <button type="button" class="bpmn-templates__remove" disabled="@Locked" @onclick="RemoveAsync">@EditorText("TemplateChooser.Remove")</button>
+                    @if (Upgrade is not null)
+                    {
+                        <button type="button" class="bpmn-templates__update" disabled="@Locked" @onclick="UpgradeAsync">@EditorText("TemplateChooser.Update")</button>
+                    }
+                }
+            </div>
+        }
+        else
+        {
+            <button type="button" class="bpmn-templates__select" disabled="@Locked" aria-expanded="@IsOpen" @onclick="Toggle">@EditorText("TemplateChooser.Select")</button>
+        }
+        @if (IsOpen && !Locked && Element.TemplateId is null)
+        {
+            <input class="bpmn-templates__search" type="search" aria-label="@EditorText("TemplateChooser.Search")" value="@Search" @oninput="SetSearch" />
+            <div class="bpmn-templates__list" role="listbox" aria-label="@EditorText("TemplateChooser.Applicable")">
+                @foreach (var category in Filtered.GroupBy(template => CategoryOf(template)))
+                {
+                    <div class="bpmn-templates__category" role="group" aria-label="@category.Key">
+                        <h3 class="bpmn-templates__heading">@category.Key</h3>
+                        @foreach (var template in category)
+                        {
+                            <button type="button" role="option" aria-selected="false" class="bpmn-templates__option" @onclick="@(() => ApplyAsync(template))">
+                                <span class="bpmn-templates__name">@template.Name</span>
+                                <span class="bpmn-templates__description">@template.Description</span>
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+            @if (!Filtered.Any()) { <p class="bpmn-templates__empty">@EditorText("TemplateChooser.NoMatches")</p> }
+            <button type="button" class="bpmn-templates__cancel" @onclick="Toggle">@EditorText("TemplateChooser.Cancel")</button>
+        }
+    </section>
+}

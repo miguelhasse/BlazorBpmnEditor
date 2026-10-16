@@ -1,0 +1,457 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="zh-Hant" original="../DemoClientStrings.resx">
+    <body>
+      <trans-unit id="CouldNotFetch">
+        <source>Could not fetch {0}: {1}</source>
+        <target state="translated">無法擷取 {0}：{1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CouldNotOpen">
+        <source>Could not open {0}: {1}</source>
+        <target state="translated">無法開啟 {0}：{1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CouldNotRead">
+        <source>Could not read {0}: {1}</source>
+        <target state="translated">無法讀取 {0}：{1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DocumentSummary">
+        <source>{0} flow nodes, {1} sequence flows, {2} diagram(s)</source>
+        <target state="translated">{0} 個流程節點、{1} 條順序流、{2} 個圖表</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.AnimateTokens">
+        <source>Animate tokens</source>
+        <target state="translated">動態顯示權杖</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.CanvasReady">
+        <source>Canvas ready (instance {0}, config revision {1})</source>
+        <target state="translated">畫布已就緒（執行個體 {0}，組態修訂 {1}）</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ConfigurationRejected">
+        <source>Configuration rejected [{0}] at {1}: {2}</source>
+        <target state="translated">組態遭拒 [{0}]，位置 {1}：{2}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.DiagramPath">
+        <source>Diagram path</source>
+        <target state="translated">圖表路徑</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.EditRejected">
+        <source>Refused ({0}): {1}</source>
+        <target state="translated">已拒絕（{0}）：{1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Edited">
+        <source>Edited: {0} nodes, {1} flows.</source>
+        <target state="translated">已編輯：{0} 個節點、{1} 條流。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ExecutionState">
+        <source>Execution state</source>
+        <target state="translated">執行狀態</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ExportJson">
+        <source>Export JSON</source>
+        <target state="translated">匯出 JSON</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ExportXml">
+        <source>Export XML</source>
+        <target state="translated">匯出 XML</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ExportedBpmn">
+        <source>Exported BPMN {0}</source>
+        <target state="translated">已匯出 BPMN {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.HighContrast">
+        <source>High contrast</source>
+        <target state="translated">高對比</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Navigated">
+        <source>{0}: {1}</source>
+        <target state="translated">{0}：{1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.NothingSelected">
+        <source>Nothing selected.</source>
+        <target state="translated">未選取任何項目。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.OpenFile">
+        <source>Open file</source>
+        <target state="translated">開啟檔案</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Opened">
+        <source>Opened {0}.</source>
+        <target state="translated">已開啟 {0}。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Properties">
+        <source>Properties</source>
+        <target state="translated">屬性</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ReadOnly">
+        <source>Read only</source>
+        <target state="translated">唯讀</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Reading">
+        <source>Reading {0}...</source>
+        <target state="translated">正在讀取 {0}...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Rendered">
+        <source>Rendered {0} shapes and {1} connectors on '{2}'</source>
+        <target state="translated">已在「{2}」上繪製 {0} 個圖形與 {1} 條連接線</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SelectedElement">
+        <source>Selected {0}.</source>
+        <target state="translated">已選取 {0}。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SelectedElements">
+        <source>Selected {0} elements.</source>
+        <target state="translated">已選取 {0} 個元素。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ServiceTimeout">
+        <source>The service did not answer in time.</source>
+        <target state="translated">服務未在時限內回應。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SnapToGrid">
+        <source>Snap to grid</source>
+        <target state="translated">貼齊格線</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Title">
+        <source>BPMN editor</source>
+        <target state="translated">BPMN 編輯器</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Unrendered">
+        <source> ({0} DI entries had no matching element)</source>
+        <target state="translated">（{0} 個 DI 項目沒有對應的元素）</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExportSeverity.Dropped">
+        <source>Dropped</source>
+        <target state="translated">已捨棄</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExportSeverity.Info">
+        <source>Info</source>
+        <target state="translated">資訊</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExportSeverity.Normalized">
+        <source>Normalized</source>
+        <target state="translated">已正規化</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Activities">
+        <source>Activities and markers</source>
+        <target state="translated">活動與標記</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Connectors">
+        <source>Connectors and artifacts</source>
+        <target state="translated">連接線與工件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Events">
+        <source>Events: all triggers by context</source>
+        <target state="translated">事件：依情境列出所有觸發類型</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Gateways">
+        <source>Gateways</source>
+        <target state="translated">閘道</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.NotationSheet">
+        <source>Notation sheet</source>
+        <target state="translated">符號表</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Rendered">
+        <source>{0} shapes, {1} connectors</source>
+        <target state="translated">{0} 個圖形、{1} 條連接線</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Swimlanes">
+        <source>Pools and Lanes: both orientations</source>
+        <target state="translated">池與泳道：兩種方向</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Title">
+        <source>BPMN notation gallery</source>
+        <target state="translated">BPMN 符號圖庫</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Gallery">
+        <source>Notation gallery</source>
+        <target state="translated">符號圖庫</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Heading">
+        <source>BPMN component playground</source>
+        <target state="translated">BPMN 元件測試區</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Icons">
+        <source>Icon manifest</source>
+        <target state="translated">圖示清單</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Interchange">
+        <source>XML interchange</source>
+        <target state="translated">XML 交換</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.OpenEditor">
+        <source>Open the editor</source>
+        <target state="translated">開啟編輯器</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.PlainEditor">
+        <source>Plain HTML editor</source>
+        <target state="translated">純 HTML 編輯器</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Title">
+        <source>Home</source>
+        <target state="translated">首頁</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.ActivityMarkers">
+        <source>Activity markers</source>
+        <target state="translated">活動標記</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.EventTriggers">
+        <source>Event triggers</source>
+        <target state="translated">事件觸發類型</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.Gateways">
+        <source>Gateways</source>
+        <target state="translated">閘道</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.Metadata">
+        <source>{0} icons, version {1}, content {2} — rendered by the C# registry from the manifest embedded in the component assembly.</source>
+        <target state="translated">{0} 個圖示，版本 {1}，內容 {2} — 由 C# 登錄機制依元件組件內嵌的清單繪製。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.TaskTypes">
+        <source>Task type symbols</source>
+        <target state="translated">任務類型符號</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.Title">
+        <source>BPMN icon manifest</source>
+        <target state="translated">BPMN 圖示清單</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportDiagnostics">
+        <source>{0} import diagnostic(s)</source>
+        <target state="translated">{0} 項匯入診斷</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportSeverity.Degraded">
+        <source>Degraded</source>
+        <target state="translated">已降級</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportSeverity.Dropped">
+        <source>Dropped</source>
+        <target state="translated">已捨棄</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportSeverity.Info">
+        <source>Info</source>
+        <target state="translated">資訊</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportSeverity.SchemaError">
+        <source>Schema error</source>
+        <target state="translated">結構描述錯誤</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.AllowLossy">
+        <source>Allow canonical output that drops source content</source>
+        <target state="translated">允許會捨棄來源內容的標準輸出</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Artifacts">
+        <source>Artifacts</source>
+        <target state="translated">工件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Canonical">
+        <source>Canonical</source>
+        <target state="translated">標準</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.DataElements">
+        <source>Data elements</source>
+        <target state="translated">資料元素</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Edges">
+        <source>Edges</source>
+        <target state="translated">邊</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ExportDiagnostics">
+        <source>{0} export diagnostic(s)</source>
+        <target state="translated">{0} 項匯出診斷</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ExportRefused">
+        <source>Canonical export refused: {0} source loss(es). Enable the opt-in to review lossy output. {1}</source>
+        <target state="translated">已拒絕標準匯出：{0} 項來源遺失。請啟用選用項目以檢視有損輸出。{1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Fidelity">
+        <source>Fidelity</source>
+        <target state="translated">保真</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.FlowNodes">
+        <source>Flow nodes</source>
+        <target state="translated">流程節點</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ForeignAttributes">
+        <source>Foreign attributes</source>
+        <target state="translated">外部屬性</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.GlobalDefinitions">
+        <source>Global definitions</source>
+        <target state="translated">全域定義</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ImportSummary">
+        <source>{0} · {1} import diagnostic(s)</source>
+        <target state="translated">{0} — {1} 項匯入診斷</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Intro">
+        <source>Reads a sample, writes it back in both export modes, then reads the result again and compares. Canonical mode regenerates the document from the semantic model; fidelity mode edits the file that was read (specification section 10.6).</source>
+        <target state="translated">讀取範例後，以兩種匯出模式寫回，再讀取結果並進行比較。標準模式會從語意模型重新產生文件；保真模式則編輯已讀取的檔案（規格第 10.6 節）。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Lanes">
+        <source>Lanes</source>
+        <target state="translated">泳道</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Measure">
+        <source>Measure</source>
+        <target state="translated">度量</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.MessageFlows">
+        <source>Message flows</source>
+        <target state="translated">訊息流</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ModeSummary">
+        <source>{0} characters · {1} line(s) differ from the original · stable on rewrite: {2} · mode used: {3}</source>
+        <target state="translated">{0} 個字元 · 與原始檔有 {1} 行差異 · 重寫後穩定：{2} · 使用的模式：{3}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.NoLossDetails">
+        <source>No loss details were provided.</source>
+        <target state="translated">未提供遺失詳細資料。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Output">
+        <source>Output</source>
+        <target state="translated">輸出</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.PreservedElements">
+        <source>Preserved root elements</source>
+        <target state="translated">已保留的根元素</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Report">
+        <source>Round-trip report</source>
+        <target state="translated">來回轉換報告</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.RoundTripping">
+        <source>Round-tripping {0}...</source>
+        <target state="translated">正在來回轉換 {0}...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.SequenceFlows">
+        <source>Sequence flows</source>
+        <target state="translated">順序流</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Shapes">
+        <source>Shapes</source>
+        <target state="translated">圖形</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Stable">
+        <source>Stable on rewrite</source>
+        <target state="translated">重寫後穩定</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Title">
+        <source>BPMN interchange</source>
+        <target state="translated">BPMN 交換</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.VendorExtensions">
+        <source>Vendor extensions</source>
+        <target state="translated">廠商擴充</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Was">
+        <source>{0} (was {1})</source>
+        <target state="translated">{0}（原為 {1}）</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Waypoints">
+        <source>Waypoints</source>
+        <target state="translated">路徑點</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="No">
+        <source>no</source>
+        <target state="translated">否</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SampleDiagram">
+        <source>Sample diagram</source>
+        <target state="translated">範例圖表</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Yes">
+        <source>yes</source>
+        <target state="translated">是</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

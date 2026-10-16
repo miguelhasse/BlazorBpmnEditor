@@ -1,0 +1,23 @@
+﻿@page "/Error"
+
+<PageTitle>@Localizer["Error.Title"]</PageTitle>
+
+<h1 class="text-danger">@Localizer["Error.Heading"]</h1>
+<h2 class="text-danger">@Localizer["Error.Description"]</h2>
+
+@if (ShowRequestId)
+{
+    <p>
+        <strong>@Localizer["Error.RequestId"]</strong> <code>@RequestId</code>
+    </p>
+}
+
+<h3>@Localizer["Error.DevelopmentMode"]</h3>
+<p>
+    @Localizer["Error.DevelopmentDetails", "Development"]
+</p>
+<p>
+    <strong>@Localizer["Error.DevelopmentWarning", "Development"]</strong>
+    @Localizer["Error.SensitiveInformation"]
+    @Localizer["Error.LocalDebugging", "Development", "ASPNETCORE_ENVIRONMENT"]
+</p>

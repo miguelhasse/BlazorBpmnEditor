@@ -1,0 +1,147 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.AspNetCore.Components.Bpmn.Resources.BpmnEditorStrings> EditorL
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnPropertyPanelBase
+
+<BpmnPropertyScopeProvider Block="bpmn-properties" MultilineRows="3" Editors="@Session.Editors" IsReadOnly="@Inspecting" Document="@Document" Revision="@Revision">
+<section class="@CssClass("bpmn-properties")" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+    @if (Snapshots.Count == 0)
+    {
+        @if (EmptyTemplate is not null) { @EmptyTemplate }
+        else { <p class="bpmn-properties__empty">@EditorText("PropertyPanel.Empty")</p> }
+    }
+    else
+    {
+        <header class="bpmn-properties__header">
+            <h2 class="bpmn-properties__title">@Title</h2>
+            @if (Subtitle is { Length: > 0 } subtitle)
+            {
+                <p class="bpmn-properties__subtitle">@subtitle</p>
+            }
+        </header>
+
+        @if (Only is { } one)
+        {
+            <BpmnTemplateChooser Element="@one" />
+            <dl class="bpmn-properties__identity">
+                <div class="bpmn-properties__fact">
+                    <dt>@EditorText("PropertyPanel.Id")</dt>
+                    <dd>
+                        @*
+                            Editable, but never through the property form: an id is what other
+                            elements were written against, so changing it is a whole-document
+                            rewrite and a command of its own. Keyed on the revision so a refused
+                            rename snaps back to the id the document still has.
+                        *@
+                        <input type="text"
+                               class="bpmn-properties__text bpmn-properties__id"
+                               readonly="@Inspecting"
+                               value="@one.ElementId"
+                               aria-label="@EditorText("PropertyPanel.ElementId")"
+                               @key="@($"id:{one.ElementId}:{Revision}")"
+                               @onchange="@(args => RenameAsync(one.ElementId, args.Value as string))" />
+                    </dd>
+                </div>
+                @if (one.ContainerId is { Length: > 0 } container)
+                {
+                    <div class="bpmn-properties__fact">
+                        <dt>@EditorText("PropertyPanel.Container")</dt>
+                        <dd>@container</dd>
+                    </div>
+                }
+                @if (one.LaneId is { Length: > 0 } lane)
+                {
+                    <div class="bpmn-properties__fact">
+                        <dt>@EditorText("PropertyPanel.Lane")</dt>
+                        <dd>@lane</dd>
+                    </div>
+                }
+                @if (one.PoolId is { Length: > 0 } pool)
+                {
+                    <div class="bpmn-properties__fact">
+                        <dt>@EditorText("PropertyPanel.Pool")</dt>
+                        <dd>@pool</dd>
+                    </div>
+                }
+            </dl>
+        }
+
+        @if (Groups.Count == 0)
+        {
+            if (EmptyTemplate is not null) { @EmptyTemplate }
+            else { <p class="bpmn-properties__empty">@NothingToEdit</p> }
+        }
+        @foreach (var group in Groups)
+        {
+            var context = BuildGroupContext(group);
+            if (GroupTemplate is not null)
+            {
+                @GroupTemplate(context)
+            }
+            else
+            {
+                <details class="bpmn-properties__group @(group.Namespace is not null ? "bpmn-properties__group--extension" : null)"
+                         open="@group.OpenByDefault" data-group-id="@group.Id" @key="@(group.Id + ":" + Only?.ElementId)">
+                    <summary class="bpmn-properties__heading" title="@group.Tooltip">
+                        @(group.Label ?? group.Id)
+                        @if (group.Namespace is not null)
+                        {
+                            <span class="bpmn-properties__namespace-badge">@group.Namespace</span>
+                        }
+                    </summary>
+                    <div class="bpmn-properties__properties" role="group" aria-label="@(group.Label ?? group.Id)">
+                        @foreach (var entry in context.Entries)
+                        {
+                            @RenderEntry(BuildEntryContext(entry))
+                        }
+                    </div>
+                </details>
+            }
+        }
+        @if (Only is not null)
+        {
+            <div class="bpmn-properties__group">
+                <BpmnReferenceBrowser />
+            </div>
+        }
+
+        @if (Diagnostics.Count > 0)
+        {
+            <div class="bpmn-properties__group">
+                <h3 class="bpmn-properties__heading">@EditorText("PropertyPanel.Problems")</h3>
+                <ul class="bpmn-properties__diagnostics">
+                    @foreach (var diagnostic in Diagnostics)
+                    {
+                        <li class="bpmn-properties__diagnostic bpmn-properties__diagnostic--@(diagnostic.Severity.ToString().ToLowerInvariant())">
+                            <span class="bpmn-properties__code">@diagnostic.RuleId</span>
+                            <span>@MessageOf(diagnostic)</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+
+        @if (Extensions.Count > 0)
+        {
+            @*
+                Its own group, never mixed into the standard fields: section 7 forbids extension
+                content appearing as a standard property, and a heading between them is what tells
+                the reader that everything below it is a vendor's, with a vendor's meaning.
+            *@
+            <div class="bpmn-properties__group">
+                <h3 class="bpmn-properties__heading">@EditorText("PropertyPanel.Extensions")</h3>
+                <ul class="bpmn-properties__extensions">
+                    @foreach (var extension in Extensions)
+                    {
+                        <li class="bpmn-properties__extension">
+                            <code>@extension.Name</code>
+                            <span class="bpmn-properties__namespace">@extension.Namespace</span>
+                        </li>
+                    }
+                </ul>
+
+                <p class="bpmn-properties__note">@EditorText("PropertyPanel.ExtensionsNote")</p>
+            </div>
+        }
+    }
+</section>
+</BpmnPropertyScopeProvider>

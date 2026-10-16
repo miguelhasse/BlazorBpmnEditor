@@ -1,0 +1,457 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="cs" original="../DemoClientStrings.resx">
+    <body>
+      <trans-unit id="CouldNotFetch">
+        <source>Could not fetch {0}: {1}</source>
+        <target state="translated">Nelze načíst {0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CouldNotOpen">
+        <source>Could not open {0}: {1}</source>
+        <target state="translated">Nelze otevřít {0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CouldNotRead">
+        <source>Could not read {0}: {1}</source>
+        <target state="translated">Nelze přečíst {0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DocumentSummary">
+        <source>{0} flow nodes, {1} sequence flows, {2} diagram(s)</source>
+        <target state="translated">Uzly toku: {0}, sekvenční toky: {1}, diagramy: {2}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.AnimateTokens">
+        <source>Animate tokens</source>
+        <target state="translated">Animovat tokeny</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.CanvasReady">
+        <source>Canvas ready (instance {0}, config revision {1})</source>
+        <target state="translated">Plátno je připraveno (instance {0}, revize konfigurace {1})</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ConfigurationRejected">
+        <source>Configuration rejected [{0}] at {1}: {2}</source>
+        <target state="translated">Konfigurace odmítnuta [{0}] v {1}: {2}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.DiagramPath">
+        <source>Diagram path</source>
+        <target state="translated">Cesta k diagramu</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.EditRejected">
+        <source>Refused ({0}): {1}</source>
+        <target state="translated">Odmítnuto ({0}): {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Edited">
+        <source>Edited: {0} nodes, {1} flows.</source>
+        <target state="translated">Upraveno: uzly {0}, toky {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ExecutionState">
+        <source>Execution state</source>
+        <target state="translated">Stav provádění</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ExportJson">
+        <source>Export JSON</source>
+        <target state="translated">Exportovat JSON</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ExportXml">
+        <source>Export XML</source>
+        <target state="translated">Exportovat XML</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ExportedBpmn">
+        <source>Exported BPMN {0}</source>
+        <target state="translated">Exportováno BPMN {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.HighContrast">
+        <source>High contrast</source>
+        <target state="translated">Vysoký kontrast</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Navigated">
+        <source>{0}: {1}</source>
+        <target state="translated">{0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.NothingSelected">
+        <source>Nothing selected.</source>
+        <target state="translated">Nic není vybráno.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.OpenFile">
+        <source>Open file</source>
+        <target state="translated">Otevřít soubor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Opened">
+        <source>Opened {0}.</source>
+        <target state="translated">Otevřeno: {0}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Properties">
+        <source>Properties</source>
+        <target state="translated">Vlastnosti</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ReadOnly">
+        <source>Read only</source>
+        <target state="translated">Pouze pro čtení</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Reading">
+        <source>Reading {0}...</source>
+        <target state="translated">Čtení {0}...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Rendered">
+        <source>Rendered {0} shapes and {1} connectors on '{2}'</source>
+        <target state="translated">Vykresleno tvarů: {0}, konektorů: {1} na '{2}'</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SelectedElement">
+        <source>Selected {0}.</source>
+        <target state="translated">Vybráno: {0}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SelectedElements">
+        <source>Selected {0} elements.</source>
+        <target state="translated">Vybráno prvků: {0}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ServiceTimeout">
+        <source>The service did not answer in time.</source>
+        <target state="translated">Služba neodpověděla včas.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SnapToGrid">
+        <source>Snap to grid</source>
+        <target state="translated">Přichytávat k mřížce</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Title">
+        <source>BPMN editor</source>
+        <target state="translated">Editor BPMN</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Unrendered">
+        <source> ({0} DI entries had no matching element)</source>
+        <target state="translated"> (položky DI bez odpovídajícího prvku: {0})</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExportSeverity.Dropped">
+        <source>Dropped</source>
+        <target state="translated">Vynecháno</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExportSeverity.Info">
+        <source>Info</source>
+        <target state="translated">Informace</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExportSeverity.Normalized">
+        <source>Normalized</source>
+        <target state="translated">Normalizováno</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Activities">
+        <source>Activities and markers</source>
+        <target state="translated">Aktivity a značky</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Connectors">
+        <source>Connectors and artifacts</source>
+        <target state="translated">Konektory a artefakty</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Events">
+        <source>Events: all triggers by context</source>
+        <target state="translated">Události: všechny spouštěče podle kontextu</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Gateways">
+        <source>Gateways</source>
+        <target state="translated">Brány</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.NotationSheet">
+        <source>Notation sheet</source>
+        <target state="translated">Přehled notace</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Rendered">
+        <source>{0} shapes, {1} connectors</source>
+        <target state="translated">Tvary: {0}, konektory: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Swimlanes">
+        <source>Pools and Lanes: both orientations</source>
+        <target state="translated">Bazény a dráhy: obě orientace</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Title">
+        <source>BPMN notation gallery</source>
+        <target state="translated">Galerie notace BPMN</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Gallery">
+        <source>Notation gallery</source>
+        <target state="translated">Galerie notace</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Heading">
+        <source>BPMN component playground</source>
+        <target state="translated">Zkušební prostředí komponenty BPMN</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Icons">
+        <source>Icon manifest</source>
+        <target state="translated">Manifest ikon</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Interchange">
+        <source>XML interchange</source>
+        <target state="translated">Výměna XML</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.OpenEditor">
+        <source>Open the editor</source>
+        <target state="translated">Otevřít editor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.PlainEditor">
+        <source>Plain HTML editor</source>
+        <target state="translated">Prostý editor HTML</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Title">
+        <source>Home</source>
+        <target state="translated">Domů</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.ActivityMarkers">
+        <source>Activity markers</source>
+        <target state="translated">Značky aktivit</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.EventTriggers">
+        <source>Event triggers</source>
+        <target state="translated">Spouštěče událostí</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.Gateways">
+        <source>Gateways</source>
+        <target state="translated">Brány</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.Metadata">
+        <source>{0} icons, version {1}, content {2} — rendered by the C# registry from the manifest embedded in the component assembly.</source>
+        <target state="translated">Ikony: {0}, verze {1}, obsah {2} — vykresleno registrem v jazyce C# z manifestu vloženého v sestavení komponenty.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.TaskTypes">
+        <source>Task type symbols</source>
+        <target state="translated">Symboly typů úkolů</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.Title">
+        <source>BPMN icon manifest</source>
+        <target state="translated">Manifest ikon BPMN</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportDiagnostics">
+        <source>{0} import diagnostic(s)</source>
+        <target state="translated">Diagnostika importu: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportSeverity.Degraded">
+        <source>Degraded</source>
+        <target state="translated">Zhoršeno</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportSeverity.Dropped">
+        <source>Dropped</source>
+        <target state="translated">Vynecháno</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportSeverity.Info">
+        <source>Info</source>
+        <target state="translated">Informace</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportSeverity.SchemaError">
+        <source>Schema error</source>
+        <target state="translated">Chyba schématu</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.AllowLossy">
+        <source>Allow canonical output that drops source content</source>
+        <target state="translated">Povolit kanonický výstup, který vynechává obsah zdroje</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Artifacts">
+        <source>Artifacts</source>
+        <target state="translated">Artefakty</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Canonical">
+        <source>Canonical</source>
+        <target state="translated">Kanonický</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.DataElements">
+        <source>Data elements</source>
+        <target state="translated">Datové prvky</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Edges">
+        <source>Edges</source>
+        <target state="translated">Hrany</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ExportDiagnostics">
+        <source>{0} export diagnostic(s)</source>
+        <target state="translated">Diagnostika exportu: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ExportRefused">
+        <source>Canonical export refused: {0} source loss(es). Enable the opt-in to review lossy output. {1}</source>
+        <target state="translated">Kanonický export odmítnut: ztráty ze zdroje: {0}. Povolte výslovný souhlas pro kontrolu výstupu se ztrátami. {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Fidelity">
+        <source>Fidelity</source>
+        <target state="translated">Věrnost</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.FlowNodes">
+        <source>Flow nodes</source>
+        <target state="translated">Uzly toku</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ForeignAttributes">
+        <source>Foreign attributes</source>
+        <target state="translated">Cizí atributy</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.GlobalDefinitions">
+        <source>Global definitions</source>
+        <target state="translated">Globální definice</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ImportSummary">
+        <source>{0} · {1} import diagnostic(s)</source>
+        <target state="translated">{0} — diagnostika importu: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Intro">
+        <source>Reads a sample, writes it back in both export modes, then reads the result again and compares. Canonical mode regenerates the document from the semantic model; fidelity mode edits the file that was read (specification section 10.6).</source>
+        <target state="translated">Načte vzorek, zapíše jej zpět v obou režimech exportu, výsledek znovu načte a porovná. Kanonický režim znovu vytvoří dokument ze sémantického modelu; režim věrnosti upravuje načtený soubor (specifikace, oddíl 10.6).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Lanes">
+        <source>Lanes</source>
+        <target state="translated">Dráhy</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Measure">
+        <source>Measure</source>
+        <target state="translated">Míra</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.MessageFlows">
+        <source>Message flows</source>
+        <target state="translated">Toky zpráv</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ModeSummary">
+        <source>{0} characters · {1} line(s) differ from the original · stable on rewrite: {2} · mode used: {3}</source>
+        <target state="translated">Znaků: {0} — řádků lišících se od originálu: {1} — stabilní při přepisu: {2} — použitý režim: {3}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.NoLossDetails">
+        <source>No loss details were provided.</source>
+        <target state="translated">Nebyly poskytnuty žádné podrobnosti o ztrátách.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Output">
+        <source>Output</source>
+        <target state="translated">Výstup</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.PreservedElements">
+        <source>Preserved root elements</source>
+        <target state="translated">Zachované kořenové prvky</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Report">
+        <source>Round-trip report</source>
+        <target state="translated">Zpráva o zpětné konverzi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.RoundTripping">
+        <source>Round-tripping {0}...</source>
+        <target state="translated">Zpětná konverze {0}...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.SequenceFlows">
+        <source>Sequence flows</source>
+        <target state="translated">Sekvenční toky</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Shapes">
+        <source>Shapes</source>
+        <target state="translated">Tvary</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Stable">
+        <source>Stable on rewrite</source>
+        <target state="translated">Stabilní při přepisu</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Title">
+        <source>BPMN interchange</source>
+        <target state="translated">Výměna BPMN</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.VendorExtensions">
+        <source>Vendor extensions</source>
+        <target state="translated">Rozšíření dodavatele</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Was">
+        <source>{0} (was {1})</source>
+        <target state="translated">{0} (bylo {1})</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Waypoints">
+        <source>Waypoints</source>
+        <target state="translated">Body trasy</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="No">
+        <source>no</source>
+        <target state="translated">ne</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SampleDiagram">
+        <source>Sample diagram</source>
+        <target state="translated">Ukázkový diagram</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Yes">
+        <source>yes</source>
+        <target state="translated">ano</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

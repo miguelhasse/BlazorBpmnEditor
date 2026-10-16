@@ -1,0 +1,457 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="pt-BR" original="../DemoClientStrings.resx">
+    <body>
+      <trans-unit id="CouldNotFetch">
+        <source>Could not fetch {0}: {1}</source>
+        <target state="translated">Não foi possível obter {0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CouldNotOpen">
+        <source>Could not open {0}: {1}</source>
+        <target state="translated">Não foi possível abrir {0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CouldNotRead">
+        <source>Could not read {0}: {1}</source>
+        <target state="translated">Não foi possível ler {0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DocumentSummary">
+        <source>{0} flow nodes, {1} sequence flows, {2} diagram(s)</source>
+        <target state="translated">{0} nós de fluxo, {1} fluxos de sequência, {2} diagrama(s)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.AnimateTokens">
+        <source>Animate tokens</source>
+        <target state="translated">Animar tokens</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.CanvasReady">
+        <source>Canvas ready (instance {0}, config revision {1})</source>
+        <target state="translated">Canvas pronto (instância {0}, revisão de configuração {1})</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ConfigurationRejected">
+        <source>Configuration rejected [{0}] at {1}: {2}</source>
+        <target state="translated">Configuração rejeitada [{0}] em {1}: {2}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.DiagramPath">
+        <source>Diagram path</source>
+        <target state="translated">Caminho do diagrama</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.EditRejected">
+        <source>Refused ({0}): {1}</source>
+        <target state="translated">Recusado ({0}): {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Edited">
+        <source>Edited: {0} nodes, {1} flows.</source>
+        <target state="translated">Editado: {0} nós, {1} fluxos.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ExecutionState">
+        <source>Execution state</source>
+        <target state="translated">Estado de execução</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ExportJson">
+        <source>Export JSON</source>
+        <target state="translated">Exportar JSON</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ExportXml">
+        <source>Export XML</source>
+        <target state="translated">Exportar XML</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ExportedBpmn">
+        <source>Exported BPMN {0}</source>
+        <target state="translated">BPMN {0} exportado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.HighContrast">
+        <source>High contrast</source>
+        <target state="translated">Alto contraste</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Navigated">
+        <source>{0}: {1}</source>
+        <target state="translated">{0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.NothingSelected">
+        <source>Nothing selected.</source>
+        <target state="translated">Nada selecionado.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.OpenFile">
+        <source>Open file</source>
+        <target state="translated">Abrir arquivo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Opened">
+        <source>Opened {0}.</source>
+        <target state="translated">{0} aberto.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Properties">
+        <source>Properties</source>
+        <target state="translated">Propriedades</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ReadOnly">
+        <source>Read only</source>
+        <target state="translated">Somente leitura</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Reading">
+        <source>Reading {0}...</source>
+        <target state="translated">Lendo {0}...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Rendered">
+        <source>Rendered {0} shapes and {1} connectors on '{2}'</source>
+        <target state="translated">{0} formas e {1} conectores renderizados em '{2}'</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SelectedElement">
+        <source>Selected {0}.</source>
+        <target state="translated">{0} selecionado.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SelectedElements">
+        <source>Selected {0} elements.</source>
+        <target state="translated">{0} elementos selecionados.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ServiceTimeout">
+        <source>The service did not answer in time.</source>
+        <target state="translated">O serviço não respondeu a tempo.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SnapToGrid">
+        <source>Snap to grid</source>
+        <target state="translated">Alinhar à grade</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Title">
+        <source>BPMN editor</source>
+        <target state="translated">Editor BPMN</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Unrendered">
+        <source> ({0} DI entries had no matching element)</source>
+        <target state="translated"> ({0} entradas DI sem elemento correspondente)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExportSeverity.Dropped">
+        <source>Dropped</source>
+        <target state="translated">Descartado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExportSeverity.Info">
+        <source>Info</source>
+        <target state="translated">Informação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExportSeverity.Normalized">
+        <source>Normalized</source>
+        <target state="translated">Normalizado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Activities">
+        <source>Activities and markers</source>
+        <target state="translated">Atividades e marcadores</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Connectors">
+        <source>Connectors and artifacts</source>
+        <target state="translated">Conectores e artefatos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Events">
+        <source>Events: all triggers by context</source>
+        <target state="translated">Eventos: todos os gatilhos por contexto</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Gateways">
+        <source>Gateways</source>
+        <target state="translated">Gateways</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.NotationSheet">
+        <source>Notation sheet</source>
+        <target state="translated">Folha de notação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Rendered">
+        <source>{0} shapes, {1} connectors</source>
+        <target state="translated">{0} formas, {1} conectores</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Swimlanes">
+        <source>Pools and Lanes: both orientations</source>
+        <target state="translated">Pools e raias: ambas as orientações</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Title">
+        <source>BPMN notation gallery</source>
+        <target state="translated">Galeria de notação BPMN</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Gallery">
+        <source>Notation gallery</source>
+        <target state="translated">Galeria de notação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Heading">
+        <source>BPMN component playground</source>
+        <target state="translated">Área de testes do componente BPMN</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Icons">
+        <source>Icon manifest</source>
+        <target state="translated">Manifesto de ícones</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Interchange">
+        <source>XML interchange</source>
+        <target state="translated">Intercâmbio XML</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.OpenEditor">
+        <source>Open the editor</source>
+        <target state="translated">Abrir o editor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.PlainEditor">
+        <source>Plain HTML editor</source>
+        <target state="translated">Editor HTML simples</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Title">
+        <source>Home</source>
+        <target state="translated">Início</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.ActivityMarkers">
+        <source>Activity markers</source>
+        <target state="translated">Marcadores de atividade</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.EventTriggers">
+        <source>Event triggers</source>
+        <target state="translated">Gatilhos de evento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.Gateways">
+        <source>Gateways</source>
+        <target state="translated">Gateways</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.Metadata">
+        <source>{0} icons, version {1}, content {2} — rendered by the C# registry from the manifest embedded in the component assembly.</source>
+        <target state="translated">{0} ícones, versão {1}, conteúdo {2} — renderizado pelo registro C# a partir do manifesto incorporado no assembly do componente.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.TaskTypes">
+        <source>Task type symbols</source>
+        <target state="translated">Símbolos de tipo de tarefa</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.Title">
+        <source>BPMN icon manifest</source>
+        <target state="translated">Manifesto de ícones BPMN</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportDiagnostics">
+        <source>{0} import diagnostic(s)</source>
+        <target state="translated">{0} diagnóstico(s) de importação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportSeverity.Degraded">
+        <source>Degraded</source>
+        <target state="translated">Degradado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportSeverity.Dropped">
+        <source>Dropped</source>
+        <target state="translated">Descartado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportSeverity.Info">
+        <source>Info</source>
+        <target state="translated">Informação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportSeverity.SchemaError">
+        <source>Schema error</source>
+        <target state="translated">Erro de esquema</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.AllowLossy">
+        <source>Allow canonical output that drops source content</source>
+        <target state="translated">Permitir saída canônica que descarta conteúdo de origem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Artifacts">
+        <source>Artifacts</source>
+        <target state="translated">Artefatos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Canonical">
+        <source>Canonical</source>
+        <target state="translated">Canônico</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.DataElements">
+        <source>Data elements</source>
+        <target state="translated">Elementos de dados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Edges">
+        <source>Edges</source>
+        <target state="translated">Arestas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ExportDiagnostics">
+        <source>{0} export diagnostic(s)</source>
+        <target state="translated">{0} diagnóstico(s) de exportação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ExportRefused">
+        <source>Canonical export refused: {0} source loss(es). Enable the opt-in to review lossy output. {1}</source>
+        <target state="translated">Exportação canônica recusada: {0} perda(s) de origem. Ative a opção para revisar a saída com perdas. {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Fidelity">
+        <source>Fidelity</source>
+        <target state="translated">Fidelidade</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.FlowNodes">
+        <source>Flow nodes</source>
+        <target state="translated">Nós de fluxo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ForeignAttributes">
+        <source>Foreign attributes</source>
+        <target state="translated">Atributos externos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.GlobalDefinitions">
+        <source>Global definitions</source>
+        <target state="translated">Definições globais</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ImportSummary">
+        <source>{0} · {1} import diagnostic(s)</source>
+        <target state="translated">{0} — {1} diagnóstico(s) de importação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Intro">
+        <source>Reads a sample, writes it back in both export modes, then reads the result again and compares. Canonical mode regenerates the document from the semantic model; fidelity mode edits the file that was read (specification section 10.6).</source>
+        <target state="translated">Lê um exemplo, grava-o novamente nos dois modos de exportação, lê o resultado outra vez e compara. O modo canônico regenera o documento a partir do modelo semântico; o modo de fidelidade edita o arquivo que foi lido (seção 10.6 da especificação).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Lanes">
+        <source>Lanes</source>
+        <target state="translated">Raias</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Measure">
+        <source>Measure</source>
+        <target state="translated">Medida</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.MessageFlows">
+        <source>Message flows</source>
+        <target state="translated">Fluxos de mensagem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ModeSummary">
+        <source>{0} characters · {1} line(s) differ from the original · stable on rewrite: {2} · mode used: {3}</source>
+        <target state="translated">{0} caracteres — {1} linha(s) diferente(s) do original — estável ao regravar: {2} — modo usado: {3}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.NoLossDetails">
+        <source>No loss details were provided.</source>
+        <target state="translated">Nenhum detalhe de perda foi fornecido.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Output">
+        <source>Output</source>
+        <target state="translated">Saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.PreservedElements">
+        <source>Preserved root elements</source>
+        <target state="translated">Elementos raiz preservados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Report">
+        <source>Round-trip report</source>
+        <target state="translated">Relatório de ida e volta</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.RoundTripping">
+        <source>Round-tripping {0}...</source>
+        <target state="translated">Executando ida e volta de {0}...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.SequenceFlows">
+        <source>Sequence flows</source>
+        <target state="translated">Fluxos de sequência</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Shapes">
+        <source>Shapes</source>
+        <target state="translated">Formas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Stable">
+        <source>Stable on rewrite</source>
+        <target state="translated">Estável ao regravar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Title">
+        <source>BPMN interchange</source>
+        <target state="translated">Intercâmbio BPMN</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.VendorExtensions">
+        <source>Vendor extensions</source>
+        <target state="translated">Extensões de fornecedor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Was">
+        <source>{0} (was {1})</source>
+        <target state="translated">{0} (era {1})</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Waypoints">
+        <source>Waypoints</source>
+        <target state="translated">Pontos de passagem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="No">
+        <source>no</source>
+        <target state="translated">não</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SampleDiagram">
+        <source>Sample diagram</source>
+        <target state="translated">Diagrama de exemplo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Yes">
+        <source>yes</source>
+        <target state="translated">sim</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

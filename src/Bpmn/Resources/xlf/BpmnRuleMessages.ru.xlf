@@ -1,0 +1,852 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="ru" original="../BpmnRuleMessages.resx">
+    <body>
+      <trans-unit id="CT-001">
+        <source>An element cannot both own local flow elements and reference a called element.</source>
+        <target state="translated">Элемент не может одновременно владеть локальными элементами потока и ссылаться на вызываемый элемент.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-001.Native">
+        <source>An element cannot both own local flow elements and reference a called element.</source>
+        <target state="translated">Элемент не может одновременно владеть локальными элементами потока и ссылаться на вызываемый элемент.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-001.Native.2">
+        <source>A Call Activity never owns local flow elements; its content lives in the called Process.</source>
+        <target state="translated">Вызов процесса никогда не владеет локальными элементами потока; его содержимое находится в вызываемом процессе.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-005">
+        <source>Only a Boundary Event may declare an attachment to a host Activity.</source>
+        <target state="translated">Только граничное событие может объявлять присоединение к хост-активности.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-005.Native">
+        <source>Only a Boundary Event may declare an attachment to a host Activity.</source>
+        <target state="translated">Только граничное событие может объявлять присоединение к хост-активности.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-005.Native.2">
+        <source>A Boundary Event must be attached to exactly one Activity.</source>
+        <target state="translated">Граничное событие должно быть присоединено ровно к одной активности.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-005.Native.3">
+        <source>Boundary Event host '{0}' does not resolve to a flow node.</source>
+        <target state="translated">Хост «{0}» граничного события не разрешается в узел потока.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-007">
+        <source>A collapsed Sub-Process or Call Activity has visible embedded process-content cells in the active plane.</source>
+        <target state="translated">Свёрнутый подпроцесс или вызов процесса имеет видимые ячейки встроенного содержимого процесса на активной плоскости.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-007.Detail">
+        <source>It is drawn collapsed on '{0}', which also draws '{1}' from inside it.</source>
+        <target state="translated">Он нарисован свёрнутым на «{0}», где также рисуется «{1}» из его внутренней части.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-009">
+        <source>A Sub-Process expansion state disagrees with BPMNShape.isExpanded, or a collapsed Sub-Process exposes active nested visual cells/tools.</source>
+        <target state="translated">Состояние развёрнутости подпроцесса не согласуется с BPMNShape.isExpanded, либо свёрнутый подпроцесс отображает активные вложенные визуальные ячейки/инструменты.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-009.Detail">
+        <source>It is drawn expanded on '{0}' and its content is also drawn on '{1}'.</source>
+        <target state="translated">Он нарисован развёрнутым на «{0}», а его содержимое также нарисовано на «{1}».</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-012">
+        <source>A Lane subdivides a Pool, so its LaneSet's Process must be referenced by a Participant.</source>
+        <target state="translated">Дорожка делит пул, поэтому на процесс её набора дорожек должен ссылаться участник.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-012.Detail">
+        <source>No Participant references '{0}'.</source>
+        <target state="translated">Ни один участник не ссылается на «{0}».</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D001">
+        <source>Every Start Event has 0 incoming Sequence Flow.</source>
+        <target state="translated">У каждого начального события 0 входящих потоков управления.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D001.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">У {0}: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D002">
+        <source>Every End Event has 0 outgoing Sequence Flow.</source>
+        <target state="translated">У каждого конечного события 0 исходящих потоков управления.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D002.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">У {0}: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D003">
+        <source>Every Boundary Event has 0 incoming Sequence Flow and is attached to exactly one Activity.</source>
+        <target state="translated">У каждого граничного события 0 входящих потоков управления, и оно присоединено ровно к одной активности.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D003.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">У {0}: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D003.Detail.2">
+        <source>{0} is attached to nothing.</source>
+        <target state="translated">{0} ни к чему не присоединено.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D003.Detail.3">
+        <source>{0} is attached to {1}, which is not an Activity.</source>
+        <target state="translated">{0} присоединено к {1}, которое не является активностью.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D004">
+        <source>Product lint: Exclusive/Inclusive split has exactly one flow flagged isDefault OR every non-default flow has a conditionExpression.</source>
+        <target state="translated">Проверка продукта: у эксклюзивного/включающего разветвления ровно один поток помечен isDefault ИЛИ у каждого непомеченного потока есть conditionExpression.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D004.Detail">
+        <source>{0} has {1} default flows.</source>
+        <target state="translated">У {0} потоков по умолчанию: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D004.Detail.2">
+        <source>{0} has {1} branches with neither a conditionExpression nor the default flag.</source>
+        <target state="translated">У {0} ветвей без conditionExpression и без флага по умолчанию: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D005">
+        <source>Parallel/Complex/Inclusive gateway used as merge only synchronizes declared incoming flows (redundant gateway if incoming count = 1).</source>
+        <target state="translated">Параллельный/комплексный/включающий шлюз, используемый как слияние, лишь синхронизирует объявленные входящие потоки (шлюз избыточен, если входящий поток один).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D005.Detail">
+        <source>{0} merges a single flow.</source>
+        <target state="translated">{0} объединяет единственный поток.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D006">
+        <source>Event-Based Gateway: all outgoing targets are catch-events/receive-tasks, none carry conditions.</source>
+        <target state="translated">Шлюз на основе событий: все приёмники исходящих потоков — перехватывающие события/задачи получения, и ни у одного нет условий.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D006.Detail">
+        <source>A branch carries a condition.</source>
+        <target state="translated">Одна из ветвей содержит условие.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D006.Detail.2">
+        <source>{0} is neither a catching Event nor a Receive Task.</source>
+        <target state="translated">{0} не является ни перехватывающим событием, ни задачей получения.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D007">
+        <source>No Sequence Flow crosses a Pool boundary.</source>
+        <target state="translated">Ни один поток управления не пересекает границу пула.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D007.Detail">
+        <source>{0} and {1} are in different Pools.</source>
+        <target state="translated">{0} и {1} находятся в разных пулах.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D008">
+        <source>Every Message Flow crosses exactly one Pool boundary.</source>
+        <target state="translated">Каждый поток сообщений пересекает ровно одну границу пула.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D008.Detail">
+        <source>One of its ends is not in a Pool.</source>
+        <target state="translated">Один из его концов не находится в пуле.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D008.Detail.2">
+        <source>Both of its ends are in the same Pool.</source>
+        <target state="translated">Оба его конца находятся в одном пуле.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D009">
+        <source>Every node is reachable from some Start Event (no orphan nodes) and every Start Event can reach some End Event (no dead ends).</source>
+        <target state="translated">Каждый узел достижим из некоторого начального события (нет изолированных узлов), и из каждого начального события достижимо некоторое конечное событие (нет тупиков).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D009.Detail">
+        <source>{0} cannot be reached from any Start Event.</source>
+        <target state="translated">{0} недостижим ни из одного начального события.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D009.Detail.2">
+        <source>{0} cannot reach any End Event.</source>
+        <target state="translated">Из {0} не достичь ни одного конечного события.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D010">
+        <source>Event Sub-Process start event is typed (not None) and has no drawn Sequence Flow in/out.</source>
+        <target state="translated">Начальное событие событийного подпроцесса типизировано (не None) и не имеет нарисованных входящих/исходящих потоков управления.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D010.Detail">
+        <source>{0} has {1} Sequence Flow crossing its boundary.</source>
+        <target state="translated">Потоков управления, пересекающих границу {0}: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D010.Detail.2">
+        <source>{0} has {1} Start Events; it needs exactly one.</source>
+        <target state="translated">У {0} начальных событий: {1}; требуется ровно одно.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D010.Detail.3">
+        <source>An untyped Start Event can never trigger it.</source>
+        <target state="translated">Нетипизированное начальное событие никогда не сможет его запустить.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D011">
+        <source>Link Intermediate throw and catch Events pair one-to-one within a Process.</source>
+        <target state="translated">Промежуточные генерирующие и перехватывающие события ссылки образуют пары один к одному в пределах процесса.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D011.Detail">
+        <source>'{0}' is caught {1} times; a Link has one destination.</source>
+        <target state="translated">«{0}» перехватывается {1} раз; у ссылки одно назначение.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D011.Detail.2">
+        <source>'{0}' is thrown but never caught.</source>
+        <target state="translated">«{0}» генерируется, но никогда не перехватывается.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D011.Detail.3">
+        <source>'{0}' is caught but never thrown.</source>
+        <target state="translated">«{0}» перехватывается, но никогда не генерируется.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D012">
+        <source>A Compensation Boundary Event handler is not reached by ordinary Sequence Flow.</source>
+        <target state="translated">Обработчик граничного события компенсации не достигается обычным потоком управления.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D012.Detail">
+        <source>It has {0} incoming Sequence Flow.</source>
+        <target state="translated">Входящих потоков управления: {0}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D013">
+        <source>An End Event with outgoing Message Flow has a Message result, or Multiple when it has more than one.</source>
+        <target state="translated">Конечное событие с исходящим потоком сообщений имеет результат «Сообщение» или «Множественное», если потоков больше одного.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D013.Detail">
+        <source>{0} sends {1} message(s) but its result is {2}.</source>
+        <target state="translated">{0} отправляет сообщений: {1}, но его результат — {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D014">
+        <source>Event-Based Gateway targets are homogeneous and have no other incoming Sequence Flow.</source>
+        <target state="translated">Приёмники шлюза на основе событий однородны и не имеют других входящих потоков управления.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D014.Detail">
+        <source>{0} also has {1} incoming Sequence Flow from elsewhere.</source>
+        <target state="translated">У {0} есть также входящие потоки управления из других мест: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D014.Detail.2">
+        <source>Its branches mix catching Events and Receive Tasks.</source>
+        <target state="translated">Его ветви смешивают перехватывающие события и задачи получения.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015">
+        <source>Every BPMNEdge has at least two waypoints, every BPMNShape has positive bounds, and every DI element resolves to a semantic element.</source>
+        <target state="translated">У каждого BPMNEdge не менее двух опорных точек, у каждого BPMNShape положительные границы, и каждый элемент DI разрешается в семантический элемент.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015.Detail">
+        <source>Its bounds are {0} by {1}.</source>
+        <target state="translated">Его границы: {0} на {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015.Detail.2">
+        <source>Shape '{0}' draws an element this document does not have.</source>
+        <target state="translated">Фигура «{0}» рисует элемент, которого нет в этом документе.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015.Detail.3">
+        <source>Its route has {0} waypoint(s).</source>
+        <target state="translated">Опорных точек в его маршруте: {0}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015.Detail.4">
+        <source>Edge '{0}' draws a connector this document does not have.</source>
+        <target state="translated">Ребро «{0}» рисует соединитель, которого нет в этом документе.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D017">
+        <source>Every required reference resolves to an object of the permitted BPMN type.</source>
+        <target state="translated">Каждая обязательная ссылка разрешается в объект допустимого типа BPMN.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D017.Detail">
+        <source>{0} points at '{1}', which is not in this document.</source>
+        <target state="translated">{0} указывает на «{1}», которого нет в этом документе.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D017.Detail.2">
+        <source>{0} points at a {1}, which it may not.</source>
+        <target state="translated">{0} указывает на {1}, что недопустимо.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D018">
+        <source>Every semantic object has a unique XML-safe ID within the document.</source>
+        <target state="translated">У каждого семантического объекта есть уникальный допустимый для XML идентификатор в пределах документа.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D018.Detail">
+        <source>'{0}' is not a valid XML NCName.</source>
+        <target state="translated">«{0}» не является допустимым XML NCName.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D018.Detail.2">
+        <source>'{0}' is used more than once.</source>
+        <target state="translated">«{0}» используется более одного раза.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019">
+        <source>Every FlowNode belongs to exactly one container, and Lane membership agrees with its LaneSet.</source>
+        <target state="translated">Каждый узел потока принадлежит ровно одному контейнеру, а членство в дорожках согласуется с набором дорожек.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail">
+        <source>{0} names container '{1}', which is not one.</source>
+        <target state="translated">{0} называет контейнер «{1}», который таковым не является.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail.2">
+        <source>Its lane set '{0}' is not declared.</source>
+        <target state="translated">Его набор дорожек «{0}» не объявлен.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail.3">
+        <source>It claims '{0}', which does not exist.</source>
+        <target state="translated">Он заявляет «{0}», которого не существует.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail.4">
+        <source>It claims {0}, which belongs to '{1}'.</source>
+        <target state="translated">Он заявляет {0}, который принадлежит «{1}».</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail.5">
+        <source>It is claimed by {0} Lanes.</source>
+        <target state="translated">Его заявляют дорожек: {0}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D020">
+        <source>Event definitions are legal for their context and direction.</source>
+        <target state="translated">Определения событий допустимы для своего контекста и направления.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D020.Detail">
+        <source>{0} is a {1} carrying a {2} trigger.</source>
+        <target state="translated">{0} — {1} с триггером {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D020.Detail.2">
+        <source>{0} is a {1} with an invalid interruption state for {2}.</source>
+        <target state="translated">{0} — {1} с недопустимым состоянием прерывания для {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D020.Detail.3">
+        <source>{0} has an invalid container or Boundary host context.</source>
+        <target state="translated">{0} имеет недопустимый контейнер или контекст хоста граничного события.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021">
+        <source>Definitions has a targetNamespace and namespace-qualified references use resolvable, consistent QNames.</source>
+        <target state="translated">У Definitions есть targetNamespace, а ссылки с квалификацией пространства имён используют разрешимые, согласованные QName.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail">
+        <source>Definitions/@targetNamespace is required and must not be empty.</source>
+        <target state="translated">Definitions/@targetNamespace обязателен и не должен быть пустым.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.2">
+        <source>calledElement value '{0}' has an invalid QName local name.</source>
+        <target state="translated">Значение calledElement «{0}» содержит недопустимое локальное имя QName.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.3">
+        <source>calledElement QName '{0}' has an undeclared prefix or no resolved namespace.</source>
+        <target state="translated">QName calledElement «{0}» имеет необъявленный префикс или неразрешённое пространство имён.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.4">
+        <source>calledElement QName '{0}' was projected as a local reference although its namespace differs from targetNamespace.</source>
+        <target state="translated">QName calledElement «{0}» спроецирован как локальная ссылка, хотя его пространство имён отличается от targetNamespace.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.5">
+        <source>xsi:type QName '{0}' has an undeclared prefix or no resolved namespace.</source>
+        <target state="translated">QName xsi:type «{0}» имеет необъявленный префикс или неразрешённое пространство имён.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.6">
+        <source>xsi:type value '{0}' is not a valid QName.</source>
+        <target state="translated">Значение xsi:type «{0}» не является допустимым QName.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022">
+        <source>Every plane has a diagram owner, each element is drawn at most once per diagram, and label and style references resolve.</source>
+        <target state="translated">У каждой плоскости есть владелец-диаграмма, каждый элемент рисуется на диаграмме не более одного раза, а ссылки на подписи и стили разрешаются.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022.Detail">
+        <source>It is drawn more than once on '{0}'.</source>
+        <target state="translated">Он нарисован более одного раза на «{0}».</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022.Detail.2">
+        <source>Its label references style '{0}', which is not declared.</source>
+        <target state="translated">Его подпись ссылается на стиль «{0}», который не объявлен.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022.Detail.3">
+        <source>Plane '{0}' names no BPMN element.</source>
+        <target state="translated">Плоскость «{0}» не называет ни одного элемента BPMN.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022.Detail.4">
+        <source>Plane '{0}' is owned by '{1}', which does not exist.</source>
+        <target state="translated">Плоскость «{0}» принадлежит «{1}», которого не существует.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D023">
+        <source>Global definitions referenced by the document exist and have the expected type.</source>
+        <target state="translated">Глобальные определения, на которые ссылается документ, существуют и имеют ожидаемый тип.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D023.Detail">
+        <source>{0} calls QName '{1}' in namespace '{2}', which this document does not resolve.</source>
+        <target state="translated">{0} вызывает QName «{1}» в пространстве имён «{2}», которое этот документ не разрешает.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D023.Detail.2">
+        <source>{0} calls '{1}', which this document does not declare as a Process or Global Task.</source>
+        <target state="translated">{0} вызывает «{1}», который этот документ не объявляет как процесс или глобальную задачу.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-002">
+        <source>Group cannot be a connector endpoint (visual grouping only).</source>
+        <target state="translated">Группа не может быть конечной точкой соединителя (только визуальная группировка).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-002b">
+        <source>Group cannot be a connector endpoint (visual grouping only).</source>
+        <target state="translated">Группа не может быть конечной точкой соединителя (только визуальная группировка).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-003">
+        <source>Text Annotation connects only via (undirected) Association, never Data Association.</source>
+        <target state="translated">Текстовая аннотация соединяется только через (ненаправленную) ассоциацию, но не через ассоциацию данных.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-004">
+        <source>Data Object/Data Store connect only via Data Association, never a plain Association.</source>
+        <target state="translated">Объект данных/хранилище данных соединяются только через ассоциацию данных, но не через обычную ассоциацию.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-005">
+        <source>Data Input Association direction is Data Object/Store/Property to an Activity or Throwing Event input.</source>
+        <target state="translated">Входная ассоциация данных направлена от объекта/хранилища/свойства данных ко входу активности или генерирующего события.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-006">
+        <source>Data Output Association direction is an Activity or Catching Event output to a Data Object/Store/Property.</source>
+        <target state="translated">Выходная ассоциация данных направлена от выхода активности или перехватывающего события к объекту/хранилищу/свойству данных.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-001">
+        <source>Every BPMNShape must have positive width and height.</source>
+        <target state="translated">У каждого BPMNShape должны быть положительные ширина и высота.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-001.Native">
+        <source>Every BPMNShape must have positive width and height.</source>
+        <target state="translated">У каждого BPMNShape должны быть положительные ширина и высота.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-002">
+        <source>Every BPMNEdge must have at least two waypoints.</source>
+        <target state="translated">У каждого BPMNEdge должно быть не менее двух опорных точек.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-002.Native">
+        <source>Every BPMNEdge must have at least two waypoints.</source>
+        <target state="translated">У каждого BPMNEdge должно быть не менее двух опорных точек.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-007">
+        <source>isHorizontal is defined only on Pool and Lane shapes.</source>
+        <target state="translated">isHorizontal определён только для фигур пула и дорожки.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-007.Native">
+        <source>isHorizontal is defined only on Pool and Lane shapes.</source>
+        <target state="translated">isHorizontal определён только для фигур пула и дорожки.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-001">
+        <source>Extension content has no resolvable namespace URI (spec §6.1.2 expanded-name identity).</source>
+        <target state="translated">У содержимого расширения нет разрешаемого URI пространства имён (спецификация, §6.1.2, идентичность по расширенному имени).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-001.Detail">
+        <source>&lt;{0}&gt; is in no namespace.</source>
+        <target state="translated">&lt;{0}&gt; не принадлежит ни одному пространству имён.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-002">
+        <source>Extension namespace prefix mapping is inconsistent within the document.</source>
+        <target state="translated">Сопоставление префиксов пространств имён расширений несогласованно в пределах документа.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-003">
+        <source>The document could not be parsed (malformed XML).</source>
+        <target state="translated">Не удалось разобрать документ (некорректный XML).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-004">
+        <source>A registered profile emitted a rule id outside its own declared catalog; the violation was rejected.</source>
+        <target state="translated">Зарегистрированный профиль выдал идентификатор правила вне своего объявленного каталога; нарушение отклонено.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-005">
+        <source>A profile-declared reference attribute in extension content does not resolve to any element in this document.</source>
+        <target state="translated">Атрибут-ссылка, объявленный профилем в содержимом расширения, не разрешается ни в один элемент этого документа.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-006">
+        <source>A registered profile attempted to emit a core BPMN rule id; the override attempt was rejected.</source>
+        <target state="translated">Зарегистрированный профиль попытался выдать идентификатор основного правила BPMN; попытка переопределения отклонена.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-007">
+        <source>An extension SVG decoration was suppressed.</source>
+        <target state="translated">Декорация SVG расширения подавлена.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-008">
+        <source>Schema or external-resource access for extension content was blocked.</source>
+        <target state="translated">Доступ к схеме или внешнему ресурсу для содержимого расширения заблокирован.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010">
+        <source>Extension content carries active markup or a script URL, which cannot be exported (spec §5.5 layer 1: quarantine unsafe external content).</source>
+        <target state="translated">Содержимое расширения содержит активную разметку или URL скрипта, которые нельзя экспортировать (спецификация, §5.5, уровень 1: карантин небезопасного внешнего содержимого).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010.Detail">
+        <source>{0}: {1}.</source>
+        <target state="translated">{0}: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010.Detail.Handler">
+        <source>{0}/@{1}: '{1}' is an event handler.</source>
+        <target state="translated">{0}/@{1}: «{1}» — обработчик события.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010.Detail.Markup">
+        <source>{0}: &lt;{1}&gt; in the {2} namespace is active markup.</source>
+        <target state="translated">{0}: &lt;{1}&gt; в пространстве имён {2} — активная разметка.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010.Detail.Url">
+        <source>{0}: the attribute value is a '{1}' URL.</source>
+        <target state="translated">{0}: значение атрибута — URL «{1}».</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-001">
+        <source>Source and target must be InteractionNodes: Participant/Pool, Activity, or Event.</source>
+        <target state="translated">Источник и приёмник должны быть узлами взаимодействия: участником/пулом, активностью или событием.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-002">
+        <source>Source and target must be in different Participants/Pools.</source>
+        <target state="translated">Источник и приёмник должны находиться в разных участниках/пулах.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-003">
+        <source>Gateways are never Message Flow endpoints.</source>
+        <target state="translated">Шлюзы никогда не бывают конечными точками потока сообщений.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-003.Detail">
+        <source>{0} is a Gateway.</source>
+        <target state="translated">{0} — шлюз.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-004">
+        <source>Lanes, Data Objects, Groups, and Text Annotations are never Message Flow endpoints.</source>
+        <target state="translated">Дорожки, объекты данных, группы и текстовые аннотации никогда не бывают конечными точками потока сообщений.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-006">
+        <source>Target must not be an End Event.</source>
+        <target state="translated">Приёмник не должен быть конечным событием.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-006.Detail">
+        <source>{0} is an End Event.</source>
+        <target state="translated">{0} — конечное событие.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-007">
+        <source>Source Event must be message-throwing (Message Intermediate Throw, Message End, or Multiple with a message result).</source>
+        <target state="translated">Событие-источник должно отправлять сообщение (промежуточное генерирующее событие сообщения, конечное событие сообщения или множественное событие с результатом-сообщением).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-007.Detail">
+        <source>{0} does not throw messages.</source>
+        <target state="translated">{0} не отправляет сообщения.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-008">
+        <source>Target Event must be message-catching (Message Start, Message Intermediate Catch, Message Boundary, or Multiple/Parallel Multiple with a message trigger).</source>
+        <target state="translated">Событие-приёмник должно принимать сообщение (начальное событие сообщения, промежуточное перехватывающее событие сообщения, граничное событие сообщения или множественное/параллельное множественное событие с триггером-сообщением).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-008.Detail">
+        <source>{0} does not catch messages.</source>
+        <target state="translated">{0} не принимает сообщения.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-000">
+        <source>The '{0}' profile reported nothing usable: {1}.</source>
+        <target state="translated">Профиль «{0}» не сообщил ничего пригодного: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-000.Detail.Failed">
+        <source>The '{0}' profile reported nothing usable: it failed: {1}.</source>
+        <target state="translated">Профиль «{0}» не сообщил ничего пригодного: произошёл сбой: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-000.Detail.InvalidId">
+        <source>The '{0}' profile reported nothing usable: '{1}' is not a PROF-nnn rule id.</source>
+        <target state="translated">Профиль «{0}» не сообщил ничего пригодного: «{1}» не является идентификатором правила вида PROF-nnn.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101">
+        <source>Template property constraints must be satisfied.</source>
+        <target state="translated">Ограничения свойств шаблона должны быть выполнены.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail">
+        <source>{0} must not be empty.</source>
+        <target state="translated">{0} не должно быть пустым.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.2">
+        <source>{0} must contain at least {1} characters.</source>
+        <target state="translated">{0} должно содержать не менее {1} символов.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.3">
+        <source>{0} must contain at most {1} characters.</source>
+        <target state="translated">{0} должно содержать не более {1} символов.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.4">
+        <source>{0} has an invalid or excessively complex pattern.</source>
+        <target state="translated">{0} имеет недопустимый или чрезмерно сложный шаблон.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.Custom">
+        <source>{0}</source>
+        <target state="translated">{0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.Pattern">
+        <source>{0} does not match the required pattern.</source>
+        <target state="translated">{0} не соответствует требуемому шаблону.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-102">
+        <source>Template property requires a FEEL expression starting with '='.</source>
+        <target state="translated">Свойство шаблона требует выражение FEEL, начинающееся с «=».</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-102.Detail">
+        <source>{0} requires a FEEL expression starting with '='.</source>
+        <target state="translated">{0} требует выражение FEEL, начинающееся с «=».</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-103">
+        <source>Template not found: '{0}' version {1}.</source>
+        <target state="translated">Шаблон не найден: «{0}», версия {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-104">
+        <source>Template '{0}' is deprecated.</source>
+        <target state="translated">Шаблон «{0}» устарел.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-104.Detail.Custom">
+        <source>{0}</source>
+        <target state="translated">{0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-105">
+        <source>Template '{0}' version {1} is available.</source>
+        <target state="translated">Доступна версия {1} шаблона «{0}».</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-111">
+        <source>Script Task {0} has no scriptFormat, so no engine knows how to run it.</source>
+        <target state="translated">У скриптовой задачи {0} нет scriptFormat, поэтому ни один движок не знает, как её выполнить.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-112">
+        <source>Script Task {0} uses scriptFormat '{1}', which the engine does not run.</source>
+        <target state="translated">Скриптовая задача {0} использует scriptFormat '{1}', который движок не выполняет.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-113">
+        <source>Script Task {0} has no script.</source>
+        <target state="translated">У скриптовой задачи {0} нет скрипта.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-114">
+        <source>Script Task {0} has a script of {1} characters; the limit is {2}.</source>
+        <target state="translated">Скриптовая задача {0} содержит скрипт из {1} символов; предел — {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-115">
+        <source>No syntax validator is registered for scriptFormat '{0}' (Script Task {1}).</source>
+        <target state="translated">Для scriptFormat '{0}' не зарегистрирован валидатор синтаксиса (скриптовая задача {1}).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-116">
+        <source>Script Task {0}, line {1}, column {2}: {3}</source>
+        <target state="translated">Скриптовая задача {0}, строка {1}, столбец {2}: {3}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-117">
+        <source>The '{0}' script validator failed on Script Task {1}: {2}.</source>
+        <target state="translated">Валидатор скриптов '{0}' завершился сбоем на скриптовой задаче {1}: {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-118">
+        <source>Script Task {0} nests brackets deeper than {1} levels.</source>
+        <target state="translated">Скриптовая задача {0} вкладывает скобки глубже, чем на {1} уровней.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-001">
+        <source>Sequence Flow source and target must be a FlowNode (Event, Activity, or Gateway).</source>
+        <target state="translated">Источник и приёмник потока управления должны быть узлами потока (событие, активность или шлюз).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-002">
+        <source>Source must not be an End Event.</source>
+        <target state="translated">Источник не должен быть конечным событием.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-003">
+        <source>Target must not be a Start Event.</source>
+        <target state="translated">Приёмник не должен быть начальным событием.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-004">
+        <source>Target must not be a Boundary Event.</source>
+        <target state="translated">Приёмник не должен быть граничным событием.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-005">
+        <source>Source/target must not be an Event Sub-Process — it has no external Sequence Flow.</source>
+        <target state="translated">Источник/приёмник не должен быть событийным подпроцессом — у него нет внешнего потока управления.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-006">
+        <source>Sequence Flow must not cross a Pool/Participant boundary (poolId mismatch).</source>
+        <target state="translated">Поток управления не должен пересекать границу пула/участника (несоответствие poolId).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-007">
+        <source>Sequence Flow must not cross a Sub-Process containment boundary (containerId mismatch).</source>
+        <target state="translated">Поток управления не должен пересекать границу вложенности подпроцесса (несоответствие containerId).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-007.Detail">
+        <source>{0} is in '{1}' and {2} in '{3}'.</source>
+        <target state="translated">{0} находится в «{1}», а {2} — в «{3}».</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-008">
+        <source>Source must not be a Compensation Boundary Event (use an Association to the handler instead).</source>
+        <target state="translated">Источник не должен быть граничным событием компенсации (используйте вместо этого ассоциацию с обработчиком).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-009">
+        <source>Source/target must not be a compensation Activity (isForCompensation=true) reached via normal flow.</source>
+        <target state="translated">Источник/приёмник не должен быть активностью компенсации (isForCompensation=true), достигаемой по обычному потоку.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-011">
+        <source>Event-Based Gateway outgoing target must be a catching Message/Timer/Signal/Conditional event or a Receive Task.</source>
+        <target state="translated">Приёмник исходящего потока шлюза на основе событий должен быть перехватывающим событием сообщения/таймера/сигнала/условия или задачей получения.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-012">
+        <source>Event-Based Gateway outgoing Sequence Flow must not carry a condition expression.</source>
+        <target state="translated">Исходящий поток управления шлюза на основе событий не должен содержать условное выражение.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-013">
+        <source>Parallel Gateway outgoing Sequence Flow must not carry a condition.</source>
+        <target state="translated">Исходящий поток управления параллельного шлюза не должен содержать условие.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-014">
+        <source>isDefault may only be set on a flow sourced from an Activity, or an Exclusive/Inclusive/Complex Gateway.</source>
+        <target state="translated">isDefault можно задать только для потока, исходящего из активности либо из эксклюзивного/включающего/комплексного шлюза.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-015">
+        <source>Conditional Sequence Flow from an Activity requires at least one other outgoing Sequence Flow from that Activity.</source>
+        <target state="translated">Условный поток управления из активности требует как минимум одного другого исходящего потока управления из этой активности.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-016">
+        <source>Conditional Sequence Flow must not be sourced from a Parallel or Event-Based Gateway.</source>
+        <target state="translated">Условный поток управления не должен исходить из параллельного шлюза или шлюза на основе событий.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-017">
+        <source>Source must not be a Link Intermediate Throw Event — it continues at its paired Link catch, not by Sequence Flow.</source>
+        <target state="translated">Источник не должен быть промежуточным генерирующим событием ссылки — поток продолжается в парном перехватывающем событии ссылки, а не по потоку управления.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-017.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">У {0}: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-018">
+        <source>Target must not be a Link Intermediate Catch Event — it is reached from its paired Link throw, not by Sequence Flow.</source>
+        <target state="translated">Приёмник не должен быть промежуточным перехватывающим событием ссылки — оно достигается из парного генерирующего события ссылки, а не по потоку управления.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-018.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">У {0}: {1}.</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

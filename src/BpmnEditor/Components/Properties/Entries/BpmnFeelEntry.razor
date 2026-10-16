@@ -1,0 +1,35 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@using Hasseware.AspNetCore.Components.Bpmn.Editing
+@inherits BpmnPropertyEntryComponent
+
+<div class="@(Block + "__feel-entry")">
+    @if (Entry.Feel == BpmnFeelMode.Optional)
+    {
+        <button type="button" class="@(Block + "__feel-toggle")" aria-label="@EditorL["FeelEntry.Toggle"]"
+                aria-pressed="@(FeelActive ? "true" : "false")" disabled="@ReadOnly" @onclick="ToggleAsync">@Text("Expression.Function")</button>
+    }
+    @if (ReadOnly || FeelActive)
+    {
+        <BpmnPropertyEntryFrame Context="@(Context with { ErrorId = ErrorId })">
+            <span class="@(Block + "__feel-control")">
+            @if (FeelActive)
+            {
+                <span class="@(Block + "__feel-badge")">@Text("Expression.Feel")</span>
+            }
+            <textarea class="@(Block + "__text " + Block + "__feel")" rows="@MultilineRows"
+                      readonly="@ReadOnly" value="@(ReadOnly ? _value : Expression)" placeholder="@Entry.Placeholder"
+                      aria-label="@Entry.Label" aria-invalid="@(Entry.Error is not null || Warning is not null ? "true" : null)"
+                      aria-describedby="@DescribedBy" @key="Context.Revision"
+                      @oninput="Input" @onchange="ChangeAsync"></textarea>
+            @if (Warning is { } warning)
+            {
+                <span id="@_warningId" class="@(Block + "__feel-warning")" role="status">@warning</span>
+            }
+            </span>
+        </BpmnPropertyEntryFrame>
+    }
+    else
+    {
+        <DynamicComponent Type="@DefaultEditor" Parameters="@EditorParameters" @key="Context.Revision" />
+    }
+</div>

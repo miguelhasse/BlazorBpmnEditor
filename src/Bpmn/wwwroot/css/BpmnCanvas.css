@@ -1,0 +1,198 @@
+/*
+ * Canvas host. JointJS owns everything inside this element; Blazor only sizes it and styles
+ * the overlay layer that sits above the paper.
+ */
+.bpmn-canvas {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: hidden;
+  /*
+   * touch-action is set by the viewport controller, not here: it is only correct to suppress the
+   * browser's own scroll and pinch when touch navigation is actually enabled. Hard-coding it
+   * would trap a touch user on a canvas configured not to handle their gestures.
+   */
+  cursor: grab;
+  /* Nothing on the canvas is text to select or content to drag out of it. */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+
+.bpmn-canvas:focus-visible {
+  outline: 2px solid Highlight;
+  outline-offset: -2px;
+}
+
+.bpmn-canvas--panning {
+  cursor: grabbing;
+}
+
+/* JointJS adds its own classes to the mount element and renders its root SVG as a direct
+   child of it, so the paper is sized through that element rather than through the host. */
+.bpmn-canvas__paper > svg {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+/*
+ * The layer the expand buttons live in.
+ *
+ * Transparent to the pointer so it does not steal presses meant for the paper underneath — only
+ * the buttons inside it are pressable — and not hidden from assistive technology, which is the
+ * whole reason it is a sibling of the paper rather than part of it.
+ */
+.bpmn-canvas__controls {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/*
+ * The control that expands a collapsed Sub-Process (section 1.2.1).
+ *
+ * Drawn over the "+" the renderer paints rather than replacing it: the glyph is notation and has
+ * to keep looking the way section 4.3 says, while the thing you press is a real button. It is
+ * transparent until hovered or focused, so an untouched diagram looks exactly as drawn.
+ */
+.bpmn-expand {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.bpmn-expand:hover {
+  background: color-mix(in srgb, var(--bpmn-selection-color) 18%, transparent);
+}
+
+.bpmn-expand:focus-visible {
+  outline: 2px solid var(--bpmn-selection-color);
+  outline-offset: 1px;
+}
+
+/*
+ * The accessible summary of what the canvas is showing. Visually hidden rather than
+ * display:none — a hidden element is not announced at all, which defeats the purpose.
+ */
+.bpmn-canvas__summary {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+/*
+ * Alignment guides. Stroke width is set per line by the renderer, in paper units, so a guide
+ * stays one screen pixel wide at any zoom.
+ */
+.bpmn-snapline {
+    stroke: var(--bpmn-guide-color);
+    stroke-dasharray: 4 3;
+    shape-rendering: crispEdges;
+}
+
+/*
+ * The connector-initiation handle (see connect-tool.ts). The colours are attributes on the markup
+ * so the tool renders correctly before any stylesheet loads; what CSS adds is the affordance.
+ */
+.bpmn-connect-handle {
+  cursor: crosshair;
+  transition: r 100ms ease-out;
+}
+
+.bpmn-connect-handle:hover {
+  r: 9;
+}
+
+/*
+ * Shapes the live rules reject while a connector is being dragged.
+ *
+ * JointJS marks what it *accepts* with `available-cell` and leaves the rest alone. Section 7 asks
+ * for the inverse — the rejected shapes dimmed, so an illegal target never looks droppable — so the
+ * selector is "in a connecting paper, not available, and not the shape being dragged from".
+ */
+.joint-paper.bpmn-connecting .joint-element:not(.available-cell):not(.bpmn-connect-source) {
+  opacity: 0.3;
+}
+
+/*
+ * The rectangular-selection band.
+ *
+ * Plain interface, drawn over the canvas rather than on the paper: it is transient and has no
+ * place in the diagram's coordinate space, where a selector or an export could catch it.
+ */
+.bpmn-rubber-band {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  border: 1px solid var(--bpmn-selection-color);
+  background: color-mix(in srgb, var(--bpmn-selection-color) 12%, transparent);
+}
+
+/*
+ * Resize handles and the outline a resize drags.
+ *
+ * The preview is drawn instead of resizing the shape itself: whether a Lane's neighbour can absorb
+ * the change, or a container would strand its contents, are facts the host decides, so the canvas
+ * shows the intent and waits for the document to come back.
+ */
+.bpmn-resize-handle {
+  pointer-events: all;
+}
+
+.bpmn-resize-preview {
+  pointer-events: none;
+  stroke: var(--bpmn-selection-color);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+}
+
+/*
+ * Splitters between the Lanes of a Pool. Lanes always fill their Pool, so a splitter is the only
+ * way to size them. The grab area is transparent until hovered so the notation stays clean.
+ */
+.bpmn-lane-splitter-hit {
+  pointer-events: all;
+}
+
+.bpmn-lane-splitter-hit:hover {
+  fill: color-mix(in srgb, var(--bpmn-selection-color) 35%, transparent);
+}
+
+.bpmn-lane-splitter-preview {
+  pointer-events: none;
+  stroke: var(--bpmn-selection-color);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+
+/*
+ * While a file is being dragged over the canvas. The cue is on the canvas rather than a separate
+ * drop zone because the canvas is the drop target: a zone that appeared only on drag would move
+ * the target out from under a pointer that was already heading for it.
+ */
+.bpmn-canvas--file-over::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  z-index: 15;
+  pointer-events: none;
+  border: 2px dashed var(--bpmn-selection-color);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--bpmn-selection-color) 8%, transparent);
+}

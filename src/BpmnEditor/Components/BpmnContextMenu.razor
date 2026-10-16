@@ -1,0 +1,99 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnContextMenuBase
+
+@*
+    The custom context menu section 7 requires.
+
+    It renders inside the canvas host — as BpmnCanvas's ChildContent — so its coordinates are the
+    client anchor the canvas sent, with no second transform to get wrong. It always opens: a
+    right-click on blank paper gets the canvas-level menu, and a target with nothing to offer gets
+    a disabled empty-state item, because the one thing section 7 forbids is a right-click inside
+    the canvas producing nothing at all.
+*@
+@if (IsOpen)
+{
+    <div class="@CssClass("bpmn-menu")"
+         role="menu"
+         tabindex="-1"
+         aria-label="@EffectiveAriaLabel"
+         data-bpmn-element="@Selected?.ElementId"
+         style="@PositionStyle"
+         @ref="FocusTarget"
+         @onkeydown="HandleKeyDownAsync"
+         @onkeydown:stopPropagation="true"
+         @attributes="AdditionalAttributes">
+
+        <p class="bpmn-menu__title">@Title</p>
+
+        @if (Selected is { Diagnostics.Count: > 0 } diagnosed)
+        {
+            <ul class="bpmn-menu__diagnostics" aria-label="@FindingsLabel">
+                @foreach (var diagnostic in diagnosed.Diagnostics)
+                {
+                    <li class="bpmn-menu__diagnostic" @key="diagnostic.Code">
+                        <span class="bpmn-menu__code">@diagnostic.Code</span> @diagnostic.Message
+                    </li>
+                }
+            </ul>
+        }
+
+        @if (Entries.Count > 0)
+        {
+            <div class="bpmn-menu__group" role="group" aria-label="@CommandsLabel">
+                @foreach (var command in Entries)
+                {
+                    <button type="button"
+                            class="bpmn-menu__item"
+                            role="menuitem"
+                            @key="command.Command"
+                            disabled="@(!command.IsEnabled)"
+                            @onclick="@(() => InvokeAsync(command.Command))">
+                        @LabelFor(command)
+                    </button>
+                }
+            </div>
+        }
+        else
+        {
+            @*
+                Section 7: "or a disabled empty-state item". Saying so is the point — an empty menu
+                is indistinguishable from a broken one.
+            *@
+            <p class="bpmn-menu__empty" role="menuitem" aria-disabled="true">@EmptyMessage</p>
+        }
+
+        @if (Selected is { SwitchableTypes.Count: > 1 } switchable && switchable.Capabilities.CanSwitchType)
+        {
+            <div class="bpmn-menu__group" role="group" aria-label="@SwitchTypeLabel">
+                <p class="bpmn-menu__heading">@SwitchTypeLabel</p>
+
+                @foreach (var option in switchable.SwitchableTypes)
+                {
+                    <button type="button"
+                            class="bpmn-menu__item bpmn-menu__item--type"
+                            role="menuitemradio"
+                            aria-checked="@(option.IsCurrent ? "true" : "false")"
+                            @key="@($"{option.Type}:{option.EventDefinition}")"
+                            disabled="@option.IsCurrent"
+                            @onclick="@(() => SwitchTypeAsync(option))">
+                        @Display.TypeOption(option)
+                    </button>
+                }
+            </div>
+        }
+
+        @if (Selected is { Properties.Count: > 0 } described)
+        {
+            @* The controls are the shared form's: a property must not behave one way here and
+               another way in the panel. *@
+            <div class="bpmn-menu__group">
+                <p class="bpmn-menu__heading">@PropertiesLabel</p>
+
+                <BpmnPropertyForm Properties="@described.Properties"
+                                  Revision="@Revision"
+                                  OnEdit="@SetAsync" />
+            </div>
+        }
+
+    </div>
+}

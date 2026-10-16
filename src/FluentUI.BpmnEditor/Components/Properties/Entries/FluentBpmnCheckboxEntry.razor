@@ -1,0 +1,8 @@
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
+@inherits BpmnPropertyEntryComponent
+
+<FluentBpmnPropertyEntryFrame Context="@Context">
+    <FluentCheckbox Class="@(Block + "__check")" Disabled="@ReadOnly" Value="@(Entry.Value == "true")"
+                    AriaLabel="@Entry.Label" aria-invalid="@(Entry.Error is not null ? "true" : null)"
+                    ValueChanged="@(value => SubmitAsync(value ? "true" : "false"))" />
+</FluentBpmnPropertyEntryFrame>

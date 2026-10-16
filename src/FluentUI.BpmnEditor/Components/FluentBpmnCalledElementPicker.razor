@@ -1,0 +1,44 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.FluentUI.AspNetCore.Components.Bpmn.Resources.FluentBpmnEditorStrings> EditorL
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
+@inherits BpmnCalledElementPickerBase
+
+@if (IsVisible)
+{
+    <FluentBpmnDialog Class="@CssClass("bpmn-picker")" OnDismiss="CancelAsync" role="dialog" aria-modal="true" aria-labelledby="@TitleId" @attributes="AdditionalAttributes">
+
+        <div class="bpmn-picker__panel" @onkeydown="HandleKeyDownAsync">
+            <h2 class="bpmn-picker__title" id="@TitleId">@EffectiveTitle</h2>
+
+            @if (Definitions.Count == 0)
+            {
+
+                <p class="bpmn-picker__empty">@EffectiveEmptyMessage</p>
+            }
+            else
+            {
+                <ul class="bpmn-picker__list" role="listbox" aria-label="@EffectiveTitle">
+                    @foreach (var definition in Definitions)
+                    {
+                        <li>
+                            <FluentButton Type="ButtonType.Button"
+                                    Class="bpmn-picker__option"
+                                    role="option"
+                                    aria-selected="false"
+                                    @key="definition.Id"
+                                    OnClick="@(() => ChooseAsync(definition.Id))">
+                                <span class="bpmn-picker__name">@(definition.Name ?? definition.Id)</span>
+
+                                @if (definition.Name is { Length: > 0 } && definition.Name != definition.Id)
+                                {
+                                    <span class="bpmn-picker__id">@definition.Id</span>
+                                }
+                            </FluentButton>
+                        </li>
+                    }
+                </ul>
+            }
+
+            <FluentButton Type="ButtonType.Button" Class="bpmn-picker__cancel" OnClick="CancelAsync">@EditorText("CalledElementPicker.Cancel")</FluentButton>
+        </div>
+    </FluentBpmnDialog>
+}

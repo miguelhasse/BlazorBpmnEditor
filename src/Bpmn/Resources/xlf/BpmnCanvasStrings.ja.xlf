@@ -1,0 +1,437 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file datatype="xml" source-language="en" target-language="ja" original="../BpmnCanvasStrings.resx">
+    <body>
+      <trans-unit id="AriaLabel">
+        <source>BPMN diagram canvas</source>
+        <target state="translated">BPMN ダイアグラムキャンバス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ConnectionNotAllowed">
+        <source>This connection is not allowed.</source>
+        <target state="translated">この接続は許可されていません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Connector.Many">
+        <source>{0} connectors</source>
+        <target state="translated">コネクタ {0} 本</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Connector.One">
+        <source>{0} connector</source>
+        <target state="translated">コネクタ {0} 本</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Diagram">
+        <source>Diagram</source>
+        <target state="translated">ダイアグラム</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementName">
+        <source>{0}: {1}</source>
+        <target state="translated">{0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Expand">
+        <source>Expand sub-process</source>
+        <target state="translated">サブプロセスを展開</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExpandNamed">
+        <source>Expand sub-process {0}</source>
+        <target state="translated">サブプロセス {0} を展開</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Incident.Many">
+        <source>{0} incidents</source>
+        <target state="translated">インシデント {0} 件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Incident.One">
+        <source>{0} incident</source>
+        <target state="translated">インシデント {0} 件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="IncidentMessage">
+        <source>{0}: {1}</source>
+        <target state="translated">{0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListSeparator">
+        <source>, </source>
+        <target state="translated">、</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-002">
+        <source>Group cannot be a connector endpoint (visual grouping only).</source>
+        <target state="translated">グループはコネクタの端点にできません (視覚的なグループ化のみ)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-002b">
+        <source>Group cannot be a connector endpoint (visual grouping only).</source>
+        <target state="translated">グループはコネクタの端点にできません (視覚的なグループ化のみ)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-003">
+        <source>Text Annotation connects only via (undirected) Association, never Data Association.</source>
+        <target state="translated">テキスト注釈は (方向のない) 関連でのみ接続でき、データ関連では接続できません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-004">
+        <source>Data Object/Data Store connect only via Data Association, never a plain Association.</source>
+        <target state="translated">データオブジェクト/データストアはデータ関連でのみ接続でき、通常の関連では接続できません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-005">
+        <source>Data Input Association direction is Data Object/Store/Property to an Activity or Throwing Event input.</source>
+        <target state="translated">データ入力関連の方向は、データオブジェクト/データストア/プロパティから、アクティビティまたはスローイベントの入力へ向かう必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-006">
+        <source>Data Output Association direction is an Activity or Catching Event output to a Data Object/Store/Property.</source>
+        <target state="translated">データ出力関連の方向は、アクティビティまたはキャッチイベントの出力から、データオブジェクト/データストア/プロパティへ向かう必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-001">
+        <source>Source and target must be InteractionNodes: Participant/Pool, Activity, or Event.</source>
+        <target state="translated">始点と終点は InteractionNode (参加者/プール、アクティビティ、イベント) である必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-002">
+        <source>Source and target must be in different Participants/Pools.</source>
+        <target state="translated">始点と終点は異なる参加者/プールに属している必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-003">
+        <source>Gateways are never Message Flow endpoints.</source>
+        <target state="translated">ゲートウェイはメッセージフローの端点にできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-004">
+        <source>Lanes, Data Objects, Groups, and Text Annotations are never Message Flow endpoints.</source>
+        <target state="translated">レーン、データオブジェクト、グループ、テキスト注釈はメッセージフローの端点にできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-006">
+        <source>Target must not be an End Event.</source>
+        <target state="translated">終点を終了イベントにすることはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-007">
+        <source>Source Event must be message-throwing (Message Intermediate Throw, Message End, or Multiple with a message result).</source>
+        <target state="translated">始点のイベントはメッセージをスローするものである必要があります (メッセージ中間スロー、メッセージ終了、またはメッセージ結果を持つ複数)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-008">
+        <source>Target Event must be message-catching (Message Start, Message Intermediate Catch, Message Boundary, or Multiple/Parallel Multiple with a message trigger).</source>
+        <target state="translated">終点のイベントはメッセージをキャッチするものである必要があります (メッセージ開始、メッセージ中間キャッチ、メッセージ境界、またはメッセージトリガーを持つ複数/並列複数)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-001">
+        <source>Sequence Flow source and target must be a FlowNode (Event, Activity, or Gateway).</source>
+        <target state="translated">シーケンスフローの始点と終点は FlowNode (イベント、アクティビティ、ゲートウェイ) である必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-002">
+        <source>Source must not be an End Event.</source>
+        <target state="translated">始点を終了イベントにすることはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-003">
+        <source>Target must not be a Start Event.</source>
+        <target state="translated">終点を開始イベントにすることはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-004">
+        <source>Target must not be a Boundary Event.</source>
+        <target state="translated">終点を境界イベントにすることはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-005">
+        <source>Source/target must not be an Event Sub-Process — it has no external Sequence Flow.</source>
+        <target state="translated">始点/終点をイベントサブプロセスにすることはできません。外部へのシーケンスフローはありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-006">
+        <source>Sequence Flow must not cross a Pool/Participant boundary (poolId mismatch).</source>
+        <target state="translated">シーケンスフローはプール/参加者の境界をまたげません (poolId の不一致)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-007">
+        <source>Sequence Flow must not cross a Sub-Process containment boundary (containerId mismatch).</source>
+        <target state="translated">シーケンスフローはサブプロセスの包含境界をまたげません (containerId の不一致)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-008">
+        <source>Source must not be a Compensation Boundary Event (use an Association to the handler instead).</source>
+        <target state="translated">始点を補償境界イベントにすることはできません (代わりにハンドラーへの関連を使用してください)。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-009">
+        <source>Source/target must not be a compensation Activity (isForCompensation=true) reached via normal flow.</source>
+        <target state="translated">始点/終点を、通常のフローで到達する補償アクティビティ (isForCompensation=true) にすることはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-011">
+        <source>Event-Based Gateway outgoing target must be a catching Message/Timer/Signal/Conditional event or a Receive Task.</source>
+        <target state="translated">イベント基準ゲートウェイから出る終点は、メッセージ/タイマー/シグナル/条件のキャッチイベント、または受信タスクである必要があります。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-012">
+        <source>Event-Based Gateway outgoing Sequence Flow must not carry a condition expression.</source>
+        <target state="translated">イベント基準ゲートウェイから出るシーケンスフローに条件式を持たせることはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-013">
+        <source>Parallel Gateway outgoing Sequence Flow must not carry a condition.</source>
+        <target state="translated">並列ゲートウェイから出るシーケンスフローに条件を持たせることはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-014">
+        <source>isDefault may only be set on a flow sourced from an Activity, or an Exclusive/Inclusive/Complex Gateway.</source>
+        <target state="translated">isDefault は、アクティビティ、または排他/包含/複雑ゲートウェイを始点とするフローにのみ設定できます。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-016">
+        <source>Conditional Sequence Flow must not be sourced from a Parallel or Event-Based Gateway.</source>
+        <target state="translated">条件付きシーケンスフローの始点を並列ゲートウェイまたはイベント基準ゲートウェイにすることはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-017">
+        <source>Source must not be a Link Intermediate Throw Event — it continues at its paired Link catch, not by Sequence Flow.</source>
+        <target state="translated">始点をリンク中間スローイベントにすることはできません。対応するリンクキャッチで継続し、シーケンスフローでは継続しません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-018">
+        <source>Target must not be a Link Intermediate Catch Event — it is reached from its paired Link throw, not by Sequence Flow.</source>
+        <target state="translated">終点をリンク中間キャッチイベントにすることはできません。対応するリンクスローから到達し、シーケンスフローでは到達しません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shape.Many">
+        <source>{0} shapes</source>
+        <target state="translated">図形 {0} 個</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shape.One">
+        <source>{0} shape</source>
+        <target state="translated">図形 {0} 個</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Active">
+        <source>Active</source>
+        <target state="translated">アクティブ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Canceled">
+        <source>Canceled</source>
+        <target state="translated">キャンセル済み</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Completed">
+        <source>Completed</source>
+        <target state="translated">完了</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Failed">
+        <source>Failed</source>
+        <target state="translated">失敗</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Waiting">
+        <source>Waiting</source>
+        <target state="translated">待機中</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Summary">
+        <source>{0}: {1}, {2}.</source>
+        <target state="translated">{0}: {1}、{2}。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Token.Many">
+        <source>{0} tokens</source>
+        <target state="translated">トークン {0} 個</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Token.One">
+        <source>{0} token</source>
+        <target state="translated">トークン {0} 個</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.adHocSubProcess">
+        <source>Ad Hoc Sub Process</source>
+        <target state="translated">アドホックサブプロセス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.association">
+        <source>Association</source>
+        <target state="translated">関連</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.boundaryEvent">
+        <source>Boundary Event</source>
+        <target state="translated">境界イベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.businessRuleTask">
+        <source>Business Rule Task</source>
+        <target state="translated">ビジネスルールタスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.callActivity">
+        <source>Call Activity</source>
+        <target state="translated">呼び出しアクティビティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.complexGateway">
+        <source>Complex Gateway</source>
+        <target state="translated">複雑ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.connector">
+        <source>Connector</source>
+        <target state="translated">コネクタ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.dataAssociation">
+        <source>Data Association</source>
+        <target state="translated">データ関連</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.dataObjectReference">
+        <source>Data Object Reference</source>
+        <target state="translated">データオブジェクト参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.dataStoreReference">
+        <source>Data Store Reference</source>
+        <target state="translated">データストア参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.element">
+        <source>Element</source>
+        <target state="translated">要素</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.endEvent">
+        <source>End Event</source>
+        <target state="translated">終了イベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.eventBasedGateway">
+        <source>Event Based Gateway</source>
+        <target state="translated">イベント基準ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.eventSubProcess">
+        <source>Event Sub Process</source>
+        <target state="translated">イベントサブプロセス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.exclusiveGateway">
+        <source>Exclusive Gateway</source>
+        <target state="translated">排他ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.group">
+        <source>Group</source>
+        <target state="translated">グループ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.inclusiveGateway">
+        <source>Inclusive Gateway</source>
+        <target state="translated">包含ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.intermediateCatchEvent">
+        <source>Intermediate Catch Event</source>
+        <target state="translated">中間キャッチイベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.intermediateThrowEvent">
+        <source>Intermediate Throw Event</source>
+        <target state="translated">中間スローイベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.lane">
+        <source>Lane</source>
+        <target state="translated">レーン</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.manualTask">
+        <source>Manual Task</source>
+        <target state="translated">手動タスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.messageFlow">
+        <source>Message Flow</source>
+        <target state="translated">メッセージフロー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.parallelGateway">
+        <source>Parallel Gateway</source>
+        <target state="translated">並列ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.pool">
+        <source>Pool</source>
+        <target state="translated">プール</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.receiveTask">
+        <source>Receive Task</source>
+        <target state="translated">受信タスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.scriptTask">
+        <source>Script Task</source>
+        <target state="translated">スクリプトタスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.sendTask">
+        <source>Send Task</source>
+        <target state="translated">送信タスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.sequenceFlow">
+        <source>Sequence Flow</source>
+        <target state="translated">シーケンスフロー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.serviceTask">
+        <source>Service Task</source>
+        <target state="translated">サービスタスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.startEvent">
+        <source>Start Event</source>
+        <target state="translated">開始イベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.subProcess">
+        <source>Sub Process</source>
+        <target state="translated">サブプロセス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.task">
+        <source>Task</source>
+        <target state="translated">タスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.textAnnotation">
+        <source>Text Annotation</source>
+        <target state="translated">テキスト注釈</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.transaction">
+        <source>Transaction</source>
+        <target state="translated">トランザクション</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.userTask">
+        <source>User Task</source>
+        <target state="translated">ユーザータスク</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

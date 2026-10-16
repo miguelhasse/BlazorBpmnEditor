@@ -1,0 +1,70 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnValidationPanelBase
+@using Hasseware.AspNetCore.Components.Bpmn.Validation
+
+@*
+    The validation surface (specification section 5.2). Findings are actionable: each row names the
+    rule that produced it and selects the element it is about, because a diagnostic you cannot get
+    to is a diagnostic you cannot fix.
+*@
+<div class="@CssClass("bpmn-validation")" role="region" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+    <div class="bpmn-validation__summary">
+        @if (Report.Diagnostics.Count == 0)
+        {
+            <span class="bpmn-validation__clean">@CleanText</span>
+        }
+        else
+        {
+            <span class="bpmn-validation__counts">
+                @if (Report.ErrorCount > 0)
+                {
+                    <span class="bpmn-validation__count bpmn-validation__count--error">
+                        @CountText(Report.ErrorCount, BpmnSeverity.Error)
+                    </span>
+                }
+                @if (Report.WarningCount > 0)
+                {
+                    <span class="bpmn-validation__count bpmn-validation__count--warning">
+                        @CountText(Report.WarningCount, BpmnSeverity.Warning)
+                    </span>
+                }
+            </span>
+
+            @*
+                Section 5.2: an error blocks save and export, a warning does not. Saying which state
+                the document is in is the panel's most useful single line — it is the answer to
+                "can I ship this".
+            *@
+            <span class="bpmn-validation__state">
+                @ExportStateText
+            </span>
+        }
+    </div>
+
+    @if (Report.Diagnostics.Count > 0)
+    {
+        <ul class="bpmn-validation__list">
+            @foreach (var diagnostic in Ordered)
+            {
+                <li class="bpmn-validation__item bpmn-validation__item--@diagnostic.Severity.ToString().ToLowerInvariant()"
+                    @key="@($"{diagnostic.RuleId}:{diagnostic.ElementId}:{diagnostic.Message}")">
+
+                    <button type="button"
+                            class="bpmn-validation__go"
+                            disabled="@(diagnostic.ElementId is null)"
+                            title="@MessageOf(diagnostic)"
+                            @onclick="@(() => SelectAsync(diagnostic))">
+
+                        @*
+                            The rule id first, and never translated. Section 5.3 exists so a finding
+                            can be looked up from a tooltip, a test or a document without depending
+                            on its wording.
+                        *@
+                        <span class="bpmn-validation__code">@diagnostic.RuleId</span>
+                        <span class="bpmn-validation__message">@MessageOf(diagnostic)</span>
+                    </button>
+                </li>
+            }
+        </ul>
+    }
+</div>

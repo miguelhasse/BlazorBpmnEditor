@@ -1,0 +1,32 @@
+%% Properties and extensions
+%% Snapshot-driven providers; guarded callbacks keep all property edits on the command spine.
+%% Providers: priorities 1000 / 900 / 500 / 100. Templates claim fields; unrelated extensions remain editable.
+%% EntryTemplate may override registry dispatch. Template application, updates and defaults are undoable commands.
+flowchart TB
+    schemas["Camunda 7 + Zeebe schemas<br/>BpmnSchemaPropertiesProvider"]:::cs
+    providers["Bpmn<br/>IBpmnPropertiesProvider<br/>General → templates<br/>→ schemas → raw extensions"]:::cs
+    groups["BpmnPropertyGroup<br/>Ordered groups"]:::cs
+    entries["BpmnPropertyEntry<br/>Values + bindings + metadata"]:::cs
+    templates["BpmnElementTemplateLoader<br/>Local template JSON<br/>BpmnElementTemplateRegistry"]:::cs
+    commands["BpmnPropertyEntryCommands<br/>Binding command factories<br/>BpmnEditCommand"]:::cs
+    registry["Core: BpmnPropertyEditorRegistry<br/>Host overrides + kit defaults<br/>Key → predicate → FEEL → kind"]:::cs
+    builtins["Independent UI kit entry components<br/>Standard HTML / Fluent UI<br/>Text · select · list · etc."]:::cs
+    feel["Kit FEEL entry wrapper<br/>BpmnFeelCodeEditor<br/>Optional Bpmn.Feel package"]:::cs
+    custom["Custom Blazor editors<br/>DynamicComponent<br/>BpmnPropertyEntryContext"]:::cs
+    icons["Template icons on canvas<br/>Safe inline image data URI<br/>TS template-icon.ts"]:::js
+    schemas --> providers
+    templates --> providers
+    providers --> groups
+    groups --> entries
+    entries --> registry
+    registry --> builtins
+    registry --> feel
+    registry --> custom
+    feel --> commands
+    builtins --> commands
+    custom --> commands
+    templates --> icons
+    classDef cs fill:#a5d8ff,stroke:#343a40,color:#212529
+    classDef js fill:#ffec99,stroke:#343a40,color:#212529
+    classDef data fill:#b2f2bb,stroke:#343a40,color:#212529
+    classDef test fill:#e9ecef,stroke:#343a40,color:#212529

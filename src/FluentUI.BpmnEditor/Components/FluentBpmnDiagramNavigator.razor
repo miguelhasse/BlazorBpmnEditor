@@ -1,0 +1,26 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.FluentUI.AspNetCore.Components.Bpmn.Resources.FluentBpmnEditorStrings> EditorL
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
+@inherits BpmnDiagramNavigatorBase
+@using Hasseware.AspNetCore.Components.Bpmn.Editing
+
+<div class="@CssClass("bpmn-diagrams")" role="group" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+    @if (Diagrams.Count > 1)
+    {
+        <label class="bpmn-diagrams__pick">
+            <span class="bpmn-diagrams__heading">@EditorText("DiagramNavigator.Diagram")</span>
+
+            <FluentSelect TOption="BpmnDiagramTarget" TValue="string" Class="bpmn-diagrams__select"
+                          AriaLabel="@EditorText("DiagramNavigator.Diagram")" Items="@Diagrams"
+                          OptionValue="@(target => target.DiagramId)" OptionText="@LabelOf"
+                          Value="@ActiveDiagramId" ValueChanged="SelectAsync" />
+        </label>
+    }
+
+    <FluentButton Type="ButtonType.Button"
+            IconStart="@(new Icons.Regular.Size20.ArrowRight())" Class="bpmn-diagrams__open"
+            Disabled="@(!CanDrill)"
+            Title="@OpenTitle"
+            OnClick="@(() => DrillAsync())">
+        @EditorText("DiagramNavigator.Open")
+    </FluentButton>
+</div>

@@ -1,0 +1,437 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file datatype="xml" source-language="en" target-language="tr" original="../BpmnCanvasStrings.resx">
+    <body>
+      <trans-unit id="AriaLabel">
+        <source>BPMN diagram canvas</source>
+        <target state="translated">BPMN diyagram tuvali</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ConnectionNotAllowed">
+        <source>This connection is not allowed.</source>
+        <target state="translated">Bu bağlantıya izin verilmiyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Connector.Many">
+        <source>{0} connectors</source>
+        <target state="translated">{0} bağlantı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Connector.One">
+        <source>{0} connector</source>
+        <target state="translated">{0} bağlantı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Diagram">
+        <source>Diagram</source>
+        <target state="translated">Diyagram</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementName">
+        <source>{0}: {1}</source>
+        <target state="translated">{0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Expand">
+        <source>Expand sub-process</source>
+        <target state="translated">Alt süreci genişlet</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExpandNamed">
+        <source>Expand sub-process {0}</source>
+        <target state="translated">{0} alt sürecini genişlet</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Incident.Many">
+        <source>{0} incidents</source>
+        <target state="translated">{0} olay kaydı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Incident.One">
+        <source>{0} incident</source>
+        <target state="translated">{0} olay kaydı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="IncidentMessage">
+        <source>{0}: {1}</source>
+        <target state="translated">{0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListSeparator">
+        <source>, </source>
+        <target state="translated">, </target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-002">
+        <source>Group cannot be a connector endpoint (visual grouping only).</source>
+        <target state="translated">Grup, bağlantı uç noktası olamaz (yalnızca görsel gruplama).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-002b">
+        <source>Group cannot be a connector endpoint (visual grouping only).</source>
+        <target state="translated">Grup, bağlantı uç noktası olamaz (yalnızca görsel gruplama).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-003">
+        <source>Text Annotation connects only via (undirected) Association, never Data Association.</source>
+        <target state="translated">Metin Açıklaması yalnızca (yönsüz) İlişkilendirme ile bağlanır, asla Veri İlişkilendirmesi ile bağlanmaz.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-004">
+        <source>Data Object/Data Store connect only via Data Association, never a plain Association.</source>
+        <target state="translated">Veri Nesnesi/Veri Deposu yalnızca Veri İlişkilendirmesi ile bağlanır, asla düz İlişkilendirme ile bağlanmaz.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-005">
+        <source>Data Input Association direction is Data Object/Store/Property to an Activity or Throwing Event input.</source>
+        <target state="translated">Veri Girdi İlişkilendirmesinin yönü, Veri Nesnesi/Deposu/Özelliğinden bir Etkinliğin veya Fırlatma Olayının girdisine doğrudur.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-006">
+        <source>Data Output Association direction is an Activity or Catching Event output to a Data Object/Store/Property.</source>
+        <target state="translated">Veri Çıktı İlişkilendirmesinin yönü, bir Etkinliğin veya Yakalama Olayının çıktısından bir Veri Nesnesi/Deposu/Özelliğine doğrudur.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-001">
+        <source>Source and target must be InteractionNodes: Participant/Pool, Activity, or Event.</source>
+        <target state="translated">Kaynak ve hedef Etkileşim Düğümü olmalıdır: Katılımcı/Havuz, Etkinlik veya Olay.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-002">
+        <source>Source and target must be in different Participants/Pools.</source>
+        <target state="translated">Kaynak ve hedef farklı Katılımcılarda/Havuzlarda olmalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-003">
+        <source>Gateways are never Message Flow endpoints.</source>
+        <target state="translated">Ağ Geçitleri hiçbir zaman Mesaj Akışı uç noktası olamaz.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-004">
+        <source>Lanes, Data Objects, Groups, and Text Annotations are never Message Flow endpoints.</source>
+        <target state="translated">Kulvarlar, Veri Nesneleri, Gruplar ve Metin Açıklamaları hiçbir zaman Mesaj Akışı uç noktası olamaz.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-006">
+        <source>Target must not be an End Event.</source>
+        <target state="translated">Hedef bir Bitiş Olayı olmamalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-007">
+        <source>Source Event must be message-throwing (Message Intermediate Throw, Message End, or Multiple with a message result).</source>
+        <target state="translated">Kaynak Olay mesaj fırlatan olmalıdır (Mesaj Ara Fırlatma, Mesaj Bitiş veya mesaj sonuçlu Çoklu).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-008">
+        <source>Target Event must be message-catching (Message Start, Message Intermediate Catch, Message Boundary, or Multiple/Parallel Multiple with a message trigger).</source>
+        <target state="translated">Hedef Olay mesaj yakalayan olmalıdır (Mesaj Başlangıç, Mesaj Ara Yakalama, Mesaj Sınır veya mesaj tetikleyicili Çoklu/Paralel Çoklu).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-001">
+        <source>Sequence Flow source and target must be a FlowNode (Event, Activity, or Gateway).</source>
+        <target state="translated">Sıra Akışı kaynağı ve hedefi bir Akış Düğümü olmalıdır (Olay, Etkinlik veya Ağ Geçidi).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-002">
+        <source>Source must not be an End Event.</source>
+        <target state="translated">Kaynak bir Bitiş Olayı olmamalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-003">
+        <source>Target must not be a Start Event.</source>
+        <target state="translated">Hedef bir Başlangıç Olayı olmamalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-004">
+        <source>Target must not be a Boundary Event.</source>
+        <target state="translated">Hedef bir Sınır Olayı olmamalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-005">
+        <source>Source/target must not be an Event Sub-Process — it has no external Sequence Flow.</source>
+        <target state="translated">Kaynak/hedef bir Olay Alt Süreci olmamalıdır — dışarıya Sıra Akışı yoktur.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-006">
+        <source>Sequence Flow must not cross a Pool/Participant boundary (poolId mismatch).</source>
+        <target state="translated">Sıra Akışı bir Havuz/Katılımcı sınırını geçmemelidir (poolId uyuşmazlığı).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-007">
+        <source>Sequence Flow must not cross a Sub-Process containment boundary (containerId mismatch).</source>
+        <target state="translated">Sıra Akışı bir Alt Süreç kapsama sınırını geçmemelidir (containerId uyuşmazlığı).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-008">
+        <source>Source must not be a Compensation Boundary Event (use an Association to the handler instead).</source>
+        <target state="translated">Kaynak bir Telafi Sınır Olayı olmamalıdır (bunun yerine işleyiciye bir İlişkilendirme kullanın).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-009">
+        <source>Source/target must not be a compensation Activity (isForCompensation=true) reached via normal flow.</source>
+        <target state="translated">Kaynak/hedef, normal akışla ulaşılan bir telafi Etkinliği olmamalıdır (isForCompensation=true).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-011">
+        <source>Event-Based Gateway outgoing target must be a catching Message/Timer/Signal/Conditional event or a Receive Task.</source>
+        <target state="translated">Olay Tabanlı Ağ Geçidinin giden hedefi, yakalayan bir Mesaj/Zamanlayıcı/Sinyal/Koşullu olay veya bir Alma Görevi olmalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-012">
+        <source>Event-Based Gateway outgoing Sequence Flow must not carry a condition expression.</source>
+        <target state="translated">Olay Tabanlı Ağ Geçidinin giden Sıra Akışı koşul ifadesi taşımamalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-013">
+        <source>Parallel Gateway outgoing Sequence Flow must not carry a condition.</source>
+        <target state="translated">Paralel Ağ Geçidinin giden Sıra Akışı koşul taşımamalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-014">
+        <source>isDefault may only be set on a flow sourced from an Activity, or an Exclusive/Inclusive/Complex Gateway.</source>
+        <target state="translated">isDefault yalnızca bir Etkinlikten veya Dışlayıcı/Kapsayıcı/Karmaşık Ağ Geçidinden çıkan akışta ayarlanabilir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-016">
+        <source>Conditional Sequence Flow must not be sourced from a Parallel or Event-Based Gateway.</source>
+        <target state="translated">Koşullu Sıra Akışı, Paralel veya Olay Tabanlı Ağ Geçidinden çıkmamalıdır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-017">
+        <source>Source must not be a Link Intermediate Throw Event — it continues at its paired Link catch, not by Sequence Flow.</source>
+        <target state="translated">Kaynak bir Bağ Ara Fırlatma Olayı olmamalıdır — Sıra Akışı ile değil, eşleşen Bağ yakalama olayında devam eder.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-018">
+        <source>Target must not be a Link Intermediate Catch Event — it is reached from its paired Link throw, not by Sequence Flow.</source>
+        <target state="translated">Hedef bir Bağ Ara Yakalama Olayı olmamalıdır — Sıra Akışı ile değil, eşleşen Bağ fırlatma olayından ulaşılır.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shape.Many">
+        <source>{0} shapes</source>
+        <target state="translated">{0} şekil</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shape.One">
+        <source>{0} shape</source>
+        <target state="translated">{0} şekil</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Active">
+        <source>Active</source>
+        <target state="translated">Etkin</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Canceled">
+        <source>Canceled</source>
+        <target state="translated">İptal edildi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Completed">
+        <source>Completed</source>
+        <target state="translated">Tamamlandı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Failed">
+        <source>Failed</source>
+        <target state="translated">Başarısız</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Waiting">
+        <source>Waiting</source>
+        <target state="translated">Bekliyor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Summary">
+        <source>{0}: {1}, {2}.</source>
+        <target state="translated">{0}: {1}, {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Token.Many">
+        <source>{0} tokens</source>
+        <target state="translated">{0} belirteç</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Token.One">
+        <source>{0} token</source>
+        <target state="translated">{0} belirteç</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.adHocSubProcess">
+        <source>Ad Hoc Sub Process</source>
+        <target state="translated">Ad Hoc Alt Süreç</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.association">
+        <source>Association</source>
+        <target state="translated">İlişkilendirme</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.boundaryEvent">
+        <source>Boundary Event</source>
+        <target state="translated">Sınır Olayı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.businessRuleTask">
+        <source>Business Rule Task</source>
+        <target state="translated">İş Kuralı Görevi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.callActivity">
+        <source>Call Activity</source>
+        <target state="translated">Çağrı Etkinliği</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.complexGateway">
+        <source>Complex Gateway</source>
+        <target state="translated">Karmaşık Ağ Geçidi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.connector">
+        <source>Connector</source>
+        <target state="translated">Bağlantı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.dataAssociation">
+        <source>Data Association</source>
+        <target state="translated">Veri İlişkilendirmesi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.dataObjectReference">
+        <source>Data Object Reference</source>
+        <target state="translated">Veri Nesnesi Referansı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.dataStoreReference">
+        <source>Data Store Reference</source>
+        <target state="translated">Veri Deposu Referansı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.element">
+        <source>Element</source>
+        <target state="translated">Öğe</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.endEvent">
+        <source>End Event</source>
+        <target state="translated">Bitiş Olayı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.eventBasedGateway">
+        <source>Event Based Gateway</source>
+        <target state="translated">Olay Tabanlı Ağ Geçidi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.eventSubProcess">
+        <source>Event Sub Process</source>
+        <target state="translated">Olay Alt Süreci</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.exclusiveGateway">
+        <source>Exclusive Gateway</source>
+        <target state="translated">Dışlayıcı Ağ Geçidi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.group">
+        <source>Group</source>
+        <target state="translated">Grup</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.inclusiveGateway">
+        <source>Inclusive Gateway</source>
+        <target state="translated">Kapsayıcı Ağ Geçidi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.intermediateCatchEvent">
+        <source>Intermediate Catch Event</source>
+        <target state="translated">Ara Yakalama Olayı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.intermediateThrowEvent">
+        <source>Intermediate Throw Event</source>
+        <target state="translated">Ara Fırlatma Olayı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.lane">
+        <source>Lane</source>
+        <target state="translated">Kulvar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.manualTask">
+        <source>Manual Task</source>
+        <target state="translated">Manuel Görev</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.messageFlow">
+        <source>Message Flow</source>
+        <target state="translated">Mesaj Akışı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.parallelGateway">
+        <source>Parallel Gateway</source>
+        <target state="translated">Paralel Ağ Geçidi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.pool">
+        <source>Pool</source>
+        <target state="translated">Havuz</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.receiveTask">
+        <source>Receive Task</source>
+        <target state="translated">Alma Görevi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.scriptTask">
+        <source>Script Task</source>
+        <target state="translated">Betik Görevi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.sendTask">
+        <source>Send Task</source>
+        <target state="translated">Gönderme Görevi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.sequenceFlow">
+        <source>Sequence Flow</source>
+        <target state="translated">Sıra Akışı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.serviceTask">
+        <source>Service Task</source>
+        <target state="translated">Servis Görevi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.startEvent">
+        <source>Start Event</source>
+        <target state="translated">Başlangıç Olayı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.subProcess">
+        <source>Sub Process</source>
+        <target state="translated">Alt Süreç</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.task">
+        <source>Task</source>
+        <target state="translated">Görev</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.textAnnotation">
+        <source>Text Annotation</source>
+        <target state="translated">Metin Açıklaması</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.transaction">
+        <source>Transaction</source>
+        <target state="translated">İşlem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.userTask">
+        <source>User Task</source>
+        <target state="translated">Kullanıcı Görevi</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

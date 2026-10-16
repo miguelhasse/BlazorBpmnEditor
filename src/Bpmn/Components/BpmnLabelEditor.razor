@@ -1,0 +1,29 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnLabelEditorBase
+
+@*
+    Section 4.5: label editing is always in place — never a popup, dialog or modal.
+
+    So this is a textarea drawn over the label it is replacing, at the label's own box, in the
+    label's own font at the canvas's own scale. The canvas measured all of that and sent it; this
+    does not recompute any of it, because a second measurement is a second answer.
+*@
+@if (IsOpen && Edit is not null)
+{
+    <div class="@CssClass("bpmn-label-editor")"
+         data-bpmn-element="@Edit.ElementId"
+         style="@BoxStyle"
+         @attributes="AdditionalAttributes">
+
+        <textarea class="bpmn-label-editor__input"
+                  style="@TextStyle"
+                  aria-label="@EffectiveAriaLabel"
+                  spellcheck="false"
+                  @ref="FocusTarget"
+                  @bind="EditText"
+                  @bind:event="oninput"
+                  @onkeydown="HandleKeyDownAsync"
+                  @onkeydown:stopPropagation="true"
+                  @onblur="CommitAsync"></textarea>
+    </div>
+}

@@ -1,0 +1,437 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file datatype="xml" source-language="en" target-language="de" original="../BpmnCanvasStrings.resx">
+    <body>
+      <trans-unit id="AriaLabel">
+        <source>BPMN diagram canvas</source>
+        <target state="translated">BPMN-Diagramm-Zeichenfläche</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ConnectionNotAllowed">
+        <source>This connection is not allowed.</source>
+        <target state="translated">Diese Verbindung ist nicht zulässig.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Connector.Many">
+        <source>{0} connectors</source>
+        <target state="translated">{0} Konnektoren</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Connector.One">
+        <source>{0} connector</source>
+        <target state="translated">{0} Konnektor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Diagram">
+        <source>Diagram</source>
+        <target state="translated">Diagramm</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementName">
+        <source>{0}: {1}</source>
+        <target state="translated">{0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Expand">
+        <source>Expand sub-process</source>
+        <target state="translated">Teilprozess ausklappen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExpandNamed">
+        <source>Expand sub-process {0}</source>
+        <target state="translated">Teilprozess {0} ausklappen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Incident.Many">
+        <source>{0} incidents</source>
+        <target state="translated">{0} Vorfälle</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Incident.One">
+        <source>{0} incident</source>
+        <target state="translated">{0} Vorfall</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="IncidentMessage">
+        <source>{0}: {1}</source>
+        <target state="translated">{0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListSeparator">
+        <source>, </source>
+        <target state="translated">, </target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-002">
+        <source>Group cannot be a connector endpoint (visual grouping only).</source>
+        <target state="translated">Eine Gruppe kann kein Endpunkt eines Konnektors sein (nur visuelle Gruppierung).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-002b">
+        <source>Group cannot be a connector endpoint (visual grouping only).</source>
+        <target state="translated">Eine Gruppe kann kein Endpunkt eines Konnektors sein (nur visuelle Gruppierung).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-003">
+        <source>Text Annotation connects only via (undirected) Association, never Data Association.</source>
+        <target state="translated">Eine Textanmerkung wird nur über eine (ungerichtete) Assoziation verbunden, nie über eine Datenassoziation.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-004">
+        <source>Data Object/Data Store connect only via Data Association, never a plain Association.</source>
+        <target state="translated">Datenobjekt/Datenspeicher werden nur über eine Datenassoziation verbunden, nie über eine einfache Assoziation.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-005">
+        <source>Data Input Association direction is Data Object/Store/Property to an Activity or Throwing Event input.</source>
+        <target state="translated">Die Richtung einer Dateneingabe-Assoziation verläuft von Datenobjekt/Datenspeicher/Eigenschaft zu einer Aktivität oder zur Eingabe eines werfenden Ereignisses.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.DA-006">
+        <source>Data Output Association direction is an Activity or Catching Event output to a Data Object/Store/Property.</source>
+        <target state="translated">Die Richtung einer Datenausgabe-Assoziation verläuft von der Ausgabe einer Aktivität oder eines fangenden Ereignisses zu einem Datenobjekt/Datenspeicher/einer Eigenschaft.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-001">
+        <source>Source and target must be InteractionNodes: Participant/Pool, Activity, or Event.</source>
+        <target state="translated">Quelle und Ziel müssen InteractionNodes sein: Teilnehmer/Pool, Aktivität oder Ereignis.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-002">
+        <source>Source and target must be in different Participants/Pools.</source>
+        <target state="translated">Quelle und Ziel müssen in verschiedenen Teilnehmern/Pools liegen.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-003">
+        <source>Gateways are never Message Flow endpoints.</source>
+        <target state="translated">Gateways sind nie Endpunkte eines Nachrichtenflusses.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-004">
+        <source>Lanes, Data Objects, Groups, and Text Annotations are never Message Flow endpoints.</source>
+        <target state="translated">Lanes, Datenobjekte, Gruppen und Textanmerkungen sind nie Endpunkte eines Nachrichtenflusses.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-006">
+        <source>Target must not be an End Event.</source>
+        <target state="translated">Das Ziel darf kein Endereignis sein.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-007">
+        <source>Source Event must be message-throwing (Message Intermediate Throw, Message End, or Multiple with a message result).</source>
+        <target state="translated">Das Quellereignis muss nachrichtenwerfend sein (Nachrichten-Zwischenereignis werfend, Nachrichten-Endereignis oder Mehrfach mit Nachrichtenergebnis).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.MF-008">
+        <source>Target Event must be message-catching (Message Start, Message Intermediate Catch, Message Boundary, or Multiple/Parallel Multiple with a message trigger).</source>
+        <target state="translated">Das Zielereignis muss nachrichtenfangend sein (Nachrichten-Startereignis, Nachrichten-Zwischenereignis fangend, Nachrichten-Grenzereignis oder Mehrfach/Parallel mehrfach mit Nachrichtenauslöser).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-001">
+        <source>Sequence Flow source and target must be a FlowNode (Event, Activity, or Gateway).</source>
+        <target state="translated">Quelle und Ziel eines Sequenzflusses müssen ein Flussknoten sein (Ereignis, Aktivität oder Gateway).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-002">
+        <source>Source must not be an End Event.</source>
+        <target state="translated">Die Quelle darf kein Endereignis sein.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-003">
+        <source>Target must not be a Start Event.</source>
+        <target state="translated">Das Ziel darf kein Startereignis sein.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-004">
+        <source>Target must not be a Boundary Event.</source>
+        <target state="translated">Das Ziel darf kein Grenzereignis sein.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-005">
+        <source>Source/target must not be an Event Sub-Process — it has no external Sequence Flow.</source>
+        <target state="translated">Quelle/Ziel darf kein Ereignis-Teilprozess sein – er hat keinen externen Sequenzfluss.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-006">
+        <source>Sequence Flow must not cross a Pool/Participant boundary (poolId mismatch).</source>
+        <target state="translated">Ein Sequenzfluss darf keine Pool-/Teilnehmer-Grenze überschreiten (poolId stimmt nicht überein).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-007">
+        <source>Sequence Flow must not cross a Sub-Process containment boundary (containerId mismatch).</source>
+        <target state="translated">Ein Sequenzfluss darf keine Teilprozess-Containment-Grenze überschreiten (containerId stimmt nicht überein).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-008">
+        <source>Source must not be a Compensation Boundary Event (use an Association to the handler instead).</source>
+        <target state="translated">Die Quelle darf kein Kompensations-Grenzereignis sein (stattdessen eine Assoziation zum Handler verwenden).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-009">
+        <source>Source/target must not be a compensation Activity (isForCompensation=true) reached via normal flow.</source>
+        <target state="translated">Quelle/Ziel darf keine Kompensationsaktivität (isForCompensation=true) sein, die über normalen Fluss erreicht wird.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-011">
+        <source>Event-Based Gateway outgoing target must be a catching Message/Timer/Signal/Conditional event or a Receive Task.</source>
+        <target state="translated">Das ausgehende Ziel eines ereignisbasierten Gateways muss ein fangendes Nachrichten-/Timer-/Signal-/Bedingungsereignis oder eine Empfangsaufgabe sein.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-012">
+        <source>Event-Based Gateway outgoing Sequence Flow must not carry a condition expression.</source>
+        <target state="translated">Ein ausgehender Sequenzfluss eines ereignisbasierten Gateways darf keinen Bedingungsausdruck tragen.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-013">
+        <source>Parallel Gateway outgoing Sequence Flow must not carry a condition.</source>
+        <target state="translated">Ein ausgehender Sequenzfluss eines parallelen Gateways darf keine Bedingung tragen.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-014">
+        <source>isDefault may only be set on a flow sourced from an Activity, or an Exclusive/Inclusive/Complex Gateway.</source>
+        <target state="translated">isDefault darf nur für einen Fluss gesetzt werden, dessen Quelle eine Aktivität oder ein exklusives/inklusives/komplexes Gateway ist.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-016">
+        <source>Conditional Sequence Flow must not be sourced from a Parallel or Event-Based Gateway.</source>
+        <target state="translated">Ein bedingter Sequenzfluss darf nicht von einem parallelen oder ereignisbasierten Gateway ausgehen.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-017">
+        <source>Source must not be a Link Intermediate Throw Event — it continues at its paired Link catch, not by Sequence Flow.</source>
+        <target state="translated">Die Quelle darf kein werfendes Link-Zwischenereignis sein – es wird beim zugehörigen fangenden Link fortgesetzt, nicht per Sequenzfluss.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.SF-018">
+        <source>Target must not be a Link Intermediate Catch Event — it is reached from its paired Link throw, not by Sequence Flow.</source>
+        <target state="translated">Das Ziel darf kein fangendes Link-Zwischenereignis sein – es wird vom zugehörigen werfenden Link erreicht, nicht per Sequenzfluss.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shape.Many">
+        <source>{0} shapes</source>
+        <target state="translated">{0} Formen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shape.One">
+        <source>{0} shape</source>
+        <target state="translated">{0} Form</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Active">
+        <source>Active</source>
+        <target state="translated">Aktiv</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Canceled">
+        <source>Canceled</source>
+        <target state="translated">Abgebrochen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Completed">
+        <source>Completed</source>
+        <target state="translated">Abgeschlossen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Failed">
+        <source>Failed</source>
+        <target state="translated">Fehlgeschlagen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Status.Waiting">
+        <source>Waiting</source>
+        <target state="translated">Wartend</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Summary">
+        <source>{0}: {1}, {2}.</source>
+        <target state="translated">{0}: {1}, {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Token.Many">
+        <source>{0} tokens</source>
+        <target state="translated">{0} Token</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Token.One">
+        <source>{0} token</source>
+        <target state="translated">{0} Token</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.adHocSubProcess">
+        <source>Ad Hoc Sub Process</source>
+        <target state="translated">Ad-hoc-Teilprozess</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.association">
+        <source>Association</source>
+        <target state="translated">Assoziation</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.boundaryEvent">
+        <source>Boundary Event</source>
+        <target state="translated">Grenzereignis</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.businessRuleTask">
+        <source>Business Rule Task</source>
+        <target state="translated">Geschäftsregelaufgabe</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.callActivity">
+        <source>Call Activity</source>
+        <target state="translated">Aufrufaktivität</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.complexGateway">
+        <source>Complex Gateway</source>
+        <target state="translated">Komplexes Gateway</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.connector">
+        <source>Connector</source>
+        <target state="translated">Konnektor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.dataAssociation">
+        <source>Data Association</source>
+        <target state="translated">Datenassoziation</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.dataObjectReference">
+        <source>Data Object Reference</source>
+        <target state="translated">Datenobjektreferenz</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.dataStoreReference">
+        <source>Data Store Reference</source>
+        <target state="translated">Datenspeicherreferenz</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.element">
+        <source>Element</source>
+        <target state="translated">Element</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.endEvent">
+        <source>End Event</source>
+        <target state="translated">Endereignis</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.eventBasedGateway">
+        <source>Event Based Gateway</source>
+        <target state="translated">Ereignisbasiertes Gateway</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.eventSubProcess">
+        <source>Event Sub Process</source>
+        <target state="translated">Ereignis-Teilprozess</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.exclusiveGateway">
+        <source>Exclusive Gateway</source>
+        <target state="translated">Exklusives Gateway</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.group">
+        <source>Group</source>
+        <target state="translated">Gruppe</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.inclusiveGateway">
+        <source>Inclusive Gateway</source>
+        <target state="translated">Inklusives Gateway</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.intermediateCatchEvent">
+        <source>Intermediate Catch Event</source>
+        <target state="translated">Fangendes Zwischenereignis</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.intermediateThrowEvent">
+        <source>Intermediate Throw Event</source>
+        <target state="translated">Werfendes Zwischenereignis</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.lane">
+        <source>Lane</source>
+        <target state="translated">Lane</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.manualTask">
+        <source>Manual Task</source>
+        <target state="translated">Manuelle Aufgabe</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.messageFlow">
+        <source>Message Flow</source>
+        <target state="translated">Nachrichtenfluss</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.parallelGateway">
+        <source>Parallel Gateway</source>
+        <target state="translated">Paralleles Gateway</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.pool">
+        <source>Pool</source>
+        <target state="translated">Pool</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.receiveTask">
+        <source>Receive Task</source>
+        <target state="translated">Empfangsaufgabe</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.scriptTask">
+        <source>Script Task</source>
+        <target state="translated">Skriptaufgabe</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.sendTask">
+        <source>Send Task</source>
+        <target state="translated">Sendeaufgabe</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.sequenceFlow">
+        <source>Sequence Flow</source>
+        <target state="translated">Sequenzfluss</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.serviceTask">
+        <source>Service Task</source>
+        <target state="translated">Serviceaufgabe</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.startEvent">
+        <source>Start Event</source>
+        <target state="translated">Startereignis</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.subProcess">
+        <source>Sub Process</source>
+        <target state="translated">Teilprozess</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.task">
+        <source>Task</source>
+        <target state="translated">Aufgabe</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.textAnnotation">
+        <source>Text Annotation</source>
+        <target state="translated">Textanmerkung</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.transaction">
+        <source>Transaction</source>
+        <target state="translated">Transaktion</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Type.userTask">
+        <source>User Task</source>
+        <target state="translated">Benutzeraufgabe</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,50 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn.Feel
+@using Hasseware.AspNetCore.Components.Bpmn.Editing
+@inherits BpmnPropertyEntryComponent
+<div class="@(Block + "__feel-entry")">
+    @if (Entry.Feel == BpmnFeelMode.Optional)
+    {
+        <button type="button" class="@(Block + "__feel-toggle")" aria-label="@Text("PropertyEntry.ToggleFeel")"
+                aria-pressed="@(FeelActive ? "true" : "false")" disabled="@ReadOnly" @onclick="ToggleAsync">@Text("Expression.Function")</button>
+    }
+    @if (ReadOnly || FeelActive)
+    {
+        <label class="@(Block + "__property")" title="@Entry.Tooltip">
+            <span class="@(Block + "__label")">@Entry.Label</span>
+            <span class="@(Block + "__feel-control")">
+                @if (FeelActive)
+                {
+                    <span class="@(Block + "__feel-badge")">@Text("Expression.Feel")</span>
+                }
+                @if (!ReadOnly)
+                {
+                    <span class="bpmn-feel-code" @ref="_container" hidden="@(!_ready)"></span>
+                }
+                @if (ReadOnly || !_ready)
+                {
+                    <textarea class="@(Block + "__text " + Block + "__feel")" rows="@MultilineRows"
+                              readonly="@ReadOnly" value="@(ReadOnly ? _value : Expression)" placeholder="@Entry.Placeholder"
+                              aria-label="@Entry.Label" aria-invalid="@(Entry.Error is not null || Warning is not null ? "true" : null)"
+                              aria-describedby="@DescribedBy" @key="Context.Revision"
+                              @oninput="Input" @onchange="ChangeAsync" @onkeydown="KeyDownAsync"></textarea>
+                }
+                @if (Warning is { } warning)
+                {
+                    <span id="@_warningId" class="@(Block + "__feel-warning")" role="status">@warning</span>
+                }
+            </span>
+            @if (Entry.Description is { Length: > 0 })
+            {
+                <span class="@(Block + "__description")">@Entry.Description</span>
+            }
+            @if (Entry.Error is { Length: > 0 })
+            {
+                <span id="@ErrorId" class="@(Block + "__error")" role="alert">@Entry.Error</span>
+            }
+        </label>
+    }
+    else
+    {
+        <DynamicComponent Type="@DefaultEditor" Parameters="@EditorParameters" @key="Context.Revision" />
+    }
+</div>

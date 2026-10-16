@@ -1,0 +1,37 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.AspNetCore.Components.Bpmn.Resources.BpmnEditorStrings> EditorL
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnDiagramNavigatorBase
+
+<div class="@CssClass("bpmn-diagrams")" role="group" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+    @if (Diagrams.Count > 1)
+    {
+        <label class="bpmn-diagrams__pick">
+            <span class="bpmn-diagrams__heading">@EditorText("DiagramNavigator.Diagram")</span>
+
+            <select class="bpmn-diagrams__select"
+                    aria-label="@EditorText("DiagramNavigator.Diagram")"
+                    @onchange="@(args => SelectAsync(args.Value as string))">
+                @foreach (var target in Diagrams)
+                {
+                    <option value="@target.DiagramId" selected="@(target.DiagramId == ActiveDiagramId)">
+                        @LabelOf(target)
+                    </option>
+                }
+            </select>
+        </label>
+    }
+
+    @*
+        Always rendered, disabled when there is nowhere to go, and carrying the reason. Section 9.3
+        asks a disabled control to say why rather than vanish: an element that cannot be opened and
+        one that has nothing to open are different facts, and hiding the button tells the user
+        neither.
+    *@
+    <button type="button"
+            class="bpmn-diagrams__open"
+            disabled="@(!CanDrill)"
+            title="@OpenTitle"
+            @onclick="@(() => DrillAsync())">
+        @EditorText("DiagramNavigator.Open")
+    </button>
+</div>

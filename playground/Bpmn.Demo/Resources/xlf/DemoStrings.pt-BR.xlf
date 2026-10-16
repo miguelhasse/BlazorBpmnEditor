@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="pt-BR" original="../DemoStrings.resx">
+    <body>
+      <trans-unit id="Error.Description">
+        <source>An error occurred while processing your request.</source>
+        <target state="translated">Ocorreu um erro ao processar sua solicitação.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.DevelopmentDetails">
+        <source>Swapping to the {0} environment will display more detailed information about the error that occurred.</source>
+        <target state="translated">Alternar para o ambiente {0} exibirá informações mais detalhadas sobre o erro ocorrido.</target>
+        <note>{0} is the invariant environment name Development.</note>
+      </trans-unit>
+      <trans-unit id="Error.DevelopmentMode">
+        <source>Development Mode</source>
+        <target state="translated">Modo de desenvolvimento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.DevelopmentWarning">
+        <source>The {0} environment shouldn't be enabled for deployed applications.</source>
+        <target state="translated">O ambiente {0} não deve ser habilitado em aplicativos implantados.</target>
+        <note>{0} is the invariant environment name Development.</note>
+      </trans-unit>
+      <trans-unit id="Error.Heading">
+        <source>Error.</source>
+        <target state="translated">Erro.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.LocalDebugging">
+        <source>For local debugging, enable the {0} environment by setting the {1} environment variable to {0} and restarting the app.</source>
+        <target state="translated">Para depuração local, habilite o ambiente {0} definindo a variável de ambiente {1} como {0} e reiniciando o aplicativo.</target>
+        <note>{0} is Development; {1} is ASPNETCORE_ENVIRONMENT. Do not translate these argument values.</note>
+      </trans-unit>
+      <trans-unit id="Error.RequestId">
+        <source>Request ID:</source>
+        <target state="translated">ID da solicitação:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.SensitiveInformation">
+        <source>It can result in displaying sensitive information from exceptions to end users.</source>
+        <target state="translated">Isso pode resultar na exibição de informações confidenciais de exceções para os usuários finais.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.Title">
+        <source>Error</source>
+        <target state="translated">Erro</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.AboutBlazor">
+        <source>About Blazor</source>
+        <target state="translated">Sobre o Blazor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Dismiss">
+        <source>Dismiss</source>
+        <target state="translated">Dispensar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Documentation">
+        <source>Documentation and demos</source>
+        <target state="translated">Documentação e demonstrações</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Reload">
+        <source>Reload</source>
+        <target state="translated">Recarregar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Title">
+        <source>BPMN Demo</source>
+        <target state="translated">Demonstração BPMN</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.UnhandledError">
+        <source>An unhandled error has occurred.</source>
+        <target state="translated">Ocorreu um erro não tratado.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NotFound.Description">
+        <source>Sorry, the content you are looking for does not exist.</source>
+        <target state="translated">Desculpe, o conteúdo que você procura não existe.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NotFound.Title">
+        <source>Not Found</source>
+        <target state="translated">Não encontrado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Failed">
+        <source>Failed to rejoin. Please retry or reload the page.</source>
+        <target state="translated">Falha ao reconectar. Tente novamente ou recarregue a página.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Paused">
+        <source>The session has been paused by the server.</source>
+        <target state="translated">A sessão foi pausada pelo servidor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Rejoining">
+        <source>Rejoining the server...</source>
+        <target state="translated">Reconectando ao servidor...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Resume">
+        <source>Resume</source>
+        <target state="translated">Retomar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.ResumeFailed">
+        <source>Failed to resume the session. Please reload the page.</source>
+        <target state="translated">Falha ao retomar a sessão. Recarregue a página.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Retry">
+        <source>Retry</source>
+        <target state="translated">Tentar novamente</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.RetryIn">
+        <source>Rejoin failed... trying again in {0} seconds.</source>
+        <target state="translated">Falha ao reconectar... nova tentativa em {0} segundos.</target>
+        <note>{0} is replaced by the live countdown element; preserve the placeholder.</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

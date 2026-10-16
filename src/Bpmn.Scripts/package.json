@@ -1,0 +1,43 @@
+{
+  "private": true,
+  "name": "hasseware.aspnetcore.components.bpmn.assets",
+  "source": "src/index.ts",
+  "main": "dist/Hasseware.AspNetCore.Components.Bpmn.lib.module.js",
+  "cssFiles": "../Bpmn/wwwroot/css/**/*.css",
+  "cssBundle": "dist/Hasseware.AspNetCore.Components.Bpmn.bundle.scp.css",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint . --max-warnings=0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "bench": "vitest run --config vitest.bench.config.ts --disableConsoleIntercept",
+    "check": "npm run typecheck && npm run lint && npm run icons:verify && npm run test",
+    "prebuild": "npm run typecheck && npm run lint",
+    "build": "node ./esbuild.config.mjs",
+    "postbuild": "node ./scripts/verify-bundle.mjs",
+    "clean": "rimraf ./dist",
+    "icons:generate": "node ./tools/generate-icons.mjs",
+    "icons:verify": "node ./tools/generate-icons.mjs --check && node ./scripts/verify-icons.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@vitest/coverage-v8": "5.0.1",
+    "esbuild": "0.28.1",
+    "eslint": "10.10.0",
+    "glob": "13.0.6",
+    "globals": "17.12.0",
+    "jsdom": "30.1.0",
+    "rimraf": "6.1.3",
+    "tinybench": "6.1.4",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.70.0",
+    "vitest": "5.0.1"
+  },
+  "dependencies": {
+    "@joint/core": "^4.3.3"
+  }
+}

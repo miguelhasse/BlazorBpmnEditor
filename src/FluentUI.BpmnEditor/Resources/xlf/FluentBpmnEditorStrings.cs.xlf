@@ -1,0 +1,342 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="cs" original="../FluentBpmnEditorStrings.resx">
+    <body>
+      <trans-unit id="CalledElementPicker.Cancel">
+        <source>Cancel</source>
+        <target state="translated">Zrušit</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.Diagram">
+        <source>Diagram</source>
+        <target state="translated">Diagram</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.Open">
+        <source>Open</source>
+        <target state="translated">Otevřít</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FeelEntry.Toggle">
+        <source>Toggle FEEL expression</source>
+        <target state="translated">Přepnout výraz FEEL</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Cancel">
+        <source>Cancel</source>
+        <target state="translated">Zrušit</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Changed">
+        <source>Changed</source>
+        <target state="translated">Změněno</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.ChangedCount">
+        <source>{0} item(s) this editor reads differently</source>
+        <target state="translated">Položky, které tento editor čte jinak: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Diagrams">
+        <source>Diagrams</source>
+        <target state="translated">Diagramy</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.ElementCounts">
+        <source>{0} flow nodes, {1} connectors</source>
+        <target state="translated">Uzly toku: {0}, konektory: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Elements">
+        <source>Elements</source>
+        <target state="translated">Prvky</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Error">
+        <source>This file could not be read: {0}</source>
+        <target state="translated">Tento soubor nelze přečíst: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.NoProblems">
+        <source>None</source>
+        <target state="translated">Žádné</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.NotKept">
+        <source>Not kept</source>
+        <target state="translated">Nezachováno</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.NotKeptCount">
+        <source>{0} item(s) this editor cannot represent</source>
+        <target state="translated">Položky, které tento editor nedokáže reprezentovat: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Note">
+        <source>Opening this file replaces what is on screen, including its undo history.</source>
+        <target state="translated">Otevřením tohoto souboru se nahradí aktuální obsah obrazovky včetně historie zpět.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Open">
+        <source>Open</source>
+        <target state="translated">Otevřít</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.ProblemCounts">
+        <source>{0} error(s), {1} warning(s)</source>
+        <target state="translated">Chyby: {0}, upozornění: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Problems">
+        <source>Problems</source>
+        <target state="translated">Problémy</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Schema">
+        <source>XML Schema</source>
+        <target state="translated">Schéma XML</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.SchemaFailed">
+        <source>{0} violation(s) against the supplied schema set; content remains available to edit</source>
+        <target state="translated">Porušení poskytnuté sady schémat: {0}; obsah lze nadále upravovat</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.SchemaPassed">
+        <source>Passed the supplied schema set</source>
+        <target state="translated">Vyhovuje poskytnuté sadě schémat</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.SchemaSkipped">
+        <source>Not validated (no schema set supplied)</source>
+        <target state="translated">Neověřeno (nebyla poskytnuta sada schémat)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Title">
+        <source>Open {0}</source>
+        <target state="translated">Otevřít {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.Actions">
+        <source>Actions</source>
+        <target state="translated">Akce</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.Add">
+        <source>Add row</source>
+        <target state="translated">Přidat řádek</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.CellLabel">
+        <source>{0}, row {1}</source>
+        <target state="translated">{0}, řádek {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.MoveDown">
+        <source>Move row {0} down</source>
+        <target state="translated">Posunout řádek {0} dolů</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.MoveUp">
+        <source>Move row {0} up</source>
+        <target state="translated">Posunout řádek {0} nahoru</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.Remove">
+        <source>Remove</source>
+        <target state="translated">Odebrat</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.RemoveLabel">
+        <source>Remove row {0}</source>
+        <target state="translated">Odebrat řádek {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Container">
+        <source>Container</source>
+        <target state="translated">Kontejner</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.ElementId">
+        <source>Element id</source>
+        <target state="translated">ID prvku</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Empty">
+        <source>Select an element to edit its properties.</source>
+        <target state="translated">Vyberte prvek a upravte jeho vlastnosti.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Extensions">
+        <source>Extensions</source>
+        <target state="translated">Rozšíření</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.ExtensionsNote">
+        <source>Structure is preserved exactly on export.</source>
+        <target state="translated">Struktura se při exportu zachovává přesně.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Id">
+        <source>Id</source>
+        <target state="translated">ID</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Lane">
+        <source>Lane</source>
+        <target state="translated">Dráha</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Pool">
+        <source>Pool</source>
+        <target state="translated">Bazén</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Problems">
+        <source>Problems</source>
+        <target state="translated">Problémy</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceBrowser.Empty">
+        <source>Nothing refers to this element.</source>
+        <target state="translated">Na tento prvek nic neodkazuje.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilPanel.NoTemplates">
+        <source>No matching templates.</source>
+        <target state="translated">Žádné odpovídající šablony.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilPanel.SearchTemplates">
+        <source>Search templates</source>
+        <target state="translated">Hledat šablony</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilPanel.Templates">
+        <source>Templates</source>
+        <target state="translated">Šablony</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Applicable">
+        <source>Applicable templates</source>
+        <target state="translated">Použitelné šablony</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.AriaLabel">
+        <source>Element template</source>
+        <target state="translated">Šablona prvku</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Cancel">
+        <source>Cancel</source>
+        <target state="translated">Zrušit</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.NoMatches">
+        <source>No matching templates.</source>
+        <target state="translated">Žádné odpovídající šablony.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.NotFound">
+        <source>Template not found</source>
+        <target state="translated">Šablona nenalezena</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Remove">
+        <source>Remove</source>
+        <target state="translated">Odebrat</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Search">
+        <source>Search templates</source>
+        <target state="translated">Hledat šablony</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Select">
+        <source>Select template</source>
+        <target state="translated">Vybrat šablonu</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Unlink">
+        <source>Unlink</source>
+        <target state="translated">Odpojit</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Update">
+        <source>Update</source>
+        <target state="translated">Aktualizovat</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Version">
+        <source>Version {0}</source>
+        <target state="translated">Verze {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Fit">
+        <source>Fit to content</source>
+        <target state="translated">Přizpůsobit obsahu</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Fit.Text">
+        <source>Fit</source>
+        <target state="translated">Přizpůsobit</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Fit.Title">
+        <source>Fit the diagram to the viewport</source>
+        <target state="translated">Přizpůsobit diagram zobrazení</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Redo">
+        <source>Redo</source>
+        <target state="translated">Znovu</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Reset">
+        <source>Reset zoom</source>
+        <target state="translated">Obnovit zvětšení</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Reset.Text">
+        <source>Reset</source>
+        <target state="translated">Obnovit</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Reset.Title">
+        <source>Reset zoom to 100%</source>
+        <target state="translated">Obnovit zvětšení na 100 %</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Shortcuts">
+        <source>Show keyboard shortcuts</source>
+        <target state="translated">Zobrazit klávesové zkratky</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Undo">
+        <source>Undo</source>
+        <target state="translated">Zpět</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.ZoomIn">
+        <source>Zoom in</source>
+        <target state="translated">Přiblížit</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.ZoomIn.Title">
+        <source>Zoom in</source>
+        <target state="translated">Přiblížit</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.ZoomOut">
+        <source>Zoom out</source>
+        <target state="translated">Oddálit</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.ZoomOut.Title">
+        <source>Zoom out</source>
+        <target state="translated">Oddálit</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

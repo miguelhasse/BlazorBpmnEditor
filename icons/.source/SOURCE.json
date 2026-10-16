@@ -1,0 +1,11 @@
+{
+  "package": "bpmn-font",
+  "version": "0.13.0",
+  "tarball": "https://registry.npmjs.org/bpmn-font/-/bpmn-font-0.13.0.tgz",
+  "tarballSha256": "0ef20db15a756e69a9f34bae184b68d156abd5deef17491127e2d871f9dbddca",
+  "sourceFile": "dist/font/bpmn.svg",
+  "sourceSha256": "7ceeb3c3934d47d9c42a2848372533c367c9d651af7a8ccf23f39727f2c897f7",
+  "license": "OFL-1.1",
+  "licenseHolder": "Camunda Services GmbH",
+  "retrieved": "2026-09-19"
+}

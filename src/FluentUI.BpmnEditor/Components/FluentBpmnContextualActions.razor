@@ -1,0 +1,40 @@
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
+@inherits BpmnContextualActionsBase
+@using Hasseware.AspNetCore.Components.Bpmn.Editing
+@using static Hasseware.AspNetCore.Components.Bpmn.BpmnStencilPresentation
+
+@if (IsOpen)
+{
+    <div class="@CssClass("bpmn-actions")"
+         role="toolbar"
+         aria-orientation="vertical"
+         aria-label="@EffectiveAriaLabel"
+         data-bpmn-element="@Selected?.ElementId"
+         style="@PositionStyle"
+         @attributes="AdditionalAttributes">
+
+        @foreach (var action in Offered)
+        {
+            <FluentButton Type="ButtonType.Button"
+                    Class="bpmn-actions__button"
+                    Title="@LabelFor(action)"
+                    aria-label="@LabelFor(action)"
+                    @key="action.Key"
+                    OnClick="@(() => ChooseAsync(action))">
+                @if (action.Kind == BpmnActionKind.Append)
+                {
+                    var entry = new BpmnStencilEntry(action.Type, action.Label, action.EventDefinition);
+                    <svg class="bpmn-stencil__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path class="bpmn-stencil__silhouette" d="@Silhouette(entry).Outline" />
+                        @if (Silhouette(entry).Detail is { Length: > 0 } detail) { <path class="bpmn-stencil__silhouette" d="@detail" /> }
+                        @if (IconFor(entry) is { } icon) { <path class="bpmn-stencil__glyph" d="@icon.PathData" transform="@GlyphTransform(entry)" /> }
+                    </svg>
+                }
+                else
+                {
+                    <FluentIcon Value="@(action.Kind == BpmnActionKind.Delete ? new Icons.Regular.Size20.Delete() : action.Kind == BpmnActionKind.EditLabel ? new Icons.Regular.Size20.Edit() : (Icon)new Icons.Regular.Size20.MoreHorizontal())" />
+                }
+            </FluentButton>
+        }
+    </div>
+}

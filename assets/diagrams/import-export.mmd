@@ -1,0 +1,29 @@
+%% Import and export
+%% Preview first; accepting an import replaces the document and resets edit history.
+%% Canonical regenerates deterministically; rejects source-content loss unless explicitly allowed.
+%% Fidelity edits preserved source XML; falls back to Canonical with a diagnostic when no XML source exists.
+flowchart TB
+    detect["BpmnFileFormats.Detect<br/>Content first, extension fallback"]:::cs
+    xmlr["BpmnXmlReader<br/>XML + optional preloaded XSD"]:::cs
+    preview["Core: BpmnEditorSession<br/>BpmnImportPreview<br/>Document + diagnostics<br/>BpmnValidator report"]:::cs
+    offer["Standard / Fluent import dialog<br/>BpmnImportOfferBase<br/>Accept / reject via session"]:::cs
+    jsonr["BpmnJsonReader<br/>Default: 64 MiB<br/>Max depth: 256"]:::cs
+    doc["BpmnDocument<br/>Immutable semantic + DI model"]:::data
+    jsonw["BpmnJsonWriter<br/>Versioned JSON envelope"]:::cs
+    xmlw["BpmnXmlWriter<br/>Canonical / Fidelity"]:::cs
+    json["JSON interchange<br/>format: hasseware.bpmn<br/>version: 1.0 · document"]:::data
+    xml["BPMN 2.0 XML<br/>BpmnExportResult diagnostics"]:::data
+    detect --> xmlr
+    detect --> jsonr
+    xmlr --> preview
+    jsonr --> preview
+    preview --> offer
+    offer -->|"accept"| doc
+    doc --> xmlw
+    doc --> jsonw
+    xmlw --> xml
+    jsonw --> json
+    classDef cs fill:#a5d8ff,stroke:#343a40,color:#212529
+    classDef js fill:#ffec99,stroke:#343a40,color:#212529
+    classDef data fill:#b2f2bb,stroke:#343a40,color:#212529
+    classDef test fill:#e9ecef,stroke:#343a40,color:#212529

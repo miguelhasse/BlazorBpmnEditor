@@ -1,0 +1,457 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="tr" original="../DemoClientStrings.resx">
+    <body>
+      <trans-unit id="CouldNotFetch">
+        <source>Could not fetch {0}: {1}</source>
+        <target state="translated">{0} getirilemedi: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CouldNotOpen">
+        <source>Could not open {0}: {1}</source>
+        <target state="translated">{0} açılamadı: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CouldNotRead">
+        <source>Could not read {0}: {1}</source>
+        <target state="translated">{0} okunamadı: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DocumentSummary">
+        <source>{0} flow nodes, {1} sequence flows, {2} diagram(s)</source>
+        <target state="translated">{0} akış düğümü, {1} sıra akışı, {2} diyagram</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.AnimateTokens">
+        <source>Animate tokens</source>
+        <target state="translated">Belirteçleri canlandır</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.CanvasReady">
+        <source>Canvas ready (instance {0}, config revision {1})</source>
+        <target state="translated">Tuval hazır (örnek {0}, yapılandırma revizyonu {1})</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ConfigurationRejected">
+        <source>Configuration rejected [{0}] at {1}: {2}</source>
+        <target state="translated">Yapılandırma reddedildi [{0}] konum {1}: {2}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.DiagramPath">
+        <source>Diagram path</source>
+        <target state="translated">Diyagram yolu</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.EditRejected">
+        <source>Refused ({0}): {1}</source>
+        <target state="translated">Reddedildi ({0}): {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Edited">
+        <source>Edited: {0} nodes, {1} flows.</source>
+        <target state="translated">Düzenlendi: {0} düğüm, {1} akış.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ExecutionState">
+        <source>Execution state</source>
+        <target state="translated">Yürütme durumu</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ExportJson">
+        <source>Export JSON</source>
+        <target state="translated">JSON olarak dışa aktar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ExportXml">
+        <source>Export XML</source>
+        <target state="translated">XML olarak dışa aktar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ExportedBpmn">
+        <source>Exported BPMN {0}</source>
+        <target state="translated">BPMN dışa aktarıldı {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.HighContrast">
+        <source>High contrast</source>
+        <target state="translated">Yüksek karşıtlık</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Navigated">
+        <source>{0}: {1}</source>
+        <target state="translated">{0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.NothingSelected">
+        <source>Nothing selected.</source>
+        <target state="translated">Hiçbir şey seçilmedi.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.OpenFile">
+        <source>Open file</source>
+        <target state="translated">Dosya aç</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Opened">
+        <source>Opened {0}.</source>
+        <target state="translated">{0} açıldı.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Properties">
+        <source>Properties</source>
+        <target state="translated">Özellikler</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ReadOnly">
+        <source>Read only</source>
+        <target state="translated">Salt okunur</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Reading">
+        <source>Reading {0}...</source>
+        <target state="translated">{0} okunuyor...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Rendered">
+        <source>Rendered {0} shapes and {1} connectors on '{2}'</source>
+        <target state="translated">'{2}' üzerinde {0} şekil ve {1} bağlantı çizildi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SelectedElement">
+        <source>Selected {0}.</source>
+        <target state="translated">{0} seçildi.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SelectedElements">
+        <source>Selected {0} elements.</source>
+        <target state="translated">{0} öğe seçildi.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.ServiceTimeout">
+        <source>The service did not answer in time.</source>
+        <target state="translated">Servis zamanında yanıt vermedi.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SnapToGrid">
+        <source>Snap to grid</source>
+        <target state="translated">Izgaraya hizala</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Title">
+        <source>BPMN editor</source>
+        <target state="translated">BPMN düzenleyici</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Unrendered">
+        <source> ({0} DI entries had no matching element)</source>
+        <target state="translated"> ({0} DI girdisinin eşleşen öğesi yoktu)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExportSeverity.Dropped">
+        <source>Dropped</source>
+        <target state="translated">Atlandı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExportSeverity.Info">
+        <source>Info</source>
+        <target state="translated">Bilgi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExportSeverity.Normalized">
+        <source>Normalized</source>
+        <target state="translated">Normalleştirildi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Activities">
+        <source>Activities and markers</source>
+        <target state="translated">Etkinlikler ve işaretçiler</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Connectors">
+        <source>Connectors and artifacts</source>
+        <target state="translated">Bağlantılar ve yapılar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Events">
+        <source>Events: all triggers by context</source>
+        <target state="translated">Olaylar: bağlama göre tüm tetikleyiciler</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Gateways">
+        <source>Gateways</source>
+        <target state="translated">Ağ geçitleri</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.NotationSheet">
+        <source>Notation sheet</source>
+        <target state="translated">Gösterim sayfası</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Rendered">
+        <source>{0} shapes, {1} connectors</source>
+        <target state="translated">{0} şekil, {1} bağlantı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Swimlanes">
+        <source>Pools and Lanes: both orientations</source>
+        <target state="translated">Havuzlar ve Kulvarlar: her iki yönelim</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Gallery.Title">
+        <source>BPMN notation gallery</source>
+        <target state="translated">BPMN gösterim galerisi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Gallery">
+        <source>Notation gallery</source>
+        <target state="translated">Gösterim galerisi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Heading">
+        <source>BPMN component playground</source>
+        <target state="translated">BPMN bileşen deneme alanı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Icons">
+        <source>Icon manifest</source>
+        <target state="translated">Simge bildirimi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Interchange">
+        <source>XML interchange</source>
+        <target state="translated">XML değişimi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.OpenEditor">
+        <source>Open the editor</source>
+        <target state="translated">Düzenleyiciyi aç</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.PlainEditor">
+        <source>Plain HTML editor</source>
+        <target state="translated">Düz HTML düzenleyici</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Home.Title">
+        <source>Home</source>
+        <target state="translated">Ana sayfa</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.ActivityMarkers">
+        <source>Activity markers</source>
+        <target state="translated">Etkinlik işaretçileri</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.EventTriggers">
+        <source>Event triggers</source>
+        <target state="translated">Olay tetikleyicileri</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.Gateways">
+        <source>Gateways</source>
+        <target state="translated">Ağ geçitleri</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.Metadata">
+        <source>{0} icons, version {1}, content {2} — rendered by the C# registry from the manifest embedded in the component assembly.</source>
+        <target state="translated">{0} simge, sürüm {1}, içerik {2} — bileşen derlemesine gömülü bildirimden C# kayıt defteri tarafından çizildi.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.TaskTypes">
+        <source>Task type symbols</source>
+        <target state="translated">Görev türü simgeleri</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icons.Title">
+        <source>BPMN icon manifest</source>
+        <target state="translated">BPMN simge bildirimi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportDiagnostics">
+        <source>{0} import diagnostic(s)</source>
+        <target state="translated">{0} içe aktarma tanılaması</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportSeverity.Degraded">
+        <source>Degraded</source>
+        <target state="translated">Düşürüldü</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportSeverity.Dropped">
+        <source>Dropped</source>
+        <target state="translated">Atlandı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportSeverity.Info">
+        <source>Info</source>
+        <target state="translated">Bilgi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportSeverity.SchemaError">
+        <source>Schema error</source>
+        <target state="translated">Şema hatası</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.AllowLossy">
+        <source>Allow canonical output that drops source content</source>
+        <target state="translated">Kaynak içeriği atan kanonik çıktıya izin ver</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Artifacts">
+        <source>Artifacts</source>
+        <target state="translated">Yapılar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Canonical">
+        <source>Canonical</source>
+        <target state="translated">Kanonik</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.DataElements">
+        <source>Data elements</source>
+        <target state="translated">Veri öğeleri</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Edges">
+        <source>Edges</source>
+        <target state="translated">Kenarlar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ExportDiagnostics">
+        <source>{0} export diagnostic(s)</source>
+        <target state="translated">{0} dışa aktarma tanılaması</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ExportRefused">
+        <source>Canonical export refused: {0} source loss(es). Enable the opt-in to review lossy output. {1}</source>
+        <target state="translated">Kanonik dışa aktarma reddedildi: {0} kaynak kaybı. Kayıplı çıktıyı incelemek için seçeneği etkinleştirin. {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Fidelity">
+        <source>Fidelity</source>
+        <target state="translated">Sadakat</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.FlowNodes">
+        <source>Flow nodes</source>
+        <target state="translated">Akış düğümleri</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ForeignAttributes">
+        <source>Foreign attributes</source>
+        <target state="translated">Yabancı öznitelikler</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.GlobalDefinitions">
+        <source>Global definitions</source>
+        <target state="translated">Genel tanımlar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ImportSummary">
+        <source>{0} · {1} import diagnostic(s)</source>
+        <target state="translated">{0} — {1} içe aktarma tanılaması</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Intro">
+        <source>Reads a sample, writes it back in both export modes, then reads the result again and compares. Canonical mode regenerates the document from the semantic model; fidelity mode edits the file that was read (specification section 10.6).</source>
+        <target state="translated">Bir örneği okur, her iki dışa aktarma kipinde geri yazar, ardından sonucu yeniden okuyup karşılaştırır. Kanonik kip belgeyi anlamsal modelden yeniden üretir; sadakat kipi okunan dosyayı düzenler (belirtim bölüm 10.6).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Lanes">
+        <source>Lanes</source>
+        <target state="translated">Kulvarlar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Measure">
+        <source>Measure</source>
+        <target state="translated">Ölçü</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.MessageFlows">
+        <source>Message flows</source>
+        <target state="translated">Mesaj akışları</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.ModeSummary">
+        <source>{0} characters · {1} line(s) differ from the original · stable on rewrite: {2} · mode used: {3}</source>
+        <target state="translated">{0} karakter — özgün olandan {1} satır farklı — yeniden yazmada kararlı: {2} — kullanılan kip: {3}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.NoLossDetails">
+        <source>No loss details were provided.</source>
+        <target state="translated">Kayıp ayrıntısı sağlanmadı.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Output">
+        <source>Output</source>
+        <target state="translated">Çıktı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.PreservedElements">
+        <source>Preserved root elements</source>
+        <target state="translated">Korunan kök öğeler</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Report">
+        <source>Round-trip report</source>
+        <target state="translated">Gidiş-dönüş raporu</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.RoundTripping">
+        <source>Round-tripping {0}...</source>
+        <target state="translated">{0} için gidiş-dönüş yapılıyor...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.SequenceFlows">
+        <source>Sequence flows</source>
+        <target state="translated">Sıra akışları</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Shapes">
+        <source>Shapes</source>
+        <target state="translated">Şekiller</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Stable">
+        <source>Stable on rewrite</source>
+        <target state="translated">Yeniden yazmada kararlı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Title">
+        <source>BPMN interchange</source>
+        <target state="translated">BPMN değişimi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.VendorExtensions">
+        <source>Vendor extensions</source>
+        <target state="translated">Satıcı uzantıları</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Was">
+        <source>{0} (was {1})</source>
+        <target state="translated">{0} (önceki: {1})</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Interchange.Waypoints">
+        <source>Waypoints</source>
+        <target state="translated">Yol noktaları</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="No">
+        <source>no</source>
+        <target state="translated">hayır</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SampleDiagram">
+        <source>Sample diagram</source>
+        <target state="translated">Örnek diyagram</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Yes">
+        <source>yes</source>
+        <target state="translated">evet</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

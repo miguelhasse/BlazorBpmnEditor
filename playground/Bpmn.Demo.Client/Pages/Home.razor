@@ -1,0 +1,14 @@
+@page "/"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+<PageTitle>@Localizer["Home.Title"]</PageTitle>
+
+<h1>@Localizer["Home.Heading"]</h1>
+
+<p>
+    <FluentAnchorButton Href="/editor" Appearance="ButtonAppearance.Primary">@Localizer["Home.OpenEditor"]</FluentAnchorButton>
+    <FluentAnchorButton Href="/editor-plain" Appearance="ButtonAppearance.Subtle">@Localizer["Home.PlainEditor"]</FluentAnchorButton>
+    <FluentAnchorButton Href="/gallery" Appearance="ButtonAppearance.Subtle">@Localizer["Home.Gallery"]</FluentAnchorButton>
+    <FluentAnchorButton Href="/icons" Appearance="ButtonAppearance.Subtle">@Localizer["Home.Icons"]</FluentAnchorButton>
+    <FluentAnchorButton Href="/interchange" Appearance="ButtonAppearance.Subtle">@Localizer["Home.Interchange"]</FluentAnchorButton>
+</p>

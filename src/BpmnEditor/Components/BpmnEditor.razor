@@ -1,0 +1,118 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@using Hasseware.AspNetCore.Components.Bpmn.Configuration
+
+<BpmnEditorScope @ref="_scope"
+                 KitDefaults="@KitDefaults"
+                 ShowAccessibleTree="@ShowAccessibleTree"
+                 AccessibleTreeLabel="@AccessibleTreeLabel"
+                 OnImported="@OnImported"
+                 OnDiagramNavigated="@OnDiagramNavigated"
+                 Configuration="@Configuration"
+                 Document="@Document"
+                 DiagramId="@DiagramId"
+                 IsReadOnly="@IsReadOnly"
+                 ExecutionAnimation="@ExecutionAnimation"
+                 Class="@Class"
+                 Style="@Style"
+                 AriaLabel="@AriaLabel"
+                 OnDocumentChanged="@OnDocumentChanged"
+                 OnSelectionChanged="@OnSelectionChanged"
+                 OnEditRejected="@OnEditRejected"
+                 EditorLabel="@EditorLabel"
+                 StencilLabel="@StencilLabel"
+                 PanelLabel="@PanelLabel"
+                 ToolbarContent="@ToolbarContent"
+                 StencilContent="@StencilContent"
+                 PanelContent="@PanelContent"
+                 OnCanvasInitialized="@OnCanvasInitialized"
+                 OnDocumentLoaded="@OnDocumentLoaded"
+                 OnConfigRejected="@OnConfigRejected"
+                 OnViewportChanged="@OnViewportChanged"
+                 OnShortcutInvoked="@OnShortcutInvoked"
+                 ShowStencil="@ShowStencil"
+                 ShowPanel="@ShowPanel"
+                 Theming="@Theming"
+                 Stencil="@Stencil"
+                 ActiveContainerId="@ActiveContainerId"
+                 ValidateOnChange="@ValidateOnChange"
+                 OnValidated="@OnValidated">
+
+@*
+    Landmarked regions, so an assistive-technology user can move between the tools, the stencil,
+    the canvas and the properties panel instead of walking the whole subtree. Each is named,
+    because a page with four unnamed regions is no more navigable than one with none.
+*@
+<section class="bpmn-editor @Class"
+         style="@RootStyle"
+         data-bpmn-theme="@Theme.ThemeAttribute"
+         data-bpmn-contrast="@Theme.ContrastAttribute"
+         data-bpmn-animation="@AnimationAttribute"
+         aria-label="@EffectiveEditorLabel">
+    @if (HasToolbar)
+    {
+        @*
+            No role of its own. This is a layout slot, and the content placed in it — BpmnToolbar,
+            or whatever the host supplies — is what is or is not a toolbar. Claiming the role here
+            produced two nested toolbars with the same accessible name, which leaves an assistive
+            technology user choosing between identical landmarks.
+        *@
+        <div class="bpmn-editor__toolbar"><BpmnPart Part="BpmnEditorPart.Toolbar" ChildContent="@ToolbarContent" /></div>
+    }
+
+    @if (StencilContent is not null)
+    {
+        <div class="bpmn-editor__stencil" role="region" aria-label="@EffectiveStencilLabel"><BpmnPart Part="BpmnEditorPart.Stencil" ChildContent="@StencilContent" /></div>
+    }
+    @*
+        Not in read-only. Section 7 asks for every mutation surface to be gone, and a palette is
+        nothing but one: every tool in it creates something. Offering thirty-two of them to someone
+        who cannot use any is worse than offering none — each one is a refusal waiting to happen.
+
+        Only the editor's own. StencilContent is the host's, and a host that supplies a palette and
+        then turns read-only on is describing something this component cannot see inside.
+    *@
+    else if (ShowStencil && !IsReadOnly && Components.Get(BpmnEditorPart.Stencil, KitDefaults) is not null)
+    {
+        <div class="bpmn-editor__stencil" role="region" aria-label="@EffectiveStencilLabel">
+            <BpmnPart Part="BpmnEditorPart.Stencil" />
+        </div>
+    }
+
+    @*
+        The theme's own custom properties go on the canvas as well as on the root, and they have to.
+        The stylesheet declares the base tokens on `.bpmn-canvas` itself, so a value set only on an
+        ancestor loses to the canvas's own declaration instead of inheriting through it — the same
+        trap the themes work around with descendant selectors, which a host's arbitrary token name
+        has no stylesheet rule to match.
+    *@
+    <BpmnEditorCanvas>@CanvasOverlays</BpmnEditorCanvas>
+
+    @*
+        Read-only is cascaded, not left to the host to remember. Section 7 asks read-only to remove
+        every mutation surface, and this slot is where a host puts editable fields; a panel that
+        stayed editable would offer renames the editor then refuses with EDIT-002 after the fact.
+    *@
+    @if (HasPanel && ShowPanel)
+    {
+        <div class="bpmn-editor__panel" role="region" aria-label="@EffectivePanelLabel"><BpmnPart Part="BpmnEditorPart.PropertyPanel" ChildContent="@PanelContent" /></div>
+    }
+
+    @*
+        Over everything, because it is a question about the whole document: accepting replaces the
+        file on screen and its history, and there is nothing useful to do behind it meanwhile.
+    *@
+    @if (Footer is not null)
+    {
+        <div class="bpmn-editor__footer">@Footer</div>
+    }
+
+    <BpmnPart Part="BpmnEditorPart.ImportOffer" />
+
+    <BpmnPart Part="BpmnEditorPart.CalledElementPicker" />
+
+    <BpmnPart Part="BpmnEditorPart.ShortcutHelp" />
+
+    @Dialogs
+</section>
+
+</BpmnEditorScope>

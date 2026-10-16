@@ -1,0 +1,1131 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://excalidraw.com",
+  "elements": [
+    {
+      "id": "editor-composition-1",
+      "type": "text",
+      "x": 40,
+      "y": 25,
+      "width": 780,
+      "height": 38.5,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00001",
+      "roundness": null,
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "text": "Editor composition and extension seams",
+      "originalText": "Editor composition and extension seams",
+      "fontSize": 28,
+      "fontFamily": 5,
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "lineHeight": 1.375,
+      "autoResize": false
+    },
+    {
+      "id": "editor-composition-2",
+      "type": "text",
+      "x": 40,
+      "y": 68,
+      "width": 780,
+      "height": 22.0,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00002",
+      "roundness": null,
+      "seed": 2,
+      "version": 1,
+      "versionNonce": 2,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "text": "Core behavior, independent UI kits, immutable model ownership",
+      "originalText": "Core behavior, independent UI kits, immutable model ownership",
+      "fontSize": 16,
+      "fontFamily": 5,
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "lineHeight": 1.375,
+      "autoResize": false
+    },
+    {
+      "id": "editor-composition-3",
+      "type": "rectangle",
+      "x": 270.0,
+      "y": 120,
+      "width": 320,
+      "height": 114,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00003",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 3,
+      "version": 1,
+      "versionNonce": 3,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "editor-composition-11",
+          "type": "arrow"
+        },
+        {
+          "id": "editor-composition-18",
+          "type": "text"
+        }
+      ],
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "editor-composition-4",
+      "type": "rectangle",
+      "x": 270.0,
+      "y": 334,
+      "width": 320,
+      "height": 92,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00004",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 4,
+      "version": 1,
+      "versionNonce": 4,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "editor-composition-11",
+          "type": "arrow"
+        },
+        {
+          "id": "editor-composition-12",
+          "type": "arrow"
+        },
+        {
+          "id": "editor-composition-13",
+          "type": "arrow"
+        },
+        {
+          "id": "editor-composition-19",
+          "type": "text"
+        }
+      ],
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "editor-composition-5",
+      "type": "rectangle",
+      "x": 95.0,
+      "y": 526,
+      "width": 320,
+      "height": 114,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00005",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 5,
+      "version": 1,
+      "versionNonce": 5,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "editor-composition-12",
+          "type": "arrow"
+        },
+        {
+          "id": "editor-composition-14",
+          "type": "arrow"
+        },
+        {
+          "id": "editor-composition-20",
+          "type": "text"
+        }
+      ],
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "editor-composition-6",
+      "type": "rectangle",
+      "x": 95.0,
+      "y": 740,
+      "width": 320,
+      "height": 114,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00006",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 6,
+      "version": 1,
+      "versionNonce": 6,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "editor-composition-14",
+          "type": "arrow"
+        },
+        {
+          "id": "editor-composition-17",
+          "type": "arrow"
+        },
+        {
+          "id": "editor-composition-21",
+          "type": "text"
+        }
+      ],
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "editor-composition-7",
+      "type": "rectangle",
+      "x": 445.0,
+      "y": 526,
+      "width": 320,
+      "height": 114,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00007",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 7,
+      "version": 1,
+      "versionNonce": 7,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "editor-composition-13",
+          "type": "arrow"
+        },
+        {
+          "id": "editor-composition-15",
+          "type": "arrow"
+        },
+        {
+          "id": "editor-composition-22",
+          "type": "text"
+        }
+      ],
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "editor-composition-8",
+      "type": "rectangle",
+      "x": 445.0,
+      "y": 740,
+      "width": 320,
+      "height": 114,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00008",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 8,
+      "version": 1,
+      "versionNonce": 8,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "editor-composition-15",
+          "type": "arrow"
+        },
+        {
+          "id": "editor-composition-16",
+          "type": "arrow"
+        },
+        {
+          "id": "editor-composition-23",
+          "type": "text"
+        }
+      ],
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "editor-composition-9",
+      "type": "rectangle",
+      "x": 445.0,
+      "y": 954,
+      "width": 320,
+      "height": 136,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00009",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 9,
+      "version": 1,
+      "versionNonce": 9,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "editor-composition-16",
+          "type": "arrow"
+        },
+        {
+          "id": "editor-composition-24",
+          "type": "text"
+        }
+      ],
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "editor-composition-10",
+      "type": "rectangle",
+      "x": 95.0,
+      "y": 954,
+      "width": 320,
+      "height": 136,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00010",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 10,
+      "version": 1,
+      "versionNonce": 10,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "editor-composition-17",
+          "type": "arrow"
+        },
+        {
+          "id": "editor-composition-25",
+          "type": "text"
+        }
+      ],
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "editor-composition-11",
+      "type": "arrow",
+      "x": 430.0,
+      "y": 234,
+      "width": 0.0,
+      "height": 100,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00011",
+      "roundness": null,
+      "seed": 11,
+      "version": 1,
+      "versionNonce": 11,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0.0,
+          0
+        ],
+        [
+          0.0,
+          35
+        ],
+        [
+          0.0,
+          35
+        ],
+        [
+          0.0,
+          100
+        ]
+      ],
+      "startBinding": {
+        "elementId": "editor-composition-3",
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "editor-composition-4",
+        "focus": 0,
+        "gap": 0
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "editor-composition-12",
+      "type": "arrow",
+      "x": 255.0,
+      "y": 426,
+      "width": 175.0,
+      "height": 100,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00012",
+      "roundness": null,
+      "seed": 12,
+      "version": 1,
+      "versionNonce": 12,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          175.0,
+          0
+        ],
+        [
+          175.0,
+          45
+        ],
+        [
+          0.0,
+          45
+        ],
+        [
+          0.0,
+          100
+        ]
+      ],
+      "startBinding": {
+        "elementId": "editor-composition-4",
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "editor-composition-5",
+        "focus": 0,
+        "gap": 0
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "editor-composition-13",
+      "type": "arrow",
+      "x": 430.0,
+      "y": 426,
+      "width": 175.0,
+      "height": 100,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00013",
+      "roundness": null,
+      "seed": 13,
+      "version": 1,
+      "versionNonce": 13,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0.0,
+          0
+        ],
+        [
+          0.0,
+          55
+        ],
+        [
+          175.0,
+          55
+        ],
+        [
+          175.0,
+          100
+        ]
+      ],
+      "startBinding": {
+        "elementId": "editor-composition-4",
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "editor-composition-7",
+        "focus": 0,
+        "gap": 0
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "editor-composition-14",
+      "type": "arrow",
+      "x": 255.0,
+      "y": 640,
+      "width": 0.0,
+      "height": 100,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00014",
+      "roundness": null,
+      "seed": 14,
+      "version": 1,
+      "versionNonce": 14,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0.0,
+          0
+        ],
+        [
+          0.0,
+          65
+        ],
+        [
+          0.0,
+          65
+        ],
+        [
+          0.0,
+          100
+        ]
+      ],
+      "startBinding": {
+        "elementId": "editor-composition-5",
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "editor-composition-6",
+        "focus": 0,
+        "gap": 0
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "editor-composition-15",
+      "type": "arrow",
+      "x": 605.0,
+      "y": 640,
+      "width": 0.0,
+      "height": 100,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00015",
+      "roundness": null,
+      "seed": 15,
+      "version": 1,
+      "versionNonce": 15,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0.0,
+          0
+        ],
+        [
+          0.0,
+          35
+        ],
+        [
+          0.0,
+          35
+        ],
+        [
+          0.0,
+          100
+        ]
+      ],
+      "startBinding": {
+        "elementId": "editor-composition-7",
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "editor-composition-8",
+        "focus": 0,
+        "gap": 0
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "editor-composition-16",
+      "type": "arrow",
+      "x": 605.0,
+      "y": 854,
+      "width": 0.0,
+      "height": 100,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00016",
+      "roundness": null,
+      "seed": 16,
+      "version": 1,
+      "versionNonce": 16,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0.0,
+          0
+        ],
+        [
+          0.0,
+          45
+        ],
+        [
+          0.0,
+          45
+        ],
+        [
+          0.0,
+          100
+        ]
+      ],
+      "startBinding": {
+        "elementId": "editor-composition-8",
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "editor-composition-9",
+        "focus": 0,
+        "gap": 0
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "editor-composition-17",
+      "type": "arrow",
+      "x": 255.0,
+      "y": 854,
+      "width": 0.0,
+      "height": 100,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00017",
+      "roundness": null,
+      "seed": 17,
+      "version": 1,
+      "versionNonce": 17,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0.0,
+          0
+        ],
+        [
+          0.0,
+          55
+        ],
+        [
+          0.0,
+          55
+        ],
+        [
+          0.0,
+          100
+        ]
+      ],
+      "startBinding": {
+        "elementId": "editor-composition-6",
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "editor-composition-10",
+        "focus": 0,
+        "gap": 0
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "editor-composition-18",
+      "type": "text",
+      "x": 280.0,
+      "y": 133.0,
+      "width": 300,
+      "height": 88.0,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00018",
+      "roundness": null,
+      "seed": 18,
+      "version": 1,
+      "versionNonce": 18,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "text": "Host application\nStandard / Fluent / third-party\nkit\nOwn layout and composition slots",
+      "originalText": "Host application\nStandard / Fluent / third-party\nkit\nOwn layout and composition slots",
+      "fontSize": 16,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "editor-composition-3",
+      "lineHeight": 1.375,
+      "autoResize": false
+    },
+    {
+      "id": "editor-composition-19",
+      "type": "text",
+      "x": 280.0,
+      "y": 347.0,
+      "width": 300,
+      "height": 66.0,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00019",
+      "roundness": null,
+      "seed": 19,
+      "version": 1,
+      "versionNonce": 19,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "text": "BpmnEditorScope (Core)\nOne BpmnEditorSession\nCascades session + immutable state",
+      "originalText": "BpmnEditorScope (Core)\nOne BpmnEditorSession\nCascades session + immutable state",
+      "fontSize": 16,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "editor-composition-4",
+      "lineHeight": 1.375,
+      "autoResize": false
+    },
+    {
+      "id": "editor-composition-20",
+      "type": "text",
+      "x": 105.0,
+      "y": 539.0,
+      "width": 300,
+      "height": 88.0,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00020",
+      "roundness": null,
+      "seed": 20,
+      "version": 1,
+      "versionNonce": 20,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "text": "BpmnPart\nInstance ChildContent → host\noverride\n→ kit defaults → Core defaults",
+      "originalText": "BpmnPart\nInstance ChildContent → host\noverride\n→ kit defaults → Core defaults",
+      "fontSize": 16,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "editor-composition-5",
+      "lineHeight": 1.375,
+      "autoResize": false
+    },
+    {
+      "id": "editor-composition-21",
+      "type": "text",
+      "x": 105.0,
+      "y": 753.0,
+      "width": 300,
+      "height": 88.0,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00021",
+      "roundness": null,
+      "seed": 21,
+      "version": 1,
+      "versionNonce": 21,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "text": "BpmnEditorComponentBase\nToolbar / properties / validation\nbases\nRequire scope; shared commands",
+      "originalText": "BpmnEditorComponentBase\nToolbar / properties / validation\nbases\nRequire scope; shared commands",
+      "fontSize": 16,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "editor-composition-6",
+      "lineHeight": 1.375,
+      "autoResize": false
+    },
+    {
+      "id": "editor-composition-22",
+      "type": "text",
+      "x": 455.0,
+      "y": 539.0,
+      "width": 300,
+      "height": 88.0,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00022",
+      "roundness": null,
+      "seed": 22,
+      "version": 1,
+      "versionNonce": 22,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "text": "BpmnEditorCanvas\nOne canvas attachment\nAutomatic widget parts + extra\noverlays",
+      "originalText": "BpmnEditorCanvas\nOne canvas attachment\nAutomatic widget parts + extra\noverlays",
+      "fontSize": 16,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "editor-composition-7",
+      "lineHeight": 1.375,
+      "autoResize": false
+    },
+    {
+      "id": "editor-composition-23",
+      "type": "text",
+      "x": 455.0,
+      "y": 764.0,
+      "width": 300,
+      "height": 66.0,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00023",
+      "roundness": null,
+      "seed": 23,
+      "version": 1,
+      "versionNonce": 23,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "text": "BpmnCanvas (Core)\nSole canvas interop owner\nCascades BpmnCanvasSurface",
+      "originalText": "BpmnCanvas (Core)\nSole canvas interop owner\nCascades BpmnCanvasSurface",
+      "fontSize": 16,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "editor-composition-8",
+      "lineHeight": 1.375,
+      "autoResize": false
+    },
+    {
+      "id": "editor-composition-24",
+      "type": "text",
+      "x": 455.0,
+      "y": 967.0,
+      "width": 300,
+      "height": 110.0,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00024",
+      "roundness": null,
+      "seed": 24,
+      "version": 1,
+      "versionNonce": 24,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "text": "BpmnCanvasWidgetBase\nContext menu · label editor\nContextual actions · accessible\ntree\nRequire scope and canvas surface",
+      "originalText": "BpmnCanvasWidgetBase\nContext menu · label editor\nContextual actions · accessible\ntree\nRequire scope and canvas surface",
+      "fontSize": 16,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "editor-composition-9",
+      "lineHeight": 1.375,
+      "autoResize": false
+    },
+    {
+      "id": "editor-composition-25",
+      "type": "text",
+      "x": 105.0,
+      "y": 989.0,
+      "width": 300,
+      "height": 66.0,
+      "angle": 0,
+      "strokeColor": "#343a40",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a00025",
+      "roundness": null,
+      "seed": 25,
+      "version": 1,
+      "versionNonce": 25,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791549600000,
+      "link": null,
+      "locked": false,
+      "text": "BpmnPropertyEditorRegistry\nHost + kit entry renderers\nGuarded BpmnPropertyEntryContext",
+      "originalText": "BpmnPropertyEditorRegistry\nHost + kit entry renderers\nGuarded BpmnPropertyEntryContext",
+      "fontSize": 16,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "editor-composition-10",
+      "lineHeight": 1.375,
+      "autoResize": false
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#ffffff",
+    "gridSize": 20
+  },
+  "files": {}
+}

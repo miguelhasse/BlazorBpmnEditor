@@ -1,0 +1,760 @@
+{
+  "$comment": "Shared rule catalog consumed identically by both runtimes: TS via a static import, C# via a source generator in src/Bpmn.RulesGenerator. A rule with 'native':true has no 'predicate' at all — its real logic lives in code, this entry only reserves the id/message/severity so nothing hand-duplicates them.",
+  "schemaVersion": "1.0.0",
+  "rules": [
+    {
+      "id": "SF-001",
+      "scope": "live",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "Sequence Flow source and target must be a FlowNode (Event, Activity, or Gateway).",
+      "predicate": {
+        "op": "or",
+        "args": [
+          { "op": "notIn", "field": "source.kind", "values": ["event", "activity", "gateway"] },
+          { "op": "notIn", "field": "target.kind", "values": ["event", "activity", "gateway"] }
+        ]
+      }
+    },
+    {
+      "id": "SF-002",
+      "scope": "live",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "Source must not be an End Event.",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "eq", "field": "source.kind", "value": "event" },
+          { "op": "eq", "field": "source.category", "value": "end" }
+        ]
+      }
+    },
+    {
+      "id": "SF-003",
+      "scope": "live",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "Target must not be a Start Event.",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "eq", "field": "target.kind", "value": "event" },
+          { "op": "in", "field": "target.category", "values": ["start", "startEventSubProcess"] }
+        ]
+      }
+    },
+    {
+      "id": "SF-004",
+      "scope": "live",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "Target must not be a Boundary Event.",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "eq", "field": "target.kind", "value": "event" },
+          { "op": "eq", "field": "target.category", "value": "boundary" }
+        ]
+      }
+    },
+    {
+      "id": "SF-005",
+      "scope": "live",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "Source/target must not be an Event Sub-Process — it has no external Sequence Flow.",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "and",
+            "args": [
+              { "op": "eq", "field": "source.kind", "value": "activity" },
+              { "op": "eq", "field": "source.subProcessKind", "value": "eventSubProcess" }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              { "op": "eq", "field": "target.kind", "value": "activity" },
+              { "op": "eq", "field": "target.subProcessKind", "value": "eventSubProcess" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SF-006",
+      "scope": "live",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "Sequence Flow must not cross a Pool/Participant boundary (poolId mismatch).",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "exists", "field": "source.poolId" },
+          { "op": "exists", "field": "target.poolId" },
+          { "op": "fieldsNotEqual", "left": "source.poolId", "right": "target.poolId" }
+        ]
+      }
+    },
+    {
+      "id": "SF-007",
+      "scope": "live",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "Sequence Flow must not cross a Sub-Process containment boundary (containerId mismatch).",
+      "predicate": { "op": "fieldsNotEqual", "left": "source.containerId", "right": "target.containerId" }
+    },
+    {
+      "id": "SF-008",
+      "scope": "live",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "Source must not be a Compensation Boundary Event (use an Association to the handler instead).",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "eq", "field": "source.kind", "value": "event" },
+          { "op": "eq", "field": "source.category", "value": "boundary" },
+          { "op": "eq", "field": "source.eventDefinitionType", "value": "compensation" }
+        ]
+      }
+    },
+    {
+      "id": "SF-009",
+      "scope": "live",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "Source/target must not be a compensation Activity (isForCompensation=true) reached via normal flow.",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "and",
+            "args": [
+              { "op": "eq", "field": "source.kind", "value": "activity" },
+              { "op": "eq", "field": "source.isForCompensation", "value": true }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              { "op": "eq", "field": "target.kind", "value": "activity" },
+              { "op": "eq", "field": "target.isForCompensation", "value": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SF-011",
+      "scope": "live",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "Event-Based Gateway outgoing target must be a catching Message/Timer/Signal/Conditional event or a Receive Task.",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "eq", "field": "source.kind", "value": "gateway" },
+          { "op": "eq", "field": "source.gatewayType", "value": "eventBased" },
+          {
+            "op": "not",
+            "arg": {
+              "op": "or",
+              "args": [
+                {
+                  "op": "and",
+                  "args": [
+                    { "op": "eq", "field": "target.kind", "value": "event" },
+                    { "op": "eq", "field": "target.category", "value": "intermediateCatch" },
+                    { "op": "in", "field": "target.eventDefinitionType", "values": ["message", "timer", "signal", "conditional"] }
+                  ]
+                },
+                {
+                  "op": "and",
+                  "args": [
+                    { "op": "eq", "field": "target.kind", "value": "activity" },
+                    { "op": "eq", "field": "target.taskType", "value": "receiveTask" }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "SF-012",
+      "scope": "live",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "Event-Based Gateway outgoing Sequence Flow must not carry a condition expression.",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "eq", "field": "source.kind", "value": "gateway" },
+          { "op": "eq", "field": "source.gatewayType", "value": "eventBased" },
+          { "op": "eq", "field": "isConditional", "value": true }
+        ]
+      }
+    },
+    {
+      "id": "SF-013",
+      "scope": "live",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "Parallel Gateway outgoing Sequence Flow must not carry a condition.",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "eq", "field": "source.kind", "value": "gateway" },
+          { "op": "eq", "field": "source.gatewayType", "value": "parallel" },
+          { "op": "eq", "field": "isConditional", "value": true }
+        ]
+      }
+    },
+    {
+      "id": "SF-014",
+      "scope": "live",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "isDefault may only be set on a flow sourced from an Activity, or an Exclusive/Inclusive/Complex Gateway.",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "eq", "field": "isDefault", "value": true },
+          {
+            "op": "not",
+            "arg": {
+              "op": "or",
+              "args": [
+                { "op": "eq", "field": "source.kind", "value": "activity" },
+                { "op": "in", "field": "source.gatewayType", "values": ["exclusive", "inclusive", "complex"] }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "SF-016",
+      "scope": "live",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "Conditional Sequence Flow must not be sourced from a Parallel or Event-Based Gateway.",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "eq", "field": "isConditional", "value": true },
+          { "op": "in", "field": "source.gatewayType", "values": ["parallel", "eventBased", "parallelEventBased"] }
+        ]
+      }
+    },
+    {
+      "id": "SF-017",
+      "scope": "live",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "Source must not be a Link Intermediate Throw Event — it continues at its paired Link catch, not by Sequence Flow.",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "eq", "field": "source.kind", "value": "event" },
+          { "op": "eq", "field": "source.category", "value": "intermediateThrow" },
+          { "op": "eq", "field": "source.eventDefinitionType", "value": "link" }
+        ]
+      }
+    },
+    {
+      "id": "SF-018",
+      "scope": "live",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "Target must not be a Link Intermediate Catch Event — it is reached from its paired Link throw, not by Sequence Flow.",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "eq", "field": "target.kind", "value": "event" },
+          { "op": "eq", "field": "target.category", "value": "intermediateCatch" },
+          { "op": "eq", "field": "target.eventDefinitionType", "value": "link" }
+        ]
+      }
+    },
+    {
+      "id": "MF-001",
+      "scope": "live",
+      "connectorKind": "messageFlow",
+      "severity": "error",
+      "message": "Source and target must be InteractionNodes: Participant/Pool, Activity, or Event.",
+      "predicate": {
+        "op": "or",
+        "args": [
+          { "op": "notIn", "field": "source.kind", "values": ["pool", "activity", "event"] },
+          { "op": "notIn", "field": "target.kind", "values": ["pool", "activity", "event"] }
+        ]
+      }
+    },
+    {
+      "id": "MF-002",
+      "scope": "live",
+      "connectorKind": "messageFlow",
+      "severity": "error",
+      "message": "Source and target must be in different Participants/Pools.",
+      "predicate": { "op": "fieldsEqual", "left": "source.poolId", "right": "target.poolId" }
+    },
+    {
+      "id": "MF-003",
+      "scope": "live",
+      "connectorKind": "messageFlow",
+      "severity": "error",
+      "message": "Gateways are never Message Flow endpoints.",
+      "predicate": {
+        "op": "or",
+        "args": [
+          { "op": "eq", "field": "source.kind", "value": "gateway" },
+          { "op": "eq", "field": "target.kind", "value": "gateway" }
+        ]
+      }
+    },
+    {
+      "id": "MF-004",
+      "scope": "live",
+      "connectorKind": "messageFlow",
+      "severity": "error",
+      "message": "Lanes, Data Objects, Groups, and Text Annotations are never Message Flow endpoints.",
+      "predicate": {
+        "op": "or",
+        "args": [
+          { "op": "in", "field": "source.kind", "values": ["lane", "artifact"] },
+          { "op": "in", "field": "target.kind", "values": ["lane", "artifact"] }
+        ]
+      }
+    },
+    {
+      "id": "MF-006",
+      "scope": "live",
+      "connectorKind": "messageFlow",
+      "severity": "error",
+      "message": "Target must not be an End Event.",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "eq", "field": "target.kind", "value": "event" },
+          { "op": "eq", "field": "target.category", "value": "end" }
+        ]
+      }
+    },
+    {
+      "id": "MF-007",
+      "scope": "live",
+      "connectorKind": "messageFlow",
+      "severity": "error",
+      "message": "Source Event must be message-throwing (Message Intermediate Throw, Message End, or Multiple with a message result).",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "eq", "field": "source.kind", "value": "event" },
+          {
+            "op": "not",
+            "arg": {
+              "op": "or",
+              "args": [
+                {
+                  "op": "and",
+                  "args": [
+                    { "op": "in", "field": "source.category", "values": ["intermediateThrow", "end"] },
+                    { "op": "in", "field": "source.eventDefinitionType", "values": ["message", "multiple"] }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "MF-008",
+      "scope": "live",
+      "connectorKind": "messageFlow",
+      "severity": "error",
+      "message": "Target Event must be message-catching (Message Start, Message Intermediate Catch, Message Boundary, or Multiple/Parallel Multiple with a message trigger).",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "eq", "field": "target.kind", "value": "event" },
+          {
+            "op": "not",
+            "arg": {
+              "op": "or",
+              "args": [
+                {
+                  "op": "and",
+                  "args": [
+                    { "op": "in", "field": "target.category", "values": ["start", "intermediateCatch", "boundary"] },
+                    { "op": "in", "field": "target.eventDefinitionType", "values": ["message", "multiple", "parallelMultiple"] }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "DA-002",
+      "scope": "live",
+      "connectorKind": "association",
+      "severity": "error",
+      "message": "Group cannot be a connector endpoint (visual grouping only).",
+      "predicate": {
+        "op": "or",
+        "args": [
+          { "op": "eq", "field": "source.artifactType", "value": "group" },
+          { "op": "eq", "field": "target.artifactType", "value": "group" }
+        ]
+      }
+    },
+    {
+      "id": "DA-002b",
+      "scope": "live",
+      "connectorKind": "dataAssociation",
+      "severity": "error",
+      "message": "Group cannot be a connector endpoint (visual grouping only).",
+      "predicate": {
+        "op": "or",
+        "args": [
+          { "op": "eq", "field": "source.artifactType", "value": "group" },
+          { "op": "eq", "field": "target.artifactType", "value": "group" }
+        ]
+      }
+    },
+    {
+      "id": "DA-003",
+      "scope": "live",
+      "connectorKind": "dataAssociation",
+      "severity": "error",
+      "message": "Text Annotation connects only via (undirected) Association, never Data Association.",
+      "predicate": {
+        "op": "or",
+        "args": [
+          { "op": "eq", "field": "source.artifactType", "value": "textAnnotation" },
+          { "op": "eq", "field": "target.artifactType", "value": "textAnnotation" }
+        ]
+      }
+    },
+    {
+      "id": "DA-004",
+      "scope": "live",
+      "connectorKind": "association",
+      "severity": "error",
+      "message": "Data Object/Data Store connect only via Data Association, never a plain Association.",
+      "predicate": {
+        "op": "or",
+        "args": [
+          { "op": "in", "field": "source.artifactType", "values": ["dataObjectReference", "dataStoreReference"] },
+          { "op": "in", "field": "target.artifactType", "values": ["dataObjectReference", "dataStoreReference"] }
+        ]
+      }
+    },
+    {
+      "id": "DA-005",
+      "scope": "live",
+      "connectorKind": "dataAssociation",
+      "severity": "error",
+      "message": "Data Input Association direction is Data Object/Store/Property to an Activity or Throwing Event input.",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "in", "field": "source.artifactType", "values": ["dataObjectReference", "dataStoreReference"] },
+          {
+            "op": "or",
+            "args": [
+              { "op": "notIn", "field": "target.kind", "values": ["activity", "event"] },
+              {
+                "op": "and",
+                "args": [
+                  { "op": "eq", "field": "target.kind", "value": "event" },
+                  { "op": "notIn", "field": "target.category", "values": ["intermediateThrow", "end"] }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "DA-006",
+      "scope": "live",
+      "connectorKind": "dataAssociation",
+      "severity": "error",
+      "message": "Data Output Association direction is an Activity or Catching Event output to a Data Object/Store/Property.",
+      "predicate": {
+        "op": "and",
+        "args": [
+          { "op": "in", "field": "target.artifactType", "values": ["dataObjectReference", "dataStoreReference"] },
+          {
+            "op": "or",
+            "args": [
+              { "op": "notIn", "field": "source.kind", "values": ["activity", "event"] },
+              {
+                "op": "and",
+                "args": [
+                  { "op": "eq", "field": "source.kind", "value": "event" },
+                  { "op": "notIn", "field": "source.category", "values": ["intermediateCatch", "start", "boundary", "startEventSubProcess"] }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "D001",
+      "scope": "document",
+      "severity": "error",
+      "message": "Every Start Event has 0 incoming Sequence Flow.",
+      "native": true
+    },
+    {
+      "id": "D002",
+      "scope": "document",
+      "severity": "error",
+      "message": "Every End Event has 0 outgoing Sequence Flow.",
+      "native": true
+    },
+    {
+      "id": "D003",
+      "scope": "document",
+      "severity": "error",
+      "message": "Every Boundary Event has 0 incoming Sequence Flow and is attached to exactly one Activity.",
+      "native": true
+    },
+    {
+      "id": "D004",
+      "scope": "document",
+      "severity": "error",
+      "message": "Product lint: Exclusive/Inclusive split has exactly one flow flagged isDefault OR every non-default flow has a conditionExpression.",
+      "native": true
+    },
+    {
+      "id": "D005",
+      "scope": "document",
+      "severity": "warning",
+      "message": "Parallel/Complex/Inclusive gateway used as merge only synchronizes declared incoming flows (redundant gateway if incoming count = 1).",
+      "native": true
+    },
+    {
+      "id": "D006",
+      "scope": "document",
+      "severity": "error",
+      "message": "Event-Based Gateway: all outgoing targets are catch-events/receive-tasks, none carry conditions.",
+      "native": true
+    },
+    {
+      "id": "D009",
+      "scope": "document",
+      "severity": "warning",
+      "message": "Every node is reachable from some Start Event (no orphan nodes) and every Start Event can reach some End Event (no dead ends).",
+      "native": true
+    },
+    {
+      "id": "D010",
+      "scope": "document",
+      "severity": "error",
+      "message": "Event Sub-Process start event is typed (not None) and has no drawn Sequence Flow in/out.",
+      "native": true
+    },
+    {
+      "id": "D018",
+      "scope": "document",
+      "severity": "error",
+      "message": "Every semantic object has a unique XML-safe ID within the document.",
+      "native": true
+    },
+    {
+      "id": "SF-015",
+      "scope": "document",
+      "connectorKind": "sequenceFlow",
+      "severity": "error",
+      "message": "Conditional Sequence Flow from an Activity requires at least one other outgoing Sequence Flow from that Activity.",
+      "native": true
+    },
+    {
+      "id": "EXT-001",
+      "scope": "document",
+      "severity": "warning",
+      "message": "Extension content has no resolvable namespace URI (spec §6.1.2 expanded-name identity).",
+      "native": true
+    },
+    {
+      "id": "EXT-002",
+      "scope": "document",
+      "severity": "warning",
+      "message": "Extension namespace prefix mapping is inconsistent within the document.",
+      "native": true
+    },
+    {
+      "id": "EXT-003",
+      "scope": "document",
+      "severity": "error",
+      "message": "The document could not be parsed (malformed XML).",
+      "native": true
+    },
+    {
+      "id": "EXT-010",
+      "scope": "document",
+      "severity": "error",
+      "message": "Extension content carries active markup or a script URL, which cannot be exported (spec §5.5 layer 1: quarantine unsafe external content).",
+      "native": true
+    },
+    {
+      "id": "EXT-004",
+      "scope": "document",
+      "severity": "warning",
+      "message": "A registered profile emitted a rule id outside its own declared catalog; the violation was rejected.",
+      "native": true
+    },
+    {
+      "id": "EXT-005",
+      "scope": "document",
+      "severity": "warning",
+      "message": "A profile-declared reference attribute in extension content does not resolve to any element in this document.",
+      "native": true
+    },
+    {
+      "id": "EXT-006",
+      "scope": "document",
+      "severity": "error",
+      "message": "A registered profile attempted to emit a core BPMN rule id; the override attempt was rejected.",
+      "native": true
+    },
+    {
+      "id": "EXT-007",
+      "scope": "document",
+      "severity": "info",
+      "message": "An extension SVG decoration was suppressed.",
+      "native": true
+    },
+    {
+      "id": "EXT-008",
+      "scope": "document",
+      "severity": "warning",
+      "message": "Schema or external-resource access for extension content was blocked.",
+      "native": true
+    },
+    {
+      "id": "D007",
+      "scope": "document",
+      "severity": "error",
+      "message": "No Sequence Flow crosses a Pool boundary.",
+      "native": true
+    },
+    {
+      "id": "D008",
+      "scope": "document",
+      "severity": "error",
+      "message": "Every Message Flow crosses exactly one Pool boundary.",
+      "native": true
+    },
+    {
+      "id": "D011",
+      "scope": "document",
+      "severity": "error",
+      "message": "Link Intermediate throw and catch Events pair one-to-one within a Process.",
+      "native": true
+    },
+    {
+      "id": "D012",
+      "scope": "document",
+      "severity": "error",
+      "message": "A Compensation Boundary Event handler is not reached by ordinary Sequence Flow.",
+      "native": true
+    },
+    {
+      "id": "D013",
+      "scope": "document",
+      "severity": "error",
+      "message": "An End Event with outgoing Message Flow has a Message result, or Multiple when it has more than one.",
+      "native": true
+    },
+    {
+      "id": "D014",
+      "scope": "document",
+      "severity": "error",
+      "message": "Event-Based Gateway targets are homogeneous and have no other incoming Sequence Flow.",
+      "native": true
+    },
+    {
+      "id": "D015",
+      "scope": "document",
+      "severity": "error",
+      "message": "Every BPMNEdge has at least two waypoints, every BPMNShape has positive bounds, and every DI element resolves to a semantic element.",
+      "native": true
+    },
+    {
+      "id": "D017",
+      "scope": "document",
+      "severity": "error",
+      "message": "Every required reference resolves to an object of the permitted BPMN type.",
+      "native": true
+    },
+    {
+      "id": "D019",
+      "scope": "document",
+      "severity": "error",
+      "message": "Every FlowNode belongs to exactly one container, and Lane membership agrees with its LaneSet.",
+      "native": true
+    },
+    {
+      "id": "CT-007",
+      "scope": "document",
+      "severity": "error",
+      "message": "A collapsed Sub-Process or Call Activity has visible embedded process-content cells in the active plane.",
+      "native": true
+    },
+    {
+      "id": "CT-009",
+      "scope": "document",
+      "severity": "error",
+      "message": "A Sub-Process expansion state disagrees with BPMNShape.isExpanded, or a collapsed Sub-Process exposes active nested visual cells/tools.",
+      "native": true
+    },
+    {
+      "id": "CT-012",
+      "scope": "document",
+      "severity": "error",
+      "message": "A Lane subdivides a Pool, so its LaneSet's Process must be referenced by a Participant.",
+      "native": true
+    },
+    {
+      "id": "D020",
+      "scope": "document",
+      "severity": "error",
+      "message": "Event definitions are legal for their context and direction.",
+      "native": true
+    },
+    {
+      "id": "D021",
+      "scope": "document",
+      "severity": "error",
+      "message": "Definitions has a targetNamespace and namespace-qualified references use resolvable, consistent QNames.",
+      "native": true
+    },
+    {
+      "id": "D022",
+      "scope": "document",
+      "severity": "error",
+      "message": "Every plane has a diagram owner, each element is drawn at most once per diagram, and label and style references resolve.",
+      "native": true
+    },
+    {
+      "id": "D023",
+      "scope": "document",
+      "severity": "error",
+      "message": "Global definitions referenced by the document exist and have the expected type.",
+      "native": true
+    }
+  ]
+}

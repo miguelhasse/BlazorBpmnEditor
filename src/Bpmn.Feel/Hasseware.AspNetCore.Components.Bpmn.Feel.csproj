@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Hasseware.AspNetCore.Components.Bpmn.Feel</AssemblyName>
+    <RootNamespace>Hasseware.AspNetCore.Components.Bpmn.Feel</RootNamespace>
+    <PackageId>Hasseware.AspNetCore.Components.Bpmn.Feel</PackageId>
+    <Description>Optional rich FEEL expression editor for Hasseware Blazor BPMN components.</Description>
+    <PackageTags>bpmn;blazor;feel;editor;codemirror</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+    <DisableScopedCssBundling>true</DisableScopedCssBundling>
+    <ScopedCssEnabled>false</ScopedCssEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+    <ProjectReference Include="..\Bpmn\Hasseware.AspNetCore.Components.Bpmn.csproj" />
+    <ProjectReference Include="..\Bpmn.Feel.Scripts\Hasseware.AspNetCore.Components.Bpmn.Feel.Scripts.esproj" PrivateAssets="All" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Update="THIRD-PARTY-NOTICES.txt" Pack="true" PackagePath="licenses\" />
+  </ItemGroup>
+  <!-- The esproj supplies its dist output as static web assets. Fail fast if its npm build produces no bundle. -->
+  <Target Name="VerifyFeelEditorBundle" AfterTargets="Build">
+    <Error Condition="!Exists('..\Bpmn.Feel.Scripts\dist\feel-editor.js')" Text="FEEL bundle missing. Run npm ci and npm run build in src\Bpmn.Feel.Scripts." />
+  </Target>
+</Project>

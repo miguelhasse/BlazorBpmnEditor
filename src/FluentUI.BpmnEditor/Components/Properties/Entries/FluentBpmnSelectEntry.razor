@@ -1,0 +1,11 @@
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
+@inherits BpmnPropertyEntryComponent
+@using Hasseware.AspNetCore.Components.Bpmn.Editing
+
+<FluentBpmnPropertyEntryFrame Context="@Context">
+    <FluentSelect TOption="BpmnPropertyChoice" TValue="string" Class="@(Block + "__select")"
+                  Items="@Choices" OptionText="@(choice => choice.Label)" OptionValue="@(choice => choice.Value)"
+                  Value="@Entry.Value" ValueChanged="@(value => SubmitAsync(value))" Disabled="@ReadOnly"
+                  AriaLabel="@Entry.Label" Placeholder="@Entry.Placeholder"
+                  aria-invalid="@(Entry.Error is not null ? "true" : null)" />
+</FluentBpmnPropertyEntryFrame>

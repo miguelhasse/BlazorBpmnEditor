@@ -1,0 +1,29 @@
+.bpmn-feel-code { min-width: 0; width: 100%; }
+.bpmn-feel-code .cm-editor.cm-editor {
+  height: auto;
+  border: 1px solid var(--bpmn-surface-border);
+  border-radius: 4px;
+  background: var(--bpmn-surface-background);
+  color: var(--bpmn-surface-foreground);
+  font-size: inherit;
+}
+.bpmn-feel-code .cm-editor.cm-focused { outline: 2px solid var(--bpmn-selection-color); outline-offset: 1px; }
+.bpmn-feel-code .cm-scroller { max-height: 12rem; font-family: ui-monospace, Consolas, monospace; }
+.bpmn-feel-code .cm-content { min-height: 3.5em; padding: 0.2rem 0; caret-color: var(--bpmn-surface-foreground); }
+.bpmn-feel-code .cm-line { padding: 0 0.35rem; }
+.bpmn-feel-code .cm-cursor { border-left-color: var(--bpmn-surface-foreground); }
+.bpmn-feel-code .cm-selectionBackground { background: color-mix(in srgb, var(--bpmn-selection-color) 30%, transparent) !important; }
+.bpmn-feel-code .cm-content ::selection { background: color-mix(in srgb, var(--bpmn-selection-color) 30%, transparent); }
+.bpmn-feel-code .cm-tooltip { background: var(--bpmn-surface-background); color: var(--bpmn-surface-foreground); border-color: var(--bpmn-surface-border); }
+.bpmn-feel-code .cm-tooltip-autocomplete ul li[aria-selected] { background: var(--bpmn-selection-color); color: var(--bpmn-surface-background); }
+.bpmn-feel-code .cm-content .bpmn-feel-keyword { color: var(--bpmn-selection-color); font-weight: 600; }
+.bpmn-feel-code .cm-content .bpmn-feel-string { color: var(--bpmn-warning-color); }
+.bpmn-feel-code .cm-content .bpmn-feel-number { color: var(--bpmn-selection-color); }
+.bpmn-feel-code .cm-content .bpmn-feel-name { color: var(--bpmn-surface-foreground); }
+.bpmn-feel-code .cm-content .bpmn-feel-comment { color: var(--bpmn-surface-foreground); font-style: italic; }
+@media (forced-colors: active) {
+  .bpmn-feel-code .cm-editor, .bpmn-feel-code .cm-tooltip { background: Canvas; color: CanvasText; border-color: CanvasText; }
+  .bpmn-feel-code .cm-editor.cm-focused { outline-color: Highlight; }
+  .bpmn-feel-code .cm-selectionBackground { background: Highlight !important; }
+  .bpmn-feel-code .cm-cursor { border-left-color: CanvasText; }
+}

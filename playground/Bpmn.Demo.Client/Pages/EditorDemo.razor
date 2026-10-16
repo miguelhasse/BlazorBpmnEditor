@@ -1,0 +1,204 @@
+@using Hasseware.AspNetCore.Components.Bpmn.Serialization
+
+<PageTitle>@Localizer["Editor.Title"]</PageTitle>
+
+<div class="demo-shell">
+    <div class="demo-controls">
+        <FluentSelect TOption="string"
+                      TValue="string"
+                      Items="@SampleFiles"
+                      OptionText="@(file => file)"
+                      OptionValue="@(file => file)"
+                      Value="@_selectedSample"
+                      ValueChanged="@LoadSampleAsync"
+                      Label="@Localizer["SampleDiagram"]" />
+
+        <button type="button" class="demo-export" disabled="@(_document is null)" @onclick="ExportXml">@Localizer["Editor.ExportXml"]</button>
+        <button type="button" class="demo-export" disabled="@(_document is null)" @onclick="ExportJson">@Localizer["Editor.ExportJson"]</button>
+
+        <label class="demo-open">
+            @Localizer["Editor.OpenFile"]
+            <InputFile accept="@BpmnFileFormats.Accept" OnChange="@OpenFileAsync" />
+        </label>
+
+        <label class="demo-snap">
+            <input type="checkbox"
+                   checked="@_snapToGrid"
+                   @onchange="@(args => ToggleSnap(args.Value is true))" />
+            @Localizer["Editor.SnapToGrid"]
+        </label>
+
+        @*
+            Off by default: the panel's column is a fixed 22rem, and on a small window that is the
+            difference between a wide Pool fitting the canvas and its right edge — with the resize
+            handle on it — falling outside the paper entirely.
+        *@
+        <label class="demo-toggle">
+            <input type="checkbox" class="demo-show-properties" checked="@_showProperties" @onchange="OnShowPropertiesChanged" />
+            @Localizer["Editor.Properties"]
+        </label>
+
+        <label class="demo-toggle">
+            <input type="checkbox" class="demo-high-contrast" checked="@_highContrast" @onchange="OnContrastChanged" />
+            @Localizer["Editor.HighContrast"]
+        </label>
+
+        @*
+            Read-only is a mode a host chooses, so the demo has to be able to choose it: the
+            gallery is the only other read-only surface and it draws notation sheets with nothing
+            nested to look inside.
+        *@
+        <label class="demo-toggle">
+            <input type="checkbox" class="demo-read-only" checked="@_readOnly" @onchange="OnReadOnlyChanged" />
+            @Localizer["Editor.ReadOnly"]
+        </label>
+
+        @*
+            Execution overlays are the host's to supply, so the demo plays the host: it invents a
+            plausible state from whatever sample is loaded and pushes it. The editor never derives
+            one, because it does not execute BPMN.
+        *@
+        <label class="demo-toggle">
+            <input type="checkbox" class="demo-execution" checked="@_showExecution" @onchange="OnExecutionChangedAsync" />
+            @Localizer["Editor.ExecutionState"]
+        </label>
+
+        <label class="demo-toggle">
+            <input type="checkbox" class="demo-execution-animation" checked="@_animateTokens" @onchange="OnAnimationChanged" />
+            @Localizer["Editor.AnimateTokens"]
+        </label>
+
+        @*
+            The navigator is the library's; the breadcrumb below is not. The plan asks for
+            `diagramNavigated` to carry a path a *host* renders, so the demo renders one — that is
+            the thing being demonstrated, and a breadcrumb baked into the editor would prove
+            nothing about the event.
+        *@
+        
+
+                <span class="demo-status">@_status</span>
+        <span class="demo-edit-status">@_editStatus</span>
+    </div>
+
+    @if (_path.Count > 1)
+    {
+        <nav class="demo-breadcrumb" aria-label="@Localizer["Editor.DiagramPath"]">
+            @foreach (var (step, index) in _path.Select((step, index) => (step, index)))
+            {
+                @if (index > 0)
+                {
+                    <span class="demo-breadcrumb__separator" aria-hidden="true">/</span>
+                }
+
+                <button type="button"
+                        class="demo-breadcrumb__step"
+                        disabled="@(index == _path.Count - 1)"
+                        @onclick="@(() => AscendAsync(step.DiagramId))">
+                    @step.Label
+                </button>
+            }
+        </nav>
+    }
+
+    @if (Plain)
+    {
+    <BpmnEditor @ref="_plainEditor"
+                Class="demo-editor"
+                Configuration="@_configuration"
+                Document="@_document"
+                IsReadOnly="@_readOnly"
+                ShowStencil="true"
+                ShowPanel="@_showProperties"
+                Theming="@_theme"
+                ExecutionAnimation="@(_animateTokens ? BpmnExecutionAnimation.Enabled : BpmnExecutionAnimation.Disabled)"
+                OnDocumentChanged="@OnDocumentChanged"
+                OnSelectionChanged="@OnSelectionChanged"
+                OnDiagramNavigated="@OnDiagramNavigated"
+                OnImported="@OnImported"
+                OnEditRejected="@OnEditRejected"
+                OnCanvasInitialized="@OnCanvasInitialized"
+                OnDocumentLoaded="@OnDocumentLoadedAsync"
+                OnConfigRejected="@OnConfigRejected">
+        <ToolbarContent>
+            <BpmnToolbar>
+                <BpmnDiagramNavigator />
+            </BpmnToolbar>
+        </ToolbarContent>
+        <PanelContent>
+            @*
+                The property panel lives in the side slot, which is the one surface that stays put
+                while the selection moves. Its width is fixed by the editor's own grid, so a long
+                value cannot narrow the canvas under the pointer.
+            *@
+            <BpmnPropertyPanel />
+        </PanelContent>
+        <Footer>
+            <BpmnValidationPanel Class="demo-validation" />
+        </Footer>
+    </BpmnEditor>
+    }
+    else
+    {
+    <FluentBpmnEditor @ref="_fluentEditor"
+                Class="demo-editor"
+                Configuration="@_configuration"
+                Document="@_document"
+                IsReadOnly="@_readOnly"
+                ShowStencil="true"
+                ShowPanel="@_showProperties"
+                Theming="@_theme"
+                ExecutionAnimation="@(_animateTokens ? BpmnExecutionAnimation.Enabled : BpmnExecutionAnimation.Disabled)"
+                OnDocumentChanged="@OnDocumentChanged"
+                OnSelectionChanged="@OnSelectionChanged"
+                OnDiagramNavigated="@OnDiagramNavigated"
+                OnImported="@OnImported"
+                OnEditRejected="@OnEditRejected"
+                OnCanvasInitialized="@OnCanvasInitialized"
+                OnDocumentLoaded="@OnDocumentLoadedAsync"
+                OnConfigRejected="@OnConfigRejected">
+        <ToolbarContent>
+            <FluentBpmnToolbar>
+                <FluentBpmnDiagramNavigator />
+            </FluentBpmnToolbar>
+        </ToolbarContent>
+        <PanelContent>
+            @*
+                The property panel lives in the side slot, which is the one surface that stays put
+                while the selection moves. Its width is fixed by the editor's own grid, so a long
+                value cannot narrow the canvas under the pointer.
+            *@
+            <FluentBpmnPropertyPanel />
+        </PanelContent>
+        <Footer>
+            <FluentBpmnValidationPanel Class="demo-validation" />
+        </Footer>
+    </FluentBpmnEditor>
+    }
+
+    @*
+        Diagnostics below the diagram rather than beside it, which is where a problems list belongs
+        and leaves the editor's side slot for the property panel. A docked side panel would also
+        take a third of the canvas permanently to say "No problems found".
+    *@
+        
+
+    @if (_diagnostics.Count > 0)
+    {
+        <details class="demo-diagnostics">
+            <summary>@Localizer["ImportDiagnostics", _diagnostics.Count]</summary>
+            <ul>
+                @foreach (var diagnostic in _diagnostics)
+                {
+                    <li><strong>@Localizer[$"ImportSeverity.{diagnostic.Severity}"]</strong> @diagnostic.Message</li>
+                }
+            </ul>
+        </details>
+    }
+    @if (_exportedXml is not null)
+    {
+        <details class="demo-exported" open>
+            <summary>@Localizer["Editor.ExportedBpmn", _exportedFormat]</summary>
+            <pre class="demo-export-xml"><code>@_exportedXml</code></pre>
+        </details>
+    }
+</div>

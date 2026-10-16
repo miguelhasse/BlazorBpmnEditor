@@ -1,0 +1,37 @@
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:vw="https://bpmn.valenceworks.io/schema/bpmn" id="Definitions_414dfba4bbe248428098605d82b6d444" targetNamespace="http://blazor.diagrams.bpmn/schema" exporter="Blazor.Diagrams.Bpmn" exporterVersion="1.0" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+  <process id="Process_1" name="Process_1" isExecutable="false">
+    <startEvent id="Event_59cad4c346ef4a6d9072547d942cd19c" name="Start">
+      <outgoing>Flow_5f80ee9e71d343189de011cb7d836c10</outgoing>
+    </startEvent>
+    <userTask id="Task_5dc8c2742a684dce80d658c302f6037b" name="Review Request">
+      <incoming>Flow_5f80ee9e71d343189de011cb7d836c10</incoming>
+      <outgoing>Flow_ff144263a7ea45d488e9b814f613b88a</outgoing>
+    </userTask>
+    <endEvent id="Event_ea177ab0d0c0466e8e68d5a7d8093354" name="Done">
+      <incoming>Flow_ff144263a7ea45d488e9b814f613b88a</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_5f80ee9e71d343189de011cb7d836c10" sourceRef="Event_59cad4c346ef4a6d9072547d942cd19c" targetRef="Task_5dc8c2742a684dce80d658c302f6037b" />
+    <sequenceFlow id="Flow_ff144263a7ea45d488e9b814f613b88a" sourceRef="Task_5dc8c2742a684dce80d658c302f6037b" targetRef="Event_ea177ab0d0c0466e8e68d5a7d8093354" />
+  </process>
+  <bpmndi:BPMNDiagram id="Diagram_ded066b653cb4e9d9b5884df0e776b07" name="Diagram">
+    <bpmndi:BPMNPlane id="Plane_85459ac881a74eefaca52835016d067b" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="Shape_349fad5f31974f6a9be3875ecaa93990" bpmnElement="Event_59cad4c346ef4a6d9072547d942cd19c">
+        <dc:Bounds x="80" y="120" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_69f5fc20a3bd4e25b1621627c4980453" bpmnElement="Task_5dc8c2742a684dce80d658c302f6037b">
+        <dc:Bounds x="220" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_f5f2156c721e4b29a217b12f02540e87" bpmnElement="Event_ea177ab0d0c0466e8e68d5a7d8093354">
+        <dc:Bounds x="420" y="120" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_5bccd12b072a43538c5ef3f5349d6075" bpmnElement="Flow_5f80ee9e71d343189de011cb7d836c10">
+        <di:waypoint x="0" y="0" />
+        <di:waypoint x="0" y="0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_d9d3b7955c6749348ae033cfbd0e088e" bpmnElement="Flow_ff144263a7ea45d488e9b814f613b88a">
+        <di:waypoint x="0" y="0" />
+        <di:waypoint x="0" y="0" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

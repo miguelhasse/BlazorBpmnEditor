@@ -1,0 +1,29 @@
+@page "/gallery"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+<PageTitle>@Localizer["Gallery.Title"]</PageTitle>
+
+<div class="demo-shell">
+    <div class="demo-controls">
+        <FluentSelect TOption="GallerySheet"
+                      TValue="string"
+                      Items="@Sheets"
+                      OptionText="@(sheet => Localizer[sheet.TitleResourceKey].Value)"
+                      OptionValue="@(sheet => sheet.Title)"
+                      Value="@_sheet.Title"
+                      ValueChanged="@ShowAsync"
+                      Label="@Localizer["Gallery.NotationSheet"]" />
+
+        <span class="demo-status">@_status</span>
+    </div>
+
+    <FluentBpmnEditor @ref="_editor"
+                Class="demo-editor"
+                Document="@_document"
+                IsReadOnly="true"
+                OnDocumentLoaded="@OnDocumentLoaded">
+        <ToolbarContent>
+            <FluentBpmnToolbar />
+        </ToolbarContent>
+    </FluentBpmnEditor>
+</div>

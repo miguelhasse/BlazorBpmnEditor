@@ -1,0 +1,8 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnPropertyEntryComponent
+
+<label class="@(Block + "__property")" title="@Entry.Tooltip">
+    <span class="@(Block + "__label")">@Entry.Label</span>
+    @ChildContent
+    <BpmnPropertyEntryHelp Context="@Context" />
+</label>

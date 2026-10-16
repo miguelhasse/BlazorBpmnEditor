@@ -1,0 +1,6 @@
+# Test-project overrides.
+
+[*.cs]
+# Test names read as sentences describing behaviour ("DisposesTheInstanceAndTheModule"), which is
+# the xUnit convention and more useful in a failure report than an Async suffix would be.
+dotnet_naming_rule.async_methods_end_in_async.severity = none

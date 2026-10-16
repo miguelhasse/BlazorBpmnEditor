@@ -1,0 +1,84 @@
+@page "/interchange"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+<PageTitle>@Localizer["Interchange.Title"]</PageTitle>
+
+<div class="demo-shell">
+    <h1>@Localizer["Home.Interchange"]</h1>
+    <p class="demo-intro">
+        @Localizer["Interchange.Intro"]
+    </p>
+
+    <div class="demo-controls">
+        <FluentSelect TOption="string"
+                      TValue="string"
+                      Items="@SampleFiles"
+                      OptionText="@(file => file)"
+                      OptionValue="@(file => file)"
+                      Value="@_selectedSample"
+                      ValueChanged="@RunAsync"
+                      Label="@Localizer["SampleDiagram"]" />
+
+        <span class="demo-status">@_status</span>
+    </div>
+    <label class="demo-control-check">
+        <input type="checkbox"
+               @bind="_allowLossyCanonicalExport"
+               @bind:after="RunSelectedAsync" />
+        @Localizer["Interchange.AllowLossy"]
+    </label>
+
+    @if (_report is { } report)
+    {
+        <table class="demo-table" aria-label="@Localizer["Interchange.Report"]">
+            <thead>
+                <tr>
+                    <th scope="col">@Localizer["Interchange.Measure"]</th>
+                    <th scope="col">@Localizer["Interchange.Canonical"]</th>
+                    <th scope="col">@Localizer["Interchange.Fidelity"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in report.Rows)
+                {
+                    <tr class="@(row.IsOk ? "demo-row-ok" : "demo-row-bad")">
+                        <th scope="row">@row.Name</th>
+                        <td>@row.Canonical</td>
+                        <td>@row.Fidelity</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="demo-modes">
+            @foreach (var mode in report.Modes)
+            {
+                <section class="demo-mode">
+                    <h2>@mode.Title</h2>
+
+                    <p class="demo-mode-summary">
+                        @mode.Summary
+                    </p>
+
+                    @if (mode.Diagnostics.Count > 0)
+                    {
+                        <details>
+                            <summary>@Localizer["Interchange.ExportDiagnostics", mode.Diagnostics.Count]</summary>
+                            <ul>
+                                @foreach (var diagnostic in mode.Diagnostics)
+                                {
+                                    <li><strong>@Localizer[$"ExportSeverity.{diagnostic.Severity}"]</strong> @diagnostic.Message</li>
+                                }
+                            </ul>
+                        </details>
+                    }
+
+                    <details>
+                        <summary>@Localizer["Interchange.Output"]</summary>
+                        <pre class="demo-xml"><code>@mode.Xml</code></pre>
+                    </details>
+                </section>
+            }
+        </div>
+    }
+</div>

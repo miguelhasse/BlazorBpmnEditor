@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Hasseware.AspNetCore.Components.Bpmn.Scripting.CSharp</AssemblyName>
+    <RootNamespace>Hasseware.AspNetCore.Components.Bpmn.Scripting.CSharp</RootNamespace>
+    <PackageId>Hasseware.AspNetCore.Components.Bpmn.Scripting.CSharp</PackageId>
+    <Description>C# script syntax validation for Script Tasks in Hasseware Blazor BPMN components.</Description>
+    <PackageTags>bpmn;blazor;script;csharp;validation</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bpmn\Hasseware.AspNetCore.Components.Bpmn.csproj" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

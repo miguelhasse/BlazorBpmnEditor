@@ -1,0 +1,30 @@
+/* --- the inline label editor (section 4.5) -------------------------------- */
+
+.bpmn-label-editor {
+  position: absolute;
+  z-index: 25;
+}
+
+/*
+ * Transparent, borderless and sized to the label's own box: the point of section 4.5's "always
+ * inline" is that the text stays where it was, so the only visible change on entering the editor
+ * is a caret and a focus ring.
+ */
+.bpmn-label-editor__input {
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 2px solid var(--bpmn-selection-color);
+  outline-offset: 2px;
+  border-radius: 2px;
+  background: var(--bpmn-fill);
+  color: var(--bpmn-label-color);
+  resize: none;
+  overflow: hidden;
+
+  /* The canvas wraps on word boundaries and never truncates; so does this. */
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}

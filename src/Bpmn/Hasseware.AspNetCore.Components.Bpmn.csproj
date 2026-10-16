@@ -1,0 +1,101 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <EnableXlfLocalization>true</EnableXlfLocalization>
+    <PackageId>Hasseware.AspNetCore.Components.Bpmn</PackageId>
+    <Description>Core BPMN 2.0 model, headless editor sessions, extensible component bases and SVG canvas for Blazor. No UI kit dependency.</Description>
+    <PackageTags>bpmn;blazor;diagram;editor;svg;workflow</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+	<!-- Disable the auto-generated CSS Bundle, to use the Components.Scripts project -->
+    <DisableScopedCssBundling>true</DisableScopedCssBundling>
+    <ScopedCssEnabled>false</ScopedCssEnabled>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Hasseware.AspNetCore.Components.Bpmn.Benchmarks</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>$(MSBuildProjectName).Tests</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Hasseware.AspNetCore.Components.BpmnEditor.Tests</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Hasseware.FluentUI.AspNetCore.Components.BpmnEditor.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+  
+  <!--
+    tsconfig.json is a build-time TypeScript configuration. The StaticWebAssets SDK
+    includes it as Content with CopyToPublishDirectory=PreserveNewest, so it flows to
+    a consuming app's publish output at the root. When more than one referenced library
+    (e.g. Core and Charts) does this, the duplicate root-level tsconfig.json triggers
+    NETSDK1152. Exclude it from the output and publish directories.
+  -->
+  <ItemGroup>
+    <Content Update="tsconfig.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
+    <None Update="tsconfig.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Microsoft.Extensions.Localization" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Bpmn.Scripts\Hasseware.AspNetCore.Components.Bpmn.Scripts.esproj" PrivateAssets="All" />
+    <!-- The shared rule-table source generator — referenced as an analyzer
+         only, never as a runtime dependency of this library's own assembly. -->
+    <ProjectReference Include="..\Bpmn.RulesGenerator\Hasseware.AspNetCore.Components.Bpmn.RulesGenerator.csproj"
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\rules\bpmn-rules.json" />
+  </ItemGroup>
+
+  <!--
+    The generated icon manifest is embedded rather than shipped as a static web asset: the C#
+    stencil reads it directly and the TypeScript bundle imports the same file at build time, so
+    both sides render identical notation from one source (specification section 4.5).
+  -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\icons\bpmn-icons.json"
+                      LogicalName="Hasseware.AspNetCore.Components.Bpmn.bpmn-icons.json" />
+  </ItemGroup>
+
+  <!--
+    The esproj declares StaticWebAssetSourceId/BuildCommand/DebugAssetsDirectory to feed its npm
+    build output into this project's static web assets, but a silently failing/misconfigured npm
+    build would otherwise ship an empty or missing JS bundle without failing `dotnet build`. Fail
+    fast instead.
+  -->
+  <Target Name="VerifyBpmnScriptsBundle" AfterTargets="Build">
+    <Error Condition="!Exists('..\Bpmn.Scripts\dist\Hasseware.AspNetCore.Components.Bpmn.lib.module.js')"
+           Text="Bpmn.Scripts JS bundle not found. Run 'npm ci' then 'npm run build' in src/Bpmn.Scripts." />
+    <Error Condition="!Exists('..\Bpmn.Scripts\dist\Hasseware.AspNetCore.Components.Bpmn.bundle.scp.css')"
+           Text="Bpmn.Scripts CSS bundle not found. Run 'npm run build' in src/Bpmn.Scripts." />
+    <Error Condition="!Exists('..\Bpmn.Scripts\dist\bundle-manifest.json')"
+           Text="Bpmn.Scripts bundle manifest not found. The npm build did not complete; see src/Bpmn.Scripts/scripts/verify-bundle.mjs." />
+  </Target>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Model\Extensions\Schema\Resources\zeebe.json" LogicalName="Hasseware.AspNetCore.Components.Bpmn.Extensions.zeebe.json" />
+    <EmbeddedResource Include="Model\Extensions\Schema\Resources\camunda.json" LogicalName="Hasseware.AspNetCore.Components.Bpmn.Extensions.camunda.json" />
+    <None Update="Model\Extensions\Schema\Resources\LICENSE-*.txt" Pack="true" PackagePath="licenses\" />
+    <None Update="Model\Extensions\Schema\Resources\THIRD-PARTY-NOTICES.txt" Pack="true" PackagePath="licenses\" />
+  </ItemGroup>
+
+</Project>

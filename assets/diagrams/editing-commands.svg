@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 960" role="img" aria-labelledby="title desc">
+  <title id="title">Editing command spine</title>
+  <desc id="desc">Typed edit intents run through snapshot history and pure document editing. Successful edits publish via the session to the canvas and UI kit panels; undo and redo restore snapshots.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="140%"><feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity=".13"/></filter>
+    <style>
+      text { font-family: Segoe UI, Arial, sans-serif; font-size: 16px; } text:not([fill]) { fill: #1e293b; }
+      .cs { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.5; filter: url(#shadow); }
+      .kit { fill: #fdf4ff; stroke: #7c3aed; stroke-width: 1.5; filter: url(#shadow); }
+      .data { fill: #f0fdf4; stroke: #059669; stroke-width: 1.5; filter: url(#shadow); }
+      .js { fill: #fffbeb; stroke: #d97706; stroke-width: 1.5; filter: url(#shadow); }
+      .edge { fill: none; stroke: #2563eb; stroke-width: 2; marker-end: url(#arrow); }
+      .heading { font-size: 24px; font-weight: 700; } .name { font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="1100" height="960" fill="#f8fafc"/>
+  <text x="550" y="38" text-anchor="middle" class="heading">Editing command spine</text>
+  <text x="550" y="64" text-anchor="middle" fill="#64748b">Refused edits change neither model nor history. Canvas SVG is not model of record.</text>
+  <line x1="40" y1="84" x2="1060" y2="84" stroke="#e2e8f0" stroke-width="1.5"/>
+  <path class="edge" d="M500 160H610"/>
+  <path class="edge" d="M820 210V260"/>
+  <path class="edge" d="M610 310H500"/>
+  <path class="edge" d="M290 360V420"/>
+  <path class="edge" d="M290 530V565H710V600"/>
+  <path class="edge" d="M820 360V420"/>
+  <path class="edge" d="M820 510V555H910V600"/>
+  <path class="edge" d="M730 710V745H290V780"/>
+  <path class="edge" d="M820 710V780"/>
+  <g transform="translate(80 110)"><rect class="cs" width="420" height="100" rx="8"/>
+    <text x="210" y="31" text-anchor="middle"><tspan class="name">User gesture</tspan><tspan x="210" dy="26">Canvas · panel · keyboard</tspan><tspan x="210" dy="26">Intent, not direct model mutation</tspan></text>
+  </g>
+  <g transform="translate(610 110)"><rect class="cs" width="420" height="100" rx="8"/>
+    <text x="210" y="31" text-anchor="middle"><tspan class="name">BpmnEditCommand</tspan><tspan x="210" dy="26">Typed intent / canvas EditRequest</tspan><tspan x="210" dy="26">Session resolves the command</tspan></text>
+  </g>
+  <g transform="translate(610 260)"><rect class="cs" width="420" height="100" rx="8"/>
+    <text x="210" y="31" text-anchor="middle"><tspan class="name">BpmnEditHistory.Apply</tspan><tspan x="210" dy="26">Undo + redo snapshot stacks</tspan><tspan x="210" dy="26">History contains immutable documents</tspan></text>
+  </g>
+  <g transform="translate(80 260)"><rect class="cs" width="420" height="100" rx="8"/>
+    <text x="210" y="31" text-anchor="middle"><tspan class="name">BpmnDocumentEditor.Apply</tspan><tspan x="210" dy="26">Pure validation and edit</tspan><tspan x="210" dy="26">Accept or refuse the complete command</tspan></text>
+  </g>
+  <g transform="translate(80 420)"><rect class="data" width="420" height="110" rx="8"/>
+    <text x="210" y="29" text-anchor="middle"><tspan class="name">New BpmnDocument</tspan><tspan x="210" dy="25">Semantic and BPMNDI changes</tspan><tspan x="210" dy="25">Record previous snapshot on success</tspan></text>
+  </g>
+  <g transform="translate(610 420)"><rect class="cs" width="420" height="90" rx="8"/>
+    <text x="210" y="32" text-anchor="middle"><tspan class="name">Undo / Redo</tspan><tspan x="210" dy="26">Restore exact document snapshots</tspan></text>
+  </g>
+  <g transform="translate(610 600)"><rect class="cs" width="420" height="110" rx="8"/>
+    <text x="210" y="29" text-anchor="middle"><tspan class="name">BpmnEditorSession (Core)</tspan><tspan x="210" dy="25">Publish immutable state</tspan><tspan x="210" dy="25">OnDocumentChanged notifies host</tspan></text>
+  </g>
+  <g transform="translate(80 780)"><rect class="js" width="420" height="120" rx="8"/>
+    <text x="210" y="29" text-anchor="middle"><tspan class="name">BpmnCanvas</tspan><tspan x="210" dy="25">JS loadDocument → renderDocument</tspan><tspan x="210" dy="25">JointJS graph redraw</tspan><tspan x="210" dy="25">No incremental document patch contract</tspan></text>
+  </g>
+  <g transform="translate(610 780)"><rect class="kit" width="420" height="120" rx="8"/>
+    <text x="210" y="29" text-anchor="middle"><tspan class="name">Standard / Fluent property panel</tspan><tspan x="210" dy="25">BpmnPropertyPanelBase</tspan><tspan x="210" dy="25">Cached groups and entry contexts</tspan><tspan x="210" dy="25">Revision resets refused edits</tspan></text>
+  </g>
+</svg>

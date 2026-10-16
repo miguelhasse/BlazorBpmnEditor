@@ -1,0 +1,2812 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="ja" original="../BpmnStrings.resx">
+    <body>
+      <trans-unit id="AccessibleTree.AriaLabel">
+        <source>Diagram contents</source>
+        <target state="translated">ダイアグラムの内容</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Associated">
+        <source>{0}. Associated with {1}.</source>
+        <target state="translated">{0}。{1} に関連付けられています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Collapsed">
+        <source>{0}, collapsed.</source>
+        <target state="translated">{0}、折りたたみ。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Connections">
+        <source>{0}. {1}, {2}.</source>
+        <target state="translated">{0}。{1}、{2}。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Container">
+        <source>{0}.</source>
+        <target state="translated">{0}。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Empty">
+        <source>This diagram has no elements.</source>
+        <target state="translated">このダイアグラムには要素がありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Expanded">
+        <source>{0}, expanded.</source>
+        <target state="translated">{0}、展開。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Incoming">
+        <source>{0} incoming</source>
+        <target state="translated">入力 {0} 本</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Named">
+        <source>{0} {1}</source>
+        <target state="translated">{0} {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.NoIncoming">
+        <source>no incoming</source>
+        <target state="translated">入力なし</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.NoOutgoing">
+        <source>no outgoing</source>
+        <target state="translated">出力なし</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Outgoing">
+        <source>{0} outgoing</source>
+        <target state="translated">出力 {0} 本</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Unassociated">
+        <source>{0}. Not associated with anything.</source>
+        <target state="translated">{0}。何にも関連付けられていません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.adHocSubProcess">
+        <source>Ad hoc sub process</source>
+        <target state="translated">アドホックサブプロセス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.boundaryEvent">
+        <source>Boundary event</source>
+        <target state="translated">境界イベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.businessRuleTask">
+        <source>Business rule task</source>
+        <target state="translated">ビジネスルールタスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.callActivity">
+        <source>Call activity</source>
+        <target state="translated">呼び出しアクティビティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.complexGateway">
+        <source>Complex gateway</source>
+        <target state="translated">複雑ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.dataObjectReference">
+        <source>Data object reference</source>
+        <target state="translated">データオブジェクト参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.dataStoreReference">
+        <source>Data store reference</source>
+        <target state="translated">データストア参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.endEvent">
+        <source>End event</source>
+        <target state="translated">終了イベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.eventBasedGateway">
+        <source>Event based gateway</source>
+        <target state="translated">イベント基準ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.eventSubProcess">
+        <source>Event sub process</source>
+        <target state="translated">イベントサブプロセス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.exclusiveGateway">
+        <source>Exclusive gateway</source>
+        <target state="translated">排他ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.group">
+        <source>Group</source>
+        <target state="translated">グループ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.inclusiveGateway">
+        <source>Inclusive gateway</source>
+        <target state="translated">包含ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.intermediateCatchEvent">
+        <source>Intermediate catch event</source>
+        <target state="translated">中間キャッチイベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.intermediateThrowEvent">
+        <source>Intermediate throw event</source>
+        <target state="translated">中間スローイベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.lane">
+        <source>Lane</source>
+        <target state="translated">レーン</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.manualTask">
+        <source>Manual task</source>
+        <target state="translated">手動タスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.parallelGateway">
+        <source>Parallel gateway</source>
+        <target state="translated">並列ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.pool">
+        <source>Pool</source>
+        <target state="translated">プール</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.receiveTask">
+        <source>Receive task</source>
+        <target state="translated">受信タスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.scriptTask">
+        <source>Script task</source>
+        <target state="translated">スクリプトタスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.sendTask">
+        <source>Send task</source>
+        <target state="translated">送信タスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.serviceTask">
+        <source>Service task</source>
+        <target state="translated">サービスタスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.startEvent">
+        <source>Start event</source>
+        <target state="translated">開始イベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.subProcess">
+        <source>Sub process</source>
+        <target state="translated">サブプロセス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.task">
+        <source>Task</source>
+        <target state="translated">タスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.textAnnotation">
+        <source>Text annotation</source>
+        <target state="translated">テキスト注釈</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.transaction">
+        <source>Transaction</source>
+        <target state="translated">トランザクション</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.userTask">
+        <source>User task</source>
+        <target state="translated">ユーザータスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CalledElementPicker.Empty">
+        <source>This document has no global Process or Global Task to call. Create one first.</source>
+        <target state="translated">このドキュメントには、呼び出せるグローバルプロセスまたはグローバルタスクがありません。先に作成してください。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CalledElementPicker.Title">
+        <source>Call which definition?</source>
+        <target state="translated">どの定義を呼び出しますか?</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.CanvasTitle">
+        <source>Canvas</source>
+        <target state="translated">キャンバス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.Copy">
+        <source>Copy</source>
+        <target state="translated">コピー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.Cut">
+        <source>Cut</source>
+        <target state="translated">切り取り</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.Delete">
+        <source>Delete</source>
+        <target state="translated">削除</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.Duplicate">
+        <source>Duplicate</source>
+        <target state="translated">複製</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.EditLabel">
+        <source>Edit label</source>
+        <target state="translated">ラベルを編集</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.FitToContent">
+        <source>Fit to content</source>
+        <target state="translated">内容に合わせる</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.Paste">
+        <source>Paste</source>
+        <target state="translated">貼り付け</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.Redo">
+        <source>Redo</source>
+        <target state="translated">やり直し</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.SelectAll">
+        <source>Select all</source>
+        <target state="translated">すべて選択</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.Undo">
+        <source>Undo</source>
+        <target state="translated">元に戻す</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Commands">
+        <source>Commands</source>
+        <target state="translated">コマンド</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Empty">
+        <source>Nothing to do here</source>
+        <target state="translated">ここで実行できる操作はありません</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Findings">
+        <source>Validation findings</source>
+        <target state="translated">検証結果</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Properties">
+        <source>Properties</source>
+        <target state="translated">プロパティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.SwitchType">
+        <source>Switch type</source>
+        <target state="translated">種類を切り替え</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextualActions.Append.EndEvent">
+        <source>Append End Event</source>
+        <target state="translated">終了イベントを追加</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextualActions.Append.ExclusiveGateway">
+        <source>Append Exclusive Gateway</source>
+        <target state="translated">排他ゲートウェイを追加</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextualActions.Append.Task">
+        <source>Append Task</source>
+        <target state="translated">タスクを追加</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextualActions.AriaLabel">
+        <source>Quick actions</source>
+        <target state="translated">クイックアクション</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextualActions.Delete">
+        <source>Delete</source>
+        <target state="translated">削除</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextualActions.EditLabel">
+        <source>Rename</source>
+        <target state="translated">名前を変更</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextualActions.OpenMenu">
+        <source>More actions</source>
+        <target state="translated">その他の操作</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.AriaLabel">
+        <source>Diagrams</source>
+        <target state="translated">ダイアグラム</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.Nested">
+        <source>(nested)</source>
+        <target state="translated">(入れ子)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.NoCalledDiagram">
+        <source>'{0}' is called from here but is not drawn in this file.</source>
+        <target state="translated">'{0}' はここから呼び出されていますが、このファイルには描画されていません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.NoSubProcessDiagram">
+        <source>This Sub-Process has no diagram of its own; its content is drawn in place.</source>
+        <target state="translated">このサブプロセスには専用のダイアグラムがありません。内容はその場に描画されています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.NotDrillable">
+        <source>Only a Call Activity or a collapsed Sub-Process opens a diagram.</source>
+        <target state="translated">ダイアグラムを開けるのは、呼び出しアクティビティまたは折りたたまれたサブプロセスのみです。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.NothingCalled">
+        <source>This Call Activity does not say what it calls.</source>
+        <target state="translated">この呼び出しアクティビティは、呼び出し先を指定していません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.NothingToOpen">
+        <source>Select a Call Activity or a collapsed Sub-Process.</source>
+        <target state="translated">呼び出しアクティビティまたは折りたたまれたサブプロセスを選択してください。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.Open">
+        <source>Open</source>
+        <target state="translated">開く</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.OpenTarget">
+        <source>Open {0}</source>
+        <target state="translated">{0} を開く</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.AriaLabel">
+        <source>BPMN editor</source>
+        <target state="translated">BPMN エディター</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.CanvasLabel">
+        <source>BPMN diagram canvas</source>
+        <target state="translated">BPMN ダイアグラムキャンバス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.PanelLabel">
+        <source>Diagram properties</source>
+        <target state="translated">ダイアグラムのプロパティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.StencilLabel">
+        <source>Element stencil</source>
+        <target state="translated">要素ステンシル</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.adHocSubProcess">
+        <source>Ad-Hoc Sub-Process</source>
+        <target state="translated">アドホックサブプロセス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.association">
+        <source>Association</source>
+        <target state="translated">関連</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.boundaryEvent">
+        <source>Boundary Event</source>
+        <target state="translated">境界イベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.businessRuleTask">
+        <source>Business Rule Task</source>
+        <target state="translated">ビジネスルールタスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.callActivity">
+        <source>Call Activity</source>
+        <target state="translated">呼び出しアクティビティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.collaboration">
+        <source>Collaboration</source>
+        <target state="translated">コラボレーション</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.complexGateway">
+        <source>Complex Gateway</source>
+        <target state="translated">複雑ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.dataInputAssociation">
+        <source>Data Input Association</source>
+        <target state="translated">データ入力関連</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.dataObjectReference">
+        <source>Data Object Reference</source>
+        <target state="translated">データオブジェクト参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.dataOutputAssociation">
+        <source>Data Output Association</source>
+        <target state="translated">データ出力関連</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.dataStoreReference">
+        <source>Data Store Reference</source>
+        <target state="translated">データストア参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.endEvent">
+        <source>End Event</source>
+        <target state="translated">終了イベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.eventBasedGateway">
+        <source>Event-Based Gateway</source>
+        <target state="translated">イベント基準ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.eventSubProcess">
+        <source>Event Sub-Process</source>
+        <target state="translated">イベントサブプロセス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.exclusiveGateway">
+        <source>Exclusive Gateway</source>
+        <target state="translated">排他ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.group">
+        <source>Group</source>
+        <target state="translated">グループ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.inclusiveGateway">
+        <source>Inclusive Gateway</source>
+        <target state="translated">包含ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.intermediateCatchEvent">
+        <source>Catch Event</source>
+        <target state="translated">キャッチイベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.intermediateThrowEvent">
+        <source>Throw Event</source>
+        <target state="translated">スローイベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.lane">
+        <source>Lane</source>
+        <target state="translated">レーン</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.manualTask">
+        <source>Manual Task</source>
+        <target state="translated">手動タスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.messageFlow">
+        <source>Message Flow</source>
+        <target state="translated">メッセージフロー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.parallelGateway">
+        <source>Parallel Gateway</source>
+        <target state="translated">並列ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.participant">
+        <source>Pool</source>
+        <target state="translated">プール</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.pool">
+        <source>Pool</source>
+        <target state="translated">プール</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.process">
+        <source>Process</source>
+        <target state="translated">プロセス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.receiveTask">
+        <source>Receive Task</source>
+        <target state="translated">受信タスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.scriptTask">
+        <source>Script Task</source>
+        <target state="translated">スクリプトタスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.sendTask">
+        <source>Send Task</source>
+        <target state="translated">送信タスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.sequenceFlow">
+        <source>Sequence Flow</source>
+        <target state="translated">シーケンスフロー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.serviceTask">
+        <source>Service Task</source>
+        <target state="translated">サービスタスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.startEvent">
+        <source>Start Event</source>
+        <target state="translated">開始イベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.subProcess">
+        <source>Sub-Process</source>
+        <target state="translated">サブプロセス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.task">
+        <source>Task</source>
+        <target state="translated">タスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.textAnnotation">
+        <source>Text Annotation</source>
+        <target state="translated">テキスト注釈</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.transaction">
+        <source>Transaction</source>
+        <target state="translated">トランザクション</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.userTask">
+        <source>User Task</source>
+        <target state="translated">ユーザータスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Cancel">
+        <source>Cancel</source>
+        <target state="translated">キャンセル</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Compensation">
+        <source>Compensation</source>
+        <target state="translated">補償</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Conditional">
+        <source>Conditional</source>
+        <target state="translated">条件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Error">
+        <source>Error</source>
+        <target state="translated">エラー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Escalation">
+        <source>Escalation</source>
+        <target state="translated">エスカレーション</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Link">
+        <source>Link</source>
+        <target state="translated">リンク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Message">
+        <source>Message</source>
+        <target state="translated">メッセージ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Multiple">
+        <source>Multiple</source>
+        <target state="translated">複数</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.None">
+        <source>None</source>
+        <target state="translated">なし</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.ParallelMultiple">
+        <source>Parallel Multiple</source>
+        <target state="translated">並列複数</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Signal">
+        <source>Signal</source>
+        <target state="translated">シグナル</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Terminate">
+        <source>Terminate</source>
+        <target state="translated">終了</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Timer">
+        <source>Timer</source>
+        <target state="translated">タイマー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Expression.Feel">
+        <source>FEEL</source>
+        <target state="translated">FEEL</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Expression.Function">
+        <source>fx</source>
+        <target state="translated">fx</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Expression.Juel">
+        <source>JUEL</source>
+        <target state="translated">JUEL</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Expression.Warning">
+        <source>{0} warning: {1}</source>
+        <target state="translated">{0} の警告: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Expression.Warnings">
+        <source>FEEL warnings ({0}): {1}</source>
+        <target state="translated">FEEL の警告 ({0}): {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.ad-hoc-marker">
+        <source>Ad hoc marker</source>
+        <target state="translated">アドホックマーカー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.business-rule">
+        <source>Business rule</source>
+        <target state="translated">ビジネスルール</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.compensation-marker">
+        <source>Compensation marker</source>
+        <target state="translated">補償マーカー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.end-event-cancel">
+        <source>End event cancel</source>
+        <target state="translated">終了イベント (キャンセル)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.end-event-compensation">
+        <source>End event compensation</source>
+        <target state="translated">終了イベント (補償)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.end-event-error">
+        <source>End event error</source>
+        <target state="translated">終了イベント (エラー)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.end-event-escalation">
+        <source>End event escalation</source>
+        <target state="translated">終了イベント (エスカレーション)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.end-event-message">
+        <source>End event message</source>
+        <target state="translated">終了イベント (メッセージ)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.end-event-multiple">
+        <source>End event multiple</source>
+        <target state="translated">終了イベント (複数)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.end-event-signal">
+        <source>End event signal</source>
+        <target state="translated">終了イベント (シグナル)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.end-event-terminate">
+        <source>End event terminate</source>
+        <target state="translated">終了イベント (終了)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.gateway-complex">
+        <source>Gateway complex</source>
+        <target state="translated">複雑ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.gateway-eventbased">
+        <source>Gateway eventbased</source>
+        <target state="translated">イベント基準ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.gateway-or">
+        <source>Gateway or</source>
+        <target state="translated">包含ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.gateway-parallel">
+        <source>Gateway parallel</source>
+        <target state="translated">並列ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.gateway-xor">
+        <source>Gateway xor</source>
+        <target state="translated">排他ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-cancel">
+        <source>Intermediate event catch cancel</source>
+        <target state="translated">中間キャッチイベント (キャンセル)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-compensation">
+        <source>Intermediate event catch compensation</source>
+        <target state="translated">中間キャッチイベント (補償)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-condition">
+        <source>Intermediate event catch condition</source>
+        <target state="translated">中間キャッチイベント (条件)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-error">
+        <source>Intermediate event catch error</source>
+        <target state="translated">中間キャッチイベント (エラー)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-escalation">
+        <source>Intermediate event catch escalation</source>
+        <target state="translated">中間キャッチイベント (エスカレーション)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-link">
+        <source>Intermediate event catch link</source>
+        <target state="translated">中間キャッチイベント (リンク)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-message">
+        <source>Intermediate event catch message</source>
+        <target state="translated">中間キャッチイベント (メッセージ)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-multiple">
+        <source>Intermediate event catch multiple</source>
+        <target state="translated">中間キャッチイベント (複数)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-non-interrupting-condition">
+        <source>Intermediate event catch non interrupting condition</source>
+        <target state="translated">中間キャッチイベント (非割り込み 条件)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-non-interrupting-escalation">
+        <source>Intermediate event catch non interrupting escalation</source>
+        <target state="translated">中間キャッチイベント (非割り込み エスカレーション)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-non-interrupting-message">
+        <source>Intermediate event catch non interrupting message</source>
+        <target state="translated">中間キャッチイベント (非割り込み メッセージ)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-non-interrupting-multiple">
+        <source>Intermediate event catch non interrupting multiple</source>
+        <target state="translated">中間キャッチイベント (非割り込み 複数)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-non-interrupting-parallel-multiple">
+        <source>Intermediate event catch non interrupting parallel multiple</source>
+        <target state="translated">中間キャッチイベント (非割り込み 並列複数)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-non-interrupting-signal">
+        <source>Intermediate event catch non interrupting signal</source>
+        <target state="translated">中間キャッチイベント (非割り込み シグナル)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-non-interrupting-timer">
+        <source>Intermediate event catch non interrupting timer</source>
+        <target state="translated">中間キャッチイベント (非割り込み タイマー)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-parallel-multiple">
+        <source>Intermediate event catch parallel multiple</source>
+        <target state="translated">中間キャッチイベント (並列複数)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-signal">
+        <source>Intermediate event catch signal</source>
+        <target state="translated">中間キャッチイベント (シグナル)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-timer">
+        <source>Intermediate event catch timer</source>
+        <target state="translated">中間キャッチイベント (タイマー)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-throw-compensation">
+        <source>Intermediate event throw compensation</source>
+        <target state="translated">中間スローイベント (補償)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-throw-escalation">
+        <source>Intermediate event throw escalation</source>
+        <target state="translated">中間スローイベント (エスカレーション)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-throw-link">
+        <source>Intermediate event throw link</source>
+        <target state="translated">中間スローイベント (リンク)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-throw-message">
+        <source>Intermediate event throw message</source>
+        <target state="translated">中間スローイベント (メッセージ)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-throw-multiple">
+        <source>Intermediate event throw multiple</source>
+        <target state="translated">中間スローイベント (複数)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-throw-signal">
+        <source>Intermediate event throw signal</source>
+        <target state="translated">中間スローイベント (シグナル)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.loop-marker">
+        <source>Loop marker</source>
+        <target state="translated">ループマーカー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.manual">
+        <source>Manual</source>
+        <target state="translated">手動</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.parallel-mi-marker">
+        <source>Parallel mi marker</source>
+        <target state="translated">並列マルチインスタンスマーカー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.receive">
+        <source>Receive</source>
+        <target state="translated">受信</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.script">
+        <source>Script</source>
+        <target state="translated">スクリプト</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.send">
+        <source>Send</source>
+        <target state="translated">送信</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.sequential-mi-marker">
+        <source>Sequential mi marker</source>
+        <target state="translated">逐次マルチインスタンスマーカー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.service">
+        <source>Service</source>
+        <target state="translated">サービス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-condition">
+        <source>Start event condition</source>
+        <target state="translated">開始イベント (条件)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-message">
+        <source>Start event message</source>
+        <target state="translated">開始イベント (メッセージ)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-multiple">
+        <source>Start event multiple</source>
+        <target state="translated">開始イベント (複数)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-non-interrupting-condition">
+        <source>Start event non interrupting condition</source>
+        <target state="translated">開始イベント (非割り込み 条件)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-non-interrupting-message">
+        <source>Start event non interrupting message</source>
+        <target state="translated">開始イベント (非割り込み メッセージ)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-non-interrupting-multiple">
+        <source>Start event non interrupting multiple</source>
+        <target state="translated">開始イベント (非割り込み 複数)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-non-interrupting-parallel-multiple">
+        <source>Start event non interrupting parallel multiple</source>
+        <target state="translated">開始イベント (非割り込み 並列複数)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-non-interrupting-signal">
+        <source>Start event non interrupting signal</source>
+        <target state="translated">開始イベント (非割り込み シグナル)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-non-interrupting-timer">
+        <source>Start event non interrupting timer</source>
+        <target state="translated">開始イベント (非割り込み タイマー)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-parallel-multiple">
+        <source>Start event parallel multiple</source>
+        <target state="translated">開始イベント (並列複数)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-signal">
+        <source>Start event signal</source>
+        <target state="translated">開始イベント (シグナル)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-timer">
+        <source>Start event timer</source>
+        <target state="translated">開始イベント (タイマー)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.sub-process-marker">
+        <source>Sub process marker</source>
+        <target state="translated">サブプロセスマーカー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.user">
+        <source>User</source>
+        <target state="translated">ユーザー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.AriaLabel">
+        <source>Import</source>
+        <target state="translated">インポート</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Cancel">
+        <source>Cancel</source>
+        <target state="translated">キャンセル</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Open">
+        <source>Open</source>
+        <target state="translated">開く</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="LabelEditor.AriaLabel">
+        <source>Edit label</source>
+        <target state="translated">ラベルを編集</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.RawText">
+        <source>{0} text</source>
+        <target state="translated">{0} テキスト</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.activationCondition">
+        <source>Activation condition</source>
+        <target state="translated">アクティベーション条件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.activationCondition.language">
+        <source>Activation condition language</source>
+        <target state="translated">アクティベーション条件の言語</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.activationCondition.type">
+        <source>Activation condition type</source>
+        <target state="translated">アクティベーション条件の種類</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.assignment.from">
+        <source>Assignment {0} from</source>
+        <target state="translated">代入 {0} の元</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.assignment.from.language">
+        <source>Assignment {0} from language</source>
+        <target state="translated">代入 {0} の元の言語</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.assignment.from.type">
+        <source>Assignment {0} from type</source>
+        <target state="translated">代入 {0} の元の種類</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.assignment.to">
+        <source>Assignment {0} to</source>
+        <target state="translated">代入 {0} の先</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.assignment.to.language">
+        <source>Assignment {0} to language</source>
+        <target state="translated">代入 {0} の先の言語</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.assignment.to.type">
+        <source>Assignment {0} to type</source>
+        <target state="translated">代入 {0} の先の種類</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.associationDirection">
+        <source>Direction</source>
+        <target state="translated">方向</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.calledElementRef">
+        <source>Calls</source>
+        <target state="translated">呼び出し先</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.categoryValueRef">
+        <source>Category</source>
+        <target state="translated">カテゴリ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.conditionExpression">
+        <source>Condition</source>
+        <target state="translated">条件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.conditionLanguage">
+        <source>Condition language</source>
+        <target state="translated">条件の言語</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.dataObjectRef">
+        <source>Data Object</source>
+        <target state="translated">データオブジェクト</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.dataStoreRef">
+        <source>Data Store</source>
+        <target state="translated">データストア</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.defaultFlowRef">
+        <source>Default flow</source>
+        <target state="translated">デフォルトフロー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.documentation">
+        <source>Documentation</source>
+        <target state="translated">ドキュメント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.eventDefinition">
+        <source>Trigger</source>
+        <target state="translated">トリガー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.isClosed">
+        <source>Closed</source>
+        <target state="translated">クローズ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.isCollection">
+        <source>Collection</source>
+        <target state="translated">コレクション</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.isDefault">
+        <source>Default flow</source>
+        <target state="translated">デフォルトフロー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.isExecutable">
+        <source>Executable</source>
+        <target state="translated">実行可能</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.isForCompensation">
+        <source>Compensation handler</source>
+        <target state="translated">補償ハンドラー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.isInterrupting">
+        <source>Interrupting</source>
+        <target state="translated">割り込み</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.loopCharacteristics">
+        <source>Loop</source>
+        <target state="translated">ループ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.messageRef">
+        <source>Message</source>
+        <target state="translated">メッセージ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.behavior">
+        <source>Multi-instance behavior</source>
+        <target state="translated">マルチインスタンスの動作</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.completionCondition">
+        <source>Completion condition</source>
+        <target state="translated">完了条件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.completionCondition.language">
+        <source>Completion condition language</source>
+        <target state="translated">完了条件の言語</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.completionCondition.type">
+        <source>Completion condition type</source>
+        <target state="translated">完了条件の種類</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.complexBehavior.condition">
+        <source>Complex behavior {0} condition</source>
+        <target state="translated">複雑な動作 {0} の条件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.complexBehavior.condition.language">
+        <source>Complex behavior {0} condition language</source>
+        <target state="translated">複雑な動作 {0} の条件の言語</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.complexBehavior.condition.type">
+        <source>Complex behavior {0} condition type</source>
+        <target state="translated">複雑な動作 {0} の条件の種類</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.complexBehavior.event">
+        <source>Complex behavior {0} event</source>
+        <target state="translated">複雑な動作 {0} のイベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.inputDataItem.id">
+        <source>Input data item id</source>
+        <target state="translated">入力データ項目の ID</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.inputDataItem.isCollection">
+        <source>Input data item is collection</source>
+        <target state="translated">入力データ項目はコレクション</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.inputDataItem.itemSubjectRef">
+        <source>Input data item item subject reference</source>
+        <target state="translated">入力データ項目のアイテム主題参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.inputDataItem.name">
+        <source>Input data item name</source>
+        <target state="translated">入力データ項目の名前</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.isSequential">
+        <source>Sequential</source>
+        <target state="translated">逐次</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.loopCardinality">
+        <source>Loop cardinality</source>
+        <target state="translated">ループの基数</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.loopCardinality.language">
+        <source>Loop cardinality language</source>
+        <target state="translated">ループの基数の言語</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.loopCardinality.type">
+        <source>Loop cardinality type</source>
+        <target state="translated">ループの基数の種類</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.loopDataInputRef">
+        <source>Loop data input reference</source>
+        <target state="translated">ループデータ入力参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.loopDataOutputRef">
+        <source>Loop data output reference</source>
+        <target state="translated">ループデータ出力参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.outputDataItem.id">
+        <source>Output data item id</source>
+        <target state="translated">出力データ項目の ID</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.outputDataItem.isCollection">
+        <source>Output data item is collection</source>
+        <target state="translated">出力データ項目はコレクション</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.outputDataItem.itemSubjectRef">
+        <source>Output data item item subject reference</source>
+        <target state="translated">出力データ項目のアイテム主題参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.outputDataItem.name">
+        <source>Output data item name</source>
+        <target state="translated">出力データ項目の名前</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.name">
+        <source>Name</source>
+        <target state="translated">名前</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.processType">
+        <source>Process type</source>
+        <target state="translated">プロセスの種類</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.standardLoop.loopCondition">
+        <source>Loop condition</source>
+        <target state="translated">ループ条件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.standardLoop.loopCondition.language">
+        <source>Loop condition language</source>
+        <target state="translated">ループ条件の言語</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.standardLoop.loopCondition.type">
+        <source>Loop condition type</source>
+        <target state="translated">ループ条件の種類</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.standardLoop.loopMaximum">
+        <source>Loop maximum</source>
+        <target state="translated">ループの最大回数</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.standardLoop.testBefore">
+        <source>Test before</source>
+        <target state="translated">事前テスト</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.state">
+        <source>State</source>
+        <target state="translated">状態</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.text">
+        <source>Text</source>
+        <target state="translated">テキスト</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.textFormat">
+        <source>Text format</source>
+        <target state="translated">テキスト形式</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.Empty">
+        <source>(none)</source>
+        <target state="translated">(なし)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.associationDirection.both">
+        <source>Both</source>
+        <target state="translated">両方</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.associationDirection.none">
+        <source>None</source>
+        <target state="translated">なし</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.associationDirection.one">
+        <source>One</source>
+        <target state="translated">片方向</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.loopCharacteristics.multiInstanceParallel">
+        <source>Multi-instance (parallel)</source>
+        <target state="translated">マルチインスタンス (並列)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.loopCharacteristics.multiInstanceSequential">
+        <source>Multi-instance (sequential)</source>
+        <target state="translated">マルチインスタンス (逐次)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.loopCharacteristics.none">
+        <source>None</source>
+        <target state="translated">なし</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.loopCharacteristics.standard">
+        <source>Loop</source>
+        <target state="translated">ループ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.multiInstance.behavior.All">
+        <source>All</source>
+        <target state="translated">すべて</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.multiInstance.behavior.Complex">
+        <source>Complex</source>
+        <target state="translated">複雑</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.multiInstance.behavior.None">
+        <source>None</source>
+        <target state="translated">なし</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.multiInstance.behavior.One">
+        <source>One</source>
+        <target state="translated">1 つ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.processType.None">
+        <source>None</source>
+        <target state="translated">なし</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.processType.Private">
+        <source>Private</source>
+        <target state="translated">プライベート</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.processType.Public">
+        <source>Public</source>
+        <target state="translated">パブリック</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyEntry.ToggleFeel">
+        <source>Toggle FEEL expression</source>
+        <target state="translated">FEEL 式を切り替え</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyForm.AriaLabel">
+        <source>Properties</source>
+        <target state="translated">プロパティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.extensions">
+        <source>Extensions</source>
+        <target state="translated">拡張</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.general">
+        <source>General</source>
+        <target state="translated">全般</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.AriaLabel">
+        <source>Properties</source>
+        <target state="translated">プロパティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.BulkEdit">
+        <source>Set {0} on {1} elements</source>
+        <target state="translated">{1} 個の要素の {0} を設定</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Elements">
+        <source>{0} elements</source>
+        <target state="translated">{0} 個の要素</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.NoCommonProperties">
+        <source>These elements have no properties in common.</source>
+        <target state="translated">これらの要素には共通のプロパティがありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.NoProperties">
+        <source>This element has no editable properties.</source>
+        <target state="translated">この要素には編集可能なプロパティがありません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceBrowser.Heading">
+        <source>Used by</source>
+        <target state="translated">使用元</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceBrowser.OwnerTitle">
+        <source>{0} {1}</source>
+        <target state="translated">{0} {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Association">
+        <source>Association</source>
+        <target state="translated">関連</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.DataAssociation">
+        <source>Data Association</source>
+        <target state="translated">データ関連</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.DataObject">
+        <source>Data Object</source>
+        <target state="translated">データオブジェクト</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.DataObjectReference">
+        <source>Data Object Reference</source>
+        <target state="translated">データオブジェクト参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.DataStoreReference">
+        <source>Data Store Reference</source>
+        <target state="translated">データストア参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Edge">
+        <source>Edge</source>
+        <target state="translated">エッジ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Flownode">
+        <source>Flow node</source>
+        <target state="translated">フローノード</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Group">
+        <source>Group</source>
+        <target state="translated">グループ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Lane">
+        <source>Lane</source>
+        <target state="translated">レーン</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Laneset">
+        <source>Lane set</source>
+        <target state="translated">レーンセット</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.MessageFlow">
+        <source>Message Flow</source>
+        <target state="translated">メッセージフロー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Participant">
+        <source>Participant</source>
+        <target state="translated">参加者</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Plane">
+        <source>Plane</source>
+        <target state="translated">プレーン</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.SequenceFlow">
+        <source>Sequence Flow</source>
+        <target state="translated">シーケンスフロー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Shape">
+        <source>Shape</source>
+        <target state="translated">図形</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.TextAnnotation">
+        <source>Text Annotation</source>
+        <target state="translated">テキスト注釈</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Connector">
+        <source>Connector</source>
+        <target state="translated">コネクタ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Constraint">
+        <source>Constraint</source>
+        <target state="translated">制約</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Entry">
+        <source>Entry</source>
+        <target state="translated">エントリ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:ErrorEventDefinition">
+        <source>Error Event Definition</source>
+        <target state="translated">エラーイベント定義</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:ExecutionListener">
+        <source>Execution Listener</source>
+        <target state="translated">実行リスナー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:FailedJobRetryTimeCycle">
+        <source>Failed Job Retry Time Cycle</source>
+        <target state="translated">失敗ジョブの再試行時間サイクル</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Field">
+        <source>Field</source>
+        <target state="translated">フィールド</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:FormData">
+        <source>Form Data</source>
+        <target state="translated">フォームデータ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:FormField">
+        <source>Form Field</source>
+        <target state="translated">フォームフィールド</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:FormProperty">
+        <source>Form Property</source>
+        <target state="translated">フォームプロパティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:In">
+        <source>In</source>
+        <target state="translated">入力</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:InOutBinding">
+        <source>In Out Binding</source>
+        <target state="translated">入出力バインディング</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:InputOutput">
+        <source>Input Output</source>
+        <target state="translated">入出力</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:InputOutputParameter">
+        <source>Input Output Parameter</source>
+        <target state="translated">入出力パラメーター</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:InputOutputParameterDefinition">
+        <source>Input Output Parameter Definition</source>
+        <target state="translated">入出力パラメーター定義</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:InputParameter">
+        <source>Input Parameter</source>
+        <target state="translated">入力パラメーター</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:List">
+        <source>List</source>
+        <target state="translated">リスト</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Map">
+        <source>Map</source>
+        <target state="translated">マップ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Out">
+        <source>Out</source>
+        <target state="translated">出力</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:OutputParameter">
+        <source>Output Parameter</source>
+        <target state="translated">出力パラメーター</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:PotentialStarter">
+        <source>Potential Starter</source>
+        <target state="translated">開始候補</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Properties">
+        <source>Properties</source>
+        <target state="translated">プロパティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Property">
+        <source>Property</source>
+        <target state="translated">プロパティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Script">
+        <source>Script</source>
+        <target state="translated">スクリプト</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:TaskListener">
+        <source>Task Listener</source>
+        <target state="translated">タスクリスナー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Validation">
+        <source>Validation</source>
+        <target state="translated">検証</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Value">
+        <source>Value</source>
+        <target state="translated">値</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:businessKey">
+        <source>business Key</source>
+        <target state="translated">ビジネスキー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:class">
+        <source>class</source>
+        <target state="translated">クラス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:config">
+        <source>config</source>
+        <target state="translated">設定</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:datePattern">
+        <source>date Pattern</source>
+        <target state="translated">日付パターン</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:default">
+        <source>default</source>
+        <target state="translated">デフォルト</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:defaultValue">
+        <source>default Value</source>
+        <target state="translated">デフォルト値</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:delegateExpression">
+        <source>delegate Expression</source>
+        <target state="translated">デリゲート式</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:event">
+        <source>event</source>
+        <target state="translated">イベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:expression">
+        <source>expression</source>
+        <target state="translated">式</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:id">
+        <source>id</source>
+        <target state="translated">ID</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:key">
+        <source>key</source>
+        <target state="translated">キー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:label">
+        <source>label</source>
+        <target state="translated">ラベル</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:local">
+        <source>local</source>
+        <target state="translated">ローカル</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:name">
+        <source>name</source>
+        <target state="translated">名前</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:readable">
+        <source>readable</source>
+        <target state="translated">読み取り可</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:required">
+        <source>required</source>
+        <target state="translated">必須</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:resource">
+        <source>resource</source>
+        <target state="translated">リソース</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:scriptFormat">
+        <source>script Format</source>
+        <target state="translated">スクリプト形式</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:source">
+        <source>source</source>
+        <target state="translated">ソース</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:sourceExpression">
+        <source>source Expression</source>
+        <target state="translated">ソース式</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:stringValue">
+        <source>string Value</source>
+        <target state="translated">文字列値</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:target">
+        <source>target</source>
+        <target state="translated">ターゲット</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:type">
+        <source>type</source>
+        <target state="translated">種類</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:variable">
+        <source>variable</source>
+        <target state="translated">変数</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:variables">
+        <source>variables</source>
+        <target state="translated">変数</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:writable">
+        <source>writable</source>
+        <target state="translated">書き込み可</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:AdHoc">
+        <source>Ad Hoc</source>
+        <target state="translated">アドホック</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:AgentDefinition">
+        <source>Agent Definition</source>
+        <target state="translated">エージェント定義</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:AssignmentDefinition">
+        <source>Assignment Definition</source>
+        <target state="translated">割り当て定義</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:CalledDecision">
+        <source>Called Decision</source>
+        <target state="translated">呼び出す決定</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:CalledElement">
+        <source>Called Element</source>
+        <target state="translated">呼び出し先要素</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:ConditionalFilter">
+        <source>Conditional Filter</source>
+        <target state="translated">条件フィルター</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:ExecutionListener">
+        <source>Execution Listener</source>
+        <target state="translated">実行リスナー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:ExecutionListeners">
+        <source>Execution Listeners</source>
+        <target state="translated">実行リスナー (複数)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:FormDefinition">
+        <source>Form Definition</source>
+        <target state="translated">フォーム定義</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:Header">
+        <source>Header</source>
+        <target state="translated">ヘッダー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:Input">
+        <source>Input</source>
+        <target state="translated">入力</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:InputOutputParameter">
+        <source>Input Output Parameter</source>
+        <target state="translated">入出力パラメーター</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:IoMapping">
+        <source>Io Mapping</source>
+        <target state="translated">入出力マッピング</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:JobPriorityDefinition">
+        <source>Job Priority Definition</source>
+        <target state="translated">ジョブ優先度定義</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:LinkedResource">
+        <source>Linked Resource</source>
+        <target state="translated">リンクされたリソース</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:LinkedResources">
+        <source>Linked Resources</source>
+        <target state="translated">リンクされたリソース (複数)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:LoopCharacteristics">
+        <source>Loop Characteristics</source>
+        <target state="translated">ループ特性</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:Output">
+        <source>Output</source>
+        <target state="translated">出力</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:PriorityDefinition">
+        <source>Priority Definition</source>
+        <target state="translated">優先度定義</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:Properties">
+        <source>Properties</source>
+        <target state="translated">プロパティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:Property">
+        <source>Property</source>
+        <target state="translated">プロパティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:Script">
+        <source>Script</source>
+        <target state="translated">スクリプト</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:Subscription">
+        <source>Subscription</source>
+        <target state="translated">サブスクリプション</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:TaskDefinition">
+        <source>Task Definition</source>
+        <target state="translated">タスク定義</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:TaskHeaders">
+        <source>Task Headers</source>
+        <target state="translated">タスクヘッダー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:TaskListener">
+        <source>Task Listener</source>
+        <target state="translated">タスクリスナー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:TaskListeners">
+        <source>Task Listeners</source>
+        <target state="translated">タスクリスナー (複数)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:TaskSchedule">
+        <source>Task Schedule</source>
+        <target state="translated">タスクスケジュール</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:UserTask">
+        <source>User Task</source>
+        <target state="translated">ユーザータスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:UserTaskForm">
+        <source>User Task Form</source>
+        <target state="translated">ユーザータスクフォーム</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:VersionTag">
+        <source>Version Tag</source>
+        <target state="translated">バージョンタグ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:activeElementsCollection">
+        <source>active Elements Collection</source>
+        <target state="translated">アクティブ要素コレクション</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:agentType">
+        <source>agent Type</source>
+        <target state="translated">エージェントの種類</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:assignee">
+        <source>assignee</source>
+        <target state="translated">担当者</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:businessId">
+        <source>business Id</source>
+        <target state="translated">ビジネス ID</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:candidateGroups">
+        <source>candidate Groups</source>
+        <target state="translated">候補グループ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:candidateUsers">
+        <source>candidate Users</source>
+        <target state="translated">候補ユーザー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:correlationKey">
+        <source>correlation Key</source>
+        <target state="translated">相関キー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:decisionId">
+        <source>decision Id</source>
+        <target state="translated">決定 ID</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:dueDate">
+        <source>due Date</source>
+        <target state="translated">期限</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:eventType">
+        <source>event Type</source>
+        <target state="translated">イベントの種類</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:expression">
+        <source>expression</source>
+        <target state="translated">式</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:externalReference">
+        <source>external Reference</source>
+        <target state="translated">外部参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:followUpDate">
+        <source>follow Up Date</source>
+        <target state="translated">フォローアップ日</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:formId">
+        <source>form Id</source>
+        <target state="translated">フォーム ID</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:formKey">
+        <source>form Key</source>
+        <target state="translated">フォームキー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:id">
+        <source>id</source>
+        <target state="translated">ID</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:inputCollection">
+        <source>input Collection</source>
+        <target state="translated">入力コレクション</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:inputElement">
+        <source>input Element</source>
+        <target state="translated">入力要素</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:key">
+        <source>key</source>
+        <target state="translated">キー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:linkName">
+        <source>link Name</source>
+        <target state="translated">リンク名</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:name">
+        <source>name</source>
+        <target state="translated">名前</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:outputCollection">
+        <source>output Collection</source>
+        <target state="translated">出力コレクション</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:outputElement">
+        <source>output Element</source>
+        <target state="translated">出力要素</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:priority">
+        <source>priority</source>
+        <target state="translated">優先度</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:processId">
+        <source>process Id</source>
+        <target state="translated">プロセス ID</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:processIdExpression">
+        <source>process Id Expression</source>
+        <target state="translated">プロセス ID 式</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:propagateAllChildVariables">
+        <source>propagate All Child Variables</source>
+        <target state="translated">すべての子変数を伝播</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:propagateAllParentVariables">
+        <source>propagate All Parent Variables</source>
+        <target state="translated">すべての親変数を伝播</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:resourceId">
+        <source>resource Id</source>
+        <target state="translated">リソース ID</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:resourceType">
+        <source>resource Type</source>
+        <target state="translated">リソースの種類</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:resultVariable">
+        <source>result Variable</source>
+        <target state="translated">結果変数</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:retries">
+        <source>retries</source>
+        <target state="translated">再試行回数</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:source">
+        <source>source</source>
+        <target state="translated">ソース</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:target">
+        <source>target</source>
+        <target state="translated">ターゲット</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:type">
+        <source>type</source>
+        <target state="translated">種類</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:value">
+        <source>value</source>
+        <target state="translated">値</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:variableEvents">
+        <source>variable Events</source>
+        <target state="translated">変数イベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:variableNames">
+        <source>variable Names</source>
+        <target state="translated">変数名</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Structured">
+        <source>Structured value (preserved): {0}</source>
+        <target state="translated">構造化された値 (保持): {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.called-element">
+        <source>Called element</source>
+        <target state="translated">呼び出し先要素</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:#text">
+        <source>Value</source>
+        <target state="translated">値</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:assignee">
+        <source>Assignee</source>
+        <target state="translated">担当者</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:assignment">
+        <source>User assignment</source>
+        <target state="translated">ユーザー割り当て</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:async">
+        <source>Asynchronous continuations</source>
+        <target state="translated">非同期継続</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:asyncAfter">
+        <source>After</source>
+        <target state="translated">後</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:asyncBefore">
+        <source>Before</source>
+        <target state="translated">前</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:businessKey">
+        <source>Business key</source>
+        <target state="translated">ビジネスキー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:called-element">
+        <source>Called element</source>
+        <target state="translated">呼び出し先要素</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:calledElementBinding">
+        <source>Binding</source>
+        <target state="translated">バインディング</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:calledElementTenantId">
+        <source>Tenant ID</source>
+        <target state="translated">テナント ID</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:calledElementVersion">
+        <source>Version</source>
+        <target state="translated">バージョン</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:calledElementVersionTag">
+        <source>Version tag</source>
+        <target state="translated">バージョンタグ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:candidateGroups">
+        <source>Candidate groups</source>
+        <target state="translated">候補グループ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:candidateUsers">
+        <source>Candidate users</source>
+        <target state="translated">候補ユーザー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:class">
+        <source>Java class</source>
+        <target state="translated">Java クラス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:connector">
+        <source>Connector</source>
+        <target state="translated">コネクタ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:connectorId">
+        <source>Connector ID</source>
+        <target state="translated">コネクタ ID</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:delegateExpression">
+        <source>Delegate expression</source>
+        <target state="translated">デリゲート式</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:dueDate">
+        <source>Due date</source>
+        <target state="translated">期限</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:event">
+        <source>Event</source>
+        <target state="translated">イベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:exclusive">
+        <source>Exclusive</source>
+        <target state="translated">排他</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:execution-listeners">
+        <source>Execution listeners</source>
+        <target state="translated">実行リスナー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:expression">
+        <source>Expression</source>
+        <target state="translated">式</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:fields">
+        <source>Field injections</source>
+        <target state="translated">フィールドインジェクション</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:followUpDate">
+        <source>Follow-up date</source>
+        <target state="translated">フォローアップ日</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:formKey">
+        <source>Form key</source>
+        <target state="translated">フォームキー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:forms">
+        <source>Forms</source>
+        <target state="translated">フォーム</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:implementation">
+        <source>Implementation</source>
+        <target state="translated">実装</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:in">
+        <source>In mappings</source>
+        <target state="translated">入力マッピング</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:inputs">
+        <source>Inputs</source>
+        <target state="translated">入力</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:local">
+        <source>Local</source>
+        <target state="translated">ローカル</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:name">
+        <source>Name</source>
+        <target state="translated">名前</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:out">
+        <source>Out mappings</source>
+        <target state="translated">出力マッピング</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:outputs">
+        <source>Outputs</source>
+        <target state="translated">出力</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:priority">
+        <source>Priority</source>
+        <target state="translated">優先度</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:properties">
+        <source>Extension properties</source>
+        <target state="translated">拡張プロパティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:resultVariable">
+        <source>Result variable</source>
+        <target state="translated">結果変数</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:source">
+        <source>Source</source>
+        <target state="translated">ソース</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:sourceExpression">
+        <source>Source expression</source>
+        <target state="translated">ソース式</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:stringValue">
+        <source>String value</source>
+        <target state="translated">文字列値</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:target">
+        <source>Target</source>
+        <target state="translated">ターゲット</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:topic">
+        <source>Topic</source>
+        <target state="translated">トピック</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:type">
+        <source>Type</source>
+        <target state="translated">種類</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:value">
+        <source>Value</source>
+        <target state="translated">値</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:variables">
+        <source>Variables</source>
+        <target state="translated">変数</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.headers">
+        <source>Headers</source>
+        <target state="translated">ヘッダー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.inputCollection">
+        <source>Input collection</source>
+        <target state="translated">入力コレクション</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.inputElement">
+        <source>Input element</source>
+        <target state="translated">入力要素</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.inputs">
+        <source>Inputs</source>
+        <target state="translated">入力</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.key">
+        <source>Key</source>
+        <target state="translated">キー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.multi-instance">
+        <source>Multi-instance</source>
+        <target state="translated">マルチインスタンス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.name">
+        <source>Name</source>
+        <target state="translated">名前</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.outputCollection">
+        <source>Output collection</source>
+        <target state="translated">出力コレクション</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.outputElement">
+        <source>Output element</source>
+        <target state="translated">出力要素</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.outputs">
+        <source>Outputs</source>
+        <target state="translated">出力</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.processId">
+        <source>Process ID</source>
+        <target state="translated">プロセス ID</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.propagateAllChildVariables">
+        <source>Propagate all child variables</source>
+        <target state="translated">すべての子変数を伝播</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.propagateAllParentVariables">
+        <source>Propagate all parent variables</source>
+        <target state="translated">すべての親変数を伝播</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.properties">
+        <source>Extension properties</source>
+        <target state="translated">拡張プロパティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.retries">
+        <source>Retries</source>
+        <target state="translated">再試行回数</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.source">
+        <source>Source</source>
+        <target state="translated">ソース</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.target">
+        <source>Target</source>
+        <target state="translated">ターゲット</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.task-definition">
+        <source>Task definition</source>
+        <target state="translated">タスク定義</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.type">
+        <source>Type</source>
+        <target state="translated">種類</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.value">
+        <source>Value</source>
+        <target state="translated">値</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.ClearSelection">
+        <source>Clear the selection</source>
+        <target state="translated">選択を解除</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.Copy">
+        <source>Copy the selection</source>
+        <target state="translated">選択範囲をコピー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.Cut">
+        <source>Cut the selection</source>
+        <target state="translated">選択範囲を切り取り</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.Delete">
+        <source>Delete the selection</source>
+        <target state="translated">選択範囲を削除</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.Duplicate">
+        <source>Duplicate the selection</source>
+        <target state="translated">選択範囲を複製</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.FitToContent">
+        <source>Fit the diagram to the view</source>
+        <target state="translated">ダイアグラムをビューに合わせる</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.PanDown">
+        <source>Pan down</source>
+        <target state="translated">下へパン</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.PanLeft">
+        <source>Pan left</source>
+        <target state="translated">左へパン</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.PanRight">
+        <source>Pan right</source>
+        <target state="translated">右へパン</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.PanUp">
+        <source>Pan up</source>
+        <target state="translated">上へパン</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.Paste">
+        <source>Paste</source>
+        <target state="translated">貼り付け</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.Redo">
+        <source>Redo</source>
+        <target state="translated">やり直し</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.ResetZoom">
+        <source>Reset zoom to 100%</source>
+        <target state="translated">ズームを 100% にリセット</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.SelectAll">
+        <source>Select everything</source>
+        <target state="translated">すべて選択</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.ShowShortcuts">
+        <source>Show keyboard shortcuts</source>
+        <target state="translated">キーボードショートカットを表示</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.Undo">
+        <source>Undo</source>
+        <target state="translated">元に戻す</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.ZoomIn">
+        <source>Zoom in</source>
+        <target state="translated">拡大</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.ZoomOut">
+        <source>Zoom out</source>
+        <target state="translated">縮小</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutHelp.Close">
+        <source>Close</source>
+        <target state="translated">閉じる</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutHelp.Empty">
+        <source>No keyboard shortcuts are configured.</source>
+        <target state="translated">キーボードショートカットが構成されていません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutHelp.Or">
+        <source>or</source>
+        <target state="translated">または</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutHelp.Title">
+        <source>Keyboard shortcuts</source>
+        <target state="translated">キーボードショートカット</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.Alt">
+        <source>Alt</source>
+        <target state="translated">Alt</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.ArrowDown">
+        <source>ArrowDown</source>
+        <target state="translated">ArrowDown</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.ArrowLeft">
+        <source>ArrowLeft</source>
+        <target state="translated">ArrowLeft</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.ArrowRight">
+        <source>ArrowRight</source>
+        <target state="translated">ArrowRight</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.ArrowUp">
+        <source>ArrowUp</source>
+        <target state="translated">ArrowUp</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.Cmd">
+        <source>Cmd</source>
+        <target state="translated">Cmd</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.Ctrl">
+        <source>Ctrl</source>
+        <target state="translated">Ctrl</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.Delete">
+        <source>Delete</source>
+        <target state="translated">Delete</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.Escape">
+        <source>Escape</source>
+        <target state="translated">Escape</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.Shift">
+        <source>Shift</source>
+        <target state="translated">Shift</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.CallActivity">
+        <source>Call Activity</source>
+        <target state="translated">呼び出しアクティビティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.DataObject">
+        <source>Data Object Reference</source>
+        <target state="translated">データオブジェクト参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.DataStore">
+        <source>Data Store Reference</source>
+        <target state="translated">データストア参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.EndEvent">
+        <source>End Event</source>
+        <target state="translated">終了イベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.ExclusiveGateway">
+        <source>Gateway</source>
+        <target state="translated">ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.Group">
+        <source>Group</source>
+        <target state="translated">グループ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.IntermediateBoundaryEvent">
+        <source>Intermediate / Boundary Event</source>
+        <target state="translated">中間/境界イベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.PoolOrLane">
+        <source>Pool / Lane</source>
+        <target state="translated">プール/レーン</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.StartEvent">
+        <source>Start Event</source>
+        <target state="translated">開始イベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.SubProcess">
+        <source>Sub-Process</source>
+        <target state="translated">サブプロセス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.Task">
+        <source>Task</source>
+        <target state="translated">タスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.TextAnnotation">
+        <source>Text Annotation</source>
+        <target state="translated">テキスト注釈</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilGroup.Activities">
+        <source>Activities</source>
+        <target state="translated">アクティビティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilGroup.Artifacts">
+        <source>Artifacts</source>
+        <target state="translated">アーティファクト</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilGroup.Data">
+        <source>Data</source>
+        <target state="translated">データ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilGroup.Events">
+        <source>Events</source>
+        <target state="translated">イベント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilGroup.Gateways">
+        <source>Gateways</source>
+        <target state="translated">ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilGroup.OtherTemplates">
+        <source>Other templates</source>
+        <target state="translated">その他のテンプレート</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilGroup.Start">
+        <source>Start</source>
+        <target state="translated">開始</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilGroup.Swimlanes">
+        <source>Swimlanes</source>
+        <target state="translated">スイムレーン</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilPanel.AriaLabel">
+        <source>Element stencil</source>
+        <target state="translated">要素ステンシル</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilPanel.Empty">
+        <source>Nothing can be created here.</source>
+        <target state="translated">ここでは何も作成できません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilPanel.Unavailable">
+        <source>{0} — unavailable here ({1})</source>
+        <target state="translated">{0} — ここでは使用できません ({1})</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilReason.CT-001">
+        <source>This container does not permit this element.</source>
+        <target state="translated">このコンテナーでは、この要素は許可されていません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilReason.EV-004">
+        <source>An Event Sub-Process requires a typed Start Event.</source>
+        <target state="translated">イベントサブプロセスには、型付きの開始イベントが必要です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilReason.WithCode">
+        <source>{0}: {1}</source>
+        <target state="translated">{0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Other">
+        <source>Other</source>
+        <target state="translated">その他</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.AriaLabel">
+        <source>Diagram tools</source>
+        <target state="translated">ダイアグラムツール</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TypeOption.Event">
+        <source>{0} {1}</source>
+        <target state="translated">{0} {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationPanel.AriaLabel">
+        <source>Validation</source>
+        <target state="translated">検証</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationPanel.Clean">
+        <source>No problems found</source>
+        <target state="translated">問題は見つかりませんでした</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationPanel.Error">
+        <source>error</source>
+        <target state="translated">エラー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationPanel.Errors">
+        <source>errors</source>
+        <target state="translated">エラー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationPanel.Exportable">
+        <source>Exportable</source>
+        <target state="translated">エクスポート可能</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationPanel.NotExportable">
+        <source>Not exportable</source>
+        <target state="translated">エクスポート不可</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationPanel.Warning">
+        <source>warning</source>
+        <target state="translated">警告</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationPanel.Warnings">
+        <source>warnings</source>
+        <target state="translated">警告</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

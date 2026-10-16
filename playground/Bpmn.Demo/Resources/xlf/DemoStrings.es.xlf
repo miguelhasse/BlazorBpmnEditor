@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="es" original="../DemoStrings.resx">
+    <body>
+      <trans-unit id="Error.Description">
+        <source>An error occurred while processing your request.</source>
+        <target state="translated">Se produjo un error al procesar su solicitud.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.DevelopmentDetails">
+        <source>Swapping to the {0} environment will display more detailed information about the error that occurred.</source>
+        <target state="translated">Cambiar al entorno {0} mostrará información más detallada sobre el error ocurrido.</target>
+        <note>{0} is the invariant environment name Development.</note>
+      </trans-unit>
+      <trans-unit id="Error.DevelopmentMode">
+        <source>Development Mode</source>
+        <target state="translated">Modo de desarrollo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.DevelopmentWarning">
+        <source>The {0} environment shouldn't be enabled for deployed applications.</source>
+        <target state="translated">El entorno {0} no debería habilitarse en aplicaciones implementadas.</target>
+        <note>{0} is the invariant environment name Development.</note>
+      </trans-unit>
+      <trans-unit id="Error.Heading">
+        <source>Error.</source>
+        <target state="translated">Error.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.LocalDebugging">
+        <source>For local debugging, enable the {0} environment by setting the {1} environment variable to {0} and restarting the app.</source>
+        <target state="translated">Para la depuración local, habilite el entorno {0} estableciendo la variable de entorno {1} en {0} y reiniciando la aplicación.</target>
+        <note>{0} is Development; {1} is ASPNETCORE_ENVIRONMENT. Do not translate these argument values.</note>
+      </trans-unit>
+      <trans-unit id="Error.RequestId">
+        <source>Request ID:</source>
+        <target state="translated">ID de solicitud:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.SensitiveInformation">
+        <source>It can result in displaying sensitive information from exceptions to end users.</source>
+        <target state="translated">Puede provocar que se muestre información confidencial de las excepciones a los usuarios finales.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.Title">
+        <source>Error</source>
+        <target state="translated">Error</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.AboutBlazor">
+        <source>About Blazor</source>
+        <target state="translated">Acerca de Blazor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Dismiss">
+        <source>Dismiss</source>
+        <target state="translated">Descartar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Documentation">
+        <source>Documentation and demos</source>
+        <target state="translated">Documentación y demostraciones</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Reload">
+        <source>Reload</source>
+        <target state="translated">Recargar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Title">
+        <source>BPMN Demo</source>
+        <target state="translated">Demostración de BPMN</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.UnhandledError">
+        <source>An unhandled error has occurred.</source>
+        <target state="translated">Se ha producido un error no controlado.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NotFound.Description">
+        <source>Sorry, the content you are looking for does not exist.</source>
+        <target state="translated">Lo sentimos, el contenido que busca no existe.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NotFound.Title">
+        <source>Not Found</source>
+        <target state="translated">No encontrado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Failed">
+        <source>Failed to rejoin. Please retry or reload the page.</source>
+        <target state="translated">No se pudo volver a conectar. Reintente o recargue la página.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Paused">
+        <source>The session has been paused by the server.</source>
+        <target state="translated">El servidor ha pausado la sesión.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Rejoining">
+        <source>Rejoining the server...</source>
+        <target state="translated">Volviendo a conectar con el servidor...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Resume">
+        <source>Resume</source>
+        <target state="translated">Reanudar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.ResumeFailed">
+        <source>Failed to resume the session. Please reload the page.</source>
+        <target state="translated">No se pudo reanudar la sesión. Recargue la página.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Retry">
+        <source>Retry</source>
+        <target state="translated">Reintentar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.RetryIn">
+        <source>Rejoin failed... trying again in {0} seconds.</source>
+        <target state="translated">Error al volver a conectar... reintentando en {0} segundos.</target>
+        <note>{0} is replaced by the live countdown element; preserve the placeholder.</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

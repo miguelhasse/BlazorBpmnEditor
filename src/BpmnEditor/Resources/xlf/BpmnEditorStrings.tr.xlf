@@ -1,0 +1,342 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="tr" original="../BpmnEditorStrings.resx">
+    <body>
+      <trans-unit id="CalledElementPicker.Cancel">
+        <source>Cancel</source>
+        <target state="translated">İptal</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.Diagram">
+        <source>Diagram</source>
+        <target state="translated">Diyagram</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.Open">
+        <source>Open</source>
+        <target state="translated">Aç</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FeelEntry.Toggle">
+        <source>Toggle FEEL expression</source>
+        <target state="translated">FEEL ifadesini aç/kapat</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Cancel">
+        <source>Cancel</source>
+        <target state="translated">İptal</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Changed">
+        <source>Changed</source>
+        <target state="translated">Değişen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.ChangedCount">
+        <source>{0} item(s) this editor reads differently</source>
+        <target state="translated">Bu düzenleyicinin farklı okuduğu {0} öğe</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Diagrams">
+        <source>Diagrams</source>
+        <target state="translated">Diyagramlar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.ElementCounts">
+        <source>{0} flow nodes, {1} connectors</source>
+        <target state="translated">{0} akış düğümü, {1} bağlantı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Elements">
+        <source>Elements</source>
+        <target state="translated">Öğeler</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Error">
+        <source>This file could not be read: {0}</source>
+        <target state="translated">Bu dosya okunamadı: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.NoProblems">
+        <source>None</source>
+        <target state="translated">Yok</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.NotKept">
+        <source>Not kept</source>
+        <target state="translated">Korunmayan</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.NotKeptCount">
+        <source>{0} item(s) this editor cannot represent</source>
+        <target state="translated">Bu düzenleyicinin temsil edemediği {0} öğe</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Note">
+        <source>Opening this file replaces what is on screen, including its undo history.</source>
+        <target state="translated">Bu dosyayı açmak, geri alma geçmişi dahil ekrandakileri değiştirir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Open">
+        <source>Open</source>
+        <target state="translated">Aç</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.ProblemCounts">
+        <source>{0} error(s), {1} warning(s)</source>
+        <target state="translated">{0} hata, {1} uyarı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Problems">
+        <source>Problems</source>
+        <target state="translated">Sorunlar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Schema">
+        <source>XML Schema</source>
+        <target state="translated">XML Şeması</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.SchemaFailed">
+        <source>{0} violation(s) against the supplied schema set; content remains available to edit</source>
+        <target state="translated">Sağlanan şema kümesine karşı {0} ihlal; içerik düzenleme için kullanılabilir durumda</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.SchemaPassed">
+        <source>Passed the supplied schema set</source>
+        <target state="translated">Sağlanan şema kümesini geçti</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.SchemaSkipped">
+        <source>Not validated (no schema set supplied)</source>
+        <target state="translated">Doğrulanmadı (şema kümesi sağlanmadı)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Title">
+        <source>Open {0}</source>
+        <target state="translated">{0} dosyasını aç</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.Actions">
+        <source>Actions</source>
+        <target state="translated">Eylemler</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.Add">
+        <source>Add row</source>
+        <target state="translated">Satır ekle</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.CellLabel">
+        <source>{0}, row {1}</source>
+        <target state="translated">{0}, satır {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.MoveDown">
+        <source>Move row {0} down</source>
+        <target state="translated">{0}. satırı aşağı taşı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.MoveUp">
+        <source>Move row {0} up</source>
+        <target state="translated">{0}. satırı yukarı taşı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.Remove">
+        <source>Remove</source>
+        <target state="translated">Kaldır</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ListEntry.RemoveLabel">
+        <source>Remove row {0}</source>
+        <target state="translated">{0}. satırı kaldır</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Container">
+        <source>Container</source>
+        <target state="translated">Kapsayıcı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.ElementId">
+        <source>Element id</source>
+        <target state="translated">Öğe kimliği</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Empty">
+        <source>Select an element to edit its properties.</source>
+        <target state="translated">Özelliklerini düzenlemek için bir öğe seçin.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Extensions">
+        <source>Extensions</source>
+        <target state="translated">Uzantılar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.ExtensionsNote">
+        <source>Structure is preserved exactly on export.</source>
+        <target state="translated">Yapı, dışa aktarmada aynen korunur.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Id">
+        <source>Id</source>
+        <target state="translated">Kimlik</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Lane">
+        <source>Lane</source>
+        <target state="translated">Kulvar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Pool">
+        <source>Pool</source>
+        <target state="translated">Havuz</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Problems">
+        <source>Problems</source>
+        <target state="translated">Sorunlar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceBrowser.Empty">
+        <source>Nothing refers to this element.</source>
+        <target state="translated">Hiçbir şey bu öğeye başvurmuyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilPanel.NoTemplates">
+        <source>No matching templates.</source>
+        <target state="translated">Eşleşen şablon yok.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilPanel.SearchTemplates">
+        <source>Search templates</source>
+        <target state="translated">Şablon ara</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilPanel.Templates">
+        <source>Templates</source>
+        <target state="translated">Şablonlar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Applicable">
+        <source>Applicable templates</source>
+        <target state="translated">Uygulanabilir şablonlar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.AriaLabel">
+        <source>Element template</source>
+        <target state="translated">Öğe şablonu</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Cancel">
+        <source>Cancel</source>
+        <target state="translated">İptal</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.NoMatches">
+        <source>No matching templates.</source>
+        <target state="translated">Eşleşen şablon yok.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.NotFound">
+        <source>Template not found</source>
+        <target state="translated">Şablon bulunamadı</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Remove">
+        <source>Remove</source>
+        <target state="translated">Kaldır</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Search">
+        <source>Search templates</source>
+        <target state="translated">Şablon ara</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Select">
+        <source>Select template</source>
+        <target state="translated">Şablon seç</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Unlink">
+        <source>Unlink</source>
+        <target state="translated">Bağlantıyı kaldır</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Update">
+        <source>Update</source>
+        <target state="translated">Güncelle</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Version">
+        <source>Version {0}</source>
+        <target state="translated">Sürüm {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Fit">
+        <source>Fit to content</source>
+        <target state="translated">İçeriğe sığdır</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Fit.Text">
+        <source>Fit</source>
+        <target state="translated">Sığdır</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Fit.Title">
+        <source>Fit the diagram to the viewport</source>
+        <target state="translated">Diyagramı görünüm alanına sığdır</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Redo">
+        <source>Redo</source>
+        <target state="translated">Yinele</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Reset">
+        <source>Reset zoom</source>
+        <target state="translated">Yakınlaştırmayı sıfırla</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Reset.Text">
+        <source>Reset</source>
+        <target state="translated">Sıfırla</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Reset.Title">
+        <source>Reset zoom to 100%</source>
+        <target state="translated">Yakınlaştırmayı %100'e sıfırla</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Shortcuts">
+        <source>Show keyboard shortcuts</source>
+        <target state="translated">Klavye kısayollarını göster</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Undo">
+        <source>Undo</source>
+        <target state="translated">Geri al</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.ZoomIn">
+        <source>Zoom in</source>
+        <target state="translated">Yakınlaştır</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.ZoomIn.Title">
+        <source>Zoom in</source>
+        <target state="translated">Yakınlaştır</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.ZoomOut">
+        <source>Zoom out</source>
+        <target state="translated">Uzaklaştır</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.ZoomOut.Title">
+        <source>Zoom out</source>
+        <target state="translated">Uzaklaştır</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 900" role="img" aria-labelledby="title desc">
+  <title id="title">Editor composition and extension seams</title>
+  <desc id="desc">A host chooses its layout over the Core scope. Editor parts need session and state; canvas widgets also need the canvas surface.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="140%"><feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity=".13"/></filter>
+    <style>
+      text { font-family: Segoe UI, Arial, sans-serif; font-size: 16px; } text:not([fill]) { fill: #1e293b; }
+      .box { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.5; filter: url(#shadow); }
+      .kit { fill: #fdf4ff; stroke: #7c3aed; stroke-width: 1.5; filter: url(#shadow); }
+      .data { fill: #f0fdf4; stroke: #059669; stroke-width: 1.5; filter: url(#shadow); }
+      .edge { fill: none; stroke: #2563eb; stroke-width: 2; marker-end: url(#arrow); }
+      .heading { font-size: 24px; font-weight: 700; }
+      .name { font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="1100" height="900" fill="#f8fafc"/>
+  <text x="550" y="38" text-anchor="middle" class="heading">Editor composition and extension seams</text>
+  <text x="550" y="64" text-anchor="middle" fill="#64748b">Independent UI kits; shared Core behavior. Host controls markup and layout.</text>
+  <line x1="40" y1="84" x2="1060" y2="84" stroke="#e2e8f0" stroke-width="1.5"/>
+  <path class="edge" d="M550 210V250"/>
+  <path class="edge" d="M550 350V380H285V410"/>
+  <path class="edge" d="M550 350V380H815V410"/>
+  <path class="edge" d="M285 530V580"/>
+  <path class="edge" d="M815 530V580"/>
+  <path class="edge" d="M285 680V735"/>
+  <path class="edge" d="M815 680V735"/>
+  <g transform="translate(335 110)">
+    <rect class="kit" width="430" height="100" rx="8"/>
+    <text x="215" y="28" text-anchor="middle"><tspan class="name">Host application</tspan><tspan x="215" dy="25">Standard / Fluent / third-party kit</tspan><tspan x="215" dy="25">Own composition slots and layout</tspan></text>
+  </g>
+  <g transform="translate(335 250)">
+    <rect class="box" width="430" height="100" rx="8"/>
+    <text x="215" y="28" text-anchor="middle"><tspan class="name">BpmnEditorScope (Core)</tspan><tspan x="215" dy="25">Owns one BpmnEditorSession</tspan><tspan x="215" dy="25">Cascades session + immutable state</tspan></text>
+  </g>
+  <g transform="translate(70 410)">
+    <rect class="box" width="430" height="120" rx="8"/>
+    <text x="215" y="27" text-anchor="middle"><tspan class="name">BpmnPart</tspan><tspan x="215" dy="25">Instance ChildContent → host override</tspan><tspan x="215" dy="25">→ kit defaults → Core defaults</tspan><tspan x="215" dy="25">Resolved component reads typed cascades</tspan></text>
+  </g>
+  <g transform="translate(600 410)">
+    <rect class="box" width="430" height="120" rx="8"/>
+    <text x="215" y="27" text-anchor="middle"><tspan class="name">BpmnEditorCanvas</tspan><tspan x="215" dy="25">One canvas attachment per session</tspan><tspan x="215" dy="25">Automatic widget parts</tspan><tspan x="215" dy="25">ChildContent adds extra overlays</tspan></text>
+  </g>
+  <g transform="translate(70 580)">
+    <rect class="box" width="430" height="100" rx="8"/>
+    <text x="215" y="28" text-anchor="middle"><tspan class="name">BpmnEditorComponentBase</tspan><tspan x="215" dy="25">Toolbar / properties / validation bases</tspan><tspan x="215" dy="25">Require scope; expose shared commands</tspan></text>
+  </g>
+  <g transform="translate(600 580)">
+    <rect class="box" width="430" height="100" rx="8"/>
+    <text x="215" y="28" text-anchor="middle"><tspan class="name">BpmnCanvas (Core)</tspan><tspan x="215" dy="25">Sole canvas interop owner</tspan><tspan x="215" dy="25">Cascades BpmnCanvasSurface</tspan></text>
+  </g>
+  <g transform="translate(70 735)">
+    <rect class="data" width="430" height="120" rx="8"/>
+    <text x="215" y="29" text-anchor="middle"><tspan class="name">BpmnPropertyEditorRegistry</tspan><tspan x="215" dy="25">Host overrides + kit entry renderers</tspan><tspan x="215" dy="25">Guarded BpmnPropertyEntryContext</tspan><tspan x="215" dy="25">All writes go through session commands</tspan></text>
+  </g>
+  <g transform="translate(600 735)">
+    <rect class="box" width="430" height="120" rx="8"/>
+    <text x="215" y="29" text-anchor="middle"><tspan class="name">BpmnCanvasWidgetBase</tspan><tspan x="215" dy="25">Context menu · label editor</tspan><tspan x="215" dy="25">Contextual actions · accessible tree</tspan><tspan x="215" dy="25">Require scope and canvas surface</tspan></text>
+  </g>
+</svg>

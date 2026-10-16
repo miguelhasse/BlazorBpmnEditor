@@ -1,0 +1,35 @@
+<Project>
+
+  <!--
+    Repository-wide defaults. Deliberately does NOT set TargetFramework: the Roslyn
+    generator (src/Bpmn.RulesGenerator) must stay netstandard2.0 while everything else
+    targets net10.0. Also does NOT set TreatWarningsAsErrors globally — that is scoped
+    per folder (src/, tests/) so the FluentUI-based playground can be triaged separately.
+  -->
+
+  <PropertyGroup>
+    <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
+    <Authors>Hasseware</Authors>
+    <Company>Hasseware</Company>
+    <Product>Hasseware BPMN Components</Product>
+    <Copyright>Copyright © Hasseware</Copyright>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <!--
+    The JavaScript SDK (.esproj) does not understand the C# compiler/analyzer knobs and
+    warns on several of them, so everything below is skipped for that project type.
+  -->
+  <PropertyGroup Condition="'$(MSBuildProjectExtension)' != '.esproj'">
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+  </PropertyGroup>
+
+</Project>

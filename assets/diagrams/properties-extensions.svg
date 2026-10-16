@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1220 1090" role="img" aria-labelledby="title desc">
+  <title id="title">Properties and extensions</title>
+  <desc id="desc">Core providers derive property groups and entries from element snapshots. The registry chooses independent kit, FEEL or custom renderers; guarded callbacks build commands. Safe template icons also reach the canvas.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="140%"><feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity=".13"/></filter>
+    <style>
+      text { font-family: Segoe UI, Arial, sans-serif; font-size: 16px; } text:not([fill]) { fill: #1e293b; }
+      .cs { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.5; filter: url(#shadow); }
+      .kit { fill: #fdf4ff; stroke: #7c3aed; stroke-width: 1.5; filter: url(#shadow); }
+      .js { fill: #fffbeb; stroke: #d97706; stroke-width: 1.5; filter: url(#shadow); }
+      .edge { fill: none; stroke: #2563eb; stroke-width: 2; marker-end: url(#arrow); }
+      .heading { font-size: 24px; font-weight: 700; } .name { font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="1220" height="1090" fill="#f8fafc"/>
+  <text x="610" y="38" text-anchor="middle" class="heading">Properties and extensions</text>
+  <text x="610" y="64" text-anchor="middle" fill="#64748b">Snapshot-driven providers; independent presentation; guarded command writes.</text>
+  <line x1="40" y1="84" x2="1180" y2="84" stroke="#e2e8f0" stroke-width="1.5"/>
+  <path class="edge" d="M230 210V240H490V280"/>
+  <path class="edge" d="M700 210V280"/>
+  <path class="edge" d="M860 160H920"/>
+  <path class="edge" d="M610 400V440"/>
+  <path class="edge" d="M790 485H860"/>
+  <path class="edge" d="M1005 530V565H610V600"/>
+  <path class="edge" d="M610 720V745H230V780"/>
+  <path class="edge" d="M610 720V780"/>
+  <path class="edge" d="M610 720V745H1005V780"/>
+  <path class="edge" d="M230 910V945H490V970"/>
+  <path class="edge" d="M610 910V970"/>
+  <path class="edge" d="M1005 910V945H730V970"/>
+  <g transform="translate(50 110)"><rect class="cs" width="360" height="100" rx="8"/>
+    <text x="180" y="31" text-anchor="middle"><tspan class="name">Camunda 7 + Zeebe schemas</tspan><tspan x="180" dy="26">BpmnSchemaPropertiesProvider</tspan><tspan x="180" dy="26">Registered extension descriptors</tspan></text>
+  </g>
+  <g transform="translate(540 110)"><rect class="cs" width="320" height="100" rx="8"/>
+    <text x="160" y="31" text-anchor="middle"><tspan class="name">Local template JSON</tspan><tspan x="160" dy="26">BpmnElementTemplateLoader</tspan><tspan x="160" dy="26">Template registry</tspan></text>
+  </g>
+  <g transform="translate(920 110)"><rect class="js" width="270" height="120" rx="8"/>
+    <text x="135" y="29" text-anchor="middle"><tspan class="name">Template canvas icons</tspan><tspan x="135" dy="25">Safe inline image data URI</tspan><tspan x="135" dy="25">TypeScript</tspan><tspan x="135" dy="25">template-icon.ts</tspan></text>
+  </g>
+  <g transform="translate(390 280)"><rect class="cs" width="440" height="120" rx="8"/>
+    <text x="220" y="29" text-anchor="middle"><tspan class="name">IBpmnPropertiesProvider (Core)</tspan><tspan x="220" dy="25">General → templates → schemas → raw</tspan><tspan x="220" dy="25">Priority: 1000 / 900 / 500 / 100</tspan><tspan x="220" dy="25">Template-owned fields suppress duplicates</tspan></text>
+  </g>
+  <g transform="translate(430 440)"><rect class="cs" width="360" height="90" rx="8"/>
+    <text x="180" y="32" text-anchor="middle"><tspan class="name">BpmnPropertyGroup</tspan><tspan x="180" dy="26">Ordered property groups</tspan></text>
+  </g>
+  <g transform="translate(860 440)"><rect class="cs" width="290" height="90" rx="8"/>
+    <text x="145" y="32" text-anchor="middle"><tspan class="name">BpmnPropertyEntry</tspan><tspan x="145" dy="26">Values, bindings, metadata</tspan></text>
+  </g>
+  <g transform="translate(390 600)"><rect class="cs" width="440" height="120" rx="8"/>
+    <text x="220" y="29" text-anchor="middle"><tspan class="name">BpmnPropertyEditorRegistry (Core)</tspan><tspan x="220" dy="25">Host overrides + kit defaults</tspan><tspan x="220" dy="25">Key → predicate → FEEL → kind</tspan><tspan x="220" dy="25">EntryTemplate can override dispatch</tspan></text>
+  </g>
+  <g transform="translate(50 780)"><rect class="kit" width="360" height="130" rx="8"/>
+    <text x="180" y="29" text-anchor="middle"><tspan class="name">Independent kit entry components</tspan><tspan x="180" dy="25">Standard HTML / Fluent UI</tspan><tspan x="180" dy="25">Text · select · list · etc.</tspan><tspan x="180" dy="25">Shared guarded context</tspan></text>
+  </g>
+  <g transform="translate(450 780)"><rect class="kit" width="320" height="130" rx="8"/>
+    <text x="160" y="29" text-anchor="middle"><tspan class="name">Kit FEEL entry wrapper</tspan><tspan x="160" dy="25">BpmnFeelCodeEditor</tspan><tspan x="160" dy="25">Optional Bpmn.Feel package</tspan><tspan x="160" dy="25">Expression hints and validation</tspan></text>
+  </g>
+  <g transform="translate(860 780)"><rect class="kit" width="290" height="130" rx="8"/>
+    <text x="145" y="29" text-anchor="middle"><tspan class="name">Custom Blazor editors</tspan><tspan x="145" dy="25">DynamicComponent</tspan><tspan x="145" dy="25">BpmnPropertyEntryContext</tspan><tspan x="145" dy="25">Guarded callbacks</tspan></text>
+  </g>
+  <g transform="translate(390 970)"><rect class="cs" width="440" height="90" rx="8"/>
+    <text x="220" y="32" text-anchor="middle"><tspan class="name">BpmnPropertyEntryCommands</tspan><tspan x="220" dy="26">Binding factories → undoable BpmnEditCommand</tspan></text>
+  </g>
+</svg>

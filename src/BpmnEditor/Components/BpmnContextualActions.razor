@@ -1,0 +1,32 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnContextualActionsBase
+
+@*
+    The quick-action strip that appears beside a single selected element.
+
+    Drawn inside the canvas host, at the client anchor the canvas reported with the selection, so
+    it follows the element without a second interop call each time the viewport moves.
+*@
+@if (IsOpen)
+{
+    <div class="@CssClass("bpmn-actions")"
+         role="toolbar"
+         aria-orientation="vertical"
+         aria-label="@EffectiveAriaLabel"
+         data-bpmn-element="@Selected?.ElementId"
+         style="@PositionStyle"
+         @attributes="AdditionalAttributes">
+
+        @foreach (var action in Offered)
+        {
+            <button type="button"
+                    class="bpmn-actions__button"
+                    title="@LabelFor(action)"
+                    aria-label="@LabelFor(action)"
+                    @key="action.Key"
+                    @onclick="@(() => ChooseAsync(action))">
+                <span class="bpmn-actions__glyph" aria-hidden="true">@action.Glyph</span>
+            </button>
+        }
+    </div>
+}

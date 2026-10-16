@@ -1,0 +1,500 @@
+/*
+ * Editor shell layout. Slots that the host does not fill collapse to zero, so the same grid
+ * serves a bare canvas and the full chrome that arrives in later milestones.
+ */
+.bpmn-editor {
+  /* The positioning context for overlays that cover the whole editor, such as shortcut help. */
+  position: relative;
+  display: grid;
+  grid-template-areas:
+    'toolbar toolbar toolbar'
+    'stencil canvas  panel'
+    'footer footer footer';
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  block-size: 100%;
+  inline-size: 100%;
+  min-block-size: 0;
+  color: var(--bpmn-label-color);
+  /* The editor is an application surface: no text selection, except in fields made for typing. */
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: var(--bpmn-font-family);
+}
+
+.bpmn-editor :is(input, textarea, select, [contenteditable=""], [contenteditable="true"]) {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.bpmn-editor__toolbar {
+  grid-area: toolbar;
+  border-block-end: 1px solid var(--bpmn-chrome-border);
+}
+
+.bpmn-editor__stencil {
+  grid-area: stencil;
+  border-inline-end: 1px solid var(--bpmn-chrome-border);
+  overflow: auto;
+}
+
+/*
+ * The panel sizes to its content, but never past a share of the editor. An `auto` column with no
+ * ceiling is a column a long line of text can widen without limit — and since the canvas column is
+ * `minmax(0, 1fr)`, "without limit" means down to nothing. A panel that can hide the diagram is
+ * not a panel.
+ */
+/*
+ * A fixed width, not a fitted one.
+ *
+ * The obvious thing is to let the column size to its content. It is wrong twice. A track that sizes
+ * to max-content is widened without limit by the longest unwrapped sentence, and the canvas column
+ * — `minmax(0, 1fr)` — gives up every pixel it takes. And even capped, a panel whose width follows
+ * its content *moves the diagram* whenever the content changes: dropping an element that is not yet
+ * connected raises a reachability warning, the panel grows to hold it, the canvas narrows, and the
+ * shape the user just placed slides out from under the pointer.
+ *
+ * So the column is the panel's width and the panel's width does not depend on what is in it. A host
+ * that wants a different one sets `inline-size` on its own content.
+ */
+.bpmn-editor__footer {
+  grid-area: footer;
+  border-block-start: 1px solid var(--bpmn-chrome-border);
+}
+
+.bpmn-editor__panel {
+  grid-area: panel;
+  inline-size: 22rem;
+  padding: 0.5rem;
+  border-inline-start: 1px solid var(--bpmn-chrome-border);
+  overflow: auto;
+}
+
+.bpmn-editor__canvas {
+  grid-area: canvas;
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+.bpmn-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.25rem;
+  inline-size: 100%;
+  padding: 0.25rem;
+}
+
+.bpmn-toolbar > * {
+  flex: 0 0 auto;
+}
+
+.bpmn-toolbar__zoom {
+  min-inline-size: 4ch;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- keyboard shortcut help ------------------------------------------------ */
+
+.bpmn-shortcut-help {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: grid;
+    place-items: center;
+}
+
+.bpmn-shortcut-help__backdrop {
+    position: absolute;
+    inset: 0;
+    background: var(--bpmn-overlay-scrim);
+}
+
+.bpmn-shortcut-help__panel {
+    position: relative;
+    max-inline-size: min(32rem, calc(100% - 2rem));
+    max-block-size: calc(100% - 2rem);
+    overflow: auto;
+    padding: 1.25rem 1.5rem;
+    border-radius: 6px;
+    background: var(--bpmn-surface-background);
+    color: var(--bpmn-surface-foreground);
+    border: 1px solid var(--bpmn-surface-border);
+    box-shadow: 0 8px 32px rgb(0 0 0 / 25%);
+}
+
+.bpmn-shortcut-help__title {
+    margin-block: 0 0.75rem;
+    font-size: 1.05rem;
+}
+
+.bpmn-shortcut-help__list {
+    display: grid;
+    gap: 0.35rem 1rem;
+    margin: 0;
+}
+
+.bpmn-shortcut-help__row {
+    display: grid;
+    grid-template-columns: minmax(6rem, auto) 1fr;
+    gap: 1rem;
+    align-items: baseline;
+}
+
+.bpmn-shortcut-help__row dt {
+    margin: 0;
+}
+
+.bpmn-shortcut-help__row dd {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/*
+ * Fully specified, including background and colour. A CSS reset in the host application may well
+ * style bare <kbd> from its own design tokens — Fluent UI's does — and those tokens are not tied
+ * to prefers-color-scheme, so anything left to inherit here comes out light on a dark panel.
+ * A library component cannot assume it is the only thing styling an element.
+ */
+.bpmn-shortcut-help kbd {
+    display: inline-block;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--bpmn-surface-border);
+    border-block-end-width: 2px;
+    border-radius: 4px;
+    background: var(--bpmn-surface-hover);
+    color: var(--bpmn-surface-foreground);
+    font: inherit;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.bpmn-shortcut-help__or {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.bpmn-shortcut-help__empty {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.bpmn-shortcut-help__close {
+    margin-block-start: 1.25rem;
+    padding: 0.35rem 1rem;
+    border-radius: 4px;
+    border: 1px solid var(--bpmn-surface-border);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.bpmn-shortcut-help__close:hover {
+    background: var(--bpmn-surface-hover);
+}
+
+/* --- stencil --------------------------------------------------------------- */
+
+.bpmn-stencil {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  min-inline-size: 11rem;
+  background: var(--bpmn-surface-background);
+  color: var(--bpmn-surface-foreground);
+}
+
+.bpmn-stencil__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.bpmn-stencil__title {
+  margin: 0 0 0.2rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.bpmn-stencil__tool {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  /*
+   * Grab, not pointer: the primary gesture is a drag onto the canvas. A keyboard user gets the
+   * same creation through Enter, which is why the tool is focusable rather than a drag handle.
+   */
+  cursor: grab;
+  user-select: none;
+}
+
+.bpmn-stencil__tool:hover {
+  background: var(--bpmn-surface-hover);
+}
+
+/*
+ * A visible ring on focus, not just the browser default: the tool sits on a panel background that
+ * the default outline can disappear into, and an armed tool must be obvious before the drop.
+ */
+.bpmn-stencil__tool:focus-visible {
+  outline: 2px solid var(--bpmn-selection-color);
+  outline-offset: 1px;
+}
+
+.bpmn-stencil__tool--armed {
+  border-color: var(--bpmn-selection-color);
+  background: var(--bpmn-surface-hover);
+}
+
+/*
+ * Disabled tools stay visible and keep their reason in the tooltip. Section 9.1 wants the user to
+ * learn why a creation is unavailable — hiding the tool teaches nothing.
+ */
+.bpmn-stencil__tool--disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.bpmn-stencil__tool--disabled:hover {
+  background: transparent;
+}
+
+.bpmn-stencil__icon {
+  flex: none;
+  /*
+   * Bigger than an icon font would need, because each entry now draws the whole element: an
+   * outline with its symbol inside. At 20px the symbol inside a Gateway came out three pixels
+   * across and could not be told from an empty diamond.
+   */
+  inline-size: 28px;
+  block-size: 28px;
+  /* The glyphs are single-colour paths, and they follow the panel's text like an icon font. */
+  fill: currentcolor;
+}
+
+/*
+ * A shape whose notation is its outline: a plain Task, an untyped Event, a Sub-Process. Stroked
+ * rather than filled, so the tool looks like the thing it creates.
+ */
+/* The symbol inside the silhouette: filled, the way the canvas draws a manifest glyph. */
+.bpmn-stencil__glyph {
+  fill: currentcolor;
+  stroke: none;
+}
+
+.bpmn-stencil__silhouette {
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.bpmn-stencil__label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.bpmn-stencil__empty {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+/* --- the called-element picker ---------------------------------------------- */
+
+.bpmn-picker {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  display: grid;
+  place-items: center;
+}
+
+.bpmn-picker__backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--bpmn-overlay-scrim);
+}
+
+.bpmn-picker__panel {
+  position: relative;
+  min-inline-size: 20rem;
+  max-inline-size: min(28rem, calc(100% - 2rem));
+  max-block-size: calc(100% - 2rem);
+  overflow: auto;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--bpmn-surface-border);
+  border-radius: 6px;
+  background: var(--bpmn-surface-background);
+  color: var(--bpmn-surface-foreground);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 25%);
+}
+
+.bpmn-picker__title {
+  margin-block: 0 0.75rem;
+  font-size: 1.05rem;
+}
+
+.bpmn-picker__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bpmn-picker__option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  inline-size: 100%;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.bpmn-picker__option:hover {
+  background: var(--bpmn-surface-hover);
+}
+
+.bpmn-picker__option:focus-visible {
+  outline: 2px solid var(--bpmn-selection-color);
+  outline-offset: 1px;
+}
+
+/* The id is the thing that actually goes into calledElementRef, so it is always shown. */
+.bpmn-picker__id {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.bpmn-picker__empty {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.bpmn-picker__cancel {
+  margin-block-start: 1rem;
+  padding: 0.35rem 1rem;
+  border: 1px solid var(--bpmn-surface-border);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.bpmn-picker__cancel:hover {
+  background: var(--bpmn-surface-hover);
+}
+
+/* --- diagram navigation (M6) -------------------------------------------------- */
+
+.bpmn-diagrams {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  font-family: var(--bpmn-font-family);
+  font-size: 0.8125rem;
+}
+
+.bpmn-diagrams__pick {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.bpmn-diagrams__heading {
+  opacity: 0.75;
+}
+
+.bpmn-diagrams__select {
+  max-inline-size: 14rem;
+  padding: 0.2rem 0.35rem;
+  border: 1px solid var(--bpmn-surface-border);
+  border-radius: 4px;
+  background: var(--bpmn-surface-background);
+  color: inherit;
+  font: inherit;
+  font-size: 0.8125rem;
+}
+
+.bpmn-diagrams__open {
+  padding: 0.2rem 0.7rem;
+  border: 1px solid var(--bpmn-surface-border);
+  border-radius: 4px;
+  background: var(--bpmn-surface-background);
+  color: inherit;
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.bpmn-diagrams__open:hover:not(:disabled) {
+  background: var(--bpmn-surface-hover);
+}
+
+.bpmn-diagrams__open:focus-visible {
+  outline: 2px solid var(--bpmn-selection-color);
+  outline-offset: 1px;
+}
+
+/* Disabled rather than hidden: the title says why, which is the point (section 9.3). */
+.bpmn-diagrams__open:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.bpmn-stencil__templates > summary { cursor: pointer; }
+.bpmn-stencil__search {
+    box-sizing: border-box;
+    width: 100%;
+    margin-block: .4rem;
+    padding: .35rem;
+    border: 1px solid var(--bpmn-stroke, currentColor);
+    border-radius: .25rem;
+    background: transparent;
+    color: inherit;
+}
+.bpmn-stencil__template-tool img { object-fit: contain; }
+
+.bpmn-toolbar__button {
+  min-block-size: 2rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--bpmn-surface-foreground);
+  font: inherit;
+  cursor: pointer;
+}
+.bpmn-toolbar__button:hover:not(:disabled) {
+  background: var(--bpmn-surface-hover);
+}
+.bpmn-toolbar__button:focus-visible {
+  outline: 2px solid var(--bpmn-selection-color);
+  outline-offset: -2px;
+}
+.bpmn-toolbar__button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

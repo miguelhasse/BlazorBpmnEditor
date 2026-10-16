@@ -1,0 +1,17 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnPropertyEntryComponent
+
+<BpmnPropertyEntryFrame Context="@Context">
+    <select class="@(Block + "__select")" disabled="@ReadOnly"
+            aria-invalid="@(Entry.Error is not null ? "true" : null)"
+            @onchange="@(args => SubmitAsync(args.Value as string))">
+        @if (Entry.Placeholder is not null && !Entry.Choices.Any(choice => choice.Value.Length == 0))
+        {
+            <option value="" disabled selected="@(Entry.Value is null)">@Entry.Placeholder</option>
+        }
+        @foreach (var choice in Choices)
+        {
+            <option value="@choice.Value" selected="@(choice.Value == (Entry.Value ?? string.Empty))">@choice.Label</option>
+        }
+    </select>
+</BpmnPropertyEntryFrame>

@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="cs" original="../DemoStrings.resx">
+    <body>
+      <trans-unit id="Error.Description">
+        <source>An error occurred while processing your request.</source>
+        <target state="translated">Při zpracování vašeho požadavku došlo k chybě.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.DevelopmentDetails">
+        <source>Swapping to the {0} environment will display more detailed information about the error that occurred.</source>
+        <target state="translated">Přepnutím na prostředí {0} se zobrazí podrobnější informace o vzniklé chybě.</target>
+        <note>{0} is the invariant environment name Development.</note>
+      </trans-unit>
+      <trans-unit id="Error.DevelopmentMode">
+        <source>Development Mode</source>
+        <target state="translated">Vývojový režim</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.DevelopmentWarning">
+        <source>The {0} environment shouldn't be enabled for deployed applications.</source>
+        <target state="translated">Prostředí {0} by nemělo být povoleno v nasazených aplikacích.</target>
+        <note>{0} is the invariant environment name Development.</note>
+      </trans-unit>
+      <trans-unit id="Error.Heading">
+        <source>Error.</source>
+        <target state="translated">Chyba.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.LocalDebugging">
+        <source>For local debugging, enable the {0} environment by setting the {1} environment variable to {0} and restarting the app.</source>
+        <target state="translated">Pro místní ladění povolte prostředí {0} nastavením proměnné prostředí {1} na {0} a restartováním aplikace.</target>
+        <note>{0} is Development; {1} is ASPNETCORE_ENVIRONMENT. Do not translate these argument values.</note>
+      </trans-unit>
+      <trans-unit id="Error.RequestId">
+        <source>Request ID:</source>
+        <target state="translated">ID požadavku:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.SensitiveInformation">
+        <source>It can result in displaying sensitive information from exceptions to end users.</source>
+        <target state="translated">Může to vést k zobrazení citlivých informací z výjimek koncovým uživatelům.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Error.Title">
+        <source>Error</source>
+        <target state="translated">Chyba</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.AboutBlazor">
+        <source>About Blazor</source>
+        <target state="translated">O Blazoru</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Dismiss">
+        <source>Dismiss</source>
+        <target state="translated">Zavřít</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Documentation">
+        <source>Documentation and demos</source>
+        <target state="translated">Dokumentace a ukázky</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Reload">
+        <source>Reload</source>
+        <target state="translated">Načíst znovu</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.Title">
+        <source>BPMN Demo</source>
+        <target state="translated">Ukázka BPMN</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Layout.UnhandledError">
+        <source>An unhandled error has occurred.</source>
+        <target state="translated">Došlo k neošetřené chybě.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NotFound.Description">
+        <source>Sorry, the content you are looking for does not exist.</source>
+        <target state="translated">Omlouváme se, obsah, který hledáte, neexistuje.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NotFound.Title">
+        <source>Not Found</source>
+        <target state="translated">Nenalezeno</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Failed">
+        <source>Failed to rejoin. Please retry or reload the page.</source>
+        <target state="translated">Opětovné připojení se nezdařilo. Zkuste to znovu nebo načtěte stránku znovu.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Paused">
+        <source>The session has been paused by the server.</source>
+        <target state="translated">Relace byla pozastavena serverem.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Rejoining">
+        <source>Rejoining the server...</source>
+        <target state="translated">Opětovné připojování k serveru...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Resume">
+        <source>Resume</source>
+        <target state="translated">Pokračovat</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.ResumeFailed">
+        <source>Failed to resume the session. Please reload the page.</source>
+        <target state="translated">Obnovení relace se nezdařilo. Načtěte stránku znovu.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.Retry">
+        <source>Retry</source>
+        <target state="translated">Zkusit znovu</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Reconnect.RetryIn">
+        <source>Rejoin failed... trying again in {0} seconds.</source>
+        <target state="translated">Opětovné připojení se nezdařilo... další pokus za {0} s.</target>
+        <note>{0} is replaced by the live countdown element; preserve the placeholder.</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

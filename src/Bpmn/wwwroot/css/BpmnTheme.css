@@ -1,0 +1,333 @@
+/*
+ * BPMN notation tokens.
+ *
+ * Every shape, marker and label references these rather than hard-coded colours, so a host
+ * restyles the canvas by redefining custom properties and the exported SVG inherits the same
+ * values. Notation geometry is never themable; only colour and typography are.
+ *
+ * Each palette is declared against three selectors, and the middle one is the one that matters:
+ * the canvas declares the base tokens itself, so a value set only on the editor is overridden by
+ * the canvas's own declaration rather than inherited through it. A theme chosen on the editor has
+ * to reach the canvas explicitly or it colours the chrome and leaves the diagram alone — which is
+ * exactly what happened the first time.
+ */
+:where(.bpmn-editor, .bpmn-editor-scope, .fluent-bpmn-editor),
+:where(.bpmn-editor, .bpmn-editor-scope, .fluent-bpmn-editor) .bpmn-canvas,
+.bpmn-canvas {
+  --bpmn-font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --bpmn-stroke: #1a1a1a;
+  --bpmn-fill: #ffffff;
+  --bpmn-header-fill: #f2f4f7;
+  --bpmn-label-color: #1a1a1a;
+  --bpmn-canvas-background: #fafbfc;
+  --bpmn-grid-color: #dfe3e8;
+  --bpmn-chrome-border: #e1e4e8;
+
+  /* Editing affordances share one accent, so guides and selection read as the same vocabulary. */
+  --bpmn-guide-color: #8250df;
+  --bpmn-selection-color: #8250df;
+
+  /* Chrome surfaces: the shortcut help overlay, and any later panel that floats over the canvas. */
+  --bpmn-surface-background: #ffffff;
+  --bpmn-surface-foreground: #1a1a1a;
+  --bpmn-surface-border: #d0d4d9;
+  --bpmn-surface-hover: #f2f4f7;
+  --bpmn-overlay-scrim: rgb(0 0 0 / 35%);
+
+  /* Validation severity. Never the only signal — see BpmnOverlays.css. */
+  --bpmn-error-color: #b3261e;
+  --bpmn-warning-color: #8a6100;
+
+  /*
+   * Execution state, a palette of its own.
+   *
+   * Kept away from the semantic and validation colours on purpose: an element that is failing is
+   * saying something different from an element that is invalid, and if the two families shared
+   * hues a reader could not tell which of them a red outline meant. None of these appear anywhere
+   * else in the stylesheet.
+   */
+  --bpmn-exec-active: #0969da;
+  --bpmn-exec-completed: #1a7f37;
+  --bpmn-exec-failed: #d1242f;
+  --bpmn-exec-canceled: #6e7781;
+  --bpmn-exec-waiting: #9a6700;
+  --bpmn-exec-path: #0969da;
+  --bpmn-exec-token-fill: #0969da;
+  --bpmn-exec-token-text: #ffffff;
+  --bpmn-exec-incident-fill: #d1242f;
+  --bpmn-exec-incident-text: #ffffff;
+}
+
+/* The dark palette when the system asks for it. An explicit choice below overrides this. */
+@media (prefers-color-scheme: dark) {
+  :where(.bpmn-editor, .bpmn-editor-scope, .fluent-bpmn-editor),
+  :where(.bpmn-editor, .bpmn-editor-scope, .fluent-bpmn-editor) .bpmn-canvas,
+  .bpmn-canvas {
+    --bpmn-stroke: #e6e6e6;
+    --bpmn-fill: #23262a;
+    --bpmn-header-fill: #2c3036;
+    --bpmn-label-color: #e6e6e6;
+    --bpmn-canvas-background: #16181b;
+    --bpmn-grid-color: #2c3036;
+    --bpmn-chrome-border: #34383d;
+    --bpmn-guide-color: #b083f0;
+    --bpmn-selection-color: #b083f0;
+    --bpmn-surface-background: #23262a;
+    --bpmn-surface-foreground: #e6e6e6;
+    --bpmn-surface-border: #34383d;
+    --bpmn-surface-hover: #2c3036;
+    --bpmn-overlay-scrim: rgb(0 0 0 / 55%);
+
+    /* Lightened for contrast on the dark surface, not merely reused. */
+    --bpmn-error-color: #f2837b;
+    --bpmn-warning-color: #e0b341;
+
+    /*
+     * Execution state, a palette of its own.
+     *
+     * Kept away from the semantic and validation colours on purpose: an element that is failing is
+     * saying something different from an element that is invalid, and if the two families shared
+     * hues a reader could not tell which of them a red outline meant. None of these appear anywhere
+     * else in the stylesheet.
+     */
+    --bpmn-exec-active: #6cb6ff;
+    --bpmn-exec-completed: #57ab5a;
+    --bpmn-exec-failed: #ff8182;
+    --bpmn-exec-canceled: #909dab;
+    --bpmn-exec-waiting: #e0b341;
+    --bpmn-exec-path: #6cb6ff;
+    --bpmn-exec-token-fill: #316dca;
+    --bpmn-exec-token-text: #ffffff;
+    --bpmn-exec-incident-fill: #b62324;
+    --bpmn-exec-incident-text: #ffffff;
+  }
+}
+
+/*
+ * Light, chosen rather than inherited.
+ *
+ * It has to restate the whole palette rather than simply not opting in: the media query above has
+ * already applied the dark one on a dark machine, and a host that asked for light on a dark machine
+ * means it.
+ */
+:where(.bpmn-editor, .bpmn-editor-scope, .fluent-bpmn-editor)[data-bpmn-theme='light'],
+:where(.bpmn-editor, .bpmn-editor-scope, .fluent-bpmn-editor)[data-bpmn-theme='light'] .bpmn-canvas,
+.bpmn-canvas[data-bpmn-theme='light'] {
+  --bpmn-stroke: #1a1a1a;
+  --bpmn-fill: #ffffff;
+  --bpmn-header-fill: #f2f4f7;
+  --bpmn-label-color: #1a1a1a;
+  --bpmn-canvas-background: #fafbfc;
+  --bpmn-grid-color: #dfe3e8;
+  --bpmn-chrome-border: #e1e4e8;
+  --bpmn-guide-color: #8250df;
+  --bpmn-selection-color: #8250df;
+  --bpmn-surface-background: #ffffff;
+  --bpmn-surface-foreground: #1a1a1a;
+  --bpmn-surface-border: #d0d4d9;
+  --bpmn-surface-hover: #f2f4f7;
+  --bpmn-overlay-scrim: rgb(0 0 0 / 35%);
+  --bpmn-error-color: #b3261e;
+  --bpmn-warning-color: #8a6100;
+
+  /*
+   * Execution state, a palette of its own.
+   *
+   * Kept away from the semantic and validation colours on purpose: an element that is failing is
+   * saying something different from an element that is invalid, and if the two families shared
+   * hues a reader could not tell which of them a red outline meant. None of these appear anywhere
+   * else in the stylesheet.
+   */
+  --bpmn-exec-active: #0969da;
+  --bpmn-exec-completed: #1a7f37;
+  --bpmn-exec-failed: #d1242f;
+  --bpmn-exec-canceled: #6e7781;
+  --bpmn-exec-waiting: #9a6700;
+  --bpmn-exec-path: #0969da;
+  --bpmn-exec-token-fill: #0969da;
+  --bpmn-exec-token-text: #ffffff;
+  --bpmn-exec-incident-fill: #d1242f;
+  --bpmn-exec-incident-text: #ffffff;
+}
+
+/* Dark, chosen rather than inherited from the system. */
+:where(.bpmn-editor, .bpmn-editor-scope, .fluent-bpmn-editor)[data-bpmn-theme='dark'],
+:where(.bpmn-editor, .bpmn-editor-scope, .fluent-bpmn-editor)[data-bpmn-theme='dark'] .bpmn-canvas,
+.bpmn-canvas[data-bpmn-theme='dark'] {
+  --bpmn-stroke: #e6e6e6;
+  --bpmn-fill: #23262a;
+  --bpmn-header-fill: #2c3036;
+  --bpmn-label-color: #e6e6e6;
+  --bpmn-canvas-background: #16181b;
+  --bpmn-grid-color: #2c3036;
+  --bpmn-chrome-border: #34383d;
+  --bpmn-guide-color: #b083f0;
+  --bpmn-selection-color: #b083f0;
+  --bpmn-surface-background: #23262a;
+  --bpmn-surface-foreground: #e6e6e6;
+  --bpmn-surface-border: #34383d;
+  --bpmn-surface-hover: #2c3036;
+  --bpmn-overlay-scrim: rgb(0 0 0 / 55%);
+  --bpmn-error-color: #f2837b;
+  --bpmn-warning-color: #e0b341;
+
+  /*
+   * Execution state, a palette of its own.
+   *
+   * Kept away from the semantic and validation colours on purpose: an element that is failing is
+   * saying something different from an element that is invalid, and if the two families shared
+   * hues a reader could not tell which of them a red outline meant. None of these appear anywhere
+   * else in the stylesheet.
+   */
+  --bpmn-exec-active: #6cb6ff;
+  --bpmn-exec-completed: #57ab5a;
+  --bpmn-exec-failed: #ff8182;
+  --bpmn-exec-canceled: #909dab;
+  --bpmn-exec-waiting: #e0b341;
+  --bpmn-exec-path: #6cb6ff;
+  --bpmn-exec-token-fill: #316dca;
+  --bpmn-exec-token-text: #ffffff;
+  --bpmn-exec-incident-fill: #b62324;
+  --bpmn-exec-incident-text: #ffffff;
+}
+
+/*
+ * Raised contrast, on either palette.
+ *
+ * A separate axis from the mode, because they answer different questions: dark is a preference and
+ * this is an accessibility need. It moves colour and stroke weight only — section 4's geometry is
+ * not a matter of taste, so a Gateway is the same diamond at every contrast.
+ */
+:where(.bpmn-editor, .bpmn-editor-scope, .fluent-bpmn-editor)[data-bpmn-contrast='high'],
+:where(.bpmn-editor, .bpmn-editor-scope, .fluent-bpmn-editor)[data-bpmn-contrast='high'] .bpmn-canvas,
+.bpmn-canvas[data-bpmn-contrast='high'] {
+  --bpmn-stroke: #000000;
+  --bpmn-fill: #ffffff;
+  --bpmn-header-fill: #ffffff;
+  --bpmn-label-color: #000000;
+  --bpmn-canvas-background: #ffffff;
+  --bpmn-grid-color: #767676;
+  --bpmn-chrome-border: #000000;
+  --bpmn-guide-color: #5a2ca0;
+  --bpmn-selection-color: #5a2ca0;
+  --bpmn-surface-background: #ffffff;
+  --bpmn-surface-foreground: #000000;
+  --bpmn-surface-border: #000000;
+  --bpmn-surface-hover: #e8e8e8;
+  --bpmn-overlay-scrim: rgb(0 0 0 / 60%);
+  --bpmn-error-color: #a3000a;
+  --bpmn-warning-color: #5c4000;
+
+  /*
+   * Execution state, a palette of its own.
+   *
+   * Kept away from the semantic and validation colours on purpose: an element that is failing is
+   * saying something different from an element that is invalid, and if the two families shared
+   * hues a reader could not tell which of them a red outline meant. None of these appear anywhere
+   * else in the stylesheet.
+   */
+  --bpmn-exec-active: #00348a;
+  --bpmn-exec-completed: #0b4a1c;
+  --bpmn-exec-failed: #8a0009;
+  --bpmn-exec-canceled: #3a3a3a;
+  --bpmn-exec-waiting: #4a3300;
+  --bpmn-exec-path: #00348a;
+  --bpmn-exec-token-fill: #00348a;
+  --bpmn-exec-token-text: #ffffff;
+  --bpmn-exec-incident-fill: #8a0009;
+  --bpmn-exec-incident-text: #ffffff;
+}
+
+:where(.bpmn-editor, .bpmn-editor-scope, .fluent-bpmn-editor)[data-bpmn-theme='dark'][data-bpmn-contrast='high'],
+:where(.bpmn-editor, .bpmn-editor-scope, .fluent-bpmn-editor)[data-bpmn-theme='dark'][data-bpmn-contrast='high'] .bpmn-canvas,
+.bpmn-canvas[data-bpmn-theme='dark'][data-bpmn-contrast='high'] {
+  --bpmn-stroke: #ffffff;
+  --bpmn-fill: #000000;
+  --bpmn-header-fill: #000000;
+  --bpmn-label-color: #ffffff;
+  --bpmn-canvas-background: #000000;
+  --bpmn-grid-color: #9a9a9a;
+  --bpmn-chrome-border: #ffffff;
+  --bpmn-guide-color: #d0aaff;
+  --bpmn-selection-color: #d0aaff;
+  --bpmn-surface-background: #000000;
+  --bpmn-surface-foreground: #ffffff;
+  --bpmn-surface-border: #ffffff;
+  --bpmn-surface-hover: #2a2a2a;
+  --bpmn-overlay-scrim: rgb(0 0 0 / 75%);
+  --bpmn-error-color: #ff9b94;
+  --bpmn-warning-color: #ffd257;
+
+  /*
+   * Execution state, a palette of its own.
+   *
+   * Kept away from the semantic and validation colours on purpose: an element that is failing is
+   * saying something different from an element that is invalid, and if the two families shared
+   * hues a reader could not tell which of them a red outline meant. None of these appear anywhere
+   * else in the stylesheet.
+   */
+  --bpmn-exec-active: #9ecbff;
+  --bpmn-exec-completed: #8ce09a;
+  --bpmn-exec-failed: #ffb3b0;
+  --bpmn-exec-canceled: #d0d0d0;
+  --bpmn-exec-waiting: #ffd257;
+  --bpmn-exec-path: #9ecbff;
+  --bpmn-exec-token-fill: #003f9e;
+  --bpmn-exec-token-text: #ffffff;
+  --bpmn-exec-incident-fill: #a30008;
+  --bpmn-exec-incident-text: #ffffff;
+}
+
+/*
+ * The same raised-contrast dark palette when dark came from the system rather than from a host.
+ *
+ * Without this, `[data-bpmn-contrast='high']` above — which is the light one — was the most
+ * specific rule that matched a system-dark reader, and turning on high contrast put a white canvas
+ * inside dark chrome. The block above only ever matched a host that had written `Mode = Dark`, so
+ * for everyone relying on their operating system the dark high-contrast palette did not exist.
+ *
+ * Guarded against an explicit light choice for the same reason the dark media query is: a host that
+ * asked for light on a dark machine means it. The values repeat the block above deliberately, the
+ * way the two dark blocks already do; there is no way to share them without a preprocessor.
+ */
+@media (prefers-color-scheme: dark) {
+  :where(.bpmn-editor, .bpmn-editor-scope, .fluent-bpmn-editor):not([data-bpmn-theme='light'])[data-bpmn-contrast='high'],
+  :where(.bpmn-editor, .bpmn-editor-scope, .fluent-bpmn-editor):not([data-bpmn-theme='light'])[data-bpmn-contrast='high'] .bpmn-canvas,
+  .bpmn-canvas:not([data-bpmn-theme='light'])[data-bpmn-contrast='high'] {
+    --bpmn-stroke: #ffffff;
+    --bpmn-fill: #000000;
+    --bpmn-header-fill: #000000;
+    --bpmn-label-color: #ffffff;
+    --bpmn-canvas-background: #000000;
+    --bpmn-grid-color: #9a9a9a;
+    --bpmn-chrome-border: #ffffff;
+    --bpmn-guide-color: #d0aaff;
+    --bpmn-selection-color: #d0aaff;
+    --bpmn-surface-background: #000000;
+    --bpmn-surface-foreground: #ffffff;
+    --bpmn-surface-border: #ffffff;
+    --bpmn-surface-hover: #2a2a2a;
+    --bpmn-overlay-scrim: rgb(0 0 0 / 75%);
+    --bpmn-error-color: #ff9b94;
+    --bpmn-warning-color: #ffd257;
+
+    /*
+     * Execution state, a palette of its own.
+     *
+     * Kept away from the semantic and validation colours on purpose: an element that is failing is
+     * saying something different from an element that is invalid, and if the two families shared
+     * hues a reader could not tell which of them a red outline meant. None of these appear anywhere
+     * else in the stylesheet.
+     */
+    --bpmn-exec-active: #9ecbff;
+    --bpmn-exec-completed: #8ce09a;
+    --bpmn-exec-failed: #ffb3b0;
+    --bpmn-exec-canceled: #d0d0d0;
+    --bpmn-exec-waiting: #ffd257;
+    --bpmn-exec-path: #9ecbff;
+    --bpmn-exec-token-fill: #003f9e;
+    --bpmn-exec-token-text: #ffffff;
+    --bpmn-exec-incident-fill: #a30008;
+    --bpmn-exec-incident-text: #ffffff;
+  }
+}

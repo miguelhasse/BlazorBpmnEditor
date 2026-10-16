@@ -1,0 +1,18 @@
+{
+  "comment": "Held to by both runtimes: geometry/outline.ts (vitest) and Model/Geometry/BpmnOutline.cs (xUnit). Change a case here and both suites must agree.",
+  "projections": [
+    { "name": "task, left of a side", "elementType": "task", "bounds": [0, 0, 100, 60], "point": [-20, 30], "expected": [0, 30] },
+    { "name": "task, above a side", "elementType": "task", "bounds": [0, 0, 100, 60], "point": [50, -20], "expected": [50, 0] },
+    { "name": "task, outside the top-left corner", "elementType": "task", "bounds": [0, 0, 100, 60], "point": [-10, -10], "expected": [2.928932, 2.928932] },
+    { "name": "task, inside near the top-left corner", "elementType": "task", "bounds": [0, 0, 100, 60], "point": [5, 5], "expected": [2.928932, 2.928932] },
+    { "name": "task, outside the bottom-right corner", "elementType": "task", "bounds": [0, 0, 100, 60], "point": [110, 70], "expected": [97.071068, 57.071068] },
+    { "name": "event, beside the circle", "elementType": "startEvent", "bounds": [0, 0, 100, 60], "point": [200, 30], "expected": [100, 30] },
+    { "name": "event, above the circle", "elementType": "startEvent", "bounds": [0, 0, 100, 60], "point": [50, -40], "expected": [50, 0] },
+    { "name": "gateway, off a vertex", "elementType": "exclusiveGateway", "bounds": [0, 0, 100, 100], "point": [100, 0], "expected": [75, 25] },
+    { "name": "pool, inside", "elementType": "pool", "bounds": [0, 0, 200, 100], "point": [100, 50], "expected": [100, 0] }
+  ],
+  "endpoints": [
+    { "name": "a near stored end is projected", "elementType": "task", "bounds": [200, 100, 100, 60], "waypoint": [310, 130], "other": [500, 130], "expected": [300, 130] },
+    { "name": "a stored end far from the shape leaves towards the other end", "elementType": "task", "bounds": [200, 100, 100, 60], "waypoint": [0, 0], "other": [500, 130], "expected": [300, 130] }
+  ]
+}

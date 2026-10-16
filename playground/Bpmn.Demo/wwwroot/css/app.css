@@ -1,0 +1,544 @@
+/* Relative to this stylesheet, not to the page: an @import resolves against the CSS file's
+   own URL, so from wwwroot/css this has to climb out of it. Kept relative rather than
+   rooted at '/' so the app still works when it is hosted under a sub-path. */
+@import '../_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css';
+
+/* Fluent UI 5's base stylesheet, which version 4 did not ship. */
+@import '../_content/Microsoft.FluentUI.AspNetCore.Components/css/default-fuib.css';
+
+body {
+    --body-font: "Segoe UI Variable", "Segoe UI", sans-serif;
+    font-family: var(--body-font);
+    font-size: var(--type-ramp-base-font-size);
+    line-height: var(--type-ramp-base-line-height);
+    margin: 0;
+}
+
+.navmenu-icon {
+    display: none;
+}
+
+/*
+ * The demo's own chrome.
+ *
+ * Fluent UI 5 rebuilt its layout components, and the playground does not need to follow: a header
+ * band, a content column and a footer are this. The colours come from prefers-color-scheme rather
+ * than Fluent's --neutral-* tokens, which FluentDesignTheme used to set and which no longer exist.
+ */
+.demo-chrome {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    /*
+     * Exactly the viewport, not a minimum.
+     *
+     * FluentBodyContent used to pin the content to calc(100dvh - 86px); with it gone, a minimum
+     * lets the editor grow past the bottom of the window, and the parts of the canvas a pointer
+     * can reach stop matching the parts it draws.
+     */
+    block-size: 100dvh;
+    overflow: hidden;
+    background: var(--demo-surface);
+    color: var(--demo-ink);
+}
+
+.demo-chrome__header {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background: var(--demo-accent);
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.demo-chrome__body {
+    display: flex;
+    min-block-size: 0;
+    overflow: hidden;
+}
+
+.demo-chrome__footer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 1.5rem;
+    background: var(--demo-chrome-fill);
+    font-size: 0.875rem;
+}
+
+.demo-chrome__spacer {
+    flex: 1 1 auto;
+}
+
+:root {
+    --demo-surface: #ffffff;
+    --demo-ink: #1a1a1a;
+    --demo-accent: #0f6cbd;
+    --demo-chrome-fill: #e8e8e8;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --demo-surface: #16181b;
+        --demo-ink: #e6e6e6;
+        --demo-accent: #0a4a80;
+        --demo-chrome-fill: #23262a;
+    }
+}
+
+.main {
+    min-height: calc(100dvh - 86px);
+    align-items: stretch !important;
+}
+
+.body-content {
+    align-self: stretch;
+    height: calc(100dvh - 86px) !important;
+    display: flex;
+}
+
+.content {
+    padding: 0.5rem 1.5rem;
+    align-self: stretch !important;
+    width: 100%;
+}
+
+.manage {
+    width: 100dvw;
+}
+
+footer {
+    align-items: center;
+}
+
+    footer a {
+        color: var(--neutral-foreground-rest);
+        text-decoration: none;
+    }
+
+        footer a:focus {
+            outline: 1px dashed;
+            outline-offset: 3px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+.alert {
+    border: 1px dashed var(--accent-fill-rest);
+    padding: 5px;
+    margin: 10px 0;
+}
+
+.alert-danger {
+    border: 1px dashed var(--error);
+}
+
+.alert-success {
+    border: 1px dashed var(--success);
+}
+
+.alert-warning {
+    border: 1px dashed var(--warning);
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    margin: 20px 0;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+.blazor-error-boundary {
+    background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNDkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIG92ZXJmbG93PSJoaWRkZW4iPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDAiPjxyZWN0IHg9IjIzNSIgeT0iNTEiIHdpZHRoPSI1NiIgaGVpZ2h0PSI0OSIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMCkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMzUgLTUxKSI+PHBhdGggZD0iTTI2My41MDYgNTFDMjY0LjcxNyA1MSAyNjUuODEzIDUxLjQ4MzcgMjY2LjYwNiA1Mi4yNjU4TDI2Ny4wNTIgNTIuNzk4NyAyNjcuNTM5IDUzLjYyODMgMjkwLjE4NSA5Mi4xODMxIDI5MC41NDUgOTIuNzk1IDI5MC42NTYgOTIuOTk2QzI5MC44NzcgOTMuNTEzIDI5MSA5NC4wODE1IDI5MSA5NC42NzgyIDI5MSA5Ny4wNjUxIDI4OS4wMzggOTkgMjg2LjYxNyA5OUwyNDAuMzgzIDk5QzIzNy45NjMgOTkgMjM2IDk3LjA2NTEgMjM2IDk0LjY3ODIgMjM2IDk0LjM3OTkgMjM2LjAzMSA5NC4wODg2IDIzNi4wODkgOTMuODA3MkwyMzYuMzM4IDkzLjAxNjIgMjM2Ljg1OCA5Mi4xMzE0IDI1OS40NzMgNTMuNjI5NCAyNTkuOTYxIDUyLjc5ODUgMjYwLjQwNyA1Mi4yNjU4QzI2MS4yIDUxLjQ4MzcgMjYyLjI5NiA1MSAyNjMuNTA2IDUxWk0yNjMuNTg2IDY2LjAxODNDMjYwLjczNyA2Ni4wMTgzIDI1OS4zMTMgNjcuMTI0NSAyNTkuMzEzIDY5LjMzNyAyNTkuMzEzIDY5LjYxMDIgMjU5LjMzMiA2OS44NjA4IDI1OS4zNzEgNzAuMDg4N0wyNjEuNzk1IDg0LjAxNjEgMjY1LjM4IDg0LjAxNjEgMjY3LjgyMSA2OS43NDc1QzI2Ny44NiA2OS43MzA5IDI2Ny44NzkgNjkuNTg3NyAyNjcuODc5IDY5LjMxNzkgMjY3Ljg3OSA2Ny4xMTgyIDI2Ni40NDggNjYuMDE4MyAyNjMuNTg2IDY2LjAxODNaTTI2My41NzYgODYuMDU0N0MyNjEuMDQ5IDg2LjA1NDcgMjU5Ljc4NiA4Ny4zMDA1IDI1OS43ODYgODkuNzkyMSAyNTkuNzg2IDkyLjI4MzcgMjYxLjA0OSA5My41Mjk1IDI2My41NzYgOTMuNTI5NSAyNjYuMTE2IDkzLjUyOTUgMjY3LjM4NyA5Mi4yODM3IDI2Ny4zODcgODkuNzkyMSAyNjcuMzg3IDg3LjMwMDUgMjY2LjExNiA4Ni4wNTQ3IDI2My41NzYgODYuMDU0N1oiIGZpbGw9IiNGRkU1MDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvZz48L3N2Zz4=) no-repeat 1rem/1.8rem, #b32121;
+    padding: 1rem 1rem 1rem 3.7rem;
+    color: white;
+}
+
+    .blazor-error-boundary::before {
+        content: "An error has occurred. "
+    }
+
+.loading-progress {
+    position: relative;
+    display: block;
+    width: 8rem;
+    height: 8rem;
+    margin: 20vh auto 1rem auto;
+}
+
+    .loading-progress circle {
+        fill: none;
+        stroke: #e0e0e0;
+        stroke-width: 0.6rem;
+        transform-origin: 50% 50%;
+        transform: rotate(-90deg);
+    }
+
+        .loading-progress circle:last-child {
+            stroke: #1b6ec2;
+            stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
+            transition: stroke-dasharray 0.05s ease-in-out;
+        }
+
+.loading-progress-text {
+    position: absolute;
+    text-align: center;
+    font-weight: bold;
+    inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
+}
+
+    .loading-progress-text:after {
+        content: var(--blazor-load-percentage-text, "Loading");
+    }
+
+code {
+    color: #c02d76;
+}
+
+@media (max-width: 600px) {
+    .header-gutters {
+        margin: 0.5rem 3rem 0.5rem 1.5rem !important;
+    }
+
+    [dir="rtl"] .header-gutters {
+        margin: 0.5rem 1.5rem 0.5rem 3rem !important;
+    }
+
+    .main {
+        flex-direction: column !important;
+        row-gap: 0 !important;
+    }
+
+    nav.sitenav {
+        width: 100%;
+        height: 100%;
+    }
+
+    #main-menu {
+        width: 100% !important;
+    }
+
+        #main-menu > div:first-child:is(.expander) {
+            display: none;
+        }
+
+    .navmenu {
+        width: 100%;
+    }
+
+    #navmenu-toggle {
+        appearance: none;
+    }
+
+        #navmenu-toggle ~ nav {
+            display: none;
+        }
+
+        #navmenu-toggle:checked ~ nav {
+            display: block;
+        }
+
+    .navmenu-icon {
+        cursor: pointer;
+        z-index: 10;
+        display: block;
+        position: absolute;
+        top: 15px;
+        left: unset;
+        right: 20px;
+        width: 20px;
+        height: 20px;
+        border: none;
+    }
+
+    [dir="rtl"] .navmenu-icon {
+        left: 20px;
+        right: unset;
+    }
+}
+
+/* Table */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+    table td,
+    table th {
+        padding: var(--spacingVerticalS) var(--spacingHorizontalM);
+        text-align: left;
+        vertical-align: middle;
+        border-bottom: calc(var(--stroke-width) * 1px) solid var(--neutral-stroke-divider-rest);
+    }
+
+/* --- BPMN demo ---------------------------------------------------------- */
+.demo-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    block-size: calc(100vh - 160px);
+}
+
+/*
+ * A fixed height, with nothing in it allowed to wrap.
+ *
+ * This row sits directly above the canvas, so a row that changes height moves the canvas with it.
+ * Two of its children change text as the user works, and when a longer status wrapped onto an
+ * extra line the canvas dropped sixty pixels mid-test — which the test then reported as a stencil
+ * drop landing sixty pixels from where it was released. The drop was exact; the page had moved
+ * underneath the measurement. Pinning the height removes the whole class of failure rather than
+ * teaching one test to re-measure.
+ */
+.demo-controls {
+    display: flex;
+    align-items: end;
+    gap: 1rem;
+    flex: 0 0 auto;
+    /*
+      * Taller than it was, because Fluent UI 5 puts a select's label above the control rather than
+      * beside it — at the old 3.5rem the label was clipped and the control showed "simple-".
+      */
+    block-size: 4.5rem;
+    padding-block-end: 0.25rem;
+    overflow: hidden;
+}
+
+/*
+ * Wide enough for the longest sample name, which is what this picker is for.
+ *
+ * Fluent UI 5's select renders as a fluent-field wrapping a fluent-dropdown, and it is the
+ * dropdown that decides the width — sizing the component the Razor names has no effect, because
+ * that element is not in the rendered tree.
+ */
+.demo-controls fluent-field,
+.demo-controls fluent-dropdown {
+    inline-size: 16rem;
+    max-inline-size: 16rem;
+}
+
+.demo-controls > * {
+    white-space: nowrap;
+}
+
+/* The two readouts share whatever the controls leave, and ellipsise rather than wrap. */
+.demo-status,
+.demo-edit-status {
+    flex: 0 1 13rem;
+}
+
+.demo-status {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    padding-block-end: 0.35rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/*
+ * A separate class rather than a second .demo-status: the E2E suite addresses the render status by
+ * that class, and a second element carrying it turns an exact match into a strict-mode violation.
+ */
+.demo-edit-status {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    padding-block-end: 0.35rem;
+    margin-inline-start: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/*
+ * The canvas fills its parent, so the parent needs a real height. A zero-height flex child is
+ * the usual reason a JointJS paper renders but shows nothing.
+ */
+.demo-editor {
+    flex: 1 1 auto;
+    min-block-size: 0;
+    border: 1px solid var(--neutral-stroke-rest, #d0d4d9);
+    border-radius: 4px;
+}
+
+.demo-diagnostics {
+    flex: 0 0 auto;
+    font-size: 0.85rem;
+    max-block-size: 8rem;
+    overflow: auto;
+}
+
+/* --- icon manifest review page ------------------------------------------ */
+.icons-meta {
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+.icons-attribution {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    max-inline-size: 70ch;
+}
+
+.icons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.5rem;
+}
+
+.icons-item {
+    margin: 0;
+    padding: 0.35rem;
+    text-align: center;
+    border: 1px solid var(--neutral-stroke-rest, #d0d4d9);
+    border-radius: 4px;
+}
+
+.icons-item figcaption {
+    margin-block-start: 0.2rem;
+    font-size: 0.65rem;
+    overflow-wrap: anywhere;
+    opacity: 0.8;
+}
+
+/* --- XML interchange review page ---------------------------------------- */
+
+/*
+ * This page is a report, not a canvas, so it scrolls instead of filling the viewport exactly.
+ */
+.demo-shell:has(.demo-table) {
+    block-size: auto;
+    overflow: visible;
+}
+
+.demo-intro {
+    font-size: 0.9rem;
+    opacity: 0.85;
+    max-inline-size: 80ch;
+    margin: 0;
+}
+
+.demo-table {
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    inline-size: fit-content;
+}
+
+.demo-table th,
+.demo-table td {
+    border: 1px solid var(--neutral-stroke-rest, #d0d4d9);
+    padding: 0.25rem 0.75rem;
+    text-align: start;
+}
+
+.demo-row-bad td,
+.demo-row-bad th {
+    background: rgb(220 50 50 / 12%);
+    font-weight: 600;
+}
+
+.demo-modes {
+    display: flex;
+    gap: 1.5rem;
+    align-items: start;
+    flex-wrap: wrap;
+}
+
+.demo-mode {
+    flex: 1 1 28rem;
+    min-inline-size: 0;
+}
+
+.demo-mode h2 {
+    font-size: 1rem;
+    margin-block: 0 0.25rem;
+}
+
+.demo-mode-summary {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    margin-block: 0 0.5rem;
+}
+
+.demo-xml {
+    max-block-size: 24rem;
+    overflow: auto;
+    font-size: 0.7rem;
+    line-height: 1.35;
+    background: var(--neutral-layer-2, #f5f6f7);
+    padding: 0.5rem;
+    border-radius: 4px;
+    white-space: pre;
+}
+
+/*
+ * The toggles beside the sample picker: the grid, so section 4.6's snapping branch can be tried,
+ * and the property panel, which is off by default because its column costs the canvas a fixed
+ * 22rem. They share a rule but not a class — a test that reaches for `.demo-snap input` must get
+ * one checkbox, not whichever two happen to look alike.
+ */
+.demo-snap,
+.demo-toggle {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+/* The validation list sits under the diagram, and never grows past a few rows. */
+.demo-validation {
+  max-block-size: 8rem;
+  padding: 0.35rem 0.5rem;
+  border-block-start: 1px solid var(--bpmn-chrome-border, #e1e4e8);
+}
+
+/*
+ * The breadcrumb is the host's, not the editor's. `diagramNavigated` carries the whole path so an
+ * application can render its own navigation chrome; this is that application.
+ */
+.demo-breadcrumb {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+}
+
+.demo-breadcrumb__step {
+  padding: 0.15rem 0.4rem;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.demo-breadcrumb__step:hover:not(:disabled) {
+  background: rgb(0 0 0 / 6%);
+}
+
+/* The last step is where you already are. */
+.demo-breadcrumb__step:disabled {
+  cursor: default;
+  font-weight: 600;
+}
+
+.demo-breadcrumb__separator {
+  opacity: 0.5;
+}

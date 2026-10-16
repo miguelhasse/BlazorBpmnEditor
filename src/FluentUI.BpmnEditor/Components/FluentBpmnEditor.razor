@@ -1,0 +1,85 @@
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
+@using Hasseware.AspNetCore.Components.Bpmn.Configuration
+
+<BpmnEditorScope @ref="_scope"
+                 KitDefaults="@KitDefaults"
+                 ShowAccessibleTree="@ShowAccessibleTree"
+                 AccessibleTreeLabel="@AccessibleTreeLabel"
+                 OnImported="@OnImported"
+                 OnDiagramNavigated="@OnDiagramNavigated"
+                 Configuration="@Configuration"
+                 Document="@Document"
+                 DiagramId="@DiagramId"
+                 IsReadOnly="@IsReadOnly"
+                 ExecutionAnimation="@ExecutionAnimation"
+                 Class="@Class"
+                 Style="@Style"
+                 AriaLabel="@AriaLabel"
+                 OnDocumentChanged="@OnDocumentChanged"
+                 OnSelectionChanged="@OnSelectionChanged"
+                 OnEditRejected="@OnEditRejected"
+                 EditorLabel="@EditorLabel"
+                 StencilLabel="@StencilLabel"
+                 PanelLabel="@PanelLabel"
+                 ToolbarContent="@ToolbarContent"
+                 StencilContent="@StencilContent"
+                 PanelContent="@PanelContent"
+                 OnCanvasInitialized="@OnCanvasInitialized"
+                 OnDocumentLoaded="@OnDocumentLoaded"
+                 OnConfigRejected="@OnConfigRejected"
+                 OnViewportChanged="@OnViewportChanged"
+                 OnShortcutInvoked="@OnShortcutInvoked"
+                 ShowStencil="@ShowStencil"
+                 ShowPanel="@ShowPanel"
+                 Theming="@Theming"
+                 Stencil="@Stencil"
+                 ActiveContainerId="@ActiveContainerId"
+                 ValidateOnChange="@ValidateOnChange"
+                 OnValidated="@OnValidated">
+
+<section class="bpmn-editor fluent-bpmn-editor @Class"
+         style="@RootStyle"
+         data-bpmn-theme="@Theme.ThemeAttribute"
+         data-bpmn-contrast="@Theme.ContrastAttribute"
+         data-bpmn-animation="@AnimationAttribute"
+         aria-label="@EffectiveEditorLabel">
+    @if (HasToolbar)
+    {
+
+        <div class="bpmn-editor__toolbar"><BpmnPart Part="BpmnEditorPart.Toolbar" ChildContent="@ToolbarContent" /></div>
+    }
+
+    @if (StencilContent is not null)
+    {
+        <div class="bpmn-editor__stencil" role="region" aria-label="@EffectiveStencilLabel"><BpmnPart Part="BpmnEditorPart.Stencil" ChildContent="@StencilContent" /></div>
+    }
+
+    else if (ShowStencil && !IsReadOnly && Components.Get(BpmnEditorPart.Stencil, KitDefaults) is not null)
+    {
+        <div class="bpmn-editor__stencil" role="region" aria-label="@EffectiveStencilLabel">
+            <BpmnPart Part="BpmnEditorPart.Stencil" />
+        </div>
+    }
+
+    <BpmnEditorCanvas>@CanvasOverlays</BpmnEditorCanvas>
+
+    @if (HasPanel && ShowPanel)
+    {
+        <div class="bpmn-editor__panel" role="region" aria-label="@EffectivePanelLabel"><BpmnPart Part="BpmnEditorPart.PropertyPanel" ChildContent="@PanelContent" /></div>
+    }
+
+    @if (Footer is not null)
+    {
+        <div class="bpmn-editor__footer">@Footer</div>
+    }
+
+    <BpmnPart Part="BpmnEditorPart.ImportOffer" />
+
+    <BpmnPart Part="BpmnEditorPart.CalledElementPicker" />
+
+    <BpmnPart Part="BpmnEditorPart.ShortcutHelp" />
+
+    @Dialogs
+</section>
+
+</BpmnEditorScope>

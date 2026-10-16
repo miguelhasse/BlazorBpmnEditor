@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <_ParentDirectoryBuildTargets>$([MSBuild]::GetPathOfFileAbove('Directory.Build.targets', '$(MSBuildThisFileDirectory)..\'))</_ParentDirectoryBuildTargets>
+  </PropertyGroup>
+  <Import Project="$(_ParentDirectoryBuildTargets)" Condition="'$(_ParentDirectoryBuildTargets)' != ''" />
+
+  <PropertyGroup>
+    <EnableXlfLocalization Condition="'$(EnableXlfLocalization)' == ''">false</EnableXlfLocalization>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(MSBuildProjectExtension)' != '.esproj' and '$(EnableXlfLocalization)' == 'true'">
+    <PackageReference Include="Microsoft.DotNet.XliffTasks" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

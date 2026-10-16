@@ -1,0 +1,66 @@
+{
+  "$schema": "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
+  "version": 1,
+  "appliesTo": [
+    "bpmn:Task"
+  ],
+  "elementType": {
+    "value": "bpmn:ServiceTask"
+  },
+  "engines": {
+    "camunda": ">=8.6.0 <9.0.0"
+  },
+  "category": {
+    "id": "demo",
+    "name": "Demo connectors"
+  },
+  "id": "demo.notification",
+  "name": "Send notification",
+  "description": "Sample notification worker with a FEEL recipient expression.",
+  "groups": [
+    {
+      "id": "notification",
+      "label": "Notification"
+    }
+  ],
+  "properties": [
+    {
+      "type": "Hidden",
+      "value": "demo-notification",
+      "binding": {
+        "type": "zeebe:taskDefinition",
+        "property": "type"
+      }
+    },
+    {
+      "id": "recipient",
+      "label": "Recipient",
+      "group": "notification",
+      "type": "String",
+      "feel": "required",
+      "value": "=customer.email",
+      "constraints": {
+        "notEmpty": true
+      },
+      "binding": {
+        "type": "zeebe:input",
+        "name": "recipient"
+      }
+    },
+    {
+      "id": "body",
+      "label": "Body",
+      "group": "notification",
+      "type": "Text",
+      "value": "Your request is ready.",
+      "constraints": {
+        "notEmpty": true,
+        "maxLength": 2000
+      },
+      "binding": {
+        "type": "zeebe:input",
+        "name": "body"
+      }
+    }
+  ]
+}

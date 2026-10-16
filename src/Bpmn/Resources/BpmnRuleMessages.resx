@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="CT-001" xml:space="preserve">
+    <value>An element cannot both own local flow elements and reference a called element.</value>
+  </data>
+  <data name="CT-001.Native" xml:space="preserve">
+    <value>An element cannot both own local flow elements and reference a called element.</value>
+  </data>
+  <data name="CT-001.Native.2" xml:space="preserve">
+    <value>A Call Activity never owns local flow elements; its content lives in the called Process.</value>
+  </data>
+  <data name="CT-005" xml:space="preserve">
+    <value>Only a Boundary Event may declare an attachment to a host Activity.</value>
+  </data>
+  <data name="CT-005.Native" xml:space="preserve">
+    <value>Only a Boundary Event may declare an attachment to a host Activity.</value>
+  </data>
+  <data name="CT-005.Native.2" xml:space="preserve">
+    <value>A Boundary Event must be attached to exactly one Activity.</value>
+  </data>
+  <data name="CT-005.Native.3" xml:space="preserve">
+    <value>Boundary Event host '{0}' does not resolve to a flow node.</value>
+  </data>
+  <data name="CT-007" xml:space="preserve">
+    <value>A collapsed Sub-Process or Call Activity has visible embedded process-content cells in the active plane.</value>
+  </data>
+  <data name="CT-007.Detail" xml:space="preserve">
+    <value>It is drawn collapsed on '{0}', which also draws '{1}' from inside it.</value>
+  </data>
+  <data name="CT-009" xml:space="preserve">
+    <value>A Sub-Process expansion state disagrees with BPMNShape.isExpanded, or a collapsed Sub-Process exposes active nested visual cells/tools.</value>
+  </data>
+  <data name="CT-009.Detail" xml:space="preserve">
+    <value>It is drawn expanded on '{0}' and its content is also drawn on '{1}'.</value>
+  </data>
+  <data name="CT-012" xml:space="preserve">
+    <value>A Lane subdivides a Pool, so its LaneSet's Process must be referenced by a Participant.</value>
+  </data>
+  <data name="CT-012.Detail" xml:space="preserve">
+    <value>No Participant references '{0}'.</value>
+  </data>
+  <data name="D001" xml:space="preserve">
+    <value>Every Start Event has 0 incoming Sequence Flow.</value>
+  </data>
+  <data name="D001.Detail" xml:space="preserve">
+    <value>{0} has {1}.</value>
+  </data>
+  <data name="D002" xml:space="preserve">
+    <value>Every End Event has 0 outgoing Sequence Flow.</value>
+  </data>
+  <data name="D002.Detail" xml:space="preserve">
+    <value>{0} has {1}.</value>
+  </data>
+  <data name="D003" xml:space="preserve">
+    <value>Every Boundary Event has 0 incoming Sequence Flow and is attached to exactly one Activity.</value>
+  </data>
+  <data name="D003.Detail" xml:space="preserve">
+    <value>{0} has {1}.</value>
+  </data>
+  <data name="D003.Detail.2" xml:space="preserve">
+    <value>{0} is attached to nothing.</value>
+  </data>
+  <data name="D003.Detail.3" xml:space="preserve">
+    <value>{0} is attached to {1}, which is not an Activity.</value>
+  </data>
+  <data name="D004" xml:space="preserve">
+    <value>Product lint: Exclusive/Inclusive split has exactly one flow flagged isDefault OR every non-default flow has a conditionExpression.</value>
+  </data>
+  <data name="D004.Detail" xml:space="preserve">
+    <value>{0} has {1} default flows.</value>
+  </data>
+  <data name="D004.Detail.2" xml:space="preserve">
+    <value>{0} has {1} branches with neither a conditionExpression nor the default flag.</value>
+  </data>
+  <data name="D005" xml:space="preserve">
+    <value>Parallel/Complex/Inclusive gateway used as merge only synchronizes declared incoming flows (redundant gateway if incoming count = 1).</value>
+  </data>
+  <data name="D005.Detail" xml:space="preserve">
+    <value>{0} merges a single flow.</value>
+  </data>
+  <data name="D006" xml:space="preserve">
+    <value>Event-Based Gateway: all outgoing targets are catch-events/receive-tasks, none carry conditions.</value>
+  </data>
+  <data name="D006.Detail" xml:space="preserve">
+    <value>A branch carries a condition.</value>
+  </data>
+  <data name="D006.Detail.2" xml:space="preserve">
+    <value>{0} is neither a catching Event nor a Receive Task.</value>
+  </data>
+  <data name="D007" xml:space="preserve">
+    <value>No Sequence Flow crosses a Pool boundary.</value>
+  </data>
+  <data name="D007.Detail" xml:space="preserve">
+    <value>{0} and {1} are in different Pools.</value>
+  </data>
+  <data name="D008" xml:space="preserve">
+    <value>Every Message Flow crosses exactly one Pool boundary.</value>
+  </data>
+  <data name="D008.Detail" xml:space="preserve">
+    <value>One of its ends is not in a Pool.</value>
+  </data>
+  <data name="D008.Detail.2" xml:space="preserve">
+    <value>Both of its ends are in the same Pool.</value>
+  </data>
+  <data name="D009" xml:space="preserve">
+    <value>Every node is reachable from some Start Event (no orphan nodes) and every Start Event can reach some End Event (no dead ends).</value>
+  </data>
+  <data name="D009.Detail" xml:space="preserve">
+    <value>{0} cannot be reached from any Start Event.</value>
+  </data>
+  <data name="D009.Detail.2" xml:space="preserve">
+    <value>{0} cannot reach any End Event.</value>
+  </data>
+  <data name="D010" xml:space="preserve">
+    <value>Event Sub-Process start event is typed (not None) and has no drawn Sequence Flow in/out.</value>
+  </data>
+  <data name="D010.Detail" xml:space="preserve">
+    <value>{0} has {1} Sequence Flow crossing its boundary.</value>
+  </data>
+  <data name="D010.Detail.2" xml:space="preserve">
+    <value>{0} has {1} Start Events; it needs exactly one.</value>
+  </data>
+  <data name="D010.Detail.3" xml:space="preserve">
+    <value>An untyped Start Event can never trigger it.</value>
+  </data>
+  <data name="D011" xml:space="preserve">
+    <value>Link Intermediate throw and catch Events pair one-to-one within a Process.</value>
+  </data>
+  <data name="D011.Detail" xml:space="preserve">
+    <value>'{0}' is caught {1} times; a Link has one destination.</value>
+  </data>
+  <data name="D011.Detail.2" xml:space="preserve">
+    <value>'{0}' is thrown but never caught.</value>
+  </data>
+  <data name="D011.Detail.3" xml:space="preserve">
+    <value>'{0}' is caught but never thrown.</value>
+  </data>
+  <data name="D012" xml:space="preserve">
+    <value>A Compensation Boundary Event handler is not reached by ordinary Sequence Flow.</value>
+  </data>
+  <data name="D012.Detail" xml:space="preserve">
+    <value>It has {0} incoming Sequence Flow.</value>
+  </data>
+  <data name="D013" xml:space="preserve">
+    <value>An End Event with outgoing Message Flow has a Message result, or Multiple when it has more than one.</value>
+  </data>
+  <data name="D013.Detail" xml:space="preserve">
+    <value>{0} sends {1} message(s) but its result is {2}.</value>
+  </data>
+  <data name="D014" xml:space="preserve">
+    <value>Event-Based Gateway targets are homogeneous and have no other incoming Sequence Flow.</value>
+  </data>
+  <data name="D014.Detail" xml:space="preserve">
+    <value>{0} also has {1} incoming Sequence Flow from elsewhere.</value>
+  </data>
+  <data name="D014.Detail.2" xml:space="preserve">
+    <value>Its branches mix catching Events and Receive Tasks.</value>
+  </data>
+  <data name="D015" xml:space="preserve">
+    <value>Every BPMNEdge has at least two waypoints, every BPMNShape has positive bounds, and every DI element resolves to a semantic element.</value>
+  </data>
+  <data name="D015.Detail" xml:space="preserve">
+    <value>Its bounds are {0} by {1}.</value>
+  </data>
+  <data name="D015.Detail.2" xml:space="preserve">
+    <value>Shape '{0}' draws an element this document does not have.</value>
+  </data>
+  <data name="D015.Detail.3" xml:space="preserve">
+    <value>Its route has {0} waypoint(s).</value>
+  </data>
+  <data name="D015.Detail.4" xml:space="preserve">
+    <value>Edge '{0}' draws a connector this document does not have.</value>
+  </data>
+  <data name="D017" xml:space="preserve">
+    <value>Every required reference resolves to an object of the permitted BPMN type.</value>
+  </data>
+  <data name="D017.Detail" xml:space="preserve">
+    <value>{0} points at '{1}', which is not in this document.</value>
+  </data>
+  <data name="D017.Detail.2" xml:space="preserve">
+    <value>{0} points at a {1}, which it may not.</value>
+  </data>
+  <data name="D018" xml:space="preserve">
+    <value>Every semantic object has a unique XML-safe ID within the document.</value>
+  </data>
+  <data name="D018.Detail" xml:space="preserve">
+    <value>'{0}' is not a valid XML NCName.</value>
+  </data>
+  <data name="D018.Detail.2" xml:space="preserve">
+    <value>'{0}' is used more than once.</value>
+  </data>
+  <data name="D019" xml:space="preserve">
+    <value>Every FlowNode belongs to exactly one container, and Lane membership agrees with its LaneSet.</value>
+  </data>
+  <data name="D019.Detail" xml:space="preserve">
+    <value>{0} names container '{1}', which is not one.</value>
+  </data>
+  <data name="D019.Detail.2" xml:space="preserve">
+    <value>Its lane set '{0}' is not declared.</value>
+  </data>
+  <data name="D019.Detail.3" xml:space="preserve">
+    <value>It claims '{0}', which does not exist.</value>
+  </data>
+  <data name="D019.Detail.4" xml:space="preserve">
+    <value>It claims {0}, which belongs to '{1}'.</value>
+  </data>
+  <data name="D019.Detail.5" xml:space="preserve">
+    <value>It is claimed by {0} Lanes.</value>
+  </data>
+  <data name="D020" xml:space="preserve">
+    <value>Event definitions are legal for their context and direction.</value>
+  </data>
+  <data name="D020.Detail" xml:space="preserve">
+    <value>{0} is a {1} carrying a {2} trigger.</value>
+  </data>
+  <data name="D020.Detail.2" xml:space="preserve">
+    <value>{0} is a {1} with an invalid interruption state for {2}.</value>
+  </data>
+  <data name="D020.Detail.3" xml:space="preserve">
+    <value>{0} has an invalid container or Boundary host context.</value>
+  </data>
+  <data name="D021" xml:space="preserve">
+    <value>Definitions has a targetNamespace and namespace-qualified references use resolvable, consistent QNames.</value>
+  </data>
+  <data name="D021.Detail" xml:space="preserve">
+    <value>Definitions/@targetNamespace is required and must not be empty.</value>
+  </data>
+  <data name="D021.Detail.2" xml:space="preserve">
+    <value>calledElement value '{0}' has an invalid QName local name.</value>
+  </data>
+  <data name="D021.Detail.3" xml:space="preserve">
+    <value>calledElement QName '{0}' has an undeclared prefix or no resolved namespace.</value>
+  </data>
+  <data name="D021.Detail.4" xml:space="preserve">
+    <value>calledElement QName '{0}' was projected as a local reference although its namespace differs from targetNamespace.</value>
+  </data>
+  <data name="D021.Detail.5" xml:space="preserve">
+    <value>xsi:type QName '{0}' has an undeclared prefix or no resolved namespace.</value>
+  </data>
+  <data name="D021.Detail.6" xml:space="preserve">
+    <value>xsi:type value '{0}' is not a valid QName.</value>
+  </data>
+  <data name="D022" xml:space="preserve">
+    <value>Every plane has a diagram owner, each element is drawn at most once per diagram, and label and style references resolve.</value>
+  </data>
+  <data name="D022.Detail" xml:space="preserve">
+    <value>It is drawn more than once on '{0}'.</value>
+  </data>
+  <data name="D022.Detail.2" xml:space="preserve">
+    <value>Its label references style '{0}', which is not declared.</value>
+  </data>
+  <data name="D022.Detail.3" xml:space="preserve">
+    <value>Plane '{0}' names no BPMN element.</value>
+  </data>
+  <data name="D022.Detail.4" xml:space="preserve">
+    <value>Plane '{0}' is owned by '{1}', which does not exist.</value>
+  </data>
+  <data name="D023" xml:space="preserve">
+    <value>Global definitions referenced by the document exist and have the expected type.</value>
+  </data>
+  <data name="D023.Detail" xml:space="preserve">
+    <value>{0} calls QName '{1}' in namespace '{2}', which this document does not resolve.</value>
+  </data>
+  <data name="D023.Detail.2" xml:space="preserve">
+    <value>{0} calls '{1}', which this document does not declare as a Process or Global Task.</value>
+  </data>
+  <data name="DA-002" xml:space="preserve">
+    <value>Group cannot be a connector endpoint (visual grouping only).</value>
+  </data>
+  <data name="DA-002b" xml:space="preserve">
+    <value>Group cannot be a connector endpoint (visual grouping only).</value>
+  </data>
+  <data name="DA-003" xml:space="preserve">
+    <value>Text Annotation connects only via (undirected) Association, never Data Association.</value>
+  </data>
+  <data name="DA-004" xml:space="preserve">
+    <value>Data Object/Data Store connect only via Data Association, never a plain Association.</value>
+  </data>
+  <data name="DA-005" xml:space="preserve">
+    <value>Data Input Association direction is Data Object/Store/Property to an Activity or Throwing Event input.</value>
+  </data>
+  <data name="DA-006" xml:space="preserve">
+    <value>Data Output Association direction is an Activity or Catching Event output to a Data Object/Store/Property.</value>
+  </data>
+  <data name="DI-001" xml:space="preserve">
+    <value>Every BPMNShape must have positive width and height.</value>
+  </data>
+  <data name="DI-001.Native" xml:space="preserve">
+    <value>Every BPMNShape must have positive width and height.</value>
+  </data>
+  <data name="DI-002" xml:space="preserve">
+    <value>Every BPMNEdge must have at least two waypoints.</value>
+  </data>
+  <data name="DI-002.Native" xml:space="preserve">
+    <value>Every BPMNEdge must have at least two waypoints.</value>
+  </data>
+  <data name="DI-007" xml:space="preserve">
+    <value>isHorizontal is defined only on Pool and Lane shapes.</value>
+  </data>
+  <data name="DI-007.Native" xml:space="preserve">
+    <value>isHorizontal is defined only on Pool and Lane shapes.</value>
+  </data>
+  <data name="EXT-001" xml:space="preserve">
+    <value>Extension content has no resolvable namespace URI (spec §6.1.2 expanded-name identity).</value>
+  </data>
+  <data name="EXT-001.Detail" xml:space="preserve">
+    <value>&lt;{0}&gt; is in no namespace.</value>
+  </data>
+  <data name="EXT-002" xml:space="preserve">
+    <value>Extension namespace prefix mapping is inconsistent within the document.</value>
+  </data>
+  <data name="EXT-003" xml:space="preserve">
+    <value>The document could not be parsed (malformed XML).</value>
+  </data>
+  <data name="EXT-004" xml:space="preserve">
+    <value>A registered profile emitted a rule id outside its own declared catalog; the violation was rejected.</value>
+  </data>
+  <data name="EXT-005" xml:space="preserve">
+    <value>A profile-declared reference attribute in extension content does not resolve to any element in this document.</value>
+  </data>
+  <data name="EXT-006" xml:space="preserve">
+    <value>A registered profile attempted to emit a core BPMN rule id; the override attempt was rejected.</value>
+  </data>
+  <data name="EXT-007" xml:space="preserve">
+    <value>An extension SVG decoration was suppressed.</value>
+  </data>
+  <data name="EXT-008" xml:space="preserve">
+    <value>Schema or external-resource access for extension content was blocked.</value>
+  </data>
+  <data name="EXT-010" xml:space="preserve">
+    <value>Extension content carries active markup or a script URL, which cannot be exported (spec §5.5 layer 1: quarantine unsafe external content).</value>
+  </data>
+  <data name="EXT-010.Detail" xml:space="preserve">
+    <value>{0}: {1}.</value>
+  </data>
+  <data name="EXT-010.Detail.Handler" xml:space="preserve">
+    <value>{0}/@{1}: '{1}' is an event handler.</value>
+  </data>
+  <data name="EXT-010.Detail.Markup" xml:space="preserve">
+    <value>{0}: &lt;{1}&gt; in the {2} namespace is active markup.</value>
+  </data>
+  <data name="EXT-010.Detail.Url" xml:space="preserve">
+    <value>{0}: the attribute value is a '{1}' URL.</value>
+  </data>
+  <data name="MF-001" xml:space="preserve">
+    <value>Source and target must be InteractionNodes: Participant/Pool, Activity, or Event.</value>
+  </data>
+  <data name="MF-002" xml:space="preserve">
+    <value>Source and target must be in different Participants/Pools.</value>
+  </data>
+  <data name="MF-003" xml:space="preserve">
+    <value>Gateways are never Message Flow endpoints.</value>
+  </data>
+  <data name="MF-003.Detail" xml:space="preserve">
+    <value>{0} is a Gateway.</value>
+  </data>
+  <data name="MF-004" xml:space="preserve">
+    <value>Lanes, Data Objects, Groups, and Text Annotations are never Message Flow endpoints.</value>
+  </data>
+  <data name="MF-006" xml:space="preserve">
+    <value>Target must not be an End Event.</value>
+  </data>
+  <data name="MF-006.Detail" xml:space="preserve">
+    <value>{0} is an End Event.</value>
+  </data>
+  <data name="MF-007" xml:space="preserve">
+    <value>Source Event must be message-throwing (Message Intermediate Throw, Message End, or Multiple with a message result).</value>
+  </data>
+  <data name="MF-007.Detail" xml:space="preserve">
+    <value>{0} does not throw messages.</value>
+  </data>
+  <data name="MF-008" xml:space="preserve">
+    <value>Target Event must be message-catching (Message Start, Message Intermediate Catch, Message Boundary, or Multiple/Parallel Multiple with a message trigger).</value>
+  </data>
+  <data name="MF-008.Detail" xml:space="preserve">
+    <value>{0} does not catch messages.</value>
+  </data>
+  <data name="PROF-000" xml:space="preserve">
+    <value>The '{0}' profile reported nothing usable: {1}.</value>
+  </data>
+  <data name="PROF-000.Detail.Failed" xml:space="preserve">
+    <value>The '{0}' profile reported nothing usable: it failed: {1}.</value>
+  </data>
+  <data name="PROF-000.Detail.InvalidId" xml:space="preserve">
+    <value>The '{0}' profile reported nothing usable: '{1}' is not a PROF-nnn rule id.</value>
+  </data>
+  <data name="PROF-101" xml:space="preserve">
+    <value>Template property constraints must be satisfied.</value>
+  </data>
+  <data name="PROF-101.Detail" xml:space="preserve">
+    <value>{0} must not be empty.</value>
+  </data>
+  <data name="PROF-101.Detail.2" xml:space="preserve">
+    <value>{0} must contain at least {1} characters.</value>
+  </data>
+  <data name="PROF-101.Detail.3" xml:space="preserve">
+    <value>{0} must contain at most {1} characters.</value>
+  </data>
+  <data name="PROF-101.Detail.4" xml:space="preserve">
+    <value>{0} has an invalid or excessively complex pattern.</value>
+  </data>
+  <data name="PROF-101.Detail.Custom" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="PROF-101.Detail.Pattern" xml:space="preserve">
+    <value>{0} does not match the required pattern.</value>
+  </data>
+  <data name="PROF-102" xml:space="preserve">
+    <value>Template property requires a FEEL expression starting with '='.</value>
+  </data>
+  <data name="PROF-102.Detail" xml:space="preserve">
+    <value>{0} requires a FEEL expression starting with '='.</value>
+  </data>
+  <data name="PROF-103" xml:space="preserve">
+    <value>Template not found: '{0}' version {1}.</value>
+  </data>
+  <data name="PROF-104" xml:space="preserve">
+    <value>Template '{0}' is deprecated.</value>
+  </data>
+  <data name="PROF-104.Detail.Custom" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="PROF-105" xml:space="preserve">
+    <value>Template '{0}' version {1} is available.</value>
+  </data>
+  <data name="PROF-111" xml:space="preserve">
+    <value>Script Task {0} has no scriptFormat, so no engine knows how to run it.</value>
+  </data>
+  <data name="PROF-112" xml:space="preserve">
+    <value>Script Task {0} uses scriptFormat '{1}', which the engine does not run.</value>
+  </data>
+  <data name="PROF-113" xml:space="preserve">
+    <value>Script Task {0} has no script.</value>
+  </data>
+  <data name="PROF-114" xml:space="preserve">
+    <value>Script Task {0} has a script of {1} characters; the limit is {2}.</value>
+  </data>
+  <data name="PROF-115" xml:space="preserve">
+    <value>No syntax validator is registered for scriptFormat '{0}' (Script Task {1}).</value>
+  </data>
+  <data name="PROF-116" xml:space="preserve">
+    <value>Script Task {0}, line {1}, column {2}: {3}</value>
+  </data>
+  <data name="PROF-117" xml:space="preserve">
+    <value>The '{0}' script validator failed on Script Task {1}: {2}.</value>
+  </data>
+  <data name="PROF-118" xml:space="preserve">
+    <value>Script Task {0} nests brackets deeper than {1} levels.</value>
+  </data>
+  <data name="SF-001" xml:space="preserve">
+    <value>Sequence Flow source and target must be a FlowNode (Event, Activity, or Gateway).</value>
+  </data>
+  <data name="SF-002" xml:space="preserve">
+    <value>Source must not be an End Event.</value>
+  </data>
+  <data name="SF-003" xml:space="preserve">
+    <value>Target must not be a Start Event.</value>
+  </data>
+  <data name="SF-004" xml:space="preserve">
+    <value>Target must not be a Boundary Event.</value>
+  </data>
+  <data name="SF-005" xml:space="preserve">
+    <value>Source/target must not be an Event Sub-Process — it has no external Sequence Flow.</value>
+  </data>
+  <data name="SF-006" xml:space="preserve">
+    <value>Sequence Flow must not cross a Pool/Participant boundary (poolId mismatch).</value>
+  </data>
+  <data name="SF-007" xml:space="preserve">
+    <value>Sequence Flow must not cross a Sub-Process containment boundary (containerId mismatch).</value>
+  </data>
+  <data name="SF-007.Detail" xml:space="preserve">
+    <value>{0} is in '{1}' and {2} in '{3}'.</value>
+  </data>
+  <data name="SF-008" xml:space="preserve">
+    <value>Source must not be a Compensation Boundary Event (use an Association to the handler instead).</value>
+  </data>
+  <data name="SF-009" xml:space="preserve">
+    <value>Source/target must not be a compensation Activity (isForCompensation=true) reached via normal flow.</value>
+  </data>
+  <data name="SF-011" xml:space="preserve">
+    <value>Event-Based Gateway outgoing target must be a catching Message/Timer/Signal/Conditional event or a Receive Task.</value>
+  </data>
+  <data name="SF-012" xml:space="preserve">
+    <value>Event-Based Gateway outgoing Sequence Flow must not carry a condition expression.</value>
+  </data>
+  <data name="SF-013" xml:space="preserve">
+    <value>Parallel Gateway outgoing Sequence Flow must not carry a condition.</value>
+  </data>
+  <data name="SF-014" xml:space="preserve">
+    <value>isDefault may only be set on a flow sourced from an Activity, or an Exclusive/Inclusive/Complex Gateway.</value>
+  </data>
+  <data name="SF-015" xml:space="preserve">
+    <value>Conditional Sequence Flow from an Activity requires at least one other outgoing Sequence Flow from that Activity.</value>
+  </data>
+  <data name="SF-016" xml:space="preserve">
+    <value>Conditional Sequence Flow must not be sourced from a Parallel or Event-Based Gateway.</value>
+  </data>
+  <data name="SF-017" xml:space="preserve">
+    <value>Source must not be a Link Intermediate Throw Event — it continues at its paired Link catch, not by Sequence Flow.</value>
+  </data>
+  <data name="SF-017.Detail" xml:space="preserve">
+    <value>{0} has {1}.</value>
+  </data>
+  <data name="SF-018" xml:space="preserve">
+    <value>Target must not be a Link Intermediate Catch Event — it is reached from its paired Link throw, not by Sequence Flow.</value>
+  </data>
+  <data name="SF-018.Detail" xml:space="preserve">
+    <value>{0} has {1}.</value>
+  </data>
+</root>

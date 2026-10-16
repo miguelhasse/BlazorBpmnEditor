@@ -1,0 +1,58 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.AspNetCore.Components.Bpmn.Resources.BpmnEditorStrings> EditorL
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnCalledElementPickerBase
+
+@*
+    A Call Activity cannot be created until it names what it calls (section 9.1), so the drop opens
+    this instead of creating something incomplete. A dialog rather than an inline editor because the
+    answer is a reference to an element that is not on the canvas — there is no label to type over.
+*@
+@if (IsVisible)
+{
+    <div class="@CssClass("bpmn-picker")" role="dialog" aria-modal="true" aria-labelledby="@TitleId" @attributes="AdditionalAttributes">
+        <div class="bpmn-picker__backdrop" @onclick="CancelAsync"></div>
+
+        <div class="bpmn-picker__panel" @onkeydown="HandleKeyDownAsync">
+            <h2 class="bpmn-picker__title" id="@TitleId">@EffectiveTitle</h2>
+
+            @if (Definitions.Count == 0)
+            {
+                @*
+                    Section 9.1 offers "create global definition" as the alternative, which needs the
+                    definition manager. Saying so is better than an empty list that looks broken.
+                *@
+                <p class="bpmn-picker__empty">@EffectiveEmptyMessage</p>
+            }
+            else
+            {
+                <ul class="bpmn-picker__list" role="listbox" aria-label="@EffectiveTitle">
+                    @foreach (var definition in Definitions)
+                    {
+                        <li>
+                            <button type="button"
+                                    class="bpmn-picker__option"
+                                    role="option"
+                                    aria-selected="false"
+                                    @key="definition.Id"
+                                    @onclick="@(() => ChooseAsync(definition.Id))">
+                                <span class="bpmn-picker__name">@(definition.Name ?? definition.Id)</span>
+
+                                @*
+                                    The id is what actually goes into calledElementRef, so it is
+                                    shown — except when it is already the whole label, which is the
+                                    common case for an unnamed Process.
+                                *@
+                                @if (definition.Name is { Length: > 0 } && definition.Name != definition.Id)
+                                {
+                                    <span class="bpmn-picker__id">@definition.Id</span>
+                                }
+                            </button>
+                        </li>
+                    }
+                </ul>
+            }
+
+            <button type="button" class="bpmn-picker__cancel" @onclick="CancelAsync">@EditorText("CalledElementPicker.Cancel")</button>
+        </div>
+    </div>
+}

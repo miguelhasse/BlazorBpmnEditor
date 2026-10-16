@@ -1,0 +1,19 @@
+{
+  "$schema": "https://unpkg.com/@camunda/element-templates-json-schema/resources/schema.json",
+  "id": "demo.camunda7.mail",
+  "name": "Mail connector (Camunda 7)",
+  "version": 1,
+  "appliesTo": ["bpmn:ServiceTask"],
+  "properties": [
+    { "type": "Hidden", "value": "Send mail", "binding": { "type": "property", "name": "name" } }
+  ],
+  "scopes": [{
+    "type": "camunda:Connector",
+    "properties": [
+      { "type": "Hidden", "value": "mail-send", "binding": { "type": "property", "name": "connectorId" } },
+      { "id": "to", "label": "Recipient", "type": "String", "value": "team@example.invalid", "constraints": { "notEmpty": true }, "binding": { "type": "camunda:inputParameter", "name": "to" } },
+      { "id": "format", "label": "Message format", "type": "Dropdown", "value": "text", "choices": [{ "name": "Text", "value": "text" }, { "name": "HTML", "value": "html" }], "binding": { "type": "camunda:inputParameter", "name": "format" } },
+      { "id": "body", "label": "Body", "type": "Text", "value": "Hello from Camunda 7", "binding": { "type": "camunda:inputParameter", "name": "body" } }
+    ]
+  }]
+}

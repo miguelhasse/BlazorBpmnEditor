@@ -1,0 +1,11 @@
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
+@inherits BpmnPropertyEntryComponent
+
+@if (Entry.Description is { Length: > 0 })
+{
+    <span class="@(Block + "__description")">@Entry.Description</span>
+}
+@if (Entry.Error is { Length: > 0 })
+{
+    <span id="@Context.ErrorId" class="@(Block + "__error")" role="alert">@Entry.Error</span>
+}

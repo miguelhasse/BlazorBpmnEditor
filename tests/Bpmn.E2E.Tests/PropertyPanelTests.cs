@@ -1,0 +1,259 @@
+using Hasseware.AspNetCore.Components.Bpmn.E2E.Tests.Fixtures;
+
+using Microsoft.Playwright;
+using Microsoft.Playwright.Xunit.v3;
+
+namespace Hasseware.AspNetCore.Components.Bpmn.E2E.Tests;
+
+/// <summary>
+/// The property panel in a browser (implementation plan M6).
+/// </summary>
+/// <remarks>
+/// <para>
+/// What a bUnit test cannot show: that an edit made in the panel reaches the document and comes
+/// back out as a redrawn label, and that the panel re-describes the element afterwards instead of
+/// going on showing what was typed.
+/// </para>
+/// <para>
+/// The demo keeps the panel off by default, so each test switches it on. That is not a convenience
+/// — the panel's column is a fixed width, and docking it permanently on a small window pushes the
+/// right edge of a wide Pool off the paper.
+/// </para>
+/// </remarks>
+public class PropertyPanelTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFixture>
+{
+    [Fact]
+    public async Task ShowsNothingUntilSomethingIsSelected()
+    {
+        await GoToEditorAsync();
+        await ShowPanelAsync();
+
+        await Expect(Page.Locator(".bpmn-properties__empty")).ToContainTextAsync("Select an element");
+    }
+
+    [Fact]
+    public async Task DescribesTheSelectedElement()
+    {
+        await GoToEditorAsync();
+        await ShowPanelAsync();
+        await SelectAsync(await TaskIdAsync());
+
+        await Expect(Page.Locator(".bpmn-properties__subtitle")).ToHaveTextAsync("User Task");
+        // An input since safe rename arrived, so the id is a value rather than text content.
+        await Expect(Page.Textbox("Element id")).ToHaveValueAsync(await TaskIdAsync());
+
+        // Contextual, not one form for everything: an Activity has a loop characteristic and a
+        // compensation flag, and a Start Event has neither.
+        await Expect(Page.Locator(".bpmn-properties__label")).ToContainTextAsync(["Name", "Loop", "Compensation handler", "Documentation"]);
+    }
+
+    [Fact]
+    public async Task AnEditInThePanelRedrawsTheLabel()
+    {
+        await GoToEditorAsync();
+        await ShowPanelAsync();
+
+        var taskId = await TaskIdAsync();
+        await SelectAsync(taskId);
+
+        await Page.Locator(".bpmn-properties__property", new() { HasTextString = "Name" })
+            .Locator("input").First.FillAsync("Renamed in the panel");
+        await Page.Keyboard.PressAsync("Tab");
+        await Page.WaitForTimeoutAsync(900);
+
+        // Joined across the tspans the wrapper produced: the drawn text has a line break where the
+        // label ran out of width, so the element's raw textContent has no space at that point.
+        Assert.Equal("Renamed in the panel", await DrawnLabelAsync(taskId));
+    }
+
+    [Fact]
+    public async Task DocumentationIsEditable()
+    {
+        // The one field every element carries, and the one the property schema had no entry for
+        // until this milestone.
+        await GoToEditorAsync();
+        await ShowPanelAsync();
+        await SelectAsync(await TaskIdAsync());
+
+        var box = Page.Locator(".bpmn-properties__property", new() { HasTextString = "Documentation" }).Locator("textarea").First;
+
+        await box.FillAsync("Checked by a human.");
+        await Page.Keyboard.PressAsync("Tab");
+        await Page.WaitForTimeoutAsync(900);
+
+        // Re-described from the document that came back, not left showing what was typed.
+        await Expect(box).ToHaveValueAsync("Checked by a human.");
+    }
+
+    [Fact]
+    public async Task ASelectionOffersOnlyWhatItsElementsShare()
+    {
+        await GoToEditorAsync();
+        await ShowPanelAsync();
+
+        await Page.Locator(".bpmn-canvas__paper").First.ClickAsync();
+        await Page.Keyboard.PressAsync("Control+a");
+        await Page.WaitForTimeoutAsync(900);
+
+        // A Start Event, a Task and an End Event have a name and documentation in common and
+        // nothing else; offering a Task's loop characteristic for the Events would offer to set a
+        // property they have never heard of.
+        await Expect(Page.Locator(".bpmn-properties__title")).ToContainTextAsync("3 elements");
+        await Expect(Page.Locator(".bpmn-properties__label")).ToHaveTextAsync(["Name", "Documentation"]);
+    }
+
+    [Fact]
+    public async Task ABulkEditIsASingleUndo()
+    {
+        await GoToEditorAsync();
+        await ShowPanelAsync();
+
+        await Page.Locator(".bpmn-canvas__paper").First.ClickAsync();
+        await Page.Keyboard.PressAsync("Control+a");
+        await Page.WaitForTimeoutAsync(900);
+
+        await Page.Locator(".bpmn-properties__property", new() { HasTextString = "Documentation" })
+            .Locator("textarea").First.FillAsync("Reviewed together.");
+        await Page.Keyboard.PressAsync("Tab");
+        await Page.WaitForTimeoutAsync(1000);
+
+        // Three elements changed by one command, so one undo takes all three back — which is what
+        // makes it a bulk edit rather than three edits that happened to be typed once.
+        await Expect(Page.Locator(".demo-edit-status")).ToContainTextAsync("Edited:");
+
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Undo" }).ClickAsync();
+        await Page.WaitForTimeoutAsync(900);
+
+        await Expect(Page.Locator(".bpmn-properties__property", new() { HasTextString = "Documentation" })
+            .Locator("textarea").First).ToHaveValueAsync(string.Empty);
+    }
+
+    [Fact]
+    public async Task NamesTheExtensionContentItCarries()
+    {
+        await GoToEditorAsync();
+        await ShowPanelAsync();
+        await SelectSampleAsync("zeebe-process.bpmn");
+        await SelectAsync("ServiceTask_ChargeCard");
+
+        // Named with their namespace, because section 6.1.2 is what gives extension content its
+        // identity and two vendors' `properties` elements are otherwise indistinguishable.
+        await Expect(Page.Locator(".bpmn-properties__extension")).ToHaveCountAsync(3);
+        await Expect(Page.Locator(".bpmn-properties__extension").First).ToContainTextAsync("taskDefinition");
+        await Expect(Page.Locator(".bpmn-properties__namespace").First).ToContainTextAsync("camunda.org/schema/zeebe");
+    }
+
+    [Fact]
+    public async Task ExtensionValuesAreEditableButNeverStandardFields()
+    {
+        await GoToEditorAsync();
+        await ShowPanelAsync();
+        await SelectSampleAsync("zeebe-process.bpmn");
+        await SelectAsync("ServiceTask_ChargeCard");
+
+        // Vendor fields stay in visibly namespaced groups, separate from standard BPMN entries.
+        await Expect(Page.Locator(".bpmn-properties__label").Nth(0)).ToHaveTextAsync("Name");
+        await Expect(Page.Locator(".bpmn-properties__label").Nth(3)).ToHaveTextAsync("Documentation");
+        await Expect(Page.Locator("[data-group-id='task-definition'] input").First).ToHaveValueAsync("charge-card");
+
+        await Page.Locator("[data-group-id='task-definition'] input").First.FillAsync("charge-card-v2");
+        await Page.Keyboard.PressAsync("Tab");
+        await Page.WaitForTimeoutAsync(1000);
+
+        // Re-described from the document that came back, not left showing what was typed.
+        await Expect(Page.Locator("[data-group-id='task-definition'] input").First).ToHaveValueAsync("charge-card-v2");
+    }
+
+    [Fact]
+    public async Task EditingOneOfTwoSameNamedSiblingsLeavesTheOtherAlone()
+    {
+        /*
+         * The reason the path addresses children by index. A zeebe:ioMapping holds two
+         * zeebe:input elements, and a scheme that addressed them by name would edit whichever came
+         * first — silently, and only ever that one.
+         */
+        await GoToEditorAsync();
+        await ShowPanelAsync();
+        await SelectSampleAsync("zeebe-process.bpmn");
+        await SelectAsync("ServiceTask_ChargeCard");
+
+        await Expect(Page.Textbox("Target, row 1").First).ToHaveValueAsync("orderId");
+        await Expect(Page.Textbox("Target, row 2").First).ToHaveValueAsync("amount");
+
+        await Page.Textbox("Target, row 2").First.FillAsync("totalAmount");
+        await Page.Keyboard.PressAsync("Tab");
+        await Page.WaitForTimeoutAsync(1000);
+
+        await Expect(Page.Textbox("Target, row 2").First).ToHaveValueAsync("totalAmount");
+        await Expect(Page.Textbox("Target, row 1").First).ToHaveValueAsync("orderId");
+
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Undo" }).ClickAsync();
+        await Page.WaitForTimeoutAsync(1000);
+
+        await Expect(Page.Textbox("Target, row 2").First).ToHaveValueAsync("amount");
+    }
+
+    [Fact]
+    public async Task ASelectionIsOfferedNoExtensionValues()
+    {
+        // A path means something different on the next element, so there is no honest way to offer
+        // one for several at once.
+        await GoToEditorAsync();
+        await ShowPanelAsync();
+        await SelectSampleAsync("zeebe-process.bpmn");
+
+        await Page.Locator(".bpmn-canvas__paper").First.ClickAsync();
+        await Page.Keyboard.PressAsync("Control+a");
+        await Page.WaitForTimeoutAsync(900);
+
+        await Expect(Page.Locator(".bpmn-properties__extension")).ToHaveCountAsync(0);
+        await Expect(Page.Locator(".bpmn-properties__label")).ToHaveTextAsync(["Name", "Documentation"]);
+    }
+
+    // --- helpers ------------------------------------------------------------------
+
+    /// <summary>The label as drawn, with the wrapper's line breaks turned back into spaces.</summary>
+    private Task<string> DrawnLabelAsync(string modelId) => Page.EvaluateAsync<string>(
+        $$"""
+        () => {
+          const cell = document.querySelector(".joint-cell[model-id='{{modelId}}']");
+          if (cell === null) return '';
+          const spans = [...cell.querySelectorAll('tspan')].map((t) => t.textContent?.trim() ?? '');
+          return spans.filter((line) => line.length > 0).join(' ');
+        }
+        """);
+
+    private Task<string> TaskIdAsync() => Page.EvaluateAsync<string>(
+        """
+        () => [...document.querySelectorAll('.bpmn-canvas .joint-element[model-id]')]
+          .find((c) => (c.getAttribute('model-id') ?? '').startsWith('Task_'))
+          ?.getAttribute('model-id') ?? ''
+        """);
+
+    private async Task SelectAsync(string modelId)
+    {
+        await Page.Locator($".joint-cell[model-id='{modelId}'] [joint-selector='body']").First.ClickAsync();
+        await Page.WaitForTimeoutAsync(800);
+    }
+
+    private async Task ShowPanelAsync()
+    {
+        await Page.Locator(".demo-show-properties").CheckAsync();
+        await Expect(Page.Locator(".bpmn-properties")).ToBeVisibleAsync();
+    }
+
+    private async Task SelectSampleAsync(string fileName)
+    {
+        await Page.GetByRole(AriaRole.Combobox, new() { Name = "Sample diagram" }).ClickAsync();
+        await Page.Locator("fluent-option", new() { HasTextString = fileName }).ClickAsync();
+        await Page.WaitForTimeoutAsync(1800);
+    }
+
+    private async Task GoToEditorAsync()
+    {
+        await Page.GotoAsync(app.Url(this));
+
+        await Expect(Page.Locator(".bpmn-canvas__paper > svg")).ToBeVisibleAsync(new() { Timeout = 30_000 });
+        await Expect(Page.Locator(".bpmn-canvas .joint-cell").First).ToBeVisibleAsync();
+    }
+}

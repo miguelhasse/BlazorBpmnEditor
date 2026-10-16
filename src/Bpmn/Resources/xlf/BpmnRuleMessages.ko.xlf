@@ -1,0 +1,852 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="ko" original="../BpmnRuleMessages.resx">
+    <body>
+      <trans-unit id="CT-001">
+        <source>An element cannot both own local flow elements and reference a called element.</source>
+        <target state="translated">요소는 로컬 흐름 요소를 소유하면서 동시에 호출된 요소를 참조할 수 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-001.Native">
+        <source>An element cannot both own local flow elements and reference a called element.</source>
+        <target state="translated">요소는 로컬 흐름 요소를 소유하면서 동시에 호출된 요소를 참조할 수 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-001.Native.2">
+        <source>A Call Activity never owns local flow elements; its content lives in the called Process.</source>
+        <target state="translated">호출 액티비티는 로컬 흐름 요소를 소유하지 않습니다. 콘텐츠는 호출된 프로세스에 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-005">
+        <source>Only a Boundary Event may declare an attachment to a host Activity.</source>
+        <target state="translated">경계 이벤트만 호스트 액티비티에 대한 연결을 선언할 수 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-005.Native">
+        <source>Only a Boundary Event may declare an attachment to a host Activity.</source>
+        <target state="translated">경계 이벤트만 호스트 액티비티에 대한 연결을 선언할 수 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-005.Native.2">
+        <source>A Boundary Event must be attached to exactly one Activity.</source>
+        <target state="translated">경계 이벤트는 정확히 하나의 액티비티에 연결되어야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-005.Native.3">
+        <source>Boundary Event host '{0}' does not resolve to a flow node.</source>
+        <target state="translated">경계 이벤트 호스트 '{0}'이(가) 흐름 노드로 확인되지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-007">
+        <source>A collapsed Sub-Process or Call Activity has visible embedded process-content cells in the active plane.</source>
+        <target state="translated">접힌 서브 프로세스 또는 호출 액티비티가 활성 평면에 포함된 프로세스 콘텐츠 셀을 표시하고 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-007.Detail">
+        <source>It is drawn collapsed on '{0}', which also draws '{1}' from inside it.</source>
+        <target state="translated">'{0}'에는 접힌 상태로 그려져 있지만, 그 내부의 '{1}'도 함께 그려져 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-009">
+        <source>A Sub-Process expansion state disagrees with BPMNShape.isExpanded, or a collapsed Sub-Process exposes active nested visual cells/tools.</source>
+        <target state="translated">서브 프로세스 확장 상태가 BPMNShape.isExpanded와 일치하지 않거나, 접힌 서브 프로세스가 활성 중첩 시각 셀/도구를 노출하고 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-009.Detail">
+        <source>It is drawn expanded on '{0}' and its content is also drawn on '{1}'.</source>
+        <target state="translated">'{0}'에는 확장된 상태로 그려져 있고 그 콘텐츠도 '{1}'에 그려져 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-012">
+        <source>A Lane subdivides a Pool, so its LaneSet's Process must be referenced by a Participant.</source>
+        <target state="translated">레인은 풀을 세분화하므로 해당 LaneSet의 프로세스를 참가자가 참조해야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CT-012.Detail">
+        <source>No Participant references '{0}'.</source>
+        <target state="translated">'{0}'을(를) 참조하는 참가자가 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D001">
+        <source>Every Start Event has 0 incoming Sequence Flow.</source>
+        <target state="translated">모든 시작 이벤트는 들어오는 시퀀스 흐름이 0개여야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D001.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">{0}에는 {1}개가 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D002">
+        <source>Every End Event has 0 outgoing Sequence Flow.</source>
+        <target state="translated">모든 종료 이벤트는 나가는 시퀀스 흐름이 0개여야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D002.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">{0}에는 {1}개가 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D003">
+        <source>Every Boundary Event has 0 incoming Sequence Flow and is attached to exactly one Activity.</source>
+        <target state="translated">모든 경계 이벤트는 들어오는 시퀀스 흐름이 0개이며 정확히 하나의 액티비티에 연결되어야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D003.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">{0}에는 {1}개가 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D003.Detail.2">
+        <source>{0} is attached to nothing.</source>
+        <target state="translated">{0}이(가) 아무것에도 연결되어 있지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D003.Detail.3">
+        <source>{0} is attached to {1}, which is not an Activity.</source>
+        <target state="translated">{0}이(가) 액티비티가 아닌 {1}에 연결되어 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D004">
+        <source>Product lint: Exclusive/Inclusive split has exactly one flow flagged isDefault OR every non-default flow has a conditionExpression.</source>
+        <target state="translated">제품 린트: 배타/포괄 분기에는 isDefault로 표시된 흐름이 정확히 하나 있거나, 기본이 아닌 모든 흐름에 conditionExpression이 있어야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D004.Detail">
+        <source>{0} has {1} default flows.</source>
+        <target state="translated">{0}에 기본 흐름이 {1}개 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D004.Detail.2">
+        <source>{0} has {1} branches with neither a conditionExpression nor the default flag.</source>
+        <target state="translated">{0}에 conditionExpression도 기본 플래그도 없는 분기가 {1}개 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D005">
+        <source>Parallel/Complex/Inclusive gateway used as merge only synchronizes declared incoming flows (redundant gateway if incoming count = 1).</source>
+        <target state="translated">병합으로 사용되는 병렬/복합/포괄 게이트웨이는 선언된 들어오는 흐름만 동기화합니다(들어오는 흐름이 1개이면 불필요한 게이트웨이입니다).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D005.Detail">
+        <source>{0} merges a single flow.</source>
+        <target state="translated">{0}이(가) 단일 흐름을 병합합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D006">
+        <source>Event-Based Gateway: all outgoing targets are catch-events/receive-tasks, none carry conditions.</source>
+        <target state="translated">이벤트 기반 게이트웨이: 나가는 모든 대상은 잡기 이벤트/수신 태스크여야 하며 조건을 가질 수 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D006.Detail">
+        <source>A branch carries a condition.</source>
+        <target state="translated">분기에 조건이 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D006.Detail.2">
+        <source>{0} is neither a catching Event nor a Receive Task.</source>
+        <target state="translated">{0}은(는) 잡기 이벤트도 수신 태스크도 아닙니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D007">
+        <source>No Sequence Flow crosses a Pool boundary.</source>
+        <target state="translated">풀 경계를 넘는 시퀀스 흐름이 없어야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D007.Detail">
+        <source>{0} and {1} are in different Pools.</source>
+        <target state="translated">{0}와(과) {1}이(가) 서로 다른 풀에 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D008">
+        <source>Every Message Flow crosses exactly one Pool boundary.</source>
+        <target state="translated">모든 메시지 흐름은 정확히 하나의 풀 경계를 넘어야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D008.Detail">
+        <source>One of its ends is not in a Pool.</source>
+        <target state="translated">양쪽 끝 중 하나가 풀에 속하지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D008.Detail.2">
+        <source>Both of its ends are in the same Pool.</source>
+        <target state="translated">양쪽 끝이 같은 풀에 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D009">
+        <source>Every node is reachable from some Start Event (no orphan nodes) and every Start Event can reach some End Event (no dead ends).</source>
+        <target state="translated">모든 노드는 어떤 시작 이벤트에서든 도달할 수 있어야 하고(고립 노드 없음), 모든 시작 이벤트는 어떤 종료 이벤트에든 도달할 수 있어야 합니다(막다른 길 없음).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D009.Detail">
+        <source>{0} cannot be reached from any Start Event.</source>
+        <target state="translated">{0}에는 어떤 시작 이벤트에서도 도달할 수 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D009.Detail.2">
+        <source>{0} cannot reach any End Event.</source>
+        <target state="translated">{0}에서는 어떤 종료 이벤트에도 도달할 수 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D010">
+        <source>Event Sub-Process start event is typed (not None) and has no drawn Sequence Flow in/out.</source>
+        <target state="translated">이벤트 서브 프로세스의 시작 이벤트는 유형이 지정되어야 하며(없음 불가) 들어오거나 나가는 시퀀스 흐름이 그려져 있지 않아야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D010.Detail">
+        <source>{0} has {1} Sequence Flow crossing its boundary.</source>
+        <target state="translated">{0}의 경계를 넘는 시퀀스 흐름이 {1}개 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D010.Detail.2">
+        <source>{0} has {1} Start Events; it needs exactly one.</source>
+        <target state="translated">{0}에 시작 이벤트가 {1}개 있습니다. 정확히 하나가 필요합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D010.Detail.3">
+        <source>An untyped Start Event can never trigger it.</source>
+        <target state="translated">유형이 없는 시작 이벤트로는 이를 트리거할 수 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D011">
+        <source>Link Intermediate throw and catch Events pair one-to-one within a Process.</source>
+        <target state="translated">링크 중간 던지기 및 잡기 이벤트는 프로세스 내에서 일대일로 짝을 이루어야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D011.Detail">
+        <source>'{0}' is caught {1} times; a Link has one destination.</source>
+        <target state="translated">'{0}'이(가) {1}번 잡혔습니다. 링크의 목적지는 하나입니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D011.Detail.2">
+        <source>'{0}' is thrown but never caught.</source>
+        <target state="translated">'{0}'이(가) 던져졌지만 잡히지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D011.Detail.3">
+        <source>'{0}' is caught but never thrown.</source>
+        <target state="translated">'{0}'이(가) 잡혔지만 던져지지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D012">
+        <source>A Compensation Boundary Event handler is not reached by ordinary Sequence Flow.</source>
+        <target state="translated">보상 경계 이벤트 핸들러는 일반 시퀀스 흐름으로 도달할 수 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D012.Detail">
+        <source>It has {0} incoming Sequence Flow.</source>
+        <target state="translated">들어오는 시퀀스 흐름이 {0}개 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D013">
+        <source>An End Event with outgoing Message Flow has a Message result, or Multiple when it has more than one.</source>
+        <target state="translated">나가는 메시지 흐름이 있는 종료 이벤트는 결과가 메시지여야 하며, 둘 이상이면 다중이어야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D013.Detail">
+        <source>{0} sends {1} message(s) but its result is {2}.</source>
+        <target state="translated">{0}이(가) 메시지 {1}개를 보내지만 결과는 {2}입니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D014">
+        <source>Event-Based Gateway targets are homogeneous and have no other incoming Sequence Flow.</source>
+        <target state="translated">이벤트 기반 게이트웨이의 대상은 동일한 유형이어야 하며 다른 곳에서 들어오는 시퀀스 흐름이 없어야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D014.Detail">
+        <source>{0} also has {1} incoming Sequence Flow from elsewhere.</source>
+        <target state="translated">{0}에는 다른 곳에서 들어오는 시퀀스 흐름도 {1}개 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D014.Detail.2">
+        <source>Its branches mix catching Events and Receive Tasks.</source>
+        <target state="translated">분기에 잡기 이벤트와 수신 태스크가 섞여 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015">
+        <source>Every BPMNEdge has at least two waypoints, every BPMNShape has positive bounds, and every DI element resolves to a semantic element.</source>
+        <target state="translated">모든 BPMNEdge에는 웨이포인트가 두 개 이상 있어야 하고, 모든 BPMNShape에는 양수 경계가 있어야 하며, 모든 DI 요소는 시맨틱 요소로 확인되어야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015.Detail">
+        <source>Its bounds are {0} by {1}.</source>
+        <target state="translated">경계는 {0} x {1}입니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015.Detail.2">
+        <source>Shape '{0}' draws an element this document does not have.</source>
+        <target state="translated">도형 '{0}'이(가) 이 문서에 없는 요소를 그리고 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015.Detail.3">
+        <source>Its route has {0} waypoint(s).</source>
+        <target state="translated">경로에 웨이포인트가 {0}개 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D015.Detail.4">
+        <source>Edge '{0}' draws a connector this document does not have.</source>
+        <target state="translated">엣지 '{0}'이(가) 이 문서에 없는 커넥터를 그리고 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D017">
+        <source>Every required reference resolves to an object of the permitted BPMN type.</source>
+        <target state="translated">필요한 모든 참조는 허용된 BPMN 유형의 객체로 확인되어야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D017.Detail">
+        <source>{0} points at '{1}', which is not in this document.</source>
+        <target state="translated">{0}이(가) 이 문서에 없는 '{1}'을(를) 가리킵니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D017.Detail.2">
+        <source>{0} points at a {1}, which it may not.</source>
+        <target state="translated">{0}이(가) 허용되지 않는 {1}을(를) 가리킵니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D018">
+        <source>Every semantic object has a unique XML-safe ID within the document.</source>
+        <target state="translated">모든 시맨틱 객체는 문서 내에서 고유하고 XML에 안전한 ID를 가져야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D018.Detail">
+        <source>'{0}' is not a valid XML NCName.</source>
+        <target state="translated">'{0}'은(는) 유효한 XML NCName이 아닙니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D018.Detail.2">
+        <source>'{0}' is used more than once.</source>
+        <target state="translated">'{0}'이(가) 두 번 이상 사용되었습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019">
+        <source>Every FlowNode belongs to exactly one container, and Lane membership agrees with its LaneSet.</source>
+        <target state="translated">모든 흐름 노드는 정확히 하나의 컨테이너에 속해야 하며, 레인 소속은 해당 LaneSet과 일치해야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail">
+        <source>{0} names container '{1}', which is not one.</source>
+        <target state="translated">{0}이(가) 컨테이너 '{1}'을(를) 지정하지만 이는 컨테이너가 아닙니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail.2">
+        <source>Its lane set '{0}' is not declared.</source>
+        <target state="translated">레인 집합 '{0}'이(가) 선언되지 않았습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail.3">
+        <source>It claims '{0}', which does not exist.</source>
+        <target state="translated">존재하지 않는 '{0}'을(를) 소유한다고 주장합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail.4">
+        <source>It claims {0}, which belongs to '{1}'.</source>
+        <target state="translated">'{1}'에 속한 {0}을(를) 소유한다고 주장합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D019.Detail.5">
+        <source>It is claimed by {0} Lanes.</source>
+        <target state="translated">{0}개의 레인이 소유를 주장하고 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D020">
+        <source>Event definitions are legal for their context and direction.</source>
+        <target state="translated">이벤트 정의는 컨텍스트와 방향에 맞게 유효해야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D020.Detail">
+        <source>{0} is a {1} carrying a {2} trigger.</source>
+        <target state="translated">{0}은(는) {2} 트리거를 가진 {1}입니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D020.Detail.2">
+        <source>{0} is a {1} with an invalid interruption state for {2}.</source>
+        <target state="translated">{0}은(는) {2}에 대한 중단 상태가 잘못된 {1}입니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D020.Detail.3">
+        <source>{0} has an invalid container or Boundary host context.</source>
+        <target state="translated">{0}의 컨테이너 또는 경계 호스트 컨텍스트가 잘못되었습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021">
+        <source>Definitions has a targetNamespace and namespace-qualified references use resolvable, consistent QNames.</source>
+        <target state="translated">Definitions에는 targetNamespace가 있어야 하며, 네임스페이스로 한정된 참조는 확인 가능하고 일관된 QName을 사용해야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail">
+        <source>Definitions/@targetNamespace is required and must not be empty.</source>
+        <target state="translated">Definitions/@targetNamespace는 필수이며 비어 있으면 안 됩니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.2">
+        <source>calledElement value '{0}' has an invalid QName local name.</source>
+        <target state="translated">calledElement 값 '{0}'의 QName 로컬 이름이 잘못되었습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.3">
+        <source>calledElement QName '{0}' has an undeclared prefix or no resolved namespace.</source>
+        <target state="translated">calledElement QName '{0}'에 선언되지 않은 접두사가 있거나 확인된 네임스페이스가 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.4">
+        <source>calledElement QName '{0}' was projected as a local reference although its namespace differs from targetNamespace.</source>
+        <target state="translated">calledElement QName '{0}'은(는) 네임스페이스가 targetNamespace와 다르지만 로컬 참조로 투영되었습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.5">
+        <source>xsi:type QName '{0}' has an undeclared prefix or no resolved namespace.</source>
+        <target state="translated">xsi:type QName '{0}'에 선언되지 않은 접두사가 있거나 확인된 네임스페이스가 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D021.Detail.6">
+        <source>xsi:type value '{0}' is not a valid QName.</source>
+        <target state="translated">xsi:type 값 '{0}'은(는) 유효한 QName이 아닙니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022">
+        <source>Every plane has a diagram owner, each element is drawn at most once per diagram, and label and style references resolve.</source>
+        <target state="translated">모든 평면에는 다이어그램 소유자가 있어야 하고, 각 요소는 다이어그램당 최대 한 번만 그려져야 하며, 레이블과 스타일 참조는 확인되어야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022.Detail">
+        <source>It is drawn more than once on '{0}'.</source>
+        <target state="translated">'{0}'에 두 번 이상 그려져 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022.Detail.2">
+        <source>Its label references style '{0}', which is not declared.</source>
+        <target state="translated">레이블이 선언되지 않은 스타일 '{0}'을(를) 참조합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022.Detail.3">
+        <source>Plane '{0}' names no BPMN element.</source>
+        <target state="translated">평면 '{0}'이(가) BPMN 요소를 지정하지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D022.Detail.4">
+        <source>Plane '{0}' is owned by '{1}', which does not exist.</source>
+        <target state="translated">평면 '{0}'의 소유자 '{1}'이(가) 존재하지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D023">
+        <source>Global definitions referenced by the document exist and have the expected type.</source>
+        <target state="translated">문서에서 참조하는 전역 정의가 존재하며 예상된 유형이어야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D023.Detail">
+        <source>{0} calls QName '{1}' in namespace '{2}', which this document does not resolve.</source>
+        <target state="translated">{0}이(가) 네임스페이스 '{2}'의 QName '{1}'을(를) 호출하지만 이 문서에서 확인되지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="D023.Detail.2">
+        <source>{0} calls '{1}', which this document does not declare as a Process or Global Task.</source>
+        <target state="translated">{0}이(가) '{1}'을(를) 호출하지만 이 문서에 프로세스 또는 전역 태스크로 선언되어 있지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-002">
+        <source>Group cannot be a connector endpoint (visual grouping only).</source>
+        <target state="translated">그룹은 커넥터 끝점이 될 수 없습니다(시각적 그룹화 전용).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-002b">
+        <source>Group cannot be a connector endpoint (visual grouping only).</source>
+        <target state="translated">그룹은 커넥터 끝점이 될 수 없습니다(시각적 그룹화 전용).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-003">
+        <source>Text Annotation connects only via (undirected) Association, never Data Association.</source>
+        <target state="translated">텍스트 주석은 (방향 없는) 연관으로만 연결되며 데이터 연관으로는 연결되지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-004">
+        <source>Data Object/Data Store connect only via Data Association, never a plain Association.</source>
+        <target state="translated">데이터 객체/데이터 저장소는 데이터 연관으로만 연결되며 일반 연관으로는 연결되지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-005">
+        <source>Data Input Association direction is Data Object/Store/Property to an Activity or Throwing Event input.</source>
+        <target state="translated">데이터 입력 연관의 방향은 데이터 객체/저장소/속성에서 액티비티 또는 던지기 이벤트 입력으로 향해야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DA-006">
+        <source>Data Output Association direction is an Activity or Catching Event output to a Data Object/Store/Property.</source>
+        <target state="translated">데이터 출력 연관의 방향은 액티비티 또는 잡기 이벤트 출력에서 데이터 객체/저장소/속성으로 향해야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-001">
+        <source>Every BPMNShape must have positive width and height.</source>
+        <target state="translated">모든 BPMNShape는 양수의 너비와 높이를 가져야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-001.Native">
+        <source>Every BPMNShape must have positive width and height.</source>
+        <target state="translated">모든 BPMNShape는 양수의 너비와 높이를 가져야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-002">
+        <source>Every BPMNEdge must have at least two waypoints.</source>
+        <target state="translated">모든 BPMNEdge는 웨이포인트가 두 개 이상 있어야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-002.Native">
+        <source>Every BPMNEdge must have at least two waypoints.</source>
+        <target state="translated">모든 BPMNEdge는 웨이포인트가 두 개 이상 있어야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-007">
+        <source>isHorizontal is defined only on Pool and Lane shapes.</source>
+        <target state="translated">isHorizontal은 풀과 레인 도형에만 정의됩니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DI-007.Native">
+        <source>isHorizontal is defined only on Pool and Lane shapes.</source>
+        <target state="translated">isHorizontal은 풀과 레인 도형에만 정의됩니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-001">
+        <source>Extension content has no resolvable namespace URI (spec §6.1.2 expanded-name identity).</source>
+        <target state="translated">확장 콘텐츠에 확인 가능한 네임스페이스 URI가 없습니다(사양 §6.1.2 확장 이름 ID).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-001.Detail">
+        <source>&lt;{0}&gt; is in no namespace.</source>
+        <target state="translated">&lt;{0}&gt;은(는) 어떤 네임스페이스에도 속하지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-002">
+        <source>Extension namespace prefix mapping is inconsistent within the document.</source>
+        <target state="translated">확장 네임스페이스 접두사 매핑이 문서 내에서 일관되지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-003">
+        <source>The document could not be parsed (malformed XML).</source>
+        <target state="translated">문서를 구문 분석할 수 없습니다(잘못된 XML).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-004">
+        <source>A registered profile emitted a rule id outside its own declared catalog; the violation was rejected.</source>
+        <target state="translated">등록된 프로파일이 자체 선언 카탈로그 밖의 규칙 ID를 내보냈으며, 해당 위반은 거부되었습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-005">
+        <source>A profile-declared reference attribute in extension content does not resolve to any element in this document.</source>
+        <target state="translated">확장 콘텐츠의 프로파일 선언 참조 속성이 이 문서의 어떤 요소로도 확인되지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-006">
+        <source>A registered profile attempted to emit a core BPMN rule id; the override attempt was rejected.</source>
+        <target state="translated">등록된 프로파일이 핵심 BPMN 규칙 ID를 내보내려 했으며, 재정의 시도는 거부되었습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-007">
+        <source>An extension SVG decoration was suppressed.</source>
+        <target state="translated">확장 SVG 장식이 억제되었습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-008">
+        <source>Schema or external-resource access for extension content was blocked.</source>
+        <target state="translated">확장 콘텐츠에 대한 스키마 또는 외부 리소스 액세스가 차단되었습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010">
+        <source>Extension content carries active markup or a script URL, which cannot be exported (spec §5.5 layer 1: quarantine unsafe external content).</source>
+        <target state="translated">확장 콘텐츠에 활성 마크업 또는 스크립트 URL이 포함되어 있어 내보낼 수 없습니다(사양 §5.5 계층 1: 안전하지 않은 외부 콘텐츠 격리).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010.Detail">
+        <source>{0}: {1}.</source>
+        <target state="translated">{0}: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010.Detail.Handler">
+        <source>{0}/@{1}: '{1}' is an event handler.</source>
+        <target state="translated">{0}/@{1}: '{1}'은(는) 이벤트 핸들러입니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010.Detail.Markup">
+        <source>{0}: &lt;{1}&gt; in the {2} namespace is active markup.</source>
+        <target state="translated">{0}: {2} 네임스페이스의 &lt;{1}&gt;은(는) 활성 마크업입니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EXT-010.Detail.Url">
+        <source>{0}: the attribute value is a '{1}' URL.</source>
+        <target state="translated">{0}: 속성 값이 '{1}' URL입니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-001">
+        <source>Source and target must be InteractionNodes: Participant/Pool, Activity, or Event.</source>
+        <target state="translated">소스와 대상은 상호작용 노드(참가자/풀, 액티비티 또는 이벤트)여야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-002">
+        <source>Source and target must be in different Participants/Pools.</source>
+        <target state="translated">소스와 대상은 서로 다른 참가자/풀에 있어야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-003">
+        <source>Gateways are never Message Flow endpoints.</source>
+        <target state="translated">게이트웨이는 메시지 흐름의 끝점이 될 수 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-003.Detail">
+        <source>{0} is a Gateway.</source>
+        <target state="translated">{0}은(는) 게이트웨이입니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-004">
+        <source>Lanes, Data Objects, Groups, and Text Annotations are never Message Flow endpoints.</source>
+        <target state="translated">레인, 데이터 객체, 그룹, 텍스트 주석은 메시지 흐름의 끝점이 될 수 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-006">
+        <source>Target must not be an End Event.</source>
+        <target state="translated">대상은 종료 이벤트이면 안 됩니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-006.Detail">
+        <source>{0} is an End Event.</source>
+        <target state="translated">{0}은(는) 종료 이벤트입니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-007">
+        <source>Source Event must be message-throwing (Message Intermediate Throw, Message End, or Multiple with a message result).</source>
+        <target state="translated">소스 이벤트는 메시지 던지기여야 합니다(메시지 중간 던지기, 메시지 종료, 또는 메시지 결과가 있는 다중).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-007.Detail">
+        <source>{0} does not throw messages.</source>
+        <target state="translated">{0}은(는) 메시지를 던지지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-008">
+        <source>Target Event must be message-catching (Message Start, Message Intermediate Catch, Message Boundary, or Multiple/Parallel Multiple with a message trigger).</source>
+        <target state="translated">대상 이벤트는 메시지 잡기여야 합니다(메시지 시작, 메시지 중간 잡기, 메시지 경계, 또는 메시지 트리거가 있는 다중/병렬 다중).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MF-008.Detail">
+        <source>{0} does not catch messages.</source>
+        <target state="translated">{0}은(는) 메시지를 잡지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-000">
+        <source>The '{0}' profile reported nothing usable: {1}.</source>
+        <target state="translated">'{0}' 프로파일이 사용할 수 있는 내용을 보고하지 않았습니다: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-000.Detail.Failed">
+        <source>The '{0}' profile reported nothing usable: it failed: {1}.</source>
+        <target state="translated">'{0}' 프로파일이 사용할 수 있는 내용을 보고하지 않았습니다. 실패했습니다: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-000.Detail.InvalidId">
+        <source>The '{0}' profile reported nothing usable: '{1}' is not a PROF-nnn rule id.</source>
+        <target state="translated">'{0}' 프로파일이 사용할 수 있는 내용을 보고하지 않았습니다. '{1}'은(는) PROF-nnn 규칙 ID가 아닙니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101">
+        <source>Template property constraints must be satisfied.</source>
+        <target state="translated">템플릿 속성 제약 조건을 충족해야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail">
+        <source>{0} must not be empty.</source>
+        <target state="translated">{0}은(는) 비어 있으면 안 됩니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.2">
+        <source>{0} must contain at least {1} characters.</source>
+        <target state="translated">{0}은(는) {1}자 이상이어야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.3">
+        <source>{0} must contain at most {1} characters.</source>
+        <target state="translated">{0}은(는) {1}자 이하여야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.4">
+        <source>{0} has an invalid or excessively complex pattern.</source>
+        <target state="translated">{0}의 패턴이 잘못되었거나 지나치게 복잡합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.Custom">
+        <source>{0}</source>
+        <target state="translated">{0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-101.Detail.Pattern">
+        <source>{0} does not match the required pattern.</source>
+        <target state="translated">{0}이(가) 필요한 패턴과 일치하지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-102">
+        <source>Template property requires a FEEL expression starting with '='.</source>
+        <target state="translated">템플릿 속성에는 '='로 시작하는 FEEL 식이 필요합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-102.Detail">
+        <source>{0} requires a FEEL expression starting with '='.</source>
+        <target state="translated">{0}에는 '='로 시작하는 FEEL 식이 필요합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-103">
+        <source>Template not found: '{0}' version {1}.</source>
+        <target state="translated">템플릿을 찾을 수 없음: '{0}' 버전 {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-104">
+        <source>Template '{0}' is deprecated.</source>
+        <target state="translated">템플릿 '{0}'은(는) 더 이상 사용되지 않습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-104.Detail.Custom">
+        <source>{0}</source>
+        <target state="translated">{0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-105">
+        <source>Template '{0}' version {1} is available.</source>
+        <target state="translated">템플릿 '{0}' 버전 {1}을(를) 사용할 수 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-111">
+        <source>Script Task {0} has no scriptFormat, so no engine knows how to run it.</source>
+        <target state="translated">스크립트 태스크 {0}에 scriptFormat이 없어 어떤 엔진도 실행 방법을 알 수 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-112">
+        <source>Script Task {0} uses scriptFormat '{1}', which the engine does not run.</source>
+        <target state="translated">스크립트 태스크 {0}은(는) 엔진이 실행하지 않는 scriptFormat '{1}'을(를) 사용합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-113">
+        <source>Script Task {0} has no script.</source>
+        <target state="translated">스크립트 태스크 {0}에 스크립트가 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-114">
+        <source>Script Task {0} has a script of {1} characters; the limit is {2}.</source>
+        <target state="translated">스크립트 태스크 {0}의 스크립트가 {1}자이며, 제한은 {2}자입니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-115">
+        <source>No syntax validator is registered for scriptFormat '{0}' (Script Task {1}).</source>
+        <target state="translated">scriptFormat '{0}'에 등록된 구문 검증기가 없습니다(스크립트 태스크 {1}).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-116">
+        <source>Script Task {0}, line {1}, column {2}: {3}</source>
+        <target state="translated">스크립트 태스크 {0}, {1}행 {2}열: {3}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-117">
+        <source>The '{0}' script validator failed on Script Task {1}: {2}.</source>
+        <target state="translated">스크립트 검증기 '{0}'이(가) 스크립트 태스크 {1}에서 실패했습니다: {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PROF-118">
+        <source>Script Task {0} nests brackets deeper than {1} levels.</source>
+        <target state="translated">스크립트 태스크 {0}의 괄호 중첩이 {1}단계를 초과합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-001">
+        <source>Sequence Flow source and target must be a FlowNode (Event, Activity, or Gateway).</source>
+        <target state="translated">시퀀스 흐름의 소스와 대상은 흐름 노드(이벤트, 액티비티 또는 게이트웨이)여야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-002">
+        <source>Source must not be an End Event.</source>
+        <target state="translated">소스는 종료 이벤트이면 안 됩니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-003">
+        <source>Target must not be a Start Event.</source>
+        <target state="translated">대상은 시작 이벤트이면 안 됩니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-004">
+        <source>Target must not be a Boundary Event.</source>
+        <target state="translated">대상은 경계 이벤트이면 안 됩니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-005">
+        <source>Source/target must not be an Event Sub-Process — it has no external Sequence Flow.</source>
+        <target state="translated">소스/대상은 이벤트 서브 프로세스이면 안 됩니다. 외부 시퀀스 흐름이 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-006">
+        <source>Sequence Flow must not cross a Pool/Participant boundary (poolId mismatch).</source>
+        <target state="translated">시퀀스 흐름은 풀/참가자 경계를 넘으면 안 됩니다(poolId 불일치).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-007">
+        <source>Sequence Flow must not cross a Sub-Process containment boundary (containerId mismatch).</source>
+        <target state="translated">시퀀스 흐름은 서브 프로세스 포함 경계를 넘으면 안 됩니다(containerId 불일치).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-007.Detail">
+        <source>{0} is in '{1}' and {2} in '{3}'.</source>
+        <target state="translated">{0}은(는) '{1}'에, {2}은(는) '{3}'에 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-008">
+        <source>Source must not be a Compensation Boundary Event (use an Association to the handler instead).</source>
+        <target state="translated">소스는 보상 경계 이벤트이면 안 됩니다(대신 핸들러에 대한 연관을 사용하세요).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-009">
+        <source>Source/target must not be a compensation Activity (isForCompensation=true) reached via normal flow.</source>
+        <target state="translated">소스/대상은 일반 흐름으로 도달하는 보상 액티비티(isForCompensation=true)이면 안 됩니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-011">
+        <source>Event-Based Gateway outgoing target must be a catching Message/Timer/Signal/Conditional event or a Receive Task.</source>
+        <target state="translated">이벤트 기반 게이트웨이의 나가는 대상은 메시지/타이머/신호/조건 잡기 이벤트 또는 수신 태스크여야 합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-012">
+        <source>Event-Based Gateway outgoing Sequence Flow must not carry a condition expression.</source>
+        <target state="translated">이벤트 기반 게이트웨이의 나가는 시퀀스 흐름은 조건 식을 가지면 안 됩니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-013">
+        <source>Parallel Gateway outgoing Sequence Flow must not carry a condition.</source>
+        <target state="translated">병렬 게이트웨이의 나가는 시퀀스 흐름은 조건을 가지면 안 됩니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-014">
+        <source>isDefault may only be set on a flow sourced from an Activity, or an Exclusive/Inclusive/Complex Gateway.</source>
+        <target state="translated">isDefault는 액티비티 또는 배타/포괄/복합 게이트웨이에서 나가는 흐름에만 설정할 수 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-015">
+        <source>Conditional Sequence Flow from an Activity requires at least one other outgoing Sequence Flow from that Activity.</source>
+        <target state="translated">액티비티에서 나가는 조건부 시퀀스 흐름에는 해당 액티비티에서 나가는 다른 시퀀스 흐름이 하나 이상 더 필요합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-016">
+        <source>Conditional Sequence Flow must not be sourced from a Parallel or Event-Based Gateway.</source>
+        <target state="translated">조건부 시퀀스 흐름은 병렬 또는 이벤트 기반 게이트웨이에서 나올 수 없습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-017">
+        <source>Source must not be a Link Intermediate Throw Event — it continues at its paired Link catch, not by Sequence Flow.</source>
+        <target state="translated">소스는 링크 중간 던지기 이벤트이면 안 됩니다. 시퀀스 흐름이 아니라 짝이 되는 링크 잡기에서 계속됩니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-017.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">{0}에는 {1}개가 있습니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-018">
+        <source>Target must not be a Link Intermediate Catch Event — it is reached from its paired Link throw, not by Sequence Flow.</source>
+        <target state="translated">대상은 링크 중간 잡기 이벤트이면 안 됩니다. 시퀀스 흐름이 아니라 짝이 되는 링크 던지기에서 도달합니다.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SF-018.Detail">
+        <source>{0} has {1}.</source>
+        <target state="translated">{0}에는 {1}개가 있습니다.</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

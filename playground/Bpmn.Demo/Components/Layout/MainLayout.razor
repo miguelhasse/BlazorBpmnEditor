@@ -1,0 +1,37 @@
+﻿@inherits LayoutComponentBase
+
+@*
+    Chrome the demo owns, rather than the component library's.
+
+    Fluent UI 5 rebuilt its layout: FluentHeader, FluentFooter, FluentBodyContent and
+    FluentDesignTheme are gone, replaced by a FluentLayout/FluentLayoutItem model and a theme
+    service. Following that across a major version is work the playground should not be doing —
+    it exists to drive the editor, and a header band, a footer and a content column are four rules
+    of CSS.
+
+    The theme goes with them, and that is the one real loss: FluentDesignTheme set Fluent's
+    --neutral-* tokens from the OS setting, which is what made the chrome invert in dark mode while
+    the canvas inverted through its own --bpmn-* tokens. The chrome now follows
+    prefers-color-scheme directly, in app.css, which is what the canvas was always doing.
+*@
+<div class="demo-chrome">
+    <header class="demo-chrome__header">@Localizer["Layout.Title"]</header>
+
+    <main class="demo-chrome__body">
+        <div class="content">
+            @Body
+        </div>
+    </main>
+
+    <footer class="demo-chrome__footer">
+        <a href="https://www.fluentui-blazor.net" target="_blank">@Localizer["Layout.Documentation"]</a>
+        <span class="demo-chrome__spacer"></span>
+        <a href="https://learn.microsoft.com/en-us/aspnet/core/blazor" target="_blank">@Localizer["Layout.AboutBlazor"]</a>
+    </footer>
+</div>
+
+<div id="blazor-error-ui" data-nosnippet>
+    @Localizer["Layout.UnhandledError"]
+    <a href="." class="reload">@Localizer["Layout.Reload"]</a>
+    <span class="dismiss" title="@Localizer["Layout.Dismiss"]">🗙</span>
+</div>

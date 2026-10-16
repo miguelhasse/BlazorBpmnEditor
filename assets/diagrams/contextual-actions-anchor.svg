@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 910" role="img" aria-labelledby="title desc">
+  <title id="title">Stable contextual-action anchors</title>
+  <desc id="desc">Shape model geometry, not the SVG bounds inflated by selection tools, anchors actions. Move and viewport gestures hide and refresh the strip.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#d97706"/></marker>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="140%"><feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity=".13"/></filter>
+    <style>
+      text { font-family: Segoe UI, Arial, sans-serif; font-size: 16px; } text:not([fill]) { fill: #1e293b; }
+      .js { fill: #fffbeb; stroke: #d97706; stroke-width: 1.5; filter: url(#shadow); }
+      .cs { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.5; filter: url(#shadow); }
+      .kit { fill: #fdf4ff; stroke: #7c3aed; stroke-width: 1.5; filter: url(#shadow); }
+      .edge { fill: none; stroke: #d97706; stroke-width: 2; marker-end: url(#arrow); }
+      .heading { font-size: 24px; font-weight: 700; } .name { font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="1100" height="910" fill="#f8fafc"/>
+  <text x="550" y="38" text-anchor="middle" class="heading">Stable contextual-action anchors</text>
+  <text x="550" y="64" text-anchor="middle" fill="#64748b">Selection handles may grow SVG bounds; they must not move HTML overlays.</text>
+  <line x1="40" y1="84" x2="1060" y2="84" stroke="#e2e8f0" stroke-width="1.5"/>
+  <path class="edge" d="M320 210V250"/>
+  <path class="edge" d="M320 370V410"/>
+  <path class="edge" d="M320 510V550"/>
+  <path class="edge" d="M560 610H640"/>
+  <path class="edge" d="M840 670V730"/>
+  <path class="edge" d="M840 370V390H600V310H560"/>
+  <g transform="translate(80 110)">
+    <rect class="js" width="480" height="100" rx="8"/>
+    <text x="240" y="28" text-anchor="middle"><tspan class="name">Single-element selection</tspan><tspan x="240" dy="25">InteractionController</tspan><tspan x="240" dy="25">Selection tools render on SVG</tspan></text>
+  </g>
+  <g transform="translate(80 250)">
+    <rect class="js" width="480" height="120" rx="8"/>
+    <text x="240" y="29" text-anchor="middle"><tspan class="name">BpmnCanvasInstance.anchorOf</tspan><tspan x="240" dy="25">Element: cell.getBBox() model bounds</tspan><tspan x="240" dy="25">Link: rendered view bounds</tspan><tspan x="240" dy="25">Independent of shape selection tools</tspan></text>
+  </g>
+  <g transform="translate(80 410)">
+    <rect class="js" width="480" height="100" rx="8"/>
+    <text x="240" y="28" text-anchor="middle"><tspan class="name">AnchorResolver</tspan><tspan x="240" dy="25">Paper → client coordinates</tspan><tspan x="240" dy="25">Subtract canvas host origin</tspan></text>
+  </g>
+  <g transform="translate(80 550)">
+    <rect class="js" width="480" height="120" rx="8"/>
+    <text x="240" y="29" text-anchor="middle"><tspan class="name">Selection event includes anchor</tspan><tspan x="240" dy="25">SelectionAnchorReporter deduplicates</tspan><tspan x="240" dy="25">Delayed refresh uses same geometry</tspan><tspan x="240" dy="25">Opening position remains unchanged</tspan></text>
+  </g>
+  <g transform="translate(640 250)">
+    <rect class="js" width="400" height="120" rx="8"/>
+    <text x="200" y="29" text-anchor="middle"><tspan class="name">Move / resize / pan / zoom</tspan><tspan x="200" dy="25">Hide while geometry changes</tspan><tspan x="200" dy="25">Refresh after release / idle</tspan><tspan x="200" dy="25">Same anchor calculation</tspan></text>
+  </g>
+  <g transform="translate(640 550)">
+    <rect class="cs" width="400" height="120" rx="8"/>
+    <text x="200" y="29" text-anchor="middle"><tspan class="name">BpmnEditorSession</tspan><tspan x="200" dy="25">ContextualActions overlay slice</tspan><tspan x="200" dy="25">Anchor + selected snapshot</tspan><tspan x="200" dy="25">+ offered actions</tspan></text>
+  </g>
+  <g transform="translate(640 730)">
+    <rect class="kit" width="400" height="120" rx="8"/>
+    <text x="200" y="29" text-anchor="middle"><tspan class="name">Standard / Fluent actions widget</tspan><tspan x="200" dy="25">Top aligned with model shape</tspan><tspan x="200" dy="25">Right edge + 26px gap</tspan><tspan x="200" dy="25">Opening does not jump</tspan></text>
+  </g>
+</svg>

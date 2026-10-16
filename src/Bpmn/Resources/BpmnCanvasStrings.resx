@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="AriaLabel" xml:space="preserve"><value>BPMN diagram canvas</value></data>
+  <data name="Diagram" xml:space="preserve"><value>Diagram</value></data>
+  <data name="Summary" xml:space="preserve"><value>{0}: {1}, {2}.</value></data>
+  <data name="Shape.One" xml:space="preserve"><value>{0} shape</value></data>
+  <data name="Shape.Many" xml:space="preserve"><value>{0} shapes</value></data>
+  <data name="Connector.One" xml:space="preserve"><value>{0} connector</value></data>
+  <data name="Connector.Many" xml:space="preserve"><value>{0} connectors</value></data>
+  <data name="ElementName" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Expand" xml:space="preserve"><value>Expand sub-process</value></data>
+  <data name="ExpandNamed" xml:space="preserve"><value>Expand sub-process {0}</value></data>
+  <data name="Incident.One" xml:space="preserve"><value>{0} incident</value></data>
+  <data name="Incident.Many" xml:space="preserve"><value>{0} incidents</value></data>
+  <data name="IncidentMessage" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Token.One" xml:space="preserve"><value>{0} token</value></data>
+  <data name="Token.Many" xml:space="preserve"><value>{0} tokens</value></data>
+  <data name="ListSeparator" xml:space="preserve"><value>, </value></data>
+  <data name="ConnectionNotAllowed" xml:space="preserve"><value>This connection is not allowed.</value></data>
+  <data name="Status.Active" xml:space="preserve"><value>Active</value></data>
+  <data name="Status.Completed" xml:space="preserve"><value>Completed</value></data>
+  <data name="Status.Failed" xml:space="preserve"><value>Failed</value></data>
+  <data name="Status.Canceled" xml:space="preserve"><value>Canceled</value></data>
+  <data name="Status.Waiting" xml:space="preserve"><value>Waiting</value></data>
+  <data name="Type.element" xml:space="preserve"><value>Element</value></data>
+  <data name="Type.connector" xml:space="preserve"><value>Connector</value></data>
+  <data name="Type.startEvent" xml:space="preserve"><value>Start Event</value></data>
+  <data name="Type.endEvent" xml:space="preserve"><value>End Event</value></data>
+  <data name="Type.intermediateCatchEvent" xml:space="preserve"><value>Intermediate Catch Event</value></data>
+  <data name="Type.intermediateThrowEvent" xml:space="preserve"><value>Intermediate Throw Event</value></data>
+  <data name="Type.boundaryEvent" xml:space="preserve"><value>Boundary Event</value></data>
+  <data name="Type.task" xml:space="preserve"><value>Task</value></data>
+  <data name="Type.userTask" xml:space="preserve"><value>User Task</value></data>
+  <data name="Type.serviceTask" xml:space="preserve"><value>Service Task</value></data>
+  <data name="Type.scriptTask" xml:space="preserve"><value>Script Task</value></data>
+  <data name="Type.manualTask" xml:space="preserve"><value>Manual Task</value></data>
+  <data name="Type.businessRuleTask" xml:space="preserve"><value>Business Rule Task</value></data>
+  <data name="Type.sendTask" xml:space="preserve"><value>Send Task</value></data>
+  <data name="Type.receiveTask" xml:space="preserve"><value>Receive Task</value></data>
+  <data name="Type.subProcess" xml:space="preserve"><value>Sub Process</value></data>
+  <data name="Type.eventSubProcess" xml:space="preserve"><value>Event Sub Process</value></data>
+  <data name="Type.transaction" xml:space="preserve"><value>Transaction</value></data>
+  <data name="Type.adHocSubProcess" xml:space="preserve"><value>Ad Hoc Sub Process</value></data>
+  <data name="Type.callActivity" xml:space="preserve"><value>Call Activity</value></data>
+  <data name="Type.exclusiveGateway" xml:space="preserve"><value>Exclusive Gateway</value></data>
+  <data name="Type.inclusiveGateway" xml:space="preserve"><value>Inclusive Gateway</value></data>
+  <data name="Type.parallelGateway" xml:space="preserve"><value>Parallel Gateway</value></data>
+  <data name="Type.complexGateway" xml:space="preserve"><value>Complex Gateway</value></data>
+  <data name="Type.eventBasedGateway" xml:space="preserve"><value>Event Based Gateway</value></data>
+  <data name="Type.pool" xml:space="preserve"><value>Pool</value></data>
+  <data name="Type.lane" xml:space="preserve"><value>Lane</value></data>
+  <data name="Type.dataObjectReference" xml:space="preserve"><value>Data Object Reference</value></data>
+  <data name="Type.dataStoreReference" xml:space="preserve"><value>Data Store Reference</value></data>
+  <data name="Type.textAnnotation" xml:space="preserve"><value>Text Annotation</value></data>
+  <data name="Type.group" xml:space="preserve"><value>Group</value></data>
+  <data name="Type.sequenceFlow" xml:space="preserve"><value>Sequence Flow</value></data>
+  <data name="Type.messageFlow" xml:space="preserve"><value>Message Flow</value></data>
+  <data name="Type.association" xml:space="preserve"><value>Association</value></data>
+  <data name="Type.dataAssociation" xml:space="preserve"><value>Data Association</value></data>
+  <data name="Rule.SF-001" xml:space="preserve"><value>Sequence Flow source and target must be a FlowNode (Event, Activity, or Gateway).</value></data>
+  <data name="Rule.SF-002" xml:space="preserve"><value>Source must not be an End Event.</value></data>
+  <data name="Rule.SF-003" xml:space="preserve"><value>Target must not be a Start Event.</value></data>
+  <data name="Rule.SF-004" xml:space="preserve"><value>Target must not be a Boundary Event.</value></data>
+  <data name="Rule.SF-005" xml:space="preserve"><value>Source/target must not be an Event Sub-Process — it has no external Sequence Flow.</value></data>
+  <data name="Rule.SF-006" xml:space="preserve"><value>Sequence Flow must not cross a Pool/Participant boundary (poolId mismatch).</value></data>
+  <data name="Rule.SF-007" xml:space="preserve"><value>Sequence Flow must not cross a Sub-Process containment boundary (containerId mismatch).</value></data>
+  <data name="Rule.SF-008" xml:space="preserve"><value>Source must not be a Compensation Boundary Event (use an Association to the handler instead).</value></data>
+  <data name="Rule.SF-009" xml:space="preserve"><value>Source/target must not be a compensation Activity (isForCompensation=true) reached via normal flow.</value></data>
+  <data name="Rule.SF-011" xml:space="preserve"><value>Event-Based Gateway outgoing target must be a catching Message/Timer/Signal/Conditional event or a Receive Task.</value></data>
+  <data name="Rule.SF-012" xml:space="preserve"><value>Event-Based Gateway outgoing Sequence Flow must not carry a condition expression.</value></data>
+  <data name="Rule.SF-013" xml:space="preserve"><value>Parallel Gateway outgoing Sequence Flow must not carry a condition.</value></data>
+  <data name="Rule.SF-014" xml:space="preserve"><value>isDefault may only be set on a flow sourced from an Activity, or an Exclusive/Inclusive/Complex Gateway.</value></data>
+  <data name="Rule.SF-016" xml:space="preserve"><value>Conditional Sequence Flow must not be sourced from a Parallel or Event-Based Gateway.</value></data>
+  <data name="Rule.SF-017" xml:space="preserve"><value>Source must not be a Link Intermediate Throw Event — it continues at its paired Link catch, not by Sequence Flow.</value></data>
+  <data name="Rule.SF-018" xml:space="preserve"><value>Target must not be a Link Intermediate Catch Event — it is reached from its paired Link throw, not by Sequence Flow.</value></data>
+  <data name="Rule.MF-001" xml:space="preserve"><value>Source and target must be InteractionNodes: Participant/Pool, Activity, or Event.</value></data>
+  <data name="Rule.MF-002" xml:space="preserve"><value>Source and target must be in different Participants/Pools.</value></data>
+  <data name="Rule.MF-003" xml:space="preserve"><value>Gateways are never Message Flow endpoints.</value></data>
+  <data name="Rule.MF-004" xml:space="preserve"><value>Lanes, Data Objects, Groups, and Text Annotations are never Message Flow endpoints.</value></data>
+  <data name="Rule.MF-006" xml:space="preserve"><value>Target must not be an End Event.</value></data>
+  <data name="Rule.MF-007" xml:space="preserve"><value>Source Event must be message-throwing (Message Intermediate Throw, Message End, or Multiple with a message result).</value></data>
+  <data name="Rule.MF-008" xml:space="preserve"><value>Target Event must be message-catching (Message Start, Message Intermediate Catch, Message Boundary, or Multiple/Parallel Multiple with a message trigger).</value></data>
+  <data name="Rule.DA-002" xml:space="preserve"><value>Group cannot be a connector endpoint (visual grouping only).</value></data>
+  <data name="Rule.DA-002b" xml:space="preserve"><value>Group cannot be a connector endpoint (visual grouping only).</value></data>
+  <data name="Rule.DA-003" xml:space="preserve"><value>Text Annotation connects only via (undirected) Association, never Data Association.</value></data>
+  <data name="Rule.DA-004" xml:space="preserve"><value>Data Object/Data Store connect only via Data Association, never a plain Association.</value></data>
+  <data name="Rule.DA-005" xml:space="preserve"><value>Data Input Association direction is Data Object/Store/Property to an Activity or Throwing Event input.</value></data>
+  <data name="Rule.DA-006" xml:space="preserve"><value>Data Output Association direction is an Activity or Catching Event output to a Data Object/Store/Property.</value></data>
+</root>

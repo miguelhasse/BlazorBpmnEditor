@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- A hand-built interchange fixture. Everything unusual in here is deliberate: each construct
+     is one thing specification section 10.5 or 10.6 says must survive import, edit and export. -->
+<?bpmn-fixture purpose="round-trip"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:acme="https://acme.example/schema/bpmn/1" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_VendorExtensions" targetNamespace="http://hasseware.dev/bpmn" exporter="hand-written" exporterVersion="1.0">
+  <bpmn:import importType="http://www.w3.org/2001/XMLSchema" location="types.xsd" namespace="https://acme.example/types" />
+  <bpmn:extension definition="acme:trackingProfile" mustUnderstand="false">
+    <acme:profile version="3" acme:scope="global">
+      <acme:field name="costCentre" required="true" />
+    </acme:profile>
+  </bpmn:extension>
+  <bpmn:process id="Process_Vendor" name="Vendor Extensions" isExecutable="false" acme:deploymentGroup="finance">
+    <bpmn:documentation>Exists so documentation survives the round trip.</bpmn:documentation>
+    <bpmn:extensionElements>
+      <acme:processMeta owner="platform" />
+    </bpmn:extensionElements>
+    <bpmn:startEvent id="Event_Start" name="Start">
+      <bpmn:outgoing>Flow_StartToWork</bpmn:outgoing>
+    </bpmn:startEvent>
+    <!-- A Task carrying every flavour of vendor content at once. -->
+    <bpmn:serviceTask id="Task_Work" name="Do Work" acme:trackingId="TRK-9" zeebe:modelerTemplate="acme.template.v2">
+      <bpmn:documentation>Task-level documentation.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="acme:worker" retries="3" />
+        <acme:routing>
+          <acme:rule acme:priority="1" match="amount &gt; 100">escalate</acme:rule>
+          <acme:rule acme:priority="2" match="*">continue</acme:rule>
+        </acme:routing>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_StartToWork</bpmn:incoming>
+      <bpmn:outgoing>Flow_WorkToEnd</bpmn:outgoing>
+      <bpmn:ioSpecification id="IoSpec_Work">
+        <bpmn:inputSet id="InputSet_Work" />
+        <bpmn:outputSet id="OutputSet_Work" />
+      </bpmn:ioSpecification>
+      <bpmn:multiInstanceLoopCharacteristics id="Loop_Work" isSequential="true" />
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_End" name="Done">
+      <bpmn:incoming>Flow_WorkToEnd</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_StartToWork" sourceRef="Event_Start" targetRef="Task_Work" />
+    <bpmn:sequenceFlow id="Flow_WorkToEnd" sourceRef="Task_Work" targetRef="Event_End" />
+  </bpmn:process>
+  <!-- Out of scope for rendering (section 8), and still not ours to delete. -->
+  <bpmn:choreography id="Choreography_Ignored" name="Ignored">
+    <bpmn:choreographyTask id="ChoreographyTask_1" name="Negotiate" />
+  </bpmn:choreography>
+  <acme:catalogue id="Catalogue_1">
+    <acme:entry key="region">emea</acme:entry>
+  </acme:catalogue>
+  <bpmndi:BPMNDiagram id="Diagram_Vendor">
+    <bpmndi:BPMNPlane id="Plane_Vendor" bpmnElement="Process_Vendor">
+      <bpmndi:BPMNShape id="Shape_Start" bpmnElement="Event_Start">
+        <di:extension>
+          <acme:style stroke="#336699" />
+        </di:extension>
+        <dc:Bounds x="160" y="100" width="36" height="36" />
+        <bpmndi:BPMNLabel id="Label_Start">
+          <dc:Bounds x="155" y="143" width="47" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Work" bpmnElement="Task_Work" acme:layer="2">
+        <dc:Bounds x="260" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_End" bpmnElement="Event_End">
+        <dc:Bounds x="430" y="100" width="36" height="36" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_StartToWork" bpmnElement="Flow_StartToWork">
+        <di:waypoint x="196" y="118" />
+        <di:waypoint x="260" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_WorkToEnd" bpmnElement="Flow_WorkToEnd">
+        <di:waypoint x="360" y="118" />
+        <di:waypoint x="430" y="118" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+    <bpmndi:BPMNLabelStyle id="LabelStyle_1">
+      <dc:Font name="Arial" size="11" isBold="true" isItalic="false" />
+    </bpmndi:BPMNLabelStyle>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,61 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.FluentUI.AspNetCore.Components.Bpmn.Resources.FluentBpmnEditorStrings> EditorL
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
+@inherits BpmnTemplateChooserBase
+@using Hasseware.AspNetCore.Components.Bpmn.Editing
+@using Hasseware.AspNetCore.Components.Bpmn.Model.Extensions.Templates
+@using Microsoft.AspNetCore.Components
+
+@if (HasContent)
+{
+    <section class="@CssClass("bpmn-templates__row")" aria-label="@EditorText("TemplateChooser.AriaLabel")" @attributes="AdditionalAttributes">
+        @if (Element.TemplateId is { } appliedId)
+        {
+            @if (Applied?.Icon is { } icon && BpmnTemplateIcons.IsSafe(icon))
+            {
+                <img class="bpmn-templates__icon" src="@icon" alt="" />
+            }
+            <span class="bpmn-templates__name">@(Applied?.Name ?? appliedId)</span>
+            @if (Element.TemplateVersion is { } version) { <span class="bpmn-templates__version">@EditorText("TemplateChooser.Version", version)</span> }
+            @if (Applied is null) { <span class="bpmn-templates__notice">@EditorText("TemplateChooser.NotFound")</span> }
+            <div class="bpmn-templates__actions">
+                <FluentButton Type="ButtonType.Button" Class="bpmn-templates__unlink" Disabled="@Locked" OnClick="UnlinkAsync">@EditorText("TemplateChooser.Unlink")</FluentButton>
+                @if (Applied is not null)
+                {
+                    <FluentButton Type="ButtonType.Button" Class="bpmn-templates__remove" Disabled="@Locked" OnClick="RemoveAsync">@EditorText("TemplateChooser.Remove")</FluentButton>
+                    @if (Upgrade is not null)
+                    {
+                        <FluentButton Type="ButtonType.Button" Class="bpmn-templates__update" Disabled="@Locked" OnClick="UpgradeAsync">@EditorText("TemplateChooser.Update")</FluentButton>
+                    }
+                }
+            </div>
+        }
+        else
+        {
+            <FluentButton Type="ButtonType.Button" Class="bpmn-templates__select" Disabled="@Locked" aria-expanded="@IsOpen" OnClick="Toggle">@EditorText("TemplateChooser.Select")</FluentButton>
+        }
+        @if (IsOpen && !Locked && Element.TemplateId is null)
+        {
+            <FluentTextInput Class="bpmn-templates__search" AriaLabel="@EditorText("TemplateChooser.Search")" Value="@Search" Immediate="true"
+                             ValueChanged="@(value => SetSearch(new ChangeEventArgs { Value = value }))">
+                <StartTemplate><FluentIcon Value="@(new Icons.Regular.Size20.Search())" /></StartTemplate>
+            </FluentTextInput>
+            <div class="bpmn-templates__list" role="listbox" aria-label="@EditorText("TemplateChooser.Applicable")">
+                @foreach (var category in Filtered.GroupBy(template => CategoryOf(template)))
+                {
+                    <div class="bpmn-templates__category" role="group" aria-label="@category.Key">
+                        <h3 class="bpmn-templates__heading">@category.Key</h3>
+                        @foreach (var template in category)
+                        {
+                            <FluentButton Type="ButtonType.Button" role="option" aria-selected="false" Class="bpmn-templates__option" OnClick="@(() => ApplyAsync(template))">
+                                <span class="bpmn-templates__name">@template.Name</span>
+                                <span class="bpmn-templates__description">@template.Description</span>
+                            </FluentButton>
+                        }
+                    </div>
+                }
+            </div>
+            @if (!Filtered.Any()) { <p class="bpmn-templates__empty">@EditorText("TemplateChooser.NoMatches")</p> }
+            <FluentButton Type="ButtonType.Button" Class="bpmn-templates__cancel" OnClick="Toggle">@EditorText("TemplateChooser.Cancel")</FluentButton>
+        }
+    </section>
+}

@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  CI: true
+
+jobs:
+  build:
+    # Pinned rather than ubuntu-latest: the visual regression suite arriving with the full
+    # marker matrix compares rendered output, which is only stable on a fixed image.
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+          dotnet-version: '10.0.x'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: src/Bpmn.Scripts/package-lock.json
+
+      - name: Restore .NET dependencies
+        run: dotnet restore BlazorBpmnEditor.slnx
+
+      - name: Verify formatting
+        run: dotnet format BlazorBpmnEditor.slnx --verify-no-changes --no-restore
+
+      - name: Install npm dependencies
+        working-directory: src/Bpmn.Scripts
+        run: npm ci
+
+      # Type-check, lint and unit-test the TypeScript before anything consumes the bundle, so a
+      # failure names the real cause instead of surfacing as a missing static web asset.
+      - name: Check TypeScript
+        working-directory: src/Bpmn.Scripts
+        run: npm run check
+
+      - name: Build
+        run: dotnet build BlazorBpmnEditor.slnx -c Release --no-restore
+
+      - name: Unit and component tests
+        run: dotnet test tests/Bpmn.Tests/Hasseware.AspNetCore.Components.Bpmn.Tests.csproj -c Release --no-build
+
+      - name: Install Playwright browsers
+        run: pwsh tests/Bpmn.E2E.Tests/bin/Release/net10.0/playwright.ps1 install chromium --with-deps
+
+      - name: End-to-end tests
+        run: dotnet test tests/Bpmn.E2E.Tests/Hasseware.AspNetCore.Components.Bpmn.E2E.Tests.csproj -c Release --no-build
+
+      - name: Pack
+        run: dotnet pack src/Bpmn/Hasseware.AspNetCore.Components.Bpmn.csproj -c Release --no-build -o artifacts
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: packages
+          path: artifacts/*.nupkg
+          if-no-files-found: warn

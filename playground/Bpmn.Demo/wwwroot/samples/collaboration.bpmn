@@ -1,0 +1,73 @@
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:vw="https://bpmn.valenceworks.io/schema/bpmn" id="Definitions_0d8c668e4c304e6e91e423e40f071137" targetNamespace="http://blazor.diagrams.bpmn/schema" exporter="Blazor.Diagrams.Bpmn" exporterVersion="1.0" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+  <message id="message-Order-Received" name="Order Received" />
+  <collaboration id="Collaboration_a03833dc52114b85972f54ebd2cd43ae">
+    <participant id="Pool_ffb67669103643308dae41df033fbf69" name="Customer" processRef="CustomerProcess" />
+    <participant id="Pool_158ca429909d4edabfbbe931d830c049" name="Vendor" processRef="VendorProcess" />
+    <messageFlow id="MessageFlow_76c732077e70489fa89af60e6041d963" sourceRef="Task_bf39db40ac4143b3992a58713987d6c0" targetRef="Event_5ce3a2bbcc5249fc9831bec1ab2bfaf8" name="Order" />
+  </collaboration>
+  <process id="CustomerProcess" name="CustomerProcess" isExecutable="false">
+    <startEvent id="Event_d3812e0295644670a9edf24abe1d8c8a" name="Need Something">
+      <outgoing>Flow_a92eac83b97949e299a06508f3e0da6c</outgoing>
+    </startEvent>
+    <sendTask id="Task_bf39db40ac4143b3992a58713987d6c0" name="Place Order">
+      <incoming>Flow_a92eac83b97949e299a06508f3e0da6c</incoming>
+      <outgoing>Flow_b07398fb2dcf4ecf8481d04bba4ce032</outgoing>
+    </sendTask>
+    <endEvent id="Event_c9e7b1a24f0b45edb3e1e5b916f97af9" name="Order Placed">
+      <incoming>Flow_b07398fb2dcf4ecf8481d04bba4ce032</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_a92eac83b97949e299a06508f3e0da6c" sourceRef="Event_d3812e0295644670a9edf24abe1d8c8a" targetRef="Task_bf39db40ac4143b3992a58713987d6c0" />
+    <sequenceFlow id="Flow_b07398fb2dcf4ecf8481d04bba4ce032" sourceRef="Task_bf39db40ac4143b3992a58713987d6c0" targetRef="Event_c9e7b1a24f0b45edb3e1e5b916f97af9" />
+  </process>
+  <process id="VendorProcess" name="VendorProcess" isExecutable="false">
+    <intermediateCatchEvent id="Event_5ce3a2bbcc5249fc9831bec1ab2bfaf8" name="Order Received">
+      <outgoing>Flow_01f6c37ac0bd4247bd50059391a8993a</outgoing>
+      <messageEventDefinition messageRef="message-Order-Received" />
+    </intermediateCatchEvent>
+    <serviceTask id="Task_9c955ec329e14fd98c2c694bb21b5915" name="Fulfill Order">
+      <incoming>Flow_01f6c37ac0bd4247bd50059391a8993a</incoming>
+    </serviceTask>
+    <sequenceFlow id="Flow_01f6c37ac0bd4247bd50059391a8993a" sourceRef="Event_5ce3a2bbcc5249fc9831bec1ab2bfaf8" targetRef="Task_9c955ec329e14fd98c2c694bb21b5915" />
+  </process>
+  <bpmndi:BPMNDiagram id="Diagram_37a1821eedc843bf84063b0b1df5523b" name="Diagram">
+    <bpmndi:BPMNPlane id="Plane_992fe35d43d44b8e96d2d29515ecd081" bpmnElement="Collaboration_a03833dc52114b85972f54ebd2cd43ae">
+      <bpmndi:BPMNShape id="Shape_ed864312eeaa481a81cc0272e3ac681c" bpmnElement="Pool_ffb67669103643308dae41df033fbf69" isHorizontal="true">
+        <dc:Bounds x="40" y="40" width="700" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_c6b416052b96425dabd1e3a330a1d156" bpmnElement="Pool_158ca429909d4edabfbbe931d830c049" isHorizontal="true">
+        <dc:Bounds x="40" y="280" width="700" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_b79f9824a145459a9394aec50351b22d" bpmnElement="Event_d3812e0295644670a9edf24abe1d8c8a">
+        <dc:Bounds x="120" y="120" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_2362360b37f94a3b9709063be0b10fac" bpmnElement="Task_bf39db40ac4143b3992a58713987d6c0">
+        <dc:Bounds x="240" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_24cedb5e13f14c9ca51ad3f5e9338540" bpmnElement="Event_c9e7b1a24f0b45edb3e1e5b916f97af9">
+        <dc:Bounds x="560" y="120" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_dbb69fef9e6d40989f3dfd244e6a9839" bpmnElement="Event_5ce3a2bbcc5249fc9831bec1ab2bfaf8">
+        <dc:Bounds x="240" y="360" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_67094d9649b84d15b1efe22ccf05091b" bpmnElement="Task_9c955ec329e14fd98c2c694bb21b5915">
+        <dc:Bounds x="400" y="340" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_779b789b3c3e42daa03feb33f3330785" bpmnElement="Flow_a92eac83b97949e299a06508f3e0da6c">
+        <di:waypoint x="0" y="0" />
+        <di:waypoint x="0" y="0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_57458f99c1e449cbae6b1a645463593e" bpmnElement="Flow_b07398fb2dcf4ecf8481d04bba4ce032">
+        <di:waypoint x="0" y="0" />
+        <di:waypoint x="0" y="0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_81a5d9fb815e4efa9d8e44616b1d6ddd" bpmnElement="Flow_01f6c37ac0bd4247bd50059391a8993a">
+        <di:waypoint x="0" y="0" />
+        <di:waypoint x="0" y="0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_ee88aa9c3eff4decbb391fdfca2c1f89" bpmnElement="MessageFlow_76c732077e70489fa89af60e6041d963">
+        <di:waypoint x="0" y="0" />
+        <di:waypoint x="0" y="0" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

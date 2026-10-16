@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Layout.Title" xml:space="preserve"><value>BPMN Demo</value></data>
+  <data name="Layout.Documentation" xml:space="preserve"><value>Documentation and demos</value></data>
+  <data name="Layout.AboutBlazor" xml:space="preserve"><value>About Blazor</value></data>
+  <data name="Layout.UnhandledError" xml:space="preserve"><value>An unhandled error has occurred.</value></data>
+  <data name="Layout.Reload" xml:space="preserve"><value>Reload</value></data>
+  <data name="Layout.Dismiss" xml:space="preserve"><value>Dismiss</value></data>
+  <data name="Reconnect.Rejoining" xml:space="preserve"><value>Rejoining the server...</value></data>
+  <data name="Reconnect.RetryIn" xml:space="preserve"><value>Rejoin failed... trying again in {0} seconds.</value><comment>{0} is replaced by the live countdown element; preserve the placeholder.</comment></data>
+  <data name="Reconnect.Failed" xml:space="preserve"><value>Failed to rejoin. Please retry or reload the page.</value></data>
+  <data name="Reconnect.Retry" xml:space="preserve"><value>Retry</value></data>
+  <data name="Reconnect.Paused" xml:space="preserve"><value>The session has been paused by the server.</value></data>
+  <data name="Reconnect.Resume" xml:space="preserve"><value>Resume</value></data>
+  <data name="Reconnect.ResumeFailed" xml:space="preserve"><value>Failed to resume the session. Please reload the page.</value></data>
+  <data name="NotFound.Title" xml:space="preserve"><value>Not Found</value></data>
+  <data name="NotFound.Description" xml:space="preserve"><value>Sorry, the content you are looking for does not exist.</value></data>
+  <data name="Error.Title" xml:space="preserve"><value>Error</value></data>
+  <data name="Error.Heading" xml:space="preserve"><value>Error.</value></data>
+  <data name="Error.Description" xml:space="preserve"><value>An error occurred while processing your request.</value></data>
+  <data name="Error.RequestId" xml:space="preserve"><value>Request ID:</value></data>
+  <data name="Error.DevelopmentMode" xml:space="preserve"><value>Development Mode</value></data>
+  <data name="Error.DevelopmentDetails" xml:space="preserve"><value>Swapping to the {0} environment will display more detailed information about the error that occurred.</value><comment>{0} is the invariant environment name Development.</comment></data>
+  <data name="Error.DevelopmentWarning" xml:space="preserve"><value>The {0} environment shouldn't be enabled for deployed applications.</value><comment>{0} is the invariant environment name Development.</comment></data>
+  <data name="Error.SensitiveInformation" xml:space="preserve"><value>It can result in displaying sensitive information from exceptions to end users.</value></data>
+  <data name="Error.LocalDebugging" xml:space="preserve"><value>For local debugging, enable the {0} environment by setting the {1} environment variable to {0} and restarting the app.</value><comment>{0} is Development; {1} is ASPNETCORE_ENVIRONMENT. Do not translate these argument values.</comment></data>
+</root>

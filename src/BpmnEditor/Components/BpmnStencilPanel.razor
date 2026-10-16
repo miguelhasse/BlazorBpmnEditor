@@ -1,0 +1,116 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.AspNetCore.Components.Bpmn.Resources.BpmnEditorStrings> EditorL
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnStencilPanelBase
+@using static Hasseware.AspNetCore.Components.Bpmn.BpmnStencilPresentation
+
+@*
+    Vertical, icon plus text. Icon-only is compact but unreadable for a notation with five kinds of
+    Gateway and a dozen Tasks, and the icons come from the same manifest the canvas draws from, so
+    a tool always looks like what it creates.
+*@
+<div class="@CssClass("bpmn-stencil")" role="listbox" aria-label="@EffectiveAriaLabel" aria-orientation="vertical" @attributes="AdditionalAttributes">
+    @if (Groups.Count == 0)
+    {
+        <p class="bpmn-stencil__empty">@EffectiveEmptyMessage</p>
+    }
+
+    @foreach (var group in Groups)
+    {
+        <div class="bpmn-stencil__group" role="group" aria-label="@Display.StencilGroup(group)">
+            <h3 class="bpmn-stencil__title">@Display.StencilGroup(group)</h3>
+
+            @foreach (var entry in group.Entries)
+            {
+                var key = KeyOf(group, entry);
+
+                <div class="bpmn-stencil__tool @ModifierFor(entry)"
+                     role="option"
+                     tabindex="@(entry.IsEnabled ? 0 : -1)"
+                     aria-selected="false"
+                     aria-disabled="@(entry.IsEnabled ? null : "true")"
+                     title="@TitleOf(entry)"
+                     draggable="@(entry.IsEnabled ? "true" : "false")"
+                     @key="key"
+                     @ondragstart="@(() => BeginDragAsync(entry))"
+                     @ondragend="EndDragAsync"
+                     @onkeydown="@(args => HandleKeyDownAsync(args, entry))">
+                    @*
+                        The whole element, not one half of it: the outline that says what family it
+                        belongs to, and the symbol inside that says which member. An entry that drew
+                        only its glyph left a Service Task looking like a bare gear, and one that
+                        drew only its outline made every typed Task identical.
+
+                        The silhouettes are strokes and the manifest glyphs are fills, because that
+                        is what each of them is on the canvas — notation drawn as a border, and a
+                        symbol drawn inside it.
+                    *@
+                    <svg class="bpmn-stencil__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path class="bpmn-stencil__silhouette" d="@Silhouette(entry).Outline" stroke-dasharray="@Silhouette(entry).OutlineDashArray" />
+
+                        @if (Silhouette(entry).Detail is { Length: > 0 } detail)
+                        {
+                            <path class="bpmn-stencil__silhouette" d="@detail" />
+                        }
+
+                        @if (IconFor(entry) is { } icon)
+                        {
+                            <path class="bpmn-stencil__glyph" d="@icon.PathData" transform="@GlyphTransform(entry)" />
+                        }
+                    </svg>
+
+                    <span class="bpmn-stencil__label">@Display.StencilEntry(entry)</span>
+                </div>
+            }
+        </div>
+    }
+    @if (TemplateGroups.Count > 0)
+    {
+        <details class="bpmn-stencil__templates" open>
+            <summary class="bpmn-stencil__title">@EditorText("StencilPanel.Templates")</summary>
+            <input class="bpmn-stencil__search" type="search" aria-label="@EditorText("StencilPanel.SearchTemplates")"
+                   placeholder="@EditorText("StencilPanel.SearchTemplates")" @bind="TemplateSearch" @bind:event="oninput" />
+            @foreach (var group in TemplateGroups)
+            {
+                var entries = MatchingTemplates(group).ToArray();
+                if (entries.Length == 0) { continue; }
+                <div class="bpmn-stencil__group" role="group" aria-label="@Display.StencilGroup(group)">
+                    <h3 class="bpmn-stencil__title">@Display.StencilGroup(group)</h3>
+                    @foreach (var entry in entries)
+                    {
+                        <div class="bpmn-stencil__tool bpmn-stencil__template-tool @ModifierFor(entry)"
+                             role="option" tabindex="@(entry.IsEnabled ? 0 : -1)" aria-selected="false"
+                             aria-disabled="@(entry.IsEnabled ? null : "true")" title="@TitleOf(entry)"
+                             draggable="@(entry.IsEnabled ? "true" : "false")" @key="KeyOf(group, entry)"
+                             @ondragstart="@(() => BeginDragAsync(entry))" @ondragend="EndDragAsync"
+                             @onclick="@(() => ActivateAsync(entry))"
+                             @onkeydown="@(args => HandleKeyDownAsync(args, entry))">
+                            @if (TemplateIcon(entry) is { } iconUrl)
+                            {
+                                <img class="bpmn-stencil__icon" src="@iconUrl" alt="" />
+                            }
+                            else
+                            {
+                                <svg class="bpmn-stencil__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path class="bpmn-stencil__silhouette" d="@Silhouette(entry).Outline" stroke-dasharray="@Silhouette(entry).OutlineDashArray" />
+                                    @if (Silhouette(entry).Detail is { Length: > 0 } detail)
+                                    {
+                                        <path class="bpmn-stencil__silhouette" d="@detail" />
+                                    }
+                                    @if (IconFor(entry) is { } icon)
+                                    {
+                                        <path class="bpmn-stencil__glyph" d="@icon.PathData" transform="@GlyphTransform(entry)" />
+                                    }
+                                </svg>
+                            }
+                            <span class="bpmn-stencil__label">@Display.StencilEntry(entry)</span>
+                        </div>
+                    }
+                </div>
+            }
+            @if (!TemplateGroups.Any(group => MatchingTemplates(group).Any()))
+            {
+                <p class="bpmn-stencil__empty" role="status">@EditorText("StencilPanel.NoTemplates")</p>
+            }
+        </details>
+    }
+</div>

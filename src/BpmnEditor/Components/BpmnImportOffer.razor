@@ -1,0 +1,135 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.AspNetCore.Components.Bpmn.Resources.BpmnEditorStrings> EditorL
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnImportOfferBase
+@using Hasseware.AspNetCore.Components.Bpmn.Editing
+@using Hasseware.AspNetCore.Components.Bpmn.Serialization
+@using Hasseware.AspNetCore.Components.Bpmn.Validation
+
+@if (Preview is { } preview)
+{
+    <div class="@CssClass("bpmn-import")" role="dialog" aria-modal="true" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+        <div class="bpmn-import__backdrop"></div>
+
+        <div class="bpmn-import__panel">
+            <h2 class="bpmn-import__title">@EditorText("ImportOffer.Title", preview.FileName)</h2>
+
+            @if (preview.Error is { Length: > 0 } error)
+            {
+                @*
+                    A file that will not parse is an ordinary answer to "what is in this file", not
+                    a failure of the editor — the user picked the wrong one, or it is not BPMN.
+                *@
+                <p class="bpmn-import__error">@EditorText("ImportOffer.Error", error)</p>
+            }
+            else
+            {
+                <dl class="bpmn-import__facts">
+                    <div class="bpmn-import__fact">
+                        <dt>@EditorText("ImportOffer.Elements")</dt>
+                        <dd>@EditorText("ImportOffer.ElementCounts", preview.FlowNodeCount, preview.ConnectorCount)</dd>
+                    </div>
+                    <div class="bpmn-import__fact">
+                        <dt>@EditorText("ImportOffer.Diagrams")</dt>
+                        <dd>@preview.DiagramCount</dd>
+                    </div>
+                    <div class="bpmn-import__fact">
+                        <dt>@EditorText("ImportOffer.Problems")</dt>
+                        <dd>
+                            @if (preview.Validation.Diagnostics.Count == 0)
+                            {
+                                <span>@EditorText("ImportOffer.NoProblems")</span>
+                            }
+                            else
+                            {
+                                <span>@EditorText("ImportOffer.ProblemCounts", preview.Validation.ErrorCount, preview.Validation.WarningCount)</span>
+                            }
+                        </dd>
+                    </div>
+
+                    <div class="bpmn-import__fact @(preview.SchemaValidationStatus == BpmnSchemaValidationStatus.Failed ? "bpmn-import__fact--warn" : null)">
+                        <dt>@EditorText("ImportOffer.Schema")</dt>
+                        <dd>
+                            @(preview.SchemaValidationStatus switch
+                            {
+                                BpmnSchemaValidationStatus.Passed => EditorText("ImportOffer.SchemaPassed"),
+                                BpmnSchemaValidationStatus.Failed => EditorText("ImportOffer.SchemaFailed", preview.SchemaFindings.Count),
+                                _ => EditorText("ImportOffer.SchemaSkipped"),
+                            })
+                        </dd>
+                    </div>
+
+                    @if (preview.ChangedCount > 0)
+                    {
+                        @*
+                            Not the same warning as losing content: nothing was lost, but what opens
+                            is not quite what the file stated. Sections 10.2 and 6.1 are why this is
+                            here at all — a reader that quietly rewrote a file would be the failure
+                            they describe, so every rewrite is named before it is accepted.
+                        *@
+                        <div class="bpmn-import__fact bpmn-import__fact--warn">
+                            <dt>@EditorText("ImportOffer.Changed")</dt>
+                            <dd>@EditorText("ImportOffer.ChangedCount", preview.ChangedCount)</dd>
+                        </div>
+                    }
+
+                    @if (preview.DroppedCount > 0)
+                    {
+                        @*
+                            The number that actually decides it. Section 10.6 wants a round trip to
+                            be lossless, and this is where a file says which parts of it will not be.
+                        *@
+                        <div class="bpmn-import__fact bpmn-import__fact--warn">
+                            <dt>@EditorText("ImportOffer.NotKept")</dt>
+                            <dd>@EditorText("ImportOffer.NotKeptCount", preview.DroppedCount)</dd>
+                        </div>
+                    }
+                </dl>
+
+                @if (Changed.Count > 0)
+                {
+                    <ul class="bpmn-import__changed">
+                        @foreach (var diagnostic in Changed)
+                        {
+                            <li>@diagnostic.Message</li>
+                        }
+                    </ul>
+                }
+
+                @if (preview.SchemaFindings.Count > 0)
+                {
+                    <ul class="bpmn-import__changed">
+                        @foreach (var diagnostic in preview.SchemaFindings)
+                        {
+                            <li>@diagnostic.Message</li>
+                        }
+                    </ul>
+                }
+
+                @if (Dropped.Count > 0)
+                {
+                    <ul class="bpmn-import__dropped">
+                        @foreach (var diagnostic in Dropped)
+                        {
+                            <li>@diagnostic.Message</li>
+                        }
+                    </ul>
+                }
+            }
+
+            <p class="bpmn-import__note">@EditorText("ImportOffer.Note")</p>
+
+            <div class="bpmn-import__actions">
+                <button type="button" class="bpmn-import__cancel" @onclick="CancelAsync">
+                    @EditorText("ImportOffer.Cancel")
+                </button>
+
+                <button type="button"
+                        class="bpmn-import__accept"
+                        disabled="@(!preview.CanAccept)"
+                        @onclick="AcceptAsync">
+                    @EditorText("ImportOffer.Open")
+                </button>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,51 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnPropertyEntryComponent
+@using Hasseware.AspNetCore.Components.Bpmn.Editing
+@using Hasseware.AspNetCore.Components.Bpmn.Validation
+
+<div class="@(Block + "__property " + Block + "__list")" title="@Entry.Tooltip">
+    <span class="@(Block + "__label")">@Entry.Label</span>
+    <table class="@(Block + "__table")" aria-label="@Entry.Label">
+        <thead><tr>
+            @foreach (var column in VisibleColumns)
+            {
+                <th scope="col">@column.Label</th>
+            }
+            @if (!ReadOnly) { <th scope="col">@EditorL["ListEntry.Actions"]</th> }
+        </tr></thead>
+        <tbody>
+            @for (var index = 0; index < _rows.Count; index++)
+            {
+                var rowIndex = index;
+                <tr>
+                    @foreach (var column in VisibleColumns)
+                    {
+                        <td>
+                            @if (column.Feel is BpmnFeelMode.Required or BpmnFeelMode.Optional || column.ExpressionLanguage != BpmnExpressionLanguage.None)
+                            {
+                                <BpmnPropertyEntryView Context="@CellContext(rowIndex, column)" />
+                            }
+                            else
+                            {
+                                <input type="text" class="@(Block + "__text")" readonly="@ReadOnly"
+                                       value="@_rows[rowIndex].GetValueOrDefault(column.Name)" placeholder="@Entry.Placeholder"
+                                       aria-label="@EditorL["ListEntry.CellLabel", column.Label, rowIndex + 1]"
+                                       @onchange="@(args => ChangeCellAsync(rowIndex, column.Name, args.Value as string))" />
+                            }
+                        </td>
+                    }
+                    @if (!ReadOnly)
+                    {
+                        <td class="@(Block + "__row-actions")">
+                            <button type="button" aria-label="@EditorL["ListEntry.RemoveLabel", rowIndex + 1]" @onclick="@(() => RemoveAsync(rowIndex))">@EditorL["ListEntry.Remove"]</button>
+                            <button type="button" aria-label="@EditorL["ListEntry.MoveUp", rowIndex + 1]" disabled="@(rowIndex == 0)" @onclick="@(() => MoveAsync(rowIndex, -1))">↑</button>
+                            <button type="button" aria-label="@EditorL["ListEntry.MoveDown", rowIndex + 1]" disabled="@(rowIndex == _rows.Count - 1)" @onclick="@(() => MoveAsync(rowIndex, 1))">↓</button>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    @if (!ReadOnly) { <button type="button" class="@(Block + "__add-row")" @onclick="AddAsync">@EditorL["ListEntry.Add"]</button> }
+    <BpmnPropertyEntryHelp Context="@Context" />
+</div>

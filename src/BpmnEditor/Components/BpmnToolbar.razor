@@ -1,0 +1,46 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.AspNetCore.Components.Bpmn.Resources.BpmnEditorStrings> EditorL
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnToolbarBase
+
+<div class="@CssClass("bpmn-toolbar")" role="toolbar" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+    <button type="button" class="bpmn-toolbar__button"
+            title="@EditorText("Toolbar.ZoomOut.Title")"
+            aria-label="@EditorText("Toolbar.ZoomOut")"
+            @onclick="@(() => ExecuteAsync(ViewportCommand.ZoomOut))">&#8722;</button>
+
+    <span class="bpmn-toolbar__zoom" aria-live="polite">@ZoomLabel</span>
+
+    <button type="button" class="bpmn-toolbar__button"
+            title="@EditorText("Toolbar.ZoomIn.Title")"
+            aria-label="@EditorText("Toolbar.ZoomIn")"
+            @onclick="@(() => ExecuteAsync(ViewportCommand.ZoomIn))">&#43;</button>
+
+    <button type="button" class="bpmn-toolbar__button"
+            title="@EditorText("Toolbar.Reset.Title")"
+            aria-label="@EditorText("Toolbar.Reset")"
+            @onclick="@(() => ExecuteAsync(ViewportCommand.Reset))">@EditorText("Toolbar.Reset.Text")</button>
+
+    <button type="button" class="bpmn-toolbar__button"
+            title="@EditorText("Toolbar.Fit.Title")"
+            aria-label="@EditorText("Toolbar.Fit")"
+            @onclick="@(() => ExecuteAsync(ViewportCommand.FitToContent))">@EditorText("Toolbar.Fit.Text")</button>
+
+    <button type="button" class="bpmn-toolbar__button"
+            title="@EditorText("Toolbar.Undo")"
+            aria-label="@EditorText("Toolbar.Undo")"
+            disabled="@(!CanUndo)"
+            @onclick="@(() => UndoAsync())">@EditorText("Toolbar.Undo")</button>
+
+    <button type="button" class="bpmn-toolbar__button"
+            title="@EditorText("Toolbar.Redo")"
+            aria-label="@EditorText("Toolbar.Redo")"
+            disabled="@(!CanRedo)"
+            @onclick="@(() => RedoAsync())">@EditorText("Toolbar.Redo")</button>
+
+    <button type="button" class="bpmn-toolbar__button"
+            title="@EditorText("Toolbar.Shortcuts")"
+            aria-label="@EditorText("Toolbar.Shortcuts")"
+            @onclick="@ShowShortcuts">?</button>
+
+    @ChildContent
+</div>

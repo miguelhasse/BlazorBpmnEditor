@@ -1,0 +1,8 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnPropertyEntryComponent
+
+<BpmnPropertyEntryFrame Context="@Context">
+    <input type="checkbox" class="@(Block + "__check")" disabled="@ReadOnly" checked="@(Entry.Value == "true")"
+           aria-invalid="@(Entry.Error is not null ? "true" : null)"
+           @onchange="@(args => SubmitAsync(args.Value is true ? "true" : "false"))" />
+</BpmnPropertyEntryFrame>

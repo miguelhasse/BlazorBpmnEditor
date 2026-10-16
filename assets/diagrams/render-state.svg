@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1010" role="img" aria-labelledby="title desc">
+  <title id="title">Managed editor render path</title>
+  <desc id="desc">Derived state is cached, equivalent state is reused, and state-only cascades render only affected presentation components. Local work bypasses this filter.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="140%"><feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity=".13"/></filter>
+    <style>
+      text { font-family: Segoe UI, Arial, sans-serif; font-size: 16px; } text:not([fill]) { fill: #1e293b; }
+      .box { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.5; filter: url(#shadow); }
+      .data { fill: #f0fdf4; stroke: #059669; stroke-width: 1.5; filter: url(#shadow); }
+      .edge { fill: none; stroke: #2563eb; stroke-width: 2; marker-end: url(#arrow); }
+      .heading { font-size: 24px; font-weight: 700; } .name { font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="1100" height="1010" fill="#f8fafc"/>
+  <text x="550" y="38" text-anchor="middle" class="heading">Managed editor render path</text>
+  <text x="550" y="64" text-anchor="middle" fill="#64748b">Immutable snapshots preserve identity; unchanged state sends no notification.</text>
+  <line x1="40" y1="84" x2="1060" y2="84" stroke="#e2e8f0" stroke-width="1.5"/>
+  <path class="edge" d="M320 210V250"/>
+  <path class="edge" d="M320 350V390"/>
+  <path class="edge" d="M320 490V530"/>
+  <path class="edge" d="M320 630V670"/>
+  <path class="edge" d="M320 790V830"/>
+  <path class="edge" d="M550 890H630"/>
+  <path class="edge" d="M825 350V830"/>
+  <g transform="translate(90 110)">
+    <rect class="box" width="460" height="100" rx="8"/>
+    <text x="230" y="28" text-anchor="middle"><tspan class="name">Session command / canvas event</tspan><tspan x="230" dy="25">Edit · selection · viewport</tspan><tspan x="230" dy="25">Configuration / registry changes</tspan></text>
+  </g>
+  <g transform="translate(90 250)">
+    <rect class="data" width="460" height="100" rx="8"/>
+    <text x="230" y="28" text-anchor="middle"><tspan class="name">BpmnEditorSession caches</tspan><tspan x="230" dy="25">Descriptions · graph · diagrams · callables</tspan><tspan x="230" dy="25">Menus · contextual actions · expansions</tspan></text>
+  </g>
+  <g transform="translate(90 390)">
+    <rect class="box" width="460" height="100" rx="8"/>
+    <text x="230" y="28" text-anchor="middle"><tspan class="name">RefreshState</tspan><tspan x="230" dy="25">Preserve unchanged slices</tspan><tspan x="230" dy="25">Reuse equivalent BpmnEditorState</tspan></text>
+  </g>
+  <g transform="translate(90 530)">
+    <rect class="box" width="460" height="100" rx="8"/>
+    <text x="230" y="28" text-anchor="middle"><tspan class="name">Changed state only</tspan><tspan x="230" dy="25">StateChanged event</tspan><tspan x="230" dy="25">BpmnEditorScope rerender</tspan></text>
+  </g>
+  <g transform="translate(90 670)">
+    <rect class="box" width="460" height="120" rx="8"/>
+    <text x="230" y="29" text-anchor="middle"><tspan class="name">BpmnStateRenderGate</tspan><tspan x="230" dy="25">Detect state-only cascade updates</tspan><tspan x="230" dy="25">Culture and other parameter changes</tspan><tspan x="230" dy="25">bypass state-slice filtering</tspan></text>
+  </g>
+  <g transform="translate(90 830)">
+    <rect class="box" width="460" height="120" rx="8"/>
+    <text x="230" y="29" text-anchor="middle"><tspan class="name">ShouldRenderOnStateChange</tspan><tspan x="230" dy="25">Default: true</tspan><tspan x="230" dy="25">Presentation bases compare the slices</tspan><tspan x="230" dy="25">their built-in markup reads</tspan></text>
+  </g>
+  <g transform="translate(630 210)">
+    <rect class="box" width="390" height="140" rx="8"/>
+    <text x="195" y="29" text-anchor="middle"><tspan class="name">Local rendering</tspan><tspan x="195" dy="25">Events / explicit render</tspan><tspan x="195" dy="25">Async completion</tspan><tspan x="195" dy="25">Changed parameters</tspan><tspan x="195" dy="25">Normal Blazor rendering</tspan></text>
+  </g>
+  <g transform="translate(630 830)">
+    <rect class="box" width="390" height="120" rx="8"/>
+    <text x="195" y="29" text-anchor="middle"><tspan class="name">Render affected components</tspan><tspan x="195" dy="25">Cached property groups / contexts</tspan><tspan x="195" dy="25">Localized validation rows</tspan><tspan x="195" dy="25">Cached component resolution</tspan></text>
+  </g>
+</svg>

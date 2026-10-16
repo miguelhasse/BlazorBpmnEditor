@@ -1,0 +1,46 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@using Hasseware.AspNetCore.Components.Bpmn.Configuration
+    <BpmnCanvas @ref="Canvas"
+                Class="bpmn-editor__canvas"
+                Style="@Session.Theme.Style"
+                Configuration="Session.ConfigurationSnapshot"
+                Document="Session.DrawnDocument"
+                DiagramId="@Session.ActiveDiagramId"
+                AriaLabel="@Session.AriaLabel"
+                OnCanvasInitialized="Session.HandleCanvasInitializedAsync"
+                OnDocumentLoaded="Session.HandleDocumentLoadedAsync"
+                OnConfigRejected="Session.OnConfigRejected"
+                OnViewportChanged="Session.HandleViewportChangedAsync"
+                OnShortcutInvoked="Session.HandleShortcutInvokedAsync"
+                OnSelectionChanged="Session.HandleSelectionChangedAsync"
+                OnSelectionAnchorChanged="Session.TrackSelectionAnchor"
+                OnEditRequested="Session.HandleEditRequestedAsync"
+                OnEditRejected="Session.OnEditRejected"
+                OnContextMenuRequested="Session.HandleContextMenuRequestedAsync"
+                OnLabelEditRequested="Session.HandleLabelEditRequestedAsync"
+                OnFileDropped="Session.HandleFileDroppedAsync"
+                OnDrop="Session.HandleDropAsync">
+
+        @*
+            Drawn as children of the canvas host, not siblings of it. Their coordinates are the
+            client anchors the canvas reported, which are relative to that element's box — placing
+            them anywhere else would mean applying the difference by hand, every frame.
+        *@
+        @*
+            The diagram told rather than drawn. Inside the canvas host so a reader who has just
+            been told what this region is walks straight into its contents, and so the whole of it
+            is one landmark rather than a picture and a list that happen to agree.
+        *@
+        @*
+            Each widget reads its own slice of the cascaded editor state and sends its commands to
+            the cascaded session; only the labels a host may want to reword are passed by hand.
+        *@
+        @if (State.Overlays.AccessibleTree.IsOpen)
+        {
+            <BpmnPart Part="BpmnEditorPart.AccessibleTree" />
+        }
+        <BpmnPart Part="BpmnEditorPart.ContextMenu" />
+        <BpmnPart Part="BpmnEditorPart.LabelEditor" />
+        <BpmnPart Part="BpmnEditorPart.ContextualActions" />
+        @ChildContent
+    </BpmnCanvas>

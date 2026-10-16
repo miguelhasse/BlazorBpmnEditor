@@ -1,0 +1,18 @@
+Embedded moddle descriptors (MIT):
+- zeebe.json: https://github.com/camunda/zeebe-bpmn-moddle (main, retrieved 2026-10-08).
+  Copyright (c) 2020-present Camunda Services GmbH. See LICENSE-zeebe.txt.
+- camunda.json: https://github.com/camunda/camunda-bpmn-moddle (main, retrieved 2026-10-08).
+  Copyright (c) 2014-2017 camunda Services GmbH. See LICENSE-camunda.txt.
+BPMN type hierarchy data (MIT):
+- https://github.com/bpmn-io/bpmn-moddle/blob/main/resources/bpmn/json/bpmn.json
+  See LICENSE-bpmn-moddle.txt for copyright and full MIT license.
+
+XML conventions: moddle-xml uses the type name for complex child tags, applying
+xml.tagAlias="lowerCase" only when the package requests it (first character only).
+Without that hint, case is retained. xml.serialize="property" and "xsi:type"
+use the property's name as the tag; xsi:type additionally carries the actual type.
+Primitive values and references also use property names; isBody uses text content.
+See https://github.com/bpmn-io/moddle-xml/blob/main/lib/write.js (nameToAlias,
+collectContainments). The registry retains serialization hints and maps declared
+child order accordingly; parentless element lookup cannot disambiguate xsi:type
+polymorphism. Unknown XML remains opaque rather than guessing a derived type.

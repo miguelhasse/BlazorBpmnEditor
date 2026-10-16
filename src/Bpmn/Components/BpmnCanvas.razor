@@ -1,0 +1,55 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+
+<div @ref="_hostElement"
+     class="bpmn-canvas @Class"
+     style="@Style"
+     tabindex="0"
+     role="application"
+     aria-label="@(AriaLabel ?? Strings["AriaLabel"])"
+     @ondragover="OnDragOver"
+     @ondragover:preventDefault="true"
+     @ondrop="OnDrop"
+     @ondrop:preventDefault="true"
+     @attributes="AdditionalAttributes">
+    @*
+        JointJS mounts its paper inside this element and nothing else ever renders into it.
+
+        Blazor and a third-party library cannot both manage one element's children: the renderer
+        walks its own logical positions, and an <svg> appended by JointJS among them makes it
+        apply attributes to the wrong node ("Cannot set attribute on non-element child"). One
+        element the library owns entirely, one the renderer owns entirely, and neither has to know
+        about the other.
+    *@
+    @*
+        Hidden from assistive technology, deliberately.
+
+        The drawn cells keep their roles and names — a tool inspecting the DOM reads the same words
+        a reader hears, which is worth having — but the SVG is not what a screen reader should walk.
+        In paint order it is arbitrary, it says nothing about what connects to what, and once the
+        paper culls what is off screen it is not even complete. The accessible representation is the
+        tree beside it, built from the model; announcing both would say everything twice and mean
+        less each time.
+    *@
+    <div class="bpmn-canvas__paper" aria-hidden="true" @ref="_paperElement"></div>
+
+    @*
+        The expand controls live here: real buttons, drawn over the collapsed "+" markers.
+
+        Empty, and filled by the canvas module rather than by the renderer — the same division as
+        the paper above, for the same reason. It is outside the paper because it must NOT be
+        hidden from assistive technology: section 1.2.1 wants the expand control focusable and
+        named, and ARIA gives a descendant no way out of an aria-hidden ancestor, so a button
+        inside the paper would be a tab stop a screen reader could not announce.
+    *@
+    <div class="bpmn-canvas__controls"></div>
+
+    @*
+        Overlays that must sit above the paper — the context menu, the inline label editor, the
+        contextual actions — render here, as children of the canvas host rather than siblings of
+        the editor, so they position against this element's box. The surface cascade is how
+        they can tell they are here.
+    *@
+    <CascadingValue Value="Surface" IsFixed="true">
+        @ChildContent
+    </CascadingValue>
+</div>

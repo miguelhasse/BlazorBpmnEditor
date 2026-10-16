@@ -1,0 +1,9 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnPropertyEntryComponent
+
+<BpmnPropertyEntryFrame Context="@ValidationContext">
+    <input type="text" class="@(Block + "__text")" readonly="@ReadOnly" value="@_value"
+           placeholder="@Entry.Placeholder" aria-invalid="@(ValidationContext.Entry.Error is not null ? "true" : null)"
+           aria-describedby="@(ValidationContext.Entry.Error is not null ? ErrorId : null)"
+           @oninput="Input" @onchange="ChangeAsync" />
+</BpmnPropertyEntryFrame>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Home.Title" xml:space="preserve"><value>Home</value></data>
+  <data name="Home.Heading" xml:space="preserve"><value>BPMN component playground</value></data>
+  <data name="Home.OpenEditor" xml:space="preserve"><value>Open the editor</value></data>
+  <data name="Home.PlainEditor" xml:space="preserve"><value>Plain HTML editor</value></data>
+  <data name="Home.Gallery" xml:space="preserve"><value>Notation gallery</value></data>
+  <data name="Home.Icons" xml:space="preserve"><value>Icon manifest</value></data>
+  <data name="Home.Interchange" xml:space="preserve"><value>XML interchange</value></data>
+  <data name="SampleDiagram" xml:space="preserve"><value>Sample diagram</value></data>
+  <data name="ImportDiagnostics" xml:space="preserve"><value>{0} import diagnostic(s)</value></data>
+  <data name="DocumentSummary" xml:space="preserve"><value>{0} flow nodes, {1} sequence flows, {2} diagram(s)</value></data>
+  <data name="CouldNotOpen" xml:space="preserve"><value>Could not open {0}: {1}</value></data>
+  <data name="CouldNotRead" xml:space="preserve"><value>Could not read {0}: {1}</value></data>
+  <data name="CouldNotFetch" xml:space="preserve"><value>Could not fetch {0}: {1}</value></data>
+  <data name="Yes" xml:space="preserve"><value>yes</value></data>
+  <data name="No" xml:space="preserve"><value>no</value></data>
+  <data name="ImportSeverity.Info" xml:space="preserve"><value>Info</value></data>
+  <data name="ImportSeverity.Degraded" xml:space="preserve"><value>Degraded</value></data>
+  <data name="ImportSeverity.Dropped" xml:space="preserve"><value>Dropped</value></data>
+  <data name="ImportSeverity.SchemaError" xml:space="preserve"><value>Schema error</value></data>
+  <data name="ExportSeverity.Info" xml:space="preserve"><value>Info</value></data>
+  <data name="ExportSeverity.Normalized" xml:space="preserve"><value>Normalized</value></data>
+  <data name="ExportSeverity.Dropped" xml:space="preserve"><value>Dropped</value></data>
+  <data name="Editor.Title" xml:space="preserve"><value>BPMN editor</value></data>
+  <data name="Editor.ExportXml" xml:space="preserve"><value>Export XML</value></data>
+  <data name="Editor.ExportJson" xml:space="preserve"><value>Export JSON</value></data>
+  <data name="Editor.OpenFile" xml:space="preserve"><value>Open file</value></data>
+  <data name="Editor.SnapToGrid" xml:space="preserve"><value>Snap to grid</value></data>
+  <data name="Editor.Properties" xml:space="preserve"><value>Properties</value></data>
+  <data name="Editor.HighContrast" xml:space="preserve"><value>High contrast</value></data>
+  <data name="Editor.ReadOnly" xml:space="preserve"><value>Read only</value></data>
+  <data name="Editor.ExecutionState" xml:space="preserve"><value>Execution state</value></data>
+  <data name="Editor.AnimateTokens" xml:space="preserve"><value>Animate tokens</value></data>
+  <data name="Editor.DiagramPath" xml:space="preserve"><value>Diagram path</value></data>
+  <data name="Editor.ExportedBpmn" xml:space="preserve"><value>Exported BPMN {0}</value></data>
+  <data name="Editor.NothingSelected" xml:space="preserve"><value>Nothing selected.</value></data>
+  <data name="Editor.Reading" xml:space="preserve"><value>Reading {0}...</value></data>
+  <data name="Editor.CanvasReady" xml:space="preserve"><value>Canvas ready (instance {0}, config revision {1})</value></data>
+  <data name="Editor.Rendered" xml:space="preserve"><value>Rendered {0} shapes and {1} connectors on '{2}'</value></data>
+  <data name="Editor.Unrendered" xml:space="preserve"><value> ({0} DI entries had no matching element)</value></data>
+  <data name="Editor.ConfigurationRejected" xml:space="preserve"><value>Configuration rejected [{0}] at {1}: {2}</value></data>
+  <data name="Editor.Edited" xml:space="preserve"><value>Edited: {0} nodes, {1} flows.</value></data>
+  <data name="Editor.Opened" xml:space="preserve"><value>Opened {0}.</value></data>
+  <data name="Editor.ServiceTimeout" xml:space="preserve"><value>The service did not answer in time.</value></data>
+  <data name="Editor.Navigated" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Editor.SelectedElement" xml:space="preserve"><value>Selected {0}.</value></data>
+  <data name="Editor.SelectedElements" xml:space="preserve"><value>Selected {0} elements.</value></data>
+  <data name="Editor.EditRejected" xml:space="preserve"><value>Refused ({0}): {1}</value></data>
+  <data name="Gallery.Title" xml:space="preserve"><value>BPMN notation gallery</value></data>
+  <data name="Gallery.NotationSheet" xml:space="preserve"><value>Notation sheet</value></data>
+  <data name="Gallery.Events" xml:space="preserve"><value>Events: all triggers by context</value></data>
+  <data name="Gallery.Gateways" xml:space="preserve"><value>Gateways</value></data>
+  <data name="Gallery.Activities" xml:space="preserve"><value>Activities and markers</value></data>
+  <data name="Gallery.Connectors" xml:space="preserve"><value>Connectors and artifacts</value></data>
+  <data name="Gallery.Swimlanes" xml:space="preserve"><value>Pools and Lanes: both orientations</value></data>
+  <data name="Gallery.Rendered" xml:space="preserve"><value>{0} shapes, {1} connectors</value></data>
+  <data name="Icons.Title" xml:space="preserve"><value>BPMN icon manifest</value></data>
+  <data name="Icons.Metadata" xml:space="preserve"><value>{0} icons, version {1}, content {2} — rendered by the C# registry from the manifest embedded in the component assembly.</value></data>
+  <data name="Icons.Gateways" xml:space="preserve"><value>Gateways</value></data>
+  <data name="Icons.EventTriggers" xml:space="preserve"><value>Event triggers</value></data>
+  <data name="Icons.TaskTypes" xml:space="preserve"><value>Task type symbols</value></data>
+  <data name="Icons.ActivityMarkers" xml:space="preserve"><value>Activity markers</value></data>
+  <data name="Interchange.Title" xml:space="preserve"><value>BPMN interchange</value></data>
+  <data name="Interchange.Intro" xml:space="preserve"><value>Reads a sample, writes it back in both export modes, then reads the result again and compares. Canonical mode regenerates the document from the semantic model; fidelity mode edits the file that was read (specification section 10.6).</value></data>
+  <data name="Interchange.AllowLossy" xml:space="preserve"><value>Allow canonical output that drops source content</value></data>
+  <data name="Interchange.Report" xml:space="preserve"><value>Round-trip report</value></data>
+  <data name="Interchange.Measure" xml:space="preserve"><value>Measure</value></data>
+  <data name="Interchange.Canonical" xml:space="preserve"><value>Canonical</value></data>
+  <data name="Interchange.Fidelity" xml:space="preserve"><value>Fidelity</value></data>
+  <data name="Interchange.ExportDiagnostics" xml:space="preserve"><value>{0} export diagnostic(s)</value></data>
+  <data name="Interchange.Output" xml:space="preserve"><value>Output</value></data>
+  <data name="Interchange.RoundTripping" xml:space="preserve"><value>Round-tripping {0}...</value></data>
+  <data name="Interchange.ImportSummary" xml:space="preserve"><value>{0} · {1} import diagnostic(s)</value></data>
+  <data name="Interchange.NoLossDetails" xml:space="preserve"><value>No loss details were provided.</value></data>
+  <data name="Interchange.ExportRefused" xml:space="preserve"><value>Canonical export refused: {0} source loss(es). Enable the opt-in to review lossy output. {1}</value></data>
+  <data name="Interchange.ModeSummary" xml:space="preserve"><value>{0} characters · {1} line(s) differ from the original · stable on rewrite: {2} · mode used: {3}</value></data>
+  <data name="Interchange.FlowNodes" xml:space="preserve"><value>Flow nodes</value></data>
+  <data name="Interchange.SequenceFlows" xml:space="preserve"><value>Sequence flows</value></data>
+  <data name="Interchange.MessageFlows" xml:space="preserve"><value>Message flows</value></data>
+  <data name="Interchange.Lanes" xml:space="preserve"><value>Lanes</value></data>
+  <data name="Interchange.Artifacts" xml:space="preserve"><value>Artifacts</value></data>
+  <data name="Interchange.DataElements" xml:space="preserve"><value>Data elements</value></data>
+  <data name="Interchange.GlobalDefinitions" xml:space="preserve"><value>Global definitions</value></data>
+  <data name="Interchange.PreservedElements" xml:space="preserve"><value>Preserved root elements</value></data>
+  <data name="Interchange.Shapes" xml:space="preserve"><value>Shapes</value></data>
+  <data name="Interchange.Edges" xml:space="preserve"><value>Edges</value></data>
+  <data name="Interchange.Waypoints" xml:space="preserve"><value>Waypoints</value></data>
+  <data name="Interchange.VendorExtensions" xml:space="preserve"><value>Vendor extensions</value></data>
+  <data name="Interchange.ForeignAttributes" xml:space="preserve"><value>Foreign attributes</value></data>
+  <data name="Interchange.Stable" xml:space="preserve"><value>Stable on rewrite</value></data>
+  <data name="Interchange.Was" xml:space="preserve"><value>{0} (was {1})</value></data>
+</root>

@@ -1,0 +1,194 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data name="DiagramNavigator.Diagram" xml:space="preserve">
+    <value>Diagram</value>
+  </data>
+  <data name="ImportOffer.Title" xml:space="preserve">
+    <value>Open {0}</value>
+  </data>
+  <data name="ImportOffer.Elements" xml:space="preserve">
+    <value>Elements</value>
+  </data>
+  <data name="ImportOffer.Diagrams" xml:space="preserve">
+    <value>Diagrams</value>
+  </data>
+  <data name="ImportOffer.NoProblems" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="ImportOffer.Schema" xml:space="preserve">
+    <value>XML Schema</value>
+  </data>
+  <data name="ImportOffer.SchemaFailed" xml:space="preserve">
+    <value>{0} violation(s) against the supplied schema set; content remains available to edit</value>
+  </data>
+  <data name="ImportOffer.Changed" xml:space="preserve">
+    <value>Changed</value>
+  </data>
+  <data name="ImportOffer.NotKept" xml:space="preserve">
+    <value>Not kept</value>
+  </data>
+  <data name="ImportOffer.Note" xml:space="preserve">
+    <value>Opening this file replaces what is on screen, including its undo history.</value>
+  </data>
+  <data name="PropertyPanel.ElementId" xml:space="preserve">
+    <value>Element id</value>
+  </data>
+  <data name="PropertyPanel.Empty" xml:space="preserve">
+    <value>Select an element to edit its properties.</value>
+  </data>
+  <data name="PropertyPanel.ExtensionsNote" xml:space="preserve">
+    <value>Structure is preserved exactly on export.</value>
+  </data>
+  <data name="PropertyPanel.Lane" xml:space="preserve">
+    <value>Lane</value>
+  </data>
+  <data name="PropertyPanel.Problems" xml:space="preserve">
+    <value>Problems</value>
+  </data>
+  <data name="StencilPanel.SearchTemplates" xml:space="preserve">
+    <value>Search templates</value>
+  </data>
+  <data name="TemplateChooser.AriaLabel" xml:space="preserve">
+    <value>Element template</value>
+  </data>
+  <data name="TemplateChooser.NoMatches" xml:space="preserve">
+    <value>No matching templates.</value>
+  </data>
+  <data name="TemplateChooser.Search" xml:space="preserve">
+    <value>Search templates</value>
+  </data>
+  <data name="TemplateChooser.Unlink" xml:space="preserve">
+    <value>Unlink</value>
+  </data>
+  <data name="TemplateChooser.Version" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
+  <data name="Toolbar.Fit" xml:space="preserve">
+    <value>Fit to content</value>
+  </data>
+  <data name="Toolbar.Fit.Title" xml:space="preserve">
+    <value>Fit the diagram to the viewport</value>
+  </data>
+  <data name="Toolbar.Reset" xml:space="preserve">
+    <value>Reset zoom</value>
+  </data>
+  <data name="Toolbar.Reset.Title" xml:space="preserve">
+    <value>Reset zoom to 100%</value>
+  </data>
+  <data name="Toolbar.Undo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="Toolbar.ZoomIn.Title" xml:space="preserve">
+    <value>Zoom in</value>
+  </data>
+  <data name="Toolbar.ZoomOut.Title" xml:space="preserve">
+    <value>Zoom out</value>
+  </data>
+  <data name="CalledElementPicker.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ImportOffer.Error" xml:space="preserve">
+    <value>This file could not be read: {0}</value>
+  </data>
+  <data name="ImportOffer.ElementCounts" xml:space="preserve">
+    <value>{0} flow nodes, {1} connectors</value>
+  </data>
+  <data name="ImportOffer.Problems" xml:space="preserve">
+    <value>Problems</value>
+  </data>
+  <data name="ImportOffer.ProblemCounts" xml:space="preserve">
+    <value>{0} error(s), {1} warning(s)</value>
+  </data>
+  <data name="ImportOffer.SchemaPassed" xml:space="preserve">
+    <value>Passed the supplied schema set</value>
+  </data>
+  <data name="ImportOffer.SchemaSkipped" xml:space="preserve">
+    <value>Not validated (no schema set supplied)</value>
+  </data>
+  <data name="ImportOffer.ChangedCount" xml:space="preserve">
+    <value>{0} item(s) this editor reads differently</value>
+  </data>
+  <data name="ImportOffer.NotKeptCount" xml:space="preserve">
+    <value>{0} item(s) this editor cannot represent</value>
+  </data>
+  <data name="PropertyPanel.Container" xml:space="preserve">
+    <value>Container</value>
+  </data>
+  <data name="PropertyPanel.Extensions" xml:space="preserve">
+    <value>Extensions</value>
+  </data>
+  <data name="PropertyPanel.Id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="PropertyPanel.Pool" xml:space="preserve">
+    <value>Pool</value>
+  </data>
+  <data name="ReferenceBrowser.Empty" xml:space="preserve">
+    <value>Nothing refers to this element.</value>
+  </data>
+  <data name="StencilPanel.NoTemplates" xml:space="preserve">
+    <value>No matching templates.</value>
+  </data>
+  <data name="StencilPanel.Templates" xml:space="preserve">
+    <value>Templates</value>
+  </data>
+  <data name="TemplateChooser.Applicable" xml:space="preserve">
+    <value>Applicable templates</value>
+  </data>
+  <data name="TemplateChooser.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="TemplateChooser.NotFound" xml:space="preserve">
+    <value>Template not found</value>
+  </data>
+  <data name="TemplateChooser.Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="TemplateChooser.Select" xml:space="preserve">
+    <value>Select template</value>
+  </data>
+  <data name="TemplateChooser.Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Toolbar.Fit.Text" xml:space="preserve">
+    <value>Fit</value>
+  </data>
+  <data name="Toolbar.Redo" xml:space="preserve">
+    <value>Redo</value>
+  </data>
+  <data name="Toolbar.Reset.Text" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Toolbar.Shortcuts" xml:space="preserve">
+    <value>Show keyboard shortcuts</value>
+  </data>
+  <data name="Toolbar.ZoomIn" xml:space="preserve">
+    <value>Zoom in</value>
+  </data>
+  <data name="Toolbar.ZoomOut" xml:space="preserve">
+    <value>Zoom out</value>
+  </data>
+  <data name="FeelEntry.Toggle" xml:space="preserve"><value>Toggle FEEL expression</value></data>
+  <data name="ListEntry.Actions" xml:space="preserve"><value>Actions</value></data>
+  <data name="ListEntry.Add" xml:space="preserve"><value>Add row</value></data>
+  <data name="ListEntry.Remove" xml:space="preserve"><value>Remove</value></data>
+  <data name="ListEntry.RemoveLabel" xml:space="preserve"><value>Remove row {0}</value></data>
+  <data name="ListEntry.MoveUp" xml:space="preserve"><value>Move row {0} up</value></data>
+  <data name="ListEntry.MoveDown" xml:space="preserve"><value>Move row {0} down</value></data>
+  <data name="ListEntry.CellLabel" xml:space="preserve"><value>{0}, row {1}</value></data>
+  <data name="DiagramNavigator.Open" xml:space="preserve"><value>Open</value></data>
+  <data name="ImportOffer.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="ImportOffer.Open" xml:space="preserve"><value>Open</value></data>
+</root>

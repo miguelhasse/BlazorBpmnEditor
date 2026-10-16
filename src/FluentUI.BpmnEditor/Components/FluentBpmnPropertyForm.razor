@@ -1,0 +1,10 @@
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
+
+<BpmnPropertyScopeProvider Block="@Block" MultilineRows="@MultilineRows">
+    <div class="@CssClass" role="group" aria-label="@EffectiveLabel">
+        @foreach (var property in Properties)
+        {
+            <FluentBpmnPropertyEntryView Context="@BuildContext(property)" />
+        }
+    </div>
+</BpmnPropertyScopeProvider>

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 950" role="img" aria-labelledby="title desc">
+  <title id="title">Canvas interop boundaries</title>
+  <desc id="desc">The scope and session call through BpmnEditorCanvas into the sole Core interop owner, BpmnCanvas. Events return through BpmnCanvasEventBridge. Optional FEEL has its own interop.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto-start-reverse"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="140%"><feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity=".13"/></filter>
+    <style>
+      text { font-family: Segoe UI, Arial, sans-serif; font-size: 16px; } text:not([fill]) { fill: #1e293b; }
+      .cs { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.5; filter: url(#shadow); }
+      .kit { fill: #fdf4ff; stroke: #7c3aed; stroke-width: 1.5; filter: url(#shadow); }
+      .js { fill: #fffbeb; stroke: #d97706; stroke-width: 1.5; filter: url(#shadow); }
+      .edge { fill: none; stroke: #2563eb; stroke-width: 2; marker-end: url(#arrow); }
+      .heading { font-size: 24px; font-weight: 700; } .name { font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="1100" height="950" fill="#f8fafc"/>
+  <text x="550" y="38" text-anchor="middle" class="heading">Canvas interop boundaries</text>
+  <text x="550" y="64" text-anchor="middle" fill="#64748b">One Core canvas boundary. UI kits and session do not own JavaScript objects.</text>
+  <line x1="40" y1="84" x2="1060" y2="84" stroke="#e2e8f0" stroke-width="1.5"/>
+  <path class="edge" d="M300 210V260"/>
+  <path class="edge" d="M300 360V410"/>
+  <path class="edge" d="M510 465H610"/>
+  <text x="535" y="453">calls</text>
+  <path class="edge" d="M820 520V575"/>
+  <path class="edge" d="M1030 465H1050V710H510"/>
+  <text x="942" y="698">events</text>
+  <path class="edge" d="M300 655V530"/>
+  <path class="edge" marker-start="url(#arrow)" d="M510 855H610"/>
+  <g transform="translate(90 110)"><rect class="kit" width="420" height="100" rx="8"/>
+    <text x="210" y="29" text-anchor="middle"><tspan class="name">Standard / Fluent / custom kit</tspan><tspan x="210" dy="25">BpmnEditorScope + session</tspan><tspan x="210" dy="25">No canvas JavaScript interop</tspan></text>
+  </g>
+  <g transform="translate(90 260)"><rect class="cs" width="420" height="100" rx="8"/>
+    <text x="210" y="29" text-anchor="middle"><tspan class="name">BpmnEditorCanvas (Core)</tspan><tspan x="210" dy="25">Binds session state and callbacks</tspan><tspan x="210" dy="25">Attaches one canvas per session</tspan></text>
+  </g>
+  <g transform="translate(90 410)"><rect class="cs" width="420" height="120" rx="8"/>
+    <text x="210" y="29" text-anchor="middle"><tspan class="name">BpmnCanvas (Core)</tspan><tspan x="210" dy="25">Sole Core IJSObjectReference owner</tspan><tspan x="210" dy="25">Owns DotNetObjectReference</tspan><tspan x="210" dy="25">Disposes canvas resources</tspan></text>
+  </g>
+  <g transform="translate(610 410)"><rect class="js" width="420" height="110" rx="8"/>
+    <text x="210" y="29" text-anchor="middle"><tspan class="name">Bpmn.Scripts</tspan><tspan x="210" dy="25">TypeScript canvas module</tspan><tspan x="210" dy="25">.lib.module.js static web asset</tspan></text>
+  </g>
+  <g transform="translate(610 575)"><rect class="js" width="420" height="90" rx="8"/>
+    <text x="210" y="32" text-anchor="middle"><tspan class="name">JointJS dia.Paper</tspan><tspan x="210" dy="26">SVG view and live gestures</tspan></text>
+  </g>
+  <g transform="translate(90 655)"><rect class="cs" width="420" height="110" rx="8"/>
+    <text x="210" y="29" text-anchor="middle"><tspan class="name">BpmnCanvasEventBridge (Core)</tspan><tspan x="210" dy="25">Sole Core [JSInvokable] surface</tspan><tspan x="210" dy="25">Typed event forwarding</tspan></text>
+  </g>
+  <g transform="translate(90 800)"><rect class="cs" width="420" height="110" rx="8"/>
+    <text x="210" y="29" text-anchor="middle"><tspan class="name">Bpmn.Feel · BpmnFeelCodeEditor</tspan><tspan x="210" dy="25">Own module / editor references</tspan><tspan x="210" dy="25">Own [JSInvokable] callbacks</tspan></text>
+  </g>
+  <g transform="translate(610 800)"><rect class="js" width="420" height="110" rx="8"/>
+    <text x="210" y="29" text-anchor="middle"><tspan class="name">Bpmn.Feel.Scripts</tspan><tspan x="210" dy="25">Lazy feel-editor.js import</tspan><tspan x="210" dy="25">CodeMirror + @bpmn-io/feel-editor</tspan></text>
+  </g>
+</svg>

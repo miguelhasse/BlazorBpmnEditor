@@ -1,0 +1,78 @@
+/*
+ * Shape presentation. Geometry is decided in TypeScript from the specification; this file only
+ * supplies colour, typography and the few presentational attributes that belong in CSS.
+ */
+.bpmn-label {
+  fill: var(--bpmn-label-color);
+  font-family: var(--bpmn-font-family);
+  /* Labels are decoration over the diagram: clicking one must hit the shape beneath it. */
+  pointer-events: none;
+  user-select: none;
+}
+
+.bpmn-event-ring,
+.bpmn-activity-body,
+.bpmn-activity-inner-border,
+.bpmn-gateway-body,
+.bpmn-swimlane-body,
+.bpmn-swimlane-header,
+.bpmn-data-body,
+.bpmn-group-body {
+  vector-effect: non-scaling-stroke;
+}
+
+.bpmn-event-icon,
+.bpmn-gateway-icon,
+.bpmn-activity-icon,
+/*
+ * Singular, matching the class the markup actually carries. It read `.bpmn-activity-markers` and
+ * so matched nothing, which left every Activity marker quietly clickable and swallowing presses
+ * meant for the shape beneath it. Making them inert is right for all of them, including the
+ * collapsed "+": it is notation, and the control that expands a Sub-Process is a real button
+ * drawn over it rather than the glyph itself.
+ */
+.bpmn-activity-marker {
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.bpmn-annotation-bracket,
+.bpmn-data-decoration {
+  vector-effect: non-scaling-stroke;
+}
+
+.bpmn-connector-line {
+  vector-effect: non-scaling-stroke;
+}
+
+.bpmn-connector-default-marker {
+  pointer-events: none;
+}
+
+/*
+ * Element-template icons (see template-icon.ts). Drawn as authored: an <image> cannot follow
+ * var(--bpmn-stroke), so a host with a monochrome icon set can recolour them for a dark theme
+ * through --bpmn-template-icon-filter (for instance `invert(1) hue-rotate(180deg)`).
+ */
+.bpmn-template-icon {
+  pointer-events: none;
+  filter: var(--bpmn-template-icon-filter, none);
+}
+
+.bpmn-template-replaced {
+  display: none;
+}
+
+/*
+ * Forced colours cannot repaint an authored image, so the notation glyph — which follows the
+ * system palette — comes back and the icon steps aside.
+ */
+@media (forced-colors: active) {
+  .bpmn-template-icon {
+    display: none;
+  }
+
+  .bpmn-template-replaced {
+    display: inline;
+  }
+}

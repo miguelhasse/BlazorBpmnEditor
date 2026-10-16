@@ -1,0 +1,36 @@
+/*
+ * The parallel accessible tree (implementation plan M7).
+ *
+ * Hidden from sight and from nothing else. `display: none` and `visibility: hidden` both take an
+ * element out of the accessible tree and out of the tab order, which is the opposite of what this
+ * is for, so it is clipped to nothing instead — the standard visually-hidden pattern.
+ *
+ * Fixed rather than absolute, and that part is load-bearing. A focused item inside an absolutely
+ * positioned box makes the browser scroll its ancestors to bring the item into view, so every
+ * arrow key nudged the page while the diagram stayed still. Nothing scrolls to reveal a fixed
+ * element.
+ */
+.bpmn-a11y-tree {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  list-style: none;
+}
+
+/*
+ * A visible focus ring would be a 1px box in the corner of the screen, which tells a sighted
+ * keyboard user nothing and looks like a rendering fault. The diagram is what shows where the
+ * reader is: moving through the tree selects the element, and the selection outline is drawn on
+ * the paper.
+ */
+.bpmn-a11y-tree__item:focus {
+  outline: none;
+}

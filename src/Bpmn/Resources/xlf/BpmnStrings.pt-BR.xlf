@@ -1,0 +1,2812 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="pt-BR" original="../BpmnStrings.resx">
+    <body>
+      <trans-unit id="AccessibleTree.AriaLabel">
+        <source>Diagram contents</source>
+        <target state="translated">Conteúdo do diagrama</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Associated">
+        <source>{0}. Associated with {1}.</source>
+        <target state="translated">{0}. Associado a {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Collapsed">
+        <source>{0}, collapsed.</source>
+        <target state="translated">{0}, recolhido.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Connections">
+        <source>{0}. {1}, {2}.</source>
+        <target state="translated">{0}. {1}, {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Container">
+        <source>{0}.</source>
+        <target state="translated">{0}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Empty">
+        <source>This diagram has no elements.</source>
+        <target state="translated">Este diagrama não tem elementos.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Expanded">
+        <source>{0}, expanded.</source>
+        <target state="translated">{0}, expandido.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Incoming">
+        <source>{0} incoming</source>
+        <target state="translated">{0} de entrada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Named">
+        <source>{0} {1}</source>
+        <target state="translated">{0} {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.NoIncoming">
+        <source>no incoming</source>
+        <target state="translated">nenhuma de entrada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.NoOutgoing">
+        <source>no outgoing</source>
+        <target state="translated">nenhuma de saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Outgoing">
+        <source>{0} outgoing</source>
+        <target state="translated">{0} de saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleTree.Unassociated">
+        <source>{0}. Not associated with anything.</source>
+        <target state="translated">{0}. Não associado a nada.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.adHocSubProcess">
+        <source>Ad hoc sub process</source>
+        <target state="translated">Subprocesso ad hoc</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.boundaryEvent">
+        <source>Boundary event</source>
+        <target state="translated">Evento de borda</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.businessRuleTask">
+        <source>Business rule task</source>
+        <target state="translated">Tarefa de regra de negócio</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.callActivity">
+        <source>Call activity</source>
+        <target state="translated">Atividade de chamada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.complexGateway">
+        <source>Complex gateway</source>
+        <target state="translated">Gateway complexo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.dataObjectReference">
+        <source>Data object reference</source>
+        <target state="translated">Referência a objeto de dados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.dataStoreReference">
+        <source>Data store reference</source>
+        <target state="translated">Referência a repositório de dados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.endEvent">
+        <source>End event</source>
+        <target state="translated">Evento de fim</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.eventBasedGateway">
+        <source>Event based gateway</source>
+        <target state="translated">Gateway baseado em eventos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.eventSubProcess">
+        <source>Event sub process</source>
+        <target state="translated">Subprocesso de evento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.exclusiveGateway">
+        <source>Exclusive gateway</source>
+        <target state="translated">Gateway exclusivo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.group">
+        <source>Group</source>
+        <target state="translated">Grupo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.inclusiveGateway">
+        <source>Inclusive gateway</source>
+        <target state="translated">Gateway inclusivo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.intermediateCatchEvent">
+        <source>Intermediate catch event</source>
+        <target state="translated">Evento intermediário de captura</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.intermediateThrowEvent">
+        <source>Intermediate throw event</source>
+        <target state="translated">Evento intermediário de lançamento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.lane">
+        <source>Lane</source>
+        <target state="translated">Raia</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.manualTask">
+        <source>Manual task</source>
+        <target state="translated">Tarefa manual</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.parallelGateway">
+        <source>Parallel gateway</source>
+        <target state="translated">Gateway paralelo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.pool">
+        <source>Pool</source>
+        <target state="translated">Pool</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.receiveTask">
+        <source>Receive task</source>
+        <target state="translated">Tarefa de recebimento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.scriptTask">
+        <source>Script task</source>
+        <target state="translated">Tarefa de script</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.sendTask">
+        <source>Send task</source>
+        <target state="translated">Tarefa de envio</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.serviceTask">
+        <source>Service task</source>
+        <target state="translated">Tarefa de serviço</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.startEvent">
+        <source>Start event</source>
+        <target state="translated">Evento de início</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.subProcess">
+        <source>Sub process</source>
+        <target state="translated">Subprocesso</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.task">
+        <source>Task</source>
+        <target state="translated">Tarefa</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.textAnnotation">
+        <source>Text annotation</source>
+        <target state="translated">Anotação de texto</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.transaction">
+        <source>Transaction</source>
+        <target state="translated">Transação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AccessibleType.userTask">
+        <source>User task</source>
+        <target state="translated">Tarefa de usuário</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CalledElementPicker.Empty">
+        <source>This document has no global Process or Global Task to call. Create one first.</source>
+        <target state="translated">Este documento não tem Processo global ou Tarefa global para chamar. Crie um primeiro.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CalledElementPicker.Title">
+        <source>Call which definition?</source>
+        <target state="translated">Chamar qual definição?</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.CanvasTitle">
+        <source>Canvas</source>
+        <target state="translated">Canvas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.Copy">
+        <source>Copy</source>
+        <target state="translated">Copiar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.Cut">
+        <source>Cut</source>
+        <target state="translated">Recortar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.Delete">
+        <source>Delete</source>
+        <target state="translated">Excluir</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.Duplicate">
+        <source>Duplicate</source>
+        <target state="translated">Duplicar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.EditLabel">
+        <source>Edit label</source>
+        <target state="translated">Editar rótulo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.FitToContent">
+        <source>Fit to content</source>
+        <target state="translated">Ajustar ao conteúdo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.Paste">
+        <source>Paste</source>
+        <target state="translated">Colar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.Redo">
+        <source>Redo</source>
+        <target state="translated">Refazer</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.SelectAll">
+        <source>Select all</source>
+        <target state="translated">Selecionar tudo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Command.Undo">
+        <source>Undo</source>
+        <target state="translated">Desfazer</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Commands">
+        <source>Commands</source>
+        <target state="translated">Comandos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Empty">
+        <source>Nothing to do here</source>
+        <target state="translated">Nada a fazer aqui</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Findings">
+        <source>Validation findings</source>
+        <target state="translated">Resultados da validação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.Properties">
+        <source>Properties</source>
+        <target state="translated">Propriedades</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextMenu.SwitchType">
+        <source>Switch type</source>
+        <target state="translated">Alterar tipo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextualActions.Append.EndEvent">
+        <source>Append End Event</source>
+        <target state="translated">Anexar Evento de fim</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextualActions.Append.ExclusiveGateway">
+        <source>Append Exclusive Gateway</source>
+        <target state="translated">Anexar Gateway exclusivo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextualActions.Append.Task">
+        <source>Append Task</source>
+        <target state="translated">Anexar Tarefa</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextualActions.AriaLabel">
+        <source>Quick actions</source>
+        <target state="translated">Ações rápidas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextualActions.Delete">
+        <source>Delete</source>
+        <target state="translated">Excluir</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextualActions.EditLabel">
+        <source>Rename</source>
+        <target state="translated">Renomear</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ContextualActions.OpenMenu">
+        <source>More actions</source>
+        <target state="translated">Mais ações</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.AriaLabel">
+        <source>Diagrams</source>
+        <target state="translated">Diagramas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.Nested">
+        <source>(nested)</source>
+        <target state="translated">(aninhado)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.NoCalledDiagram">
+        <source>'{0}' is called from here but is not drawn in this file.</source>
+        <target state="translated">'{0}' é chamado a partir daqui, mas não está desenhado neste arquivo.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.NoSubProcessDiagram">
+        <source>This Sub-Process has no diagram of its own; its content is drawn in place.</source>
+        <target state="translated">Este Subprocesso não tem diagrama próprio; seu conteúdo é desenhado no local.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.NotDrillable">
+        <source>Only a Call Activity or a collapsed Sub-Process opens a diagram.</source>
+        <target state="translated">Somente uma Atividade de chamada ou um Subprocesso recolhido abre um diagrama.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.NothingCalled">
+        <source>This Call Activity does not say what it calls.</source>
+        <target state="translated">Esta Atividade de chamada não indica o que ela chama.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.NothingToOpen">
+        <source>Select a Call Activity or a collapsed Sub-Process.</source>
+        <target state="translated">Selecione uma Atividade de chamada ou um Subprocesso recolhido.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.Open">
+        <source>Open</source>
+        <target state="translated">Abrir</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiagramNavigator.OpenTarget">
+        <source>Open {0}</source>
+        <target state="translated">Abrir {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.AriaLabel">
+        <source>BPMN editor</source>
+        <target state="translated">Editor BPMN</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.CanvasLabel">
+        <source>BPMN diagram canvas</source>
+        <target state="translated">Canvas do diagrama BPMN</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.PanelLabel">
+        <source>Diagram properties</source>
+        <target state="translated">Propriedades do diagrama</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.StencilLabel">
+        <source>Element stencil</source>
+        <target state="translated">Paleta de elementos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.adHocSubProcess">
+        <source>Ad-Hoc Sub-Process</source>
+        <target state="translated">Subprocesso ad hoc</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.association">
+        <source>Association</source>
+        <target state="translated">Associação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.boundaryEvent">
+        <source>Boundary Event</source>
+        <target state="translated">Evento de borda</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.businessRuleTask">
+        <source>Business Rule Task</source>
+        <target state="translated">Tarefa de regra de negócio</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.callActivity">
+        <source>Call Activity</source>
+        <target state="translated">Atividade de chamada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.collaboration">
+        <source>Collaboration</source>
+        <target state="translated">Colaboração</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.complexGateway">
+        <source>Complex Gateway</source>
+        <target state="translated">Gateway complexo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.dataInputAssociation">
+        <source>Data Input Association</source>
+        <target state="translated">Associação de entrada de dados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.dataObjectReference">
+        <source>Data Object Reference</source>
+        <target state="translated">Referência a objeto de dados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.dataOutputAssociation">
+        <source>Data Output Association</source>
+        <target state="translated">Associação de saída de dados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.dataStoreReference">
+        <source>Data Store Reference</source>
+        <target state="translated">Referência a repositório de dados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.endEvent">
+        <source>End Event</source>
+        <target state="translated">Evento de fim</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.eventBasedGateway">
+        <source>Event-Based Gateway</source>
+        <target state="translated">Gateway baseado em eventos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.eventSubProcess">
+        <source>Event Sub-Process</source>
+        <target state="translated">Subprocesso de evento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.exclusiveGateway">
+        <source>Exclusive Gateway</source>
+        <target state="translated">Gateway exclusivo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.group">
+        <source>Group</source>
+        <target state="translated">Grupo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.inclusiveGateway">
+        <source>Inclusive Gateway</source>
+        <target state="translated">Gateway inclusivo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.intermediateCatchEvent">
+        <source>Catch Event</source>
+        <target state="translated">Evento de captura</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.intermediateThrowEvent">
+        <source>Throw Event</source>
+        <target state="translated">Evento de lançamento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.lane">
+        <source>Lane</source>
+        <target state="translated">Raia</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.manualTask">
+        <source>Manual Task</source>
+        <target state="translated">Tarefa manual</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.messageFlow">
+        <source>Message Flow</source>
+        <target state="translated">Fluxo de mensagem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.parallelGateway">
+        <source>Parallel Gateway</source>
+        <target state="translated">Gateway paralelo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.participant">
+        <source>Pool</source>
+        <target state="translated">Pool</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.pool">
+        <source>Pool</source>
+        <target state="translated">Pool</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.process">
+        <source>Process</source>
+        <target state="translated">Processo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.receiveTask">
+        <source>Receive Task</source>
+        <target state="translated">Tarefa de recebimento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.scriptTask">
+        <source>Script Task</source>
+        <target state="translated">Tarefa de script</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.sendTask">
+        <source>Send Task</source>
+        <target state="translated">Tarefa de envio</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.sequenceFlow">
+        <source>Sequence Flow</source>
+        <target state="translated">Fluxo de sequência</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.serviceTask">
+        <source>Service Task</source>
+        <target state="translated">Tarefa de serviço</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.startEvent">
+        <source>Start Event</source>
+        <target state="translated">Evento de início</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.subProcess">
+        <source>Sub-Process</source>
+        <target state="translated">Subprocesso</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.task">
+        <source>Task</source>
+        <target state="translated">Tarefa</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.textAnnotation">
+        <source>Text Annotation</source>
+        <target state="translated">Anotação de texto</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.transaction">
+        <source>Transaction</source>
+        <target state="translated">Transação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ElementType.userTask">
+        <source>User Task</source>
+        <target state="translated">Tarefa de usuário</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Cancel">
+        <source>Cancel</source>
+        <target state="translated">Cancelamento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Compensation">
+        <source>Compensation</source>
+        <target state="translated">Compensação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Conditional">
+        <source>Conditional</source>
+        <target state="translated">Condicional</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Error">
+        <source>Error</source>
+        <target state="translated">Erro</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Escalation">
+        <source>Escalation</source>
+        <target state="translated">Escalonamento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Link">
+        <source>Link</source>
+        <target state="translated">Link</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Message">
+        <source>Message</source>
+        <target state="translated">Mensagem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Multiple">
+        <source>Multiple</source>
+        <target state="translated">Múltiplo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.None">
+        <source>None</source>
+        <target state="translated">Nenhum</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.ParallelMultiple">
+        <source>Parallel Multiple</source>
+        <target state="translated">Múltiplo paralelo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Signal">
+        <source>Signal</source>
+        <target state="translated">Sinal</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Terminate">
+        <source>Terminate</source>
+        <target state="translated">Término</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EventTrigger.Timer">
+        <source>Timer</source>
+        <target state="translated">Temporizador</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Expression.Feel">
+        <source>FEEL</source>
+        <target state="translated">FEEL</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Expression.Function">
+        <source>fx</source>
+        <target state="translated">fx</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Expression.Juel">
+        <source>JUEL</source>
+        <target state="translated">JUEL</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Expression.Warning">
+        <source>{0} warning: {1}</source>
+        <target state="translated">Aviso de {0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Expression.Warnings">
+        <source>FEEL warnings ({0}): {1}</source>
+        <target state="translated">Avisos de FEEL ({0}): {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.ad-hoc-marker">
+        <source>Ad hoc marker</source>
+        <target state="translated">Marcador ad hoc</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.business-rule">
+        <source>Business rule</source>
+        <target state="translated">Regra de negócio</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.compensation-marker">
+        <source>Compensation marker</source>
+        <target state="translated">Marcador de compensação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.end-event-cancel">
+        <source>End event cancel</source>
+        <target state="translated">Evento de fim de cancelamento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.end-event-compensation">
+        <source>End event compensation</source>
+        <target state="translated">Evento de fim de compensação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.end-event-error">
+        <source>End event error</source>
+        <target state="translated">Evento de fim de erro</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.end-event-escalation">
+        <source>End event escalation</source>
+        <target state="translated">Evento de fim de escalonamento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.end-event-message">
+        <source>End event message</source>
+        <target state="translated">Evento de fim de mensagem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.end-event-multiple">
+        <source>End event multiple</source>
+        <target state="translated">Evento de fim múltiplo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.end-event-signal">
+        <source>End event signal</source>
+        <target state="translated">Evento de fim de sinal</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.end-event-terminate">
+        <source>End event terminate</source>
+        <target state="translated">Evento de fim de término</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.gateway-complex">
+        <source>Gateway complex</source>
+        <target state="translated">Gateway complexo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.gateway-eventbased">
+        <source>Gateway eventbased</source>
+        <target state="translated">Gateway baseado em eventos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.gateway-or">
+        <source>Gateway or</source>
+        <target state="translated">Gateway OU</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.gateway-parallel">
+        <source>Gateway parallel</source>
+        <target state="translated">Gateway paralelo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.gateway-xor">
+        <source>Gateway xor</source>
+        <target state="translated">Gateway XOR</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-cancel">
+        <source>Intermediate event catch cancel</source>
+        <target state="translated">Evento intermediário de captura de cancelamento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-compensation">
+        <source>Intermediate event catch compensation</source>
+        <target state="translated">Evento intermediário de captura de compensação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-condition">
+        <source>Intermediate event catch condition</source>
+        <target state="translated">Evento intermediário de captura de condição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-error">
+        <source>Intermediate event catch error</source>
+        <target state="translated">Evento intermediário de captura de erro</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-escalation">
+        <source>Intermediate event catch escalation</source>
+        <target state="translated">Evento intermediário de captura de escalonamento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-link">
+        <source>Intermediate event catch link</source>
+        <target state="translated">Evento intermediário de captura de link</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-message">
+        <source>Intermediate event catch message</source>
+        <target state="translated">Evento intermediário de captura de mensagem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-multiple">
+        <source>Intermediate event catch multiple</source>
+        <target state="translated">Evento intermediário de captura múltiplo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-non-interrupting-condition">
+        <source>Intermediate event catch non interrupting condition</source>
+        <target state="translated">Evento intermediário de captura não interruptivo de condição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-non-interrupting-escalation">
+        <source>Intermediate event catch non interrupting escalation</source>
+        <target state="translated">Evento intermediário de captura não interruptivo de escalonamento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-non-interrupting-message">
+        <source>Intermediate event catch non interrupting message</source>
+        <target state="translated">Evento intermediário de captura não interruptivo de mensagem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-non-interrupting-multiple">
+        <source>Intermediate event catch non interrupting multiple</source>
+        <target state="translated">Evento intermediário de captura não interruptivo múltiplo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-non-interrupting-parallel-multiple">
+        <source>Intermediate event catch non interrupting parallel multiple</source>
+        <target state="translated">Evento intermediário de captura não interruptivo múltiplo paralelo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-non-interrupting-signal">
+        <source>Intermediate event catch non interrupting signal</source>
+        <target state="translated">Evento intermediário de captura não interruptivo de sinal</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-non-interrupting-timer">
+        <source>Intermediate event catch non interrupting timer</source>
+        <target state="translated">Evento intermediário de captura não interruptivo de temporizador</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-parallel-multiple">
+        <source>Intermediate event catch parallel multiple</source>
+        <target state="translated">Evento intermediário de captura múltiplo paralelo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-signal">
+        <source>Intermediate event catch signal</source>
+        <target state="translated">Evento intermediário de captura de sinal</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-catch-timer">
+        <source>Intermediate event catch timer</source>
+        <target state="translated">Evento intermediário de captura de temporizador</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-throw-compensation">
+        <source>Intermediate event throw compensation</source>
+        <target state="translated">Evento intermediário de lançamento de compensação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-throw-escalation">
+        <source>Intermediate event throw escalation</source>
+        <target state="translated">Evento intermediário de lançamento de escalonamento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-throw-link">
+        <source>Intermediate event throw link</source>
+        <target state="translated">Evento intermediário de lançamento de link</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-throw-message">
+        <source>Intermediate event throw message</source>
+        <target state="translated">Evento intermediário de lançamento de mensagem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-throw-multiple">
+        <source>Intermediate event throw multiple</source>
+        <target state="translated">Evento intermediário de lançamento múltiplo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.intermediate-event-throw-signal">
+        <source>Intermediate event throw signal</source>
+        <target state="translated">Evento intermediário de lançamento de sinal</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.loop-marker">
+        <source>Loop marker</source>
+        <target state="translated">Marcador de repetição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.manual">
+        <source>Manual</source>
+        <target state="translated">Manual</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.parallel-mi-marker">
+        <source>Parallel mi marker</source>
+        <target state="translated">Marcador de múltiplas instâncias paralelas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.receive">
+        <source>Receive</source>
+        <target state="translated">Recebimento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.script">
+        <source>Script</source>
+        <target state="translated">Script</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.send">
+        <source>Send</source>
+        <target state="translated">Envio</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.sequential-mi-marker">
+        <source>Sequential mi marker</source>
+        <target state="translated">Marcador de múltiplas instâncias sequenciais</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.service">
+        <source>Service</source>
+        <target state="translated">Serviço</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-condition">
+        <source>Start event condition</source>
+        <target state="translated">Evento de início de condição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-message">
+        <source>Start event message</source>
+        <target state="translated">Evento de início de mensagem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-multiple">
+        <source>Start event multiple</source>
+        <target state="translated">Evento de início múltiplo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-non-interrupting-condition">
+        <source>Start event non interrupting condition</source>
+        <target state="translated">Evento de início não interruptivo de condição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-non-interrupting-message">
+        <source>Start event non interrupting message</source>
+        <target state="translated">Evento de início não interruptivo de mensagem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-non-interrupting-multiple">
+        <source>Start event non interrupting multiple</source>
+        <target state="translated">Evento de início não interruptivo múltiplo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-non-interrupting-parallel-multiple">
+        <source>Start event non interrupting parallel multiple</source>
+        <target state="translated">Evento de início não interruptivo múltiplo paralelo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-non-interrupting-signal">
+        <source>Start event non interrupting signal</source>
+        <target state="translated">Evento de início não interruptivo de sinal</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-non-interrupting-timer">
+        <source>Start event non interrupting timer</source>
+        <target state="translated">Evento de início não interruptivo de temporizador</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-parallel-multiple">
+        <source>Start event parallel multiple</source>
+        <target state="translated">Evento de início múltiplo paralelo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-signal">
+        <source>Start event signal</source>
+        <target state="translated">Evento de início de sinal</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.start-event-timer">
+        <source>Start event timer</source>
+        <target state="translated">Evento de início de temporizador</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.sub-process-marker">
+        <source>Sub process marker</source>
+        <target state="translated">Marcador de subprocesso</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Icon.user">
+        <source>User</source>
+        <target state="translated">Usuário</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.AriaLabel">
+        <source>Import</source>
+        <target state="translated">Importar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Cancel">
+        <source>Cancel</source>
+        <target state="translated">Cancelar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.Open">
+        <source>Open</source>
+        <target state="translated">Abrir</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="LabelEditor.AriaLabel">
+        <source>Edit label</source>
+        <target state="translated">Editar rótulo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.RawText">
+        <source>{0} text</source>
+        <target state="translated">Texto de {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.activationCondition">
+        <source>Activation condition</source>
+        <target state="translated">Condição de ativação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.activationCondition.language">
+        <source>Activation condition language</source>
+        <target state="translated">Linguagem da condição de ativação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.activationCondition.type">
+        <source>Activation condition type</source>
+        <target state="translated">Tipo da condição de ativação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.assignment.from">
+        <source>Assignment {0} from</source>
+        <target state="translated">Origem da atribuição {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.assignment.from.language">
+        <source>Assignment {0} from language</source>
+        <target state="translated">Linguagem da origem da atribuição {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.assignment.from.type">
+        <source>Assignment {0} from type</source>
+        <target state="translated">Tipo da origem da atribuição {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.assignment.to">
+        <source>Assignment {0} to</source>
+        <target state="translated">Destino da atribuição {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.assignment.to.language">
+        <source>Assignment {0} to language</source>
+        <target state="translated">Linguagem do destino da atribuição {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.assignment.to.type">
+        <source>Assignment {0} to type</source>
+        <target state="translated">Tipo do destino da atribuição {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.associationDirection">
+        <source>Direction</source>
+        <target state="translated">Direção</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.calledElementRef">
+        <source>Calls</source>
+        <target state="translated">Chama</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.categoryValueRef">
+        <source>Category</source>
+        <target state="translated">Categoria</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.conditionExpression">
+        <source>Condition</source>
+        <target state="translated">Condição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.conditionLanguage">
+        <source>Condition language</source>
+        <target state="translated">Linguagem da condição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.dataObjectRef">
+        <source>Data Object</source>
+        <target state="translated">Objeto de dados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.dataStoreRef">
+        <source>Data Store</source>
+        <target state="translated">Repositório de dados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.defaultFlowRef">
+        <source>Default flow</source>
+        <target state="translated">Fluxo padrão</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.documentation">
+        <source>Documentation</source>
+        <target state="translated">Documentação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.eventDefinition">
+        <source>Trigger</source>
+        <target state="translated">Gatilho</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.isClosed">
+        <source>Closed</source>
+        <target state="translated">Fechado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.isCollection">
+        <source>Collection</source>
+        <target state="translated">Coleção</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.isDefault">
+        <source>Default flow</source>
+        <target state="translated">Fluxo padrão</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.isExecutable">
+        <source>Executable</source>
+        <target state="translated">Executável</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.isForCompensation">
+        <source>Compensation handler</source>
+        <target state="translated">Manipulador de compensação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.isInterrupting">
+        <source>Interrupting</source>
+        <target state="translated">Interruptivo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.loopCharacteristics">
+        <source>Loop</source>
+        <target state="translated">Repetição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.messageRef">
+        <source>Message</source>
+        <target state="translated">Mensagem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.behavior">
+        <source>Multi-instance behavior</source>
+        <target state="translated">Comportamento de múltiplas instâncias</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.completionCondition">
+        <source>Completion condition</source>
+        <target state="translated">Condição de conclusão</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.completionCondition.language">
+        <source>Completion condition language</source>
+        <target state="translated">Linguagem da condição de conclusão</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.completionCondition.type">
+        <source>Completion condition type</source>
+        <target state="translated">Tipo da condição de conclusão</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.complexBehavior.condition">
+        <source>Complex behavior {0} condition</source>
+        <target state="translated">Condição {0} do comportamento complexo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.complexBehavior.condition.language">
+        <source>Complex behavior {0} condition language</source>
+        <target state="translated">Linguagem da condição {0} do comportamento complexo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.complexBehavior.condition.type">
+        <source>Complex behavior {0} condition type</source>
+        <target state="translated">Tipo da condição {0} do comportamento complexo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.complexBehavior.event">
+        <source>Complex behavior {0} event</source>
+        <target state="translated">Evento {0} do comportamento complexo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.inputDataItem.id">
+        <source>Input data item id</source>
+        <target state="translated">ID do item de dados de entrada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.inputDataItem.isCollection">
+        <source>Input data item is collection</source>
+        <target state="translated">Item de dados de entrada é coleção</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.inputDataItem.itemSubjectRef">
+        <source>Input data item item subject reference</source>
+        <target state="translated">Referência ao item de assunto do item de dados de entrada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.inputDataItem.name">
+        <source>Input data item name</source>
+        <target state="translated">Nome do item de dados de entrada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.isSequential">
+        <source>Sequential</source>
+        <target state="translated">Sequencial</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.loopCardinality">
+        <source>Loop cardinality</source>
+        <target state="translated">Cardinalidade da repetição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.loopCardinality.language">
+        <source>Loop cardinality language</source>
+        <target state="translated">Linguagem da cardinalidade da repetição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.loopCardinality.type">
+        <source>Loop cardinality type</source>
+        <target state="translated">Tipo da cardinalidade da repetição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.loopDataInputRef">
+        <source>Loop data input reference</source>
+        <target state="translated">Referência à entrada de dados da repetição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.loopDataOutputRef">
+        <source>Loop data output reference</source>
+        <target state="translated">Referência à saída de dados da repetição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.outputDataItem.id">
+        <source>Output data item id</source>
+        <target state="translated">ID do item de dados de saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.outputDataItem.isCollection">
+        <source>Output data item is collection</source>
+        <target state="translated">Item de dados de saída é coleção</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.outputDataItem.itemSubjectRef">
+        <source>Output data item item subject reference</source>
+        <target state="translated">Referência ao item de assunto do item de dados de saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.multiInstance.outputDataItem.name">
+        <source>Output data item name</source>
+        <target state="translated">Nome do item de dados de saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.name">
+        <source>Name</source>
+        <target state="translated">Nome</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.processType">
+        <source>Process type</source>
+        <target state="translated">Tipo de processo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.standardLoop.loopCondition">
+        <source>Loop condition</source>
+        <target state="translated">Condição de repetição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.standardLoop.loopCondition.language">
+        <source>Loop condition language</source>
+        <target state="translated">Linguagem da condição de repetição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.standardLoop.loopCondition.type">
+        <source>Loop condition type</source>
+        <target state="translated">Tipo da condição de repetição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.standardLoop.loopMaximum">
+        <source>Loop maximum</source>
+        <target state="translated">Máximo de repetições</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.standardLoop.testBefore">
+        <source>Test before</source>
+        <target state="translated">Testar antes</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.state">
+        <source>State</source>
+        <target state="translated">Estado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.text">
+        <source>Text</source>
+        <target state="translated">Texto</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.textFormat">
+        <source>Text format</source>
+        <target state="translated">Formato do texto</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.Empty">
+        <source>(none)</source>
+        <target state="translated">(nenhum)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.associationDirection.both">
+        <source>Both</source>
+        <target state="translated">Ambas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.associationDirection.none">
+        <source>None</source>
+        <target state="translated">Nenhuma</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.associationDirection.one">
+        <source>One</source>
+        <target state="translated">Uma</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.loopCharacteristics.multiInstanceParallel">
+        <source>Multi-instance (parallel)</source>
+        <target state="translated">Múltiplas instâncias (paralelo)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.loopCharacteristics.multiInstanceSequential">
+        <source>Multi-instance (sequential)</source>
+        <target state="translated">Múltiplas instâncias (sequencial)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.loopCharacteristics.none">
+        <source>None</source>
+        <target state="translated">Nenhuma</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.loopCharacteristics.standard">
+        <source>Loop</source>
+        <target state="translated">Repetição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.multiInstance.behavior.All">
+        <source>All</source>
+        <target state="translated">Todos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.multiInstance.behavior.Complex">
+        <source>Complex</source>
+        <target state="translated">Complexo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.multiInstance.behavior.None">
+        <source>None</source>
+        <target state="translated">Nenhum</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.multiInstance.behavior.One">
+        <source>One</source>
+        <target state="translated">Um</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.processType.None">
+        <source>None</source>
+        <target state="translated">Nenhum</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.processType.Private">
+        <source>Private</source>
+        <target state="translated">Privado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyChoice.processType.Public">
+        <source>Public</source>
+        <target state="translated">Público</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyEntry.ToggleFeel">
+        <source>Toggle FEEL expression</source>
+        <target state="translated">Alternar expressão FEEL</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyForm.AriaLabel">
+        <source>Properties</source>
+        <target state="translated">Propriedades</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.extensions">
+        <source>Extensions</source>
+        <target state="translated">Extensões</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.general">
+        <source>General</source>
+        <target state="translated">Geral</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.AriaLabel">
+        <source>Properties</source>
+        <target state="translated">Propriedades</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.BulkEdit">
+        <source>Set {0} on {1} elements</source>
+        <target state="translated">Definir {0} em {1} elementos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.Elements">
+        <source>{0} elements</source>
+        <target state="translated">{0} elementos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.NoCommonProperties">
+        <source>These elements have no properties in common.</source>
+        <target state="translated">Estes elementos não têm propriedades em comum.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyPanel.NoProperties">
+        <source>This element has no editable properties.</source>
+        <target state="translated">Este elemento não tem propriedades editáveis.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceBrowser.Heading">
+        <source>Used by</source>
+        <target state="translated">Usado por</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceBrowser.OwnerTitle">
+        <source>{0} {1}</source>
+        <target state="translated">{0} {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Association">
+        <source>Association</source>
+        <target state="translated">Associação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.DataAssociation">
+        <source>Data Association</source>
+        <target state="translated">Associação de dados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.DataObject">
+        <source>Data Object</source>
+        <target state="translated">Objeto de dados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.DataObjectReference">
+        <source>Data Object Reference</source>
+        <target state="translated">Referência a objeto de dados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.DataStoreReference">
+        <source>Data Store Reference</source>
+        <target state="translated">Referência a repositório de dados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Edge">
+        <source>Edge</source>
+        <target state="translated">Aresta</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Flownode">
+        <source>Flow node</source>
+        <target state="translated">Nó de fluxo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Group">
+        <source>Group</source>
+        <target state="translated">Grupo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Lane">
+        <source>Lane</source>
+        <target state="translated">Raia</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Laneset">
+        <source>Lane set</source>
+        <target state="translated">Conjunto de raias</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.MessageFlow">
+        <source>Message Flow</source>
+        <target state="translated">Fluxo de mensagem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Participant">
+        <source>Participant</source>
+        <target state="translated">Participante</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Plane">
+        <source>Plane</source>
+        <target state="translated">Plano</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.SequenceFlow">
+        <source>Sequence Flow</source>
+        <target state="translated">Fluxo de sequência</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.Shape">
+        <source>Shape</source>
+        <target state="translated">Forma</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReferenceKind.TextAnnotation">
+        <source>Text Annotation</source>
+        <target state="translated">Anotação de texto</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Connector">
+        <source>Connector</source>
+        <target state="translated">Conector</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Constraint">
+        <source>Constraint</source>
+        <target state="translated">Restrição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Entry">
+        <source>Entry</source>
+        <target state="translated">Entrada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:ErrorEventDefinition">
+        <source>Error Event Definition</source>
+        <target state="translated">Definição de evento de erro</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:ExecutionListener">
+        <source>Execution Listener</source>
+        <target state="translated">Listener de execução</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:FailedJobRetryTimeCycle">
+        <source>Failed Job Retry Time Cycle</source>
+        <target state="translated">Ciclo de tempo de nova tentativa de job com falha</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Field">
+        <source>Field</source>
+        <target state="translated">Campo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:FormData">
+        <source>Form Data</source>
+        <target state="translated">Dados do formulário</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:FormField">
+        <source>Form Field</source>
+        <target state="translated">Campo de formulário</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:FormProperty">
+        <source>Form Property</source>
+        <target state="translated">Propriedade de formulário</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:In">
+        <source>In</source>
+        <target state="translated">Entrada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:InOutBinding">
+        <source>In Out Binding</source>
+        <target state="translated">Vinculação de entrada e saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:InputOutput">
+        <source>Input Output</source>
+        <target state="translated">Entrada e saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:InputOutputParameter">
+        <source>Input Output Parameter</source>
+        <target state="translated">Parâmetro de entrada e saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:InputOutputParameterDefinition">
+        <source>Input Output Parameter Definition</source>
+        <target state="translated">Definição de parâmetro de entrada e saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:InputParameter">
+        <source>Input Parameter</source>
+        <target state="translated">Parâmetro de entrada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:List">
+        <source>List</source>
+        <target state="translated">Lista</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Map">
+        <source>Map</source>
+        <target state="translated">Mapa</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Out">
+        <source>Out</source>
+        <target state="translated">Saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:OutputParameter">
+        <source>Output Parameter</source>
+        <target state="translated">Parâmetro de saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:PotentialStarter">
+        <source>Potential Starter</source>
+        <target state="translated">Iniciador potencial</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Properties">
+        <source>Properties</source>
+        <target state="translated">Propriedades</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Property">
+        <source>Property</source>
+        <target state="translated">Propriedade</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Script">
+        <source>Script</source>
+        <target state="translated">Script</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:TaskListener">
+        <source>Task Listener</source>
+        <target state="translated">Listener de tarefa</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Validation">
+        <source>Validation</source>
+        <target state="translated">Validação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:Value">
+        <source>Value</source>
+        <target state="translated">Valor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:businessKey">
+        <source>business Key</source>
+        <target state="translated">business Key</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:class">
+        <source>class</source>
+        <target state="translated">class</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:config">
+        <source>config</source>
+        <target state="translated">config</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:datePattern">
+        <source>date Pattern</source>
+        <target state="translated">date Pattern</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:default">
+        <source>default</source>
+        <target state="translated">default</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:defaultValue">
+        <source>default Value</source>
+        <target state="translated">default Value</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:delegateExpression">
+        <source>delegate Expression</source>
+        <target state="translated">delegate Expression</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:event">
+        <source>event</source>
+        <target state="translated">event</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:expression">
+        <source>expression</source>
+        <target state="translated">expression</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:id">
+        <source>id</source>
+        <target state="translated">id</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:key">
+        <source>key</source>
+        <target state="translated">key</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:label">
+        <source>label</source>
+        <target state="translated">label</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:local">
+        <source>local</source>
+        <target state="translated">local</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:name">
+        <source>name</source>
+        <target state="translated">name</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:readable">
+        <source>readable</source>
+        <target state="translated">readable</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:required">
+        <source>required</source>
+        <target state="translated">required</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:resource">
+        <source>resource</source>
+        <target state="translated">resource</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:scriptFormat">
+        <source>script Format</source>
+        <target state="translated">script Format</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:source">
+        <source>source</source>
+        <target state="translated">source</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:sourceExpression">
+        <source>source Expression</source>
+        <target state="translated">source Expression</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:stringValue">
+        <source>string Value</source>
+        <target state="translated">string Value</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:target">
+        <source>target</source>
+        <target state="translated">target</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:type">
+        <source>type</source>
+        <target state="translated">type</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:variable">
+        <source>variable</source>
+        <target state="translated">variable</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:variables">
+        <source>variables</source>
+        <target state="translated">variables</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.camunda:writable">
+        <source>writable</source>
+        <target state="translated">writable</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:AdHoc">
+        <source>Ad Hoc</source>
+        <target state="translated">Ad hoc</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:AgentDefinition">
+        <source>Agent Definition</source>
+        <target state="translated">Definição de agente</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:AssignmentDefinition">
+        <source>Assignment Definition</source>
+        <target state="translated">Definição de atribuição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:CalledDecision">
+        <source>Called Decision</source>
+        <target state="translated">Decisão chamada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:CalledElement">
+        <source>Called Element</source>
+        <target state="translated">Elemento chamado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:ConditionalFilter">
+        <source>Conditional Filter</source>
+        <target state="translated">Filtro condicional</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:ExecutionListener">
+        <source>Execution Listener</source>
+        <target state="translated">Listener de execução</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:ExecutionListeners">
+        <source>Execution Listeners</source>
+        <target state="translated">Listeners de execução</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:FormDefinition">
+        <source>Form Definition</source>
+        <target state="translated">Definição de formulário</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:Header">
+        <source>Header</source>
+        <target state="translated">Cabeçalho</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:Input">
+        <source>Input</source>
+        <target state="translated">Entrada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:InputOutputParameter">
+        <source>Input Output Parameter</source>
+        <target state="translated">Parâmetro de entrada e saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:IoMapping">
+        <source>Io Mapping</source>
+        <target state="translated">Mapeamento de E/S</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:JobPriorityDefinition">
+        <source>Job Priority Definition</source>
+        <target state="translated">Definição de prioridade de job</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:LinkedResource">
+        <source>Linked Resource</source>
+        <target state="translated">Recurso vinculado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:LinkedResources">
+        <source>Linked Resources</source>
+        <target state="translated">Recursos vinculados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:LoopCharacteristics">
+        <source>Loop Characteristics</source>
+        <target state="translated">Características de repetição</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:Output">
+        <source>Output</source>
+        <target state="translated">Saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:PriorityDefinition">
+        <source>Priority Definition</source>
+        <target state="translated">Definição de prioridade</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:Properties">
+        <source>Properties</source>
+        <target state="translated">Propriedades</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:Property">
+        <source>Property</source>
+        <target state="translated">Propriedade</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:Script">
+        <source>Script</source>
+        <target state="translated">Script</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:Subscription">
+        <source>Subscription</source>
+        <target state="translated">Assinatura</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:TaskDefinition">
+        <source>Task Definition</source>
+        <target state="translated">Definição de tarefa</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:TaskHeaders">
+        <source>Task Headers</source>
+        <target state="translated">Cabeçalhos de tarefa</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:TaskListener">
+        <source>Task Listener</source>
+        <target state="translated">Listener de tarefa</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:TaskListeners">
+        <source>Task Listeners</source>
+        <target state="translated">Listeners de tarefa</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:TaskSchedule">
+        <source>Task Schedule</source>
+        <target state="translated">Agendamento de tarefa</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:UserTask">
+        <source>User Task</source>
+        <target state="translated">Tarefa de usuário</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:UserTaskForm">
+        <source>User Task Form</source>
+        <target state="translated">Formulário de tarefa de usuário</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:VersionTag">
+        <source>Version Tag</source>
+        <target state="translated">Tag de versão</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:activeElementsCollection">
+        <source>active Elements Collection</source>
+        <target state="translated">active Elements Collection</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:agentType">
+        <source>agent Type</source>
+        <target state="translated">agent Type</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:assignee">
+        <source>assignee</source>
+        <target state="translated">assignee</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:businessId">
+        <source>business Id</source>
+        <target state="translated">business Id</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:candidateGroups">
+        <source>candidate Groups</source>
+        <target state="translated">candidate Groups</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:candidateUsers">
+        <source>candidate Users</source>
+        <target state="translated">candidate Users</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:correlationKey">
+        <source>correlation Key</source>
+        <target state="translated">correlation Key</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:decisionId">
+        <source>decision Id</source>
+        <target state="translated">decision Id</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:dueDate">
+        <source>due Date</source>
+        <target state="translated">due Date</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:eventType">
+        <source>event Type</source>
+        <target state="translated">event Type</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:expression">
+        <source>expression</source>
+        <target state="translated">expression</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:externalReference">
+        <source>external Reference</source>
+        <target state="translated">external Reference</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:followUpDate">
+        <source>follow Up Date</source>
+        <target state="translated">follow Up Date</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:formId">
+        <source>form Id</source>
+        <target state="translated">form Id</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:formKey">
+        <source>form Key</source>
+        <target state="translated">form Key</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:id">
+        <source>id</source>
+        <target state="translated">id</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:inputCollection">
+        <source>input Collection</source>
+        <target state="translated">input Collection</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:inputElement">
+        <source>input Element</source>
+        <target state="translated">input Element</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:key">
+        <source>key</source>
+        <target state="translated">key</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:linkName">
+        <source>link Name</source>
+        <target state="translated">link Name</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:name">
+        <source>name</source>
+        <target state="translated">name</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:outputCollection">
+        <source>output Collection</source>
+        <target state="translated">output Collection</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:outputElement">
+        <source>output Element</source>
+        <target state="translated">output Element</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:priority">
+        <source>priority</source>
+        <target state="translated">priority</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:processId">
+        <source>process Id</source>
+        <target state="translated">process Id</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:processIdExpression">
+        <source>process Id Expression</source>
+        <target state="translated">process Id Expression</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:propagateAllChildVariables">
+        <source>propagate All Child Variables</source>
+        <target state="translated">propagate All Child Variables</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:propagateAllParentVariables">
+        <source>propagate All Parent Variables</source>
+        <target state="translated">propagate All Parent Variables</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:resourceId">
+        <source>resource Id</source>
+        <target state="translated">resource Id</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:resourceType">
+        <source>resource Type</source>
+        <target state="translated">resource Type</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:resultVariable">
+        <source>result Variable</source>
+        <target state="translated">result Variable</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:retries">
+        <source>retries</source>
+        <target state="translated">retries</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:source">
+        <source>source</source>
+        <target state="translated">source</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:target">
+        <source>target</source>
+        <target state="translated">target</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:type">
+        <source>type</source>
+        <target state="translated">type</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:value">
+        <source>value</source>
+        <target state="translated">value</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:variableEvents">
+        <source>variable Events</source>
+        <target state="translated">variable Events</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Generic.zeebe:variableNames">
+        <source>variable Names</source>
+        <target state="translated">variable Names</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.Structured">
+        <source>Structured value (preserved): {0}</source>
+        <target state="translated">Valor estruturado (preservado): {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.called-element">
+        <source>Called element</source>
+        <target state="translated">Elemento chamado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:#text">
+        <source>Value</source>
+        <target state="translated">Valor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:assignee">
+        <source>Assignee</source>
+        <target state="translated">Responsável</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:assignment">
+        <source>User assignment</source>
+        <target state="translated">Atribuição de usuário</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:async">
+        <source>Asynchronous continuations</source>
+        <target state="translated">Continuações assíncronas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:asyncAfter">
+        <source>After</source>
+        <target state="translated">Depois</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:asyncBefore">
+        <source>Before</source>
+        <target state="translated">Antes</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:businessKey">
+        <source>Business key</source>
+        <target state="translated">Chave de negócio</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:called-element">
+        <source>Called element</source>
+        <target state="translated">Elemento chamado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:calledElementBinding">
+        <source>Binding</source>
+        <target state="translated">Vinculação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:calledElementTenantId">
+        <source>Tenant ID</source>
+        <target state="translated">ID do locatário</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:calledElementVersion">
+        <source>Version</source>
+        <target state="translated">Versão</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:calledElementVersionTag">
+        <source>Version tag</source>
+        <target state="translated">Tag de versão</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:candidateGroups">
+        <source>Candidate groups</source>
+        <target state="translated">Grupos candidatos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:candidateUsers">
+        <source>Candidate users</source>
+        <target state="translated">Usuários candidatos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:class">
+        <source>Java class</source>
+        <target state="translated">Classe Java</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:connector">
+        <source>Connector</source>
+        <target state="translated">Conector</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:connectorId">
+        <source>Connector ID</source>
+        <target state="translated">ID do conector</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:delegateExpression">
+        <source>Delegate expression</source>
+        <target state="translated">Expressão de delegação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:dueDate">
+        <source>Due date</source>
+        <target state="translated">Data de vencimento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:event">
+        <source>Event</source>
+        <target state="translated">Evento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:exclusive">
+        <source>Exclusive</source>
+        <target state="translated">Exclusivo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:execution-listeners">
+        <source>Execution listeners</source>
+        <target state="translated">Listeners de execução</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:expression">
+        <source>Expression</source>
+        <target state="translated">Expressão</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:fields">
+        <source>Field injections</source>
+        <target state="translated">Injeções de campo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:followUpDate">
+        <source>Follow-up date</source>
+        <target state="translated">Data de acompanhamento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:formKey">
+        <source>Form key</source>
+        <target state="translated">Chave do formulário</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:forms">
+        <source>Forms</source>
+        <target state="translated">Formulários</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:implementation">
+        <source>Implementation</source>
+        <target state="translated">Implementação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:in">
+        <source>In mappings</source>
+        <target state="translated">Mapeamentos de entrada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:inputs">
+        <source>Inputs</source>
+        <target state="translated">Entradas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:local">
+        <source>Local</source>
+        <target state="translated">Local</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:name">
+        <source>Name</source>
+        <target state="translated">Nome</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:out">
+        <source>Out mappings</source>
+        <target state="translated">Mapeamentos de saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:outputs">
+        <source>Outputs</source>
+        <target state="translated">Saídas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:priority">
+        <source>Priority</source>
+        <target state="translated">Prioridade</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:properties">
+        <source>Extension properties</source>
+        <target state="translated">Propriedades de extensão</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:resultVariable">
+        <source>Result variable</source>
+        <target state="translated">Variável de resultado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:source">
+        <source>Source</source>
+        <target state="translated">Origem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:sourceExpression">
+        <source>Source expression</source>
+        <target state="translated">Expressão de origem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:stringValue">
+        <source>String value</source>
+        <target state="translated">Valor de texto</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:target">
+        <source>Target</source>
+        <target state="translated">Destino</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:topic">
+        <source>Topic</source>
+        <target state="translated">Tópico</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:type">
+        <source>Type</source>
+        <target state="translated">Tipo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:value">
+        <source>Value</source>
+        <target state="translated">Valor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.camunda:variables">
+        <source>Variables</source>
+        <target state="translated">Variáveis</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.headers">
+        <source>Headers</source>
+        <target state="translated">Cabeçalhos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.inputCollection">
+        <source>Input collection</source>
+        <target state="translated">Coleção de entrada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.inputElement">
+        <source>Input element</source>
+        <target state="translated">Elemento de entrada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.inputs">
+        <source>Inputs</source>
+        <target state="translated">Entradas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.key">
+        <source>Key</source>
+        <target state="translated">Chave</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.multi-instance">
+        <source>Multi-instance</source>
+        <target state="translated">Múltiplas instâncias</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.name">
+        <source>Name</source>
+        <target state="translated">Nome</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.outputCollection">
+        <source>Output collection</source>
+        <target state="translated">Coleção de saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.outputElement">
+        <source>Output element</source>
+        <target state="translated">Elemento de saída</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.outputs">
+        <source>Outputs</source>
+        <target state="translated">Saídas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.processId">
+        <source>Process ID</source>
+        <target state="translated">ID do processo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.propagateAllChildVariables">
+        <source>Propagate all child variables</source>
+        <target state="translated">Propagar todas as variáveis filhas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.propagateAllParentVariables">
+        <source>Propagate all parent variables</source>
+        <target state="translated">Propagar todas as variáveis do pai</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.properties">
+        <source>Extension properties</source>
+        <target state="translated">Propriedades de extensão</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.retries">
+        <source>Retries</source>
+        <target state="translated">Tentativas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.source">
+        <source>Source</source>
+        <target state="translated">Origem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.target">
+        <source>Target</source>
+        <target state="translated">Destino</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.task-definition">
+        <source>Task definition</source>
+        <target state="translated">Definição de tarefa</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.type">
+        <source>Type</source>
+        <target state="translated">Tipo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Schema.value">
+        <source>Value</source>
+        <target state="translated">Valor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.ClearSelection">
+        <source>Clear the selection</source>
+        <target state="translated">Limpar a seleção</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.Copy">
+        <source>Copy the selection</source>
+        <target state="translated">Copiar a seleção</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.Cut">
+        <source>Cut the selection</source>
+        <target state="translated">Recortar a seleção</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.Delete">
+        <source>Delete the selection</source>
+        <target state="translated">Excluir a seleção</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.Duplicate">
+        <source>Duplicate the selection</source>
+        <target state="translated">Duplicar a seleção</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.FitToContent">
+        <source>Fit the diagram to the view</source>
+        <target state="translated">Ajustar o diagrama à área visível</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.PanDown">
+        <source>Pan down</source>
+        <target state="translated">Deslocar para baixo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.PanLeft">
+        <source>Pan left</source>
+        <target state="translated">Deslocar para a esquerda</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.PanRight">
+        <source>Pan right</source>
+        <target state="translated">Deslocar para a direita</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.PanUp">
+        <source>Pan up</source>
+        <target state="translated">Deslocar para cima</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.Paste">
+        <source>Paste</source>
+        <target state="translated">Colar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.Redo">
+        <source>Redo</source>
+        <target state="translated">Refazer</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.ResetZoom">
+        <source>Reset zoom to 100%</source>
+        <target state="translated">Redefinir o zoom para 100%</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.SelectAll">
+        <source>Select everything</source>
+        <target state="translated">Selecionar tudo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.ShowShortcuts">
+        <source>Show keyboard shortcuts</source>
+        <target state="translated">Mostrar atalhos de teclado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.Undo">
+        <source>Undo</source>
+        <target state="translated">Desfazer</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.ZoomIn">
+        <source>Zoom in</source>
+        <target state="translated">Aumentar zoom</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Shortcut.ZoomOut">
+        <source>Zoom out</source>
+        <target state="translated">Diminuir zoom</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutHelp.Close">
+        <source>Close</source>
+        <target state="translated">Fechar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutHelp.Empty">
+        <source>No keyboard shortcuts are configured.</source>
+        <target state="translated">Nenhum atalho de teclado está configurado.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutHelp.Or">
+        <source>or</source>
+        <target state="translated">ou</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutHelp.Title">
+        <source>Keyboard shortcuts</source>
+        <target state="translated">Atalhos de teclado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.Alt">
+        <source>Alt</source>
+        <target state="translated">Alt</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.ArrowDown">
+        <source>ArrowDown</source>
+        <target state="translated">Seta para baixo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.ArrowLeft">
+        <source>ArrowLeft</source>
+        <target state="translated">Seta para a esquerda</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.ArrowRight">
+        <source>ArrowRight</source>
+        <target state="translated">Seta para a direita</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.ArrowUp">
+        <source>ArrowUp</source>
+        <target state="translated">Seta para cima</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.Cmd">
+        <source>Cmd</source>
+        <target state="translated">Cmd</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.Ctrl">
+        <source>Ctrl</source>
+        <target state="translated">Ctrl</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.Delete">
+        <source>Delete</source>
+        <target state="translated">Delete</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.Escape">
+        <source>Escape</source>
+        <target state="translated">Esc</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ShortcutKey.Shift">
+        <source>Shift</source>
+        <target state="translated">Shift</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.CallActivity">
+        <source>Call Activity</source>
+        <target state="translated">Atividade de chamada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.DataObject">
+        <source>Data Object Reference</source>
+        <target state="translated">Referência a objeto de dados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.DataStore">
+        <source>Data Store Reference</source>
+        <target state="translated">Referência a repositório de dados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.EndEvent">
+        <source>End Event</source>
+        <target state="translated">Evento de fim</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.ExclusiveGateway">
+        <source>Gateway</source>
+        <target state="translated">Gateway</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.Group">
+        <source>Group</source>
+        <target state="translated">Grupo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.IntermediateBoundaryEvent">
+        <source>Intermediate / Boundary Event</source>
+        <target state="translated">Evento intermediário / de borda</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.PoolOrLane">
+        <source>Pool / Lane</source>
+        <target state="translated">Pool / Raia</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.StartEvent">
+        <source>Start Event</source>
+        <target state="translated">Evento de início</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.SubProcess">
+        <source>Sub-Process</source>
+        <target state="translated">Subprocesso</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.Task">
+        <source>Task</source>
+        <target state="translated">Tarefa</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilEntry.TextAnnotation">
+        <source>Text Annotation</source>
+        <target state="translated">Anotação de texto</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilGroup.Activities">
+        <source>Activities</source>
+        <target state="translated">Atividades</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilGroup.Artifacts">
+        <source>Artifacts</source>
+        <target state="translated">Artefatos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilGroup.Data">
+        <source>Data</source>
+        <target state="translated">Dados</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilGroup.Events">
+        <source>Events</source>
+        <target state="translated">Eventos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilGroup.Gateways">
+        <source>Gateways</source>
+        <target state="translated">Gateways</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilGroup.OtherTemplates">
+        <source>Other templates</source>
+        <target state="translated">Outros modelos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilGroup.Start">
+        <source>Start</source>
+        <target state="translated">Início</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilGroup.Swimlanes">
+        <source>Swimlanes</source>
+        <target state="translated">Raias</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilPanel.AriaLabel">
+        <source>Element stencil</source>
+        <target state="translated">Paleta de elementos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilPanel.Empty">
+        <source>Nothing can be created here.</source>
+        <target state="translated">Nada pode ser criado aqui.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilPanel.Unavailable">
+        <source>{0} — unavailable here ({1})</source>
+        <target state="translated">{0} — indisponível aqui ({1})</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilReason.CT-001">
+        <source>This container does not permit this element.</source>
+        <target state="translated">Este contêiner não permite este elemento.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilReason.EV-004">
+        <source>An Event Sub-Process requires a typed Start Event.</source>
+        <target state="translated">Um Subprocesso de evento exige um Evento de início tipado.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StencilReason.WithCode">
+        <source>{0}: {1}</source>
+        <target state="translated">{0}: {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TemplateChooser.Other">
+        <source>Other</source>
+        <target state="translated">Outro</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.AriaLabel">
+        <source>Diagram tools</source>
+        <target state="translated">Ferramentas do diagrama</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TypeOption.Event">
+        <source>{0} {1}</source>
+        <target state="translated">{0} {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationPanel.AriaLabel">
+        <source>Validation</source>
+        <target state="translated">Validação</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationPanel.Clean">
+        <source>No problems found</source>
+        <target state="translated">Nenhum problema encontrado</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationPanel.Error">
+        <source>error</source>
+        <target state="translated">erro</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationPanel.Errors">
+        <source>errors</source>
+        <target state="translated">erros</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationPanel.Exportable">
+        <source>Exportable</source>
+        <target state="translated">Exportável</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationPanel.NotExportable">
+        <source>Not exportable</source>
+        <target state="translated">Não exportável</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationPanel.Warning">
+        <source>warning</source>
+        <target state="translated">aviso</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ValidationPanel.Warnings">
+        <source>warnings</source>
+        <target state="translated">avisos</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

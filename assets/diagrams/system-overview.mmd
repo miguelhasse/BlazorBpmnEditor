@@ -1,0 +1,24 @@
+%% System overview
+%% Blazor owns editing and persistence; JointJS renders an SVG view.
+%% Semantic + BPMNDI layers live in BpmnDocument; canvas SVG is never the source of truth.
+%% DI registers validators/factories; BpmnOptions holds registries and local template-loading configuration.
+flowchart TB
+    host["Host application"]:::cs
+    editor["Independent UI kits<br/>BpmnEditor: standard HTML<br/>FluentBpmnEditor: Fluent UI"]:::cs
+    scope["Core: BpmnEditorScope<br/>Headless BpmnEditorSession<br/>Typed state cascades"]:::cs
+    canvas["Bpmn · BpmnCanvas<br/>Interop boundary"]:::cs
+    ts["Bpmn.Scripts<br/>TypeScript canvas module<br/>JointJS dia.Paper"]:::js
+    di["Core + chosen kit registration<br/>Options + registries<br/>Validators + template loading"]:::cs
+    semantic["BpmnDocument<br/>Semantic model + BPMNDI<br/>Immutable persisted model"]:::data
+    layout["BPMNDI layout model<br/>Bounds + waypoints<br/>Persisted layer"]:::data
+    host --> editor
+    editor --> scope
+    scope --> canvas
+    canvas <--> ts
+    di --> scope
+    semantic --> scope
+    layout --> semantic
+    classDef cs fill:#a5d8ff,stroke:#343a40,color:#212529
+    classDef js fill:#ffec99,stroke:#343a40,color:#212529
+    classDef data fill:#b2f2bb,stroke:#343a40,color:#212529
+    classDef test fill:#e9ecef,stroke:#343a40,color:#212529
