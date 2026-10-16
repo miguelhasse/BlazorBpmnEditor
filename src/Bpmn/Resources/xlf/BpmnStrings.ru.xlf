@@ -1527,6 +1527,16 @@
         <target state="translated">Поток сообщений</target>
         <note />
       </trans-unit>
+      <trans-unit id="PropertyGroup.multi-instance-input-data-item">
+        <source>Input Data Item</source>
+        <target state="new">Input Data Item</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.multi-instance-output-data-item">
+        <source>Output Data Item</source>
+        <target state="new">Output Data Item</target>
+        <note />
+      </trans-unit>
       <trans-unit id="PropertyGroup.process">
         <source>Process</source>
         <target state="translated">Процесс</target>

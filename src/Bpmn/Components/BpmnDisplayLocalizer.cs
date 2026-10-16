@@ -123,7 +123,13 @@ public sealed class BpmnDisplayLocalizer(IStringLocalizer<BpmnStrings> localizer
     /// <summary>Localizes built-in property groups and schema fields, preserving template and host labels.</summary>
     public BpmnPropertyGroup Group(BpmnPropertyGroup group)
     {
-        if (!group.HasBuiltInLabels || group.Id.StartsWith("template:", StringComparison.Ordinal)) return group;
+        if (!group.HasBuiltInLabels || group.Id.StartsWith("template:", StringComparison.Ordinal))
+        {
+            return group.Children.Count == 0
+                ? group
+                : group with { Children = group.Children.Select(Group).ToArray() };
+        }
+
         var schema = group.Namespace is "http://camunda.org/schema/zeebe/1.0" or "http://camunda.org/schema/1.0/bpmn";
         var generic = group.Id.StartsWith("schema:", StringComparison.Ordinal);
         var prefix = generic ? $"Schema.Generic.{group.Id[7..].Split(':')[0]}:"
@@ -144,6 +150,7 @@ public sealed class BpmnDisplayLocalizer(IStringLocalizer<BpmnStrings> localizer
                 }).ToArray(),
                 Choices = entry.Choices.Select(choice => choice with { Label = ChoiceLabel(entry.Id, choice) }).ToArray(),
             } : Property(entry)).ToArray(),
+            Children = group.Children.Select(Group).ToArray(),
         };
     }
 

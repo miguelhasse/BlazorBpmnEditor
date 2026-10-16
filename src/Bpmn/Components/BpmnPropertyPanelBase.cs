@@ -232,12 +232,26 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
             groups = provider.GetGroups(element, groups);
         }
 
-        _groups = groups.Where(group => Only is not null || group.Namespace is null)
-            .Select(group => group with
+        _groups = groups.Select(DisplayableGroup).Where(group => group is not null)
+            .Select(group => Display.Group(group!)).ToList();
+
+        BpmnPropertyGroup? DisplayableGroup(BpmnPropertyGroup group)
+        {
+            if (Only is null && group.Namespace is not null)
             {
-                Entries = group.Entries.Where(entry => entry.Kind != BpmnPropertyEntryKind.Hidden &&
-                    (Only is not null || entry.Binding is null)).Select(entry => entry with { GroupId = group.Id }).ToList(),
-            }).Where(group => group.Entries.Count > 0).Select(Display.Group).ToList();
+                return null;
+            }
+
+            var entries = group.Entries.Where(entry => entry.Kind != BpmnPropertyEntryKind.Hidden
+                && (Only is not null || entry.Binding is null))
+                .Select(entry => entry with { GroupId = group.Id }).ToList();
+            var children = group.Children.Select(DisplayableGroup).Where(child => child is not null)
+                .Select(child => child!).ToList();
+
+            return entries.Count == 0 && children.Count == 0
+                ? null
+                : group with { Entries = entries, Children = children };
+        }
     }
 
     /// <summary>Builds the context an entry editor is rendered with.</summary>
@@ -275,7 +289,11 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
             return cached;
 
         var context = new BpmnPropertyGroupContext(group, group.Entries,
-            context => RenderEntry(BuildEntryContext(context.Entry)), Inspecting);
+            entryContext => RenderEntry(BuildEntryContext(entryContext.Entry)), Inspecting)
+        {
+            Children = group.Children.Select(BuildGroupContext).ToArray(),
+            RenderEntry = entry => RenderEntry(BuildEntryContext(entry)),
+        };
         _groupContexts[group] = context;
         return context;
     }

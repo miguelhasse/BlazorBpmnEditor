@@ -243,6 +243,8 @@
   <data name="PropertyGroup.data-state" xml:space="preserve"><value>Data State</value></data>
   <data name="PropertyGroup.process" xml:space="preserve"><value>Process</value></data>
   <data name="PropertyGroup.loop-characteristics" xml:space="preserve"><value>Loop Characteristics</value></data>
+  <data name="PropertyGroup.multi-instance-input-data-item" xml:space="preserve"><value>Input Data Item</value></data>
+  <data name="PropertyGroup.multi-instance-output-data-item" xml:space="preserve"><value>Output Data Item</value></data>
   <data name="PropertyGroup.complex-behavior-definition" xml:space="preserve"><value>Complex Behavior Definition</value></data>
   <data name="PropertyGroup.extensions" xml:space="preserve"><value>Extensions</value></data>
   <data name="TypeOption.Event" xml:space="preserve"><value>{0} {1}</value></data>

@@ -1,0 +1,42 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+
+@if (GroupTemplate is not null)
+{
+    <div class="bpmn-properties__nested-group" data-group-id="@Context.Group.Id">
+        @GroupTemplate(Context)
+        @foreach (var child in Context.Children)
+        {
+            <BpmnPropertyGroupView Context="@child" GroupTemplate="@GroupTemplate" />
+        }
+    </div>
+}
+else
+{
+    <details class="bpmn-properties__group @(Context.Group.Namespace is not null ? "bpmn-properties__group--extension" : null)"
+             open="@Context.Group.OpenByDefault" data-group-id="@Context.Group.Id">
+        <summary class="bpmn-properties__heading" title="@Context.Group.Tooltip">
+            @(Context.Group.Label ?? Context.Group.Id)
+        </summary>
+        @if (Context.Entries.Count > 0)
+        {
+            <div class="bpmn-properties__properties" role="group" aria-label="@(Context.Group.Label ?? Context.Group.Id)">
+                @foreach (var entry in Context.Entries)
+                {
+                    @Context.RenderEntry(entry)
+                }
+            </div>
+        }
+        @foreach (var child in Context.Children)
+        {
+            <BpmnPropertyGroupView Context="@child" GroupTemplate="@GroupTemplate" />
+        }
+    </details>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public BpmnPropertyGroupContext Context { get; set; } = default!;
+
+    [Parameter]
+    public RenderFragment<BpmnPropertyGroupContext>? GroupTemplate { get; set; }
+}

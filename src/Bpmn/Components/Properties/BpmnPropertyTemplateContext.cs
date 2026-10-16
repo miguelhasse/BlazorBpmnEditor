@@ -21,13 +21,19 @@ public sealed record BpmnPropertyEntryContext(BpmnPropertyEntry Entry, EventCall
     public IReadOnlyList<BpmnFeelVariable> Variables { get; init; } = [];
 }
 
-/// <summary>A group with its visible entries and the resolved entry renderer.</summary>
+/// <summary>A group with its visible entries, child groups, and resolved entry renderer.</summary>
 /// <param name="Group">Group metadata.</param>
 /// <param name="Entries">Visible entries.</param>
 /// <param name="EntryTemplate">Renderer; callbacks are supplied by the panel for the given entry.</param>
 /// <param name="IsReadOnly">Whether the panel is inspecting.</param>
 public sealed record BpmnPropertyGroupContext(BpmnPropertyGroup Group, IReadOnlyList<BpmnPropertyEntry> Entries,
-    RenderFragment<BpmnPropertyEntryContext> EntryTemplate, bool IsReadOnly);
+    RenderFragment<BpmnPropertyEntryContext> EntryTemplate, bool IsReadOnly)
+{
+    /// <summary>Nested group contexts in display order.</summary>
+    public IReadOnlyList<BpmnPropertyGroupContext> Children { get; init; } = [];
+    /// <summary>Renders an entry with the panel's guarded write callbacks.</summary>
+    public RenderFragment<BpmnPropertyEntry> RenderEntry { get; init; } = _ => _ => { };
+}
 
 /// <summary>A bound edit routed to the host rather than a legacy property command.</summary>
 /// <param name="ElementId">The selected element.</param>

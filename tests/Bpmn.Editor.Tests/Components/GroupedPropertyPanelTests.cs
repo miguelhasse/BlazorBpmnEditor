@@ -22,6 +22,10 @@ public sealed class GroupedPropertyPanelTests : BunitContext
                 new("name", "Name", BpmnPropertyKind.Text, "Work"),
                 new("loopCharacteristics", "Loop", BpmnPropertyKind.Choice, "none",
                     Choices: [new("none", "None")]) { Group = BpmnPropertyGroupKind.LoopCharacteristics },
+                new("multiInstance.inputDataItem.id", "Input data item id", BpmnPropertyKind.Text, "Input")
+                    { Group = BpmnPropertyGroupKind.MultiInstanceInputDataItem },
+                new("multiInstance.outputDataItem.name", "Output data item name", BpmnPropertyKind.Text, "Output")
+                    { Group = BpmnPropertyGroupKind.MultiInstanceOutputDataItem },
                 new("documentation", "Documentation", BpmnPropertyKind.MultilineText, "Notes"),
             ],
             ExtensionGroups = [new("template:custom", "Template caption", [new("custom", "Custom", BpmnPropertyEntryKind.Text)])
@@ -31,10 +35,15 @@ public sealed class GroupedPropertyPanelTests : BunitContext
 
         var panel = Panel([snapshot]);
 
-        Assert.Equal(["general", "loop-characteristics", "complex-behavior-definition", "template:custom", "extensions"],
+        Assert.Equal(["general", "loop-characteristics", "multi-instance-input-data-item",
+                "multi-instance-output-data-item", "complex-behavior-definition", "template:custom", "extensions"],
             panel.FindAll("details[data-group-id]").Select(element => element.GetAttribute("data-group-id")));
         Assert.Equal(["Name", "Documentation"], panel.FindAll("[data-group-id=general] .bpmn-properties__label").Select(element => element.TextContent));
         Assert.Equal("Loop Characteristics", panel.Find("[data-group-id=loop-characteristics] summary").TextContent.Trim());
+        Assert.NotNull(panel.Find("[data-group-id=loop-characteristics] [data-group-id=multi-instance-input-data-item]"));
+        Assert.NotNull(panel.Find("[data-group-id=loop-characteristics] [data-group-id=multi-instance-output-data-item]"));
+        Assert.Equal("Input", panel.Find("[data-group-id=multi-instance-input-data-item] input").GetAttribute("value"));
+        Assert.Equal("Output", panel.Find("[data-group-id=multi-instance-output-data-item] input").GetAttribute("value"));
         Assert.Equal("Complex Behavior Definition", panel.Find("[data-group-id=complex-behavior-definition] summary").TextContent.Trim());
         Assert.Equal("Template caption", panel.Find("[data-group-id='template:custom'] summary").TextContent.Trim());
         Assert.Equal(2, panel.FindAll("details.bpmn-properties__group--extension").Count);
@@ -74,12 +83,18 @@ public sealed class GroupedPropertyPanelTests : BunitContext
     {
         var snapshot = Snapshot() with
         {
-            Properties = [new("multiInstance.complexBehavior.1.condition", "Complex behavior 2 condition", BpmnPropertyKind.MultilineText, "old")
-                { Group = BpmnPropertyGroupKind.ComplexBehaviorDefinition }],
+            Properties =
+            [
+                new("loopCharacteristics", "Loop", BpmnPropertyKind.Choice, "multiInstanceParallel")
+                    { Group = BpmnPropertyGroupKind.LoopCharacteristics },
+                new("multiInstance.complexBehavior.1.condition", "Complex behavior 2 condition", BpmnPropertyKind.MultilineText, "old")
+                    { Group = BpmnPropertyGroupKind.ComplexBehaviorDefinition },
+            ],
         };
         BpmnEditCommand? command = null;
         var panel = Panel([snapshot], configure: seed => seed.OnCommand(update => command = update));
 
+        Assert.NotNull(panel.Find("[data-group-id=loop-characteristics] [data-group-id=complex-behavior-definition]"));
         panel.Find("[data-group-id=complex-behavior-definition] textarea").Change("updated");
 
         var update = Assert.IsType<UpdatePropertiesCommand>(command);
