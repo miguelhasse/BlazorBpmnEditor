@@ -1447,14 +1447,114 @@
         <target state="translated">屬性</target>
         <note />
       </trans-unit>
+      <trans-unit id="PropertyGroup.activity">
+        <source>Activity</source>
+        <target state="translated">活動</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.assignment">
+        <source>Assignment</source>
+        <target state="translated">指派</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.association">
+        <source>Association</source>
+        <target state="translated">關聯</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.call-activity">
+        <source>Call Activity</source>
+        <target state="translated">呼叫活動</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.complex-behavior-definition">
+        <source>Complex Behavior Definition</source>
+        <target state="translated">複雜行為定義</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.complex-gateway">
+        <source>Complex Gateway</source>
+        <target state="translated">複雜閘道</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.data-object-reference">
+        <source>Data Object Reference</source>
+        <target state="translated">資料物件參照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.data-state">
+        <source>Data State</source>
+        <target state="translated">資料狀態</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.data-store-reference">
+        <source>Data Store Reference</source>
+        <target state="translated">資料儲存參照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.event">
+        <source>Event</source>
+        <target state="translated">事件</target>
+        <note />
+      </trans-unit>
       <trans-unit id="PropertyGroup.extensions">
         <source>Extensions</source>
         <target state="translated">擴充</target>
         <note />
       </trans-unit>
+      <trans-unit id="PropertyGroup.gateway">
+        <source>Gateway</source>
+        <target state="translated">閘道</target>
+        <note />
+      </trans-unit>
       <trans-unit id="PropertyGroup.general">
         <source>General</source>
         <target state="translated">一般</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.group">
+        <source>Group</source>
+        <target state="translated">群組</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.loop-characteristics">
+        <source>Loop Characteristics</source>
+        <target state="translated">Loop Characteristics</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.message-flow">
+        <source>Message Flow</source>
+        <target state="translated">訊息流</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.process">
+        <source>Process</source>
+        <target state="translated">流程</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.receive-task">
+        <source>Receive Task</source>
+        <target state="translated">接收任務</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.script-task">
+        <source>Script Task</source>
+        <target state="translated">指令碼任務</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.send-task">
+        <source>Send Task</source>
+        <target state="translated">傳送任務</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.sequence-flow">
+        <source>Sequence Flow</source>
+        <target state="translated">順序流</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.text-annotation">
+        <source>Text Annotation</source>
+        <target state="translated">文字註解</target>
         <note />
       </trans-unit>
       <trans-unit id="PropertyPanel.AriaLabel">

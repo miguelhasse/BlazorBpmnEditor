@@ -1447,14 +1447,114 @@
         <target state="translated">プロパティ</target>
         <note />
       </trans-unit>
+      <trans-unit id="PropertyGroup.activity">
+        <source>Activity</source>
+        <target state="translated">アクティビティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.assignment">
+        <source>Assignment</source>
+        <target state="translated">代入</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.association">
+        <source>Association</source>
+        <target state="translated">関連</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.call-activity">
+        <source>Call Activity</source>
+        <target state="translated">呼び出しアクティビティ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.complex-behavior-definition">
+        <source>Complex Behavior Definition</source>
+        <target state="translated">複雑な動作の定義</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.complex-gateway">
+        <source>Complex Gateway</source>
+        <target state="translated">複雑ゲートウェイ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.data-object-reference">
+        <source>Data Object Reference</source>
+        <target state="translated">データオブジェクト参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.data-state">
+        <source>Data State</source>
+        <target state="translated">データ状態</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.data-store-reference">
+        <source>Data Store Reference</source>
+        <target state="translated">データストア参照</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.event">
+        <source>Event</source>
+        <target state="translated">イベント</target>
+        <note />
+      </trans-unit>
       <trans-unit id="PropertyGroup.extensions">
         <source>Extensions</source>
         <target state="translated">拡張</target>
         <note />
       </trans-unit>
+      <trans-unit id="PropertyGroup.gateway">
+        <source>Gateway</source>
+        <target state="translated">ゲートウェイ</target>
+        <note />
+      </trans-unit>
       <trans-unit id="PropertyGroup.general">
         <source>General</source>
         <target state="translated">全般</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.group">
+        <source>Group</source>
+        <target state="translated">グループ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.loop-characteristics">
+        <source>Loop Characteristics</source>
+        <target state="translated">ループ特性</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.message-flow">
+        <source>Message Flow</source>
+        <target state="translated">メッセージフロー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.process">
+        <source>Process</source>
+        <target state="translated">プロセス</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.receive-task">
+        <source>Receive Task</source>
+        <target state="translated">受信タスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.script-task">
+        <source>Script Task</source>
+        <target state="translated">スクリプトタスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.send-task">
+        <source>Send Task</source>
+        <target state="translated">送信タスク</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.sequence-flow">
+        <source>Sequence Flow</source>
+        <target state="translated">シーケンスフロー</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.text-annotation">
+        <source>Text Annotation</source>
+        <target state="translated">テキスト注釈</target>
         <note />
       </trans-unit>
       <trans-unit id="PropertyPanel.AriaLabel">

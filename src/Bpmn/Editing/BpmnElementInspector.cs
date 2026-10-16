@@ -564,7 +564,7 @@ public static class BpmnElementInspector
             [
                 Text("name", "Name", flow.Name),
                 Choice("messageRef", "Message", flow.MessageRef, Optional(document.Catalog.Messages
-                    .Select(message => new BpmnPropertyChoice(message.Id, message.Name ?? message.Id)))),
+                    .Select(message => new BpmnPropertyChoice(message.Id, message.Name ?? message.Id))), BpmnPropertyGroupKind.MessageFlow),
             ],
             BpmnAssociation association =>
             [
@@ -572,44 +572,44 @@ public static class BpmnElementInspector
                     "associationDirection",
                     "Direction",
                     Wire(association.Direction),
-                    DirectionChoices),
+                    DirectionChoices, BpmnPropertyGroupKind.Association),
             ],
             BpmnDataAssociation association => DataAssociationProperties(association),
             BpmnTextAnnotation annotation =>
             [
-                new("text", "Text", BpmnPropertyKind.MultilineText, annotation.Text),
-                Text("textFormat", "Text format", annotation.TextFormat),
+                new("text", "Text", BpmnPropertyKind.MultilineText, annotation.Text) { Group = BpmnPropertyGroupKind.TextAnnotation },
+                Text("textFormat", "Text format", annotation.TextFormat, BpmnPropertyGroupKind.TextAnnotation),
             ],
             BpmnGroup group =>
             [
                 Text("name", "Name", group.Name),
                 Choice("categoryValueRef", "Category", group.CategoryValueRef, Optional(document.Catalog.Categories
                     .SelectMany(category => category.Values)
-                    .Select(value => new BpmnPropertyChoice(value.Id, value.Value ?? value.Id)))),
+                    .Select(value => new BpmnPropertyChoice(value.Id, value.Value ?? value.Id))), BpmnPropertyGroupKind.Group),
             ],
             BpmnDataObjectReference reference =>
             [
                 Text("name", "Name", reference.Name),
-                Text("state", "State", reference.State),
-                Flag("isCollection", "Collection", reference.IsCollection),
+                Text("state", "State", reference.State, BpmnPropertyGroupKind.DataState),
+                Flag("isCollection", "Collection", reference.IsCollection, BpmnPropertyGroupKind.DataObjectReference),
                 Choice("dataObjectRef", "Data Object", reference.DataObjectRef, Optional(document.DataObjects
-                    .Select(dataObject => new BpmnPropertyChoice(dataObject.Id, dataObject.Name ?? dataObject.Id)))),
+                    .Select(dataObject => new BpmnPropertyChoice(dataObject.Id, dataObject.Name ?? dataObject.Id))), BpmnPropertyGroupKind.DataObjectReference),
             ],
             BpmnDataStoreReference reference =>
             [
                 Text("name", "Name", reference.Name),
-                Text("state", "State", reference.State),
+                Text("state", "State", reference.State, BpmnPropertyGroupKind.DataState),
                 Choice("dataStoreRef", "Data Store", reference.DataStoreRef, Optional(document.Catalog.DataStores
-                    .Select(store => new BpmnPropertyChoice(store.Id, store.Name ?? store.Id)))),
+                    .Select(store => new BpmnPropertyChoice(store.Id, store.Name ?? store.Id))), BpmnPropertyGroupKind.DataStoreReference),
             ],
             BpmnParticipant participant => [Text("name", "Name", participant.Name)],
             BpmnLane lane => [Text("name", "Name", lane.Name)],
             BpmnProcess process =>
             [
                 Text("name", "Name", process.Name),
-                Flag("isExecutable", "Executable", process.IsExecutable),
-                Choice("processType", "Process type", process.ProcessType, ProcessTypeChoices),
-                Flag("isClosed", "Closed", process.IsClosed),
+                Flag("isExecutable", "Executable", process.IsExecutable, BpmnPropertyGroupKind.Process),
+                Choice("processType", "Process type", process.ProcessType, ProcessTypeChoices, BpmnPropertyGroupKind.Process),
+                Flag("isClosed", "Closed", process.IsClosed, BpmnPropertyGroupKind.Process),
             ],
             BpmnCollaboration collaboration => [Text("name", "Name", collaboration.Name)],
             _ => [],
@@ -628,54 +628,54 @@ public static class BpmnElementInspector
                 Wire(node.EventDefinition),
                 [.. SupportedTriggersFor(document, node).Select(trigger => new BpmnPropertyChoice(
                     Wire(trigger),
-                    TriggerLabel(trigger)) { LabelResourceKey = $"EventTrigger.{trigger}" })]));
+                    TriggerLabel(trigger)) { LabelResourceKey = $"EventTrigger.{trigger}" })], BpmnPropertyGroupKind.Event));
 
             // The dashed ring is only meaningful where an event can decline to interrupt: a
             // Boundary Event and an Event Sub-Process Start Event. Offering the flag elsewhere
             // would offer a value the notation never draws.
             if (node.Type == BpmnFlowNodeType.BoundaryEvent || IsEventSubProcessStart(document, node))
             {
-                properties.Add(Flag("isInterrupting", "Interrupting", node.IsInterrupting));
+                properties.Add(Flag("isInterrupting", "Interrupting", node.IsInterrupting, BpmnPropertyGroupKind.Event));
             }
         }
 
         if (category == BpmnElementCategory.Activity)
         {
-            properties.Add(Choice("loopCharacteristics", "Loop", Wire(node.LoopCharacteristics), LoopChoices));
-            properties.Add(Flag("isForCompensation", "Compensation handler", node.IsForCompensation));
+            properties.Add(Choice("loopCharacteristics", "Loop", Wire(node.LoopCharacteristics), LoopChoices, BpmnPropertyGroupKind.LoopCharacteristics));
+            properties.Add(Flag("isForCompensation", "Compensation handler", node.IsForCompensation, BpmnPropertyGroupKind.Activity));
 
             if (node.LoopCharacteristics == BpmnLoopCharacteristics.Standard || node.StandardLoop is not null)
             {
                 var standard = node.StandardLoop ?? new BpmnStandardLoopDetails();
-                properties.Add(Flag("standardLoop.testBefore", "Test before", standard.TestBefore));
+                properties.Add(Flag("standardLoop.testBefore", "Test before", standard.TestBefore, BpmnPropertyGroupKind.LoopCharacteristics));
                 properties.Add(Text(
                     "standardLoop.loopMaximum",
                     "Loop maximum",
-                    standard.LoopMaximum?.ToString(CultureInfo.InvariantCulture)));
+                    standard.LoopMaximum?.ToString(CultureInfo.InvariantCulture), BpmnPropertyGroupKind.LoopCharacteristics));
                 properties.AddRange(ExpressionProperties(
                     "standardLoop.loopCondition",
                     "Loop condition",
-                    standard.LoopCondition));
+                    standard.LoopCondition, BpmnPropertyGroupKind.LoopCharacteristics));
             }
 
             if (node.LoopCharacteristics is BpmnLoopCharacteristics.MultiInstanceParallel
                 or BpmnLoopCharacteristics.MultiInstanceSequential || node.MultiInstanceLoop is not null)
             {
                 var multi = node.MultiInstanceLoop ?? new BpmnMultiInstanceLoopDetails();
-                properties.Add(Flag("multiInstance.isSequential", "Sequential", multi.IsSequential));
+                properties.Add(Flag("multiInstance.isSequential", "Sequential", multi.IsSequential, BpmnPropertyGroupKind.LoopCharacteristics));
                 properties.Add(Choice(
                     "multiInstance.behavior",
                     "Multi-instance behavior",
                     multi.Behavior,
-                    MultiInstanceBehaviorChoices));
+                    MultiInstanceBehaviorChoices, BpmnPropertyGroupKind.LoopCharacteristics));
                 properties.AddRange(ExpressionProperties(
                     "multiInstance.loopCardinality",
                     "Loop cardinality",
-                    multi.LoopCardinality));
+                    multi.LoopCardinality, BpmnPropertyGroupKind.LoopCharacteristics));
                 properties.Add(Text(
                     "multiInstance.loopDataInputRef",
                     "Loop data input reference",
-                    multi.LoopDataInputRef));
+                    multi.LoopDataInputRef, BpmnPropertyGroupKind.LoopCharacteristics));
                 properties.AddRange(LoopDataItemProperties(
                     "multiInstance.inputDataItem",
                     "Input data item",
@@ -683,11 +683,11 @@ public static class BpmnElementInspector
                 properties.AddRange(ExpressionProperties(
                     "multiInstance.completionCondition",
                     "Completion condition",
-                    multi.CompletionCondition));
+                    multi.CompletionCondition, BpmnPropertyGroupKind.LoopCharacteristics));
                 properties.Add(Text(
                     "multiInstance.loopDataOutputRef",
                     "Loop data output reference",
-                    multi.LoopDataOutputRef));
+                    multi.LoopDataOutputRef, BpmnPropertyGroupKind.LoopCharacteristics));
                 properties.AddRange(LoopDataItemProperties(
                     "multiInstance.outputDataItem",
                     "Output data item",
@@ -700,11 +700,11 @@ public static class BpmnElementInspector
                     properties.Add(Text(
                         $"{prefix}.event",
                         $"Complex behavior {index + 1} event",
-                        behaviors[index].Event));
+                        behaviors[index].Event, BpmnPropertyGroupKind.ComplexBehaviorDefinition));
                     properties.AddRange(ExpressionProperties(
                         $"{prefix}.condition",
                         $"Complex behavior {index + 1} condition",
-                        behaviors[index].Condition));
+                        behaviors[index].Condition, BpmnPropertyGroupKind.ComplexBehaviorDefinition));
                 }
             }
 
@@ -718,19 +718,20 @@ public static class BpmnElementInspector
                     "Calls",
                     node.CalledElementRef,
                     [.. BpmnDocumentEditor.CallableDefinitions(document)
-                        .Select(definition => new BpmnPropertyChoice(definition.Id, definition.Name ?? definition.Id))]));
+                        .Select(definition => new BpmnPropertyChoice(definition.Id, definition.Name ?? definition.Id))], BpmnPropertyGroupKind.CallActivity));
             }
 
             if (node.Type == BpmnFlowNodeType.ScriptTask)
             {
-                properties.Add(Text("scriptFormat", "Script format", node.ScriptFormat));
-                properties.Add(new("script", "Script", BpmnPropertyKind.MultilineText, node.Script));
+                properties.Add(Text("scriptFormat", "Script format", node.ScriptFormat, BpmnPropertyGroupKind.ScriptTask));
+                properties.Add(new("script", "Script", BpmnPropertyKind.MultilineText, node.Script) { Group = BpmnPropertyGroupKind.ScriptTask });
             }
 
             if (node.Type is BpmnFlowNodeType.SendTask or BpmnFlowNodeType.ReceiveTask)
             {
                 properties.Add(Choice("messageRef", "Message", node.MessageRef, Optional(document.Catalog.Messages
-                    .Select(message => new BpmnPropertyChoice(message.Id, message.Name ?? message.Id)))));
+                    .Select(message => new BpmnPropertyChoice(message.Id, message.Name ?? message.Id))),
+                    node.Type == BpmnFlowNodeType.SendTask ? BpmnPropertyGroupKind.SendTask : BpmnPropertyGroupKind.ReceiveTask));
             }
         }
 
@@ -739,7 +740,7 @@ public static class BpmnElementInspector
             properties.AddRange(ExpressionProperties(
                 "activationCondition",
                 "Activation condition",
-                node.ActivationCondition));
+                node.ActivationCondition, BpmnPropertyGroupKind.ComplexGateway));
         }
 
         // A default flow is the "otherwise" branch of a decision, so it belongs to the kinds that
@@ -754,7 +755,10 @@ public static class BpmnElementInspector
             if (outgoing.Count > 1)
             {
                 properties.Add(Choice("defaultFlowRef", "Default flow", node.DefaultFlowRef, Optional(
-                    outgoing.Select(flow => new BpmnPropertyChoice(flow.Id, flow.Name ?? flow.Id)))));
+                    outgoing.Select(flow => new BpmnPropertyChoice(flow.Id, flow.Name ?? flow.Id))),
+                    category == BpmnElementCategory.Activity ? BpmnPropertyGroupKind.Activity
+                        : node.Type == BpmnFlowNodeType.ComplexGateway ? BpmnPropertyGroupKind.ComplexGateway
+                        : BpmnPropertyGroupKind.Gateway));
             }
         }
 
@@ -770,11 +774,11 @@ public static class BpmnElementInspector
             properties.AddRange(ExpressionProperties(
                 $"assignment.{index}.from",
                 $"Assignment {index + 1} from",
-                assignment.From));
+                assignment.From, BpmnPropertyGroupKind.Assignment));
             properties.AddRange(ExpressionProperties(
                 $"assignment.{index}.to",
                 $"Assignment {index + 1} to",
-                assignment.To));
+                assignment.To, BpmnPropertyGroupKind.Assignment));
         }
 
         return properties;
@@ -788,50 +792,54 @@ public static class BpmnElementInspector
         item ??= new BpmnLoopDataItem();
         return
         [
-            Text($"{prefix}.id", $"{label} id", item.Id),
-            Text($"{prefix}.name", $"{label} name", item.Name),
-            Text($"{prefix}.itemSubjectRef", $"{label} item subject reference", item.ItemSubjectRef),
-            Flag($"{prefix}.isCollection", $"{label} is collection", item.IsCollection),
+            Text($"{prefix}.id", $"{label} id", item.Id, BpmnPropertyGroupKind.LoopCharacteristics),
+            Text($"{prefix}.name", $"{label} name", item.Name, BpmnPropertyGroupKind.LoopCharacteristics),
+            Text($"{prefix}.itemSubjectRef", $"{label} item subject reference", item.ItemSubjectRef, BpmnPropertyGroupKind.LoopCharacteristics),
+            Flag($"{prefix}.isCollection", $"{label} is collection", item.IsCollection, BpmnPropertyGroupKind.LoopCharacteristics),
         ];
     }
 
     private static IReadOnlyList<BpmnPropertyDescriptor> ExpressionProperties(
         string name,
         string label,
-        BpmnFormalExpression? expression) =>
+        BpmnFormalExpression? expression,
+        BpmnPropertyGroupKind group) =>
     [
-        new(name, label, BpmnPropertyKind.MultilineText, expression?.Body),
-        Text($"{name}.language", $"{label} language", expression?.Language),
-        Text($"{name}.type", $"{label} type", expression?.TypeQName),
+        new(name, label, BpmnPropertyKind.MultilineText, expression?.Body) { Group = group },
+        Text($"{name}.language", $"{label} language", expression?.Language, group),
+        Text($"{name}.type", $"{label} type", expression?.TypeQName, group),
     ];
 
     private static IReadOnlyList<BpmnPropertyDescriptor> SequenceFlowProperties(BpmnSequenceFlow flow) =>
     [
         Text("name", "Name", flow.Name),
-        Flag("isDefault", "Default flow", flow.IsDefault),
+        Flag("isDefault", "Default flow", flow.IsDefault, BpmnPropertyGroupKind.SequenceFlow),
 
         // SF-006: a default flow carries no condition. The property stays visible on one so the
         // user can see the condition that has to go before the flow can become the default.
-        new("conditionExpression", "Condition", BpmnPropertyKind.MultilineText, flow.ConditionExpression),
-        Text("conditionLanguage", "Condition language", flow.ConditionLanguage),
+        new("conditionExpression", "Condition", BpmnPropertyKind.MultilineText, flow.ConditionExpression) { Group = BpmnPropertyGroupKind.SequenceFlow },
+        Text("conditionLanguage", "Condition language", flow.ConditionLanguage, BpmnPropertyGroupKind.SequenceFlow),
     ];
 
     private static bool IsEventSubProcessStart(BpmnDocument document, BpmnFlowNode node) =>
         node.Type == BpmnFlowNodeType.StartEvent
         && document.FindFlowNode(node.ContainerId) is { Type: BpmnFlowNodeType.EventSubProcess };
 
-    private static BpmnPropertyDescriptor Text(string name, string label, string? value) =>
-        new(name, label, BpmnPropertyKind.Text, value);
+    private static BpmnPropertyDescriptor Text(string name, string label, string? value,
+        BpmnPropertyGroupKind group = BpmnPropertyGroupKind.General) =>
+        new(name, label, BpmnPropertyKind.Text, value) { Group = group };
 
-    private static BpmnPropertyDescriptor Flag(string name, string label, bool? value) =>
-        new(name, label, BpmnPropertyKind.Boolean, value is null ? null : value.Value ? "true" : "false");
+    private static BpmnPropertyDescriptor Flag(string name, string label, bool? value,
+        BpmnPropertyGroupKind group = BpmnPropertyGroupKind.General) =>
+        new(name, label, BpmnPropertyKind.Boolean, value is null ? null : value.Value ? "true" : "false") { Group = group };
 
     private static BpmnPropertyDescriptor Choice(
         string name,
         string label,
         string? value,
-        IReadOnlyList<BpmnPropertyChoice> choices) =>
-        new(name, label, BpmnPropertyKind.Choice, value, Choices: choices);
+        IReadOnlyList<BpmnPropertyChoice> choices,
+        BpmnPropertyGroupKind group = BpmnPropertyGroupKind.General) =>
+        new(name, label, BpmnPropertyKind.Choice, value, Choices: choices) { Group = group };
 
     /// <summary>An optional reference needs a way to say "none", which an empty value is.</summary>
     private static IReadOnlyList<BpmnPropertyChoice> Optional(IEnumerable<BpmnPropertyChoice> choices) =>

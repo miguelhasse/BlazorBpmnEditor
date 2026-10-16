@@ -15,6 +15,33 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Localization;
 public sealed class BpmnDisplayLocalizationTests
 {
     [Fact]
+    public void SemanticGroupsTranslateWithoutChangingClassificationOrPaths()
+    {
+        var display = Display(("PropertyGroup.loop-characteristics", "Translated loops"),
+            ("PropertyGroup.complex-behavior-definition", "Translated complex behavior"),
+            ("Property.multiInstance.complexBehavior.condition", "Translated condition {0}"));
+        var descriptor = new BpmnPropertyDescriptor("multiInstance.complexBehavior.1.condition", "Complex behavior 2 condition",
+            BpmnPropertyKind.MultilineText, "unchanged") { Group = BpmnPropertyGroupKind.ComplexBehaviorDefinition };
+        var snapshot = new BpmnElementSnapshot
+        {
+            ElementId = "Task", ElementType = "task", Category = BpmnElementCategory.Activity,
+            Properties = [descriptor, new("loopCharacteristics", "Loop", BpmnPropertyKind.Text, "none")
+                { Group = BpmnPropertyGroupKind.LoopCharacteristics }],
+        };
+
+        var localized = display.Snapshot(snapshot);
+        var groups = new BpmnGeneralPropertiesProvider().GetGroups(localized, []).Select(display.Group).ToArray();
+
+        Assert.Equal(BpmnPropertyGroupKind.ComplexBehaviorDefinition, localized.Properties[0].Group);
+        Assert.Equal(["Translated loops", "Translated complex behavior"], groups.Select(group => group.Label));
+        var entry = Assert.Single(groups[1].Entries);
+        Assert.Equal("Translated condition 2", entry.Label);
+        Assert.Equal("multiInstance.complexBehavior.1.condition", entry.Id);
+        Assert.Equal("complex-behavior-definition", entry.GroupId);
+        Assert.Equal("unchanged", entry.Value);
+    }
+
+    [Fact]
     public void StandardPropertyCaptionsTranslateWithoutChangingValuesOrReferenceNames()
     {
         var display = Display(("Property.name", "Name translated"), ("Property.calledElementRef", "Calls translated"),

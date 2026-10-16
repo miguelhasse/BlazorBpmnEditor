@@ -224,6 +224,26 @@
   <data name="Editor.PanelLabel" xml:space="preserve"><value>Diagram properties</value></data>
   <data name="PropertyForm.AriaLabel" xml:space="preserve"><value>Properties</value></data>
   <data name="PropertyGroup.general" xml:space="preserve"><value>General</value></data>
+  <data name="PropertyGroup.activity" xml:space="preserve"><value>Activity</value></data>
+  <data name="PropertyGroup.event" xml:space="preserve"><value>Event</value></data>
+  <data name="PropertyGroup.script-task" xml:space="preserve"><value>Script Task</value></data>
+  <data name="PropertyGroup.call-activity" xml:space="preserve"><value>Call Activity</value></data>
+  <data name="PropertyGroup.send-task" xml:space="preserve"><value>Send Task</value></data>
+  <data name="PropertyGroup.receive-task" xml:space="preserve"><value>Receive Task</value></data>
+  <data name="PropertyGroup.gateway" xml:space="preserve"><value>Gateway</value></data>
+  <data name="PropertyGroup.complex-gateway" xml:space="preserve"><value>Complex Gateway</value></data>
+  <data name="PropertyGroup.sequence-flow" xml:space="preserve"><value>Sequence Flow</value></data>
+  <data name="PropertyGroup.message-flow" xml:space="preserve"><value>Message Flow</value></data>
+  <data name="PropertyGroup.association" xml:space="preserve"><value>Association</value></data>
+  <data name="PropertyGroup.assignment" xml:space="preserve"><value>Assignment</value></data>
+  <data name="PropertyGroup.text-annotation" xml:space="preserve"><value>Text Annotation</value></data>
+  <data name="PropertyGroup.group" xml:space="preserve"><value>Group</value></data>
+  <data name="PropertyGroup.data-object-reference" xml:space="preserve"><value>Data Object Reference</value></data>
+  <data name="PropertyGroup.data-store-reference" xml:space="preserve"><value>Data Store Reference</value></data>
+  <data name="PropertyGroup.data-state" xml:space="preserve"><value>Data State</value></data>
+  <data name="PropertyGroup.process" xml:space="preserve"><value>Process</value></data>
+  <data name="PropertyGroup.loop-characteristics" xml:space="preserve"><value>Loop Characteristics</value></data>
+  <data name="PropertyGroup.complex-behavior-definition" xml:space="preserve"><value>Complex Behavior Definition</value></data>
   <data name="PropertyGroup.extensions" xml:space="preserve"><value>Extensions</value></data>
   <data name="TypeOption.Event" xml:space="preserve"><value>{0} {1}</value></data>
   <data name="Property.RawText" xml:space="preserve"><value>{0} text</value></data>

@@ -375,6 +375,8 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
                 {
                     Value = agreed ? candidate.Value : null,
                     IsReadOnly = locked,
+                    Group = others.TrueForAll(property => property!.Group == candidate.Group)
+                        ? candidate.Group : BpmnPropertyGroupKind.General,
                 });
             }
 

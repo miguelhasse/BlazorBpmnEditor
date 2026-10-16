@@ -1447,14 +1447,114 @@
         <target state="translated">속성</target>
         <note />
       </trans-unit>
+      <trans-unit id="PropertyGroup.activity">
+        <source>Activity</source>
+        <target state="translated">활동</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.assignment">
+        <source>Assignment</source>
+        <target state="translated">할당</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.association">
+        <source>Association</source>
+        <target state="translated">연관</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.call-activity">
+        <source>Call Activity</source>
+        <target state="translated">호출 액티비티</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.complex-behavior-definition">
+        <source>Complex Behavior Definition</source>
+        <target state="translated">복합 동작 정의</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.complex-gateway">
+        <source>Complex Gateway</source>
+        <target state="translated">복합 게이트웨이</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.data-object-reference">
+        <source>Data Object Reference</source>
+        <target state="translated">데이터 객체 참조</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.data-state">
+        <source>Data State</source>
+        <target state="translated">데이터 상태</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.data-store-reference">
+        <source>Data Store Reference</source>
+        <target state="translated">데이터 저장소 참조</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.event">
+        <source>Event</source>
+        <target state="translated">이벤트</target>
+        <note />
+      </trans-unit>
       <trans-unit id="PropertyGroup.extensions">
         <source>Extensions</source>
         <target state="translated">확장</target>
         <note />
       </trans-unit>
+      <trans-unit id="PropertyGroup.gateway">
+        <source>Gateway</source>
+        <target state="translated">게이트웨이</target>
+        <note />
+      </trans-unit>
       <trans-unit id="PropertyGroup.general">
         <source>General</source>
         <target state="translated">일반</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.group">
+        <source>Group</source>
+        <target state="translated">그룹</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.loop-characteristics">
+        <source>Loop Characteristics</source>
+        <target state="translated">Loop Characteristics</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.message-flow">
+        <source>Message Flow</source>
+        <target state="translated">메시지 흐름</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.process">
+        <source>Process</source>
+        <target state="translated">프로세스</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.receive-task">
+        <source>Receive Task</source>
+        <target state="translated">수신 태스크</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.script-task">
+        <source>Script Task</source>
+        <target state="translated">스크립트 태스크</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.send-task">
+        <source>Send Task</source>
+        <target state="translated">송신 태스크</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.sequence-flow">
+        <source>Sequence Flow</source>
+        <target state="translated">시퀀스 흐름</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.text-annotation">
+        <source>Text Annotation</source>
+        <target state="translated">텍스트 주석</target>
         <note />
       </trans-unit>
       <trans-unit id="PropertyPanel.AriaLabel">

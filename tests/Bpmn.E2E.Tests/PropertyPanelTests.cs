@@ -44,7 +44,9 @@ public class PropertyPanelTests(DemoAppFixture app) : PageTest, IClassFixture<De
 
         // Contextual, not one form for everything: an Activity has a loop characteristic and a
         // compensation flag, and a Start Event has neither.
-        await Expect(Page.Locator(".bpmn-properties__label")).ToContainTextAsync(["Name", "Loop", "Compensation handler", "Documentation"]);
+        await Expect(Page.Locator("[data-group-id=general] .bpmn-properties__label")).ToHaveTextAsync(["Name", "Documentation"]);
+        await Expect(Page.Locator("[data-group-id=activity] .bpmn-properties__label")).ToHaveTextAsync(["Compensation handler"]);
+        await Expect(Page.Locator("[data-group-id=loop-characteristics] .bpmn-properties__label")).ToHaveTextAsync(["Loop"]);
     }
 
     [Fact]
@@ -67,6 +69,67 @@ public class PropertyPanelTests(DemoAppFixture app) : PageTest, IClassFixture<De
     }
 
     [Fact]
+    public async Task LoopAndComplexBehaviorPropertiesHaveSeparateSemanticSections()
+    {
+        await GoToEditorAsync();
+        await ShowPanelAsync();
+        const string xml = """
+            <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                         xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                         xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                         id="Definitions_Groups" targetNamespace="urn:test">
+              <process id="Process_Groups">
+                <task id="Task_Groups" name="Grouped task">
+                  <multiInstanceLoopCharacteristics behavior="Complex">
+                    <loopCardinality>4</loopCardinality>
+                    <complexBehaviorDefinition><condition>first</condition></complexBehaviorDefinition>
+                    <complexBehaviorDefinition><condition>second</condition></complexBehaviorDefinition>
+                  </multiInstanceLoopCharacteristics>
+                </task>
+              </process>
+              <bpmndi:BPMNDiagram id="Diagram_Groups">
+                <bpmndi:BPMNPlane id="Plane_Groups" bpmnElement="Process_Groups">
+                  <bpmndi:BPMNShape id="Shape_Groups" bpmnElement="Task_Groups">
+                    <dc:Bounds x="160" y="120" width="100" height="80" />
+                  </bpmndi:BPMNShape>
+                </bpmndi:BPMNPlane>
+              </bpmndi:BPMNDiagram>
+            </definitions>
+            """;
+        await using var transfer = await Page.EvaluateHandleAsync(
+            """
+            xml => {
+                const transfer = new DataTransfer();
+                transfer.items.add(new File([xml], 'groups.bpmn', { type: 'application/xml' }));
+                return transfer;
+            }
+            """, xml);
+        await Page.Locator(".bpmn-canvas").First.DispatchEventAsync("drop", new Dictionary<string, object> { ["dataTransfer"] = transfer });
+        await Page.ImportAccept().ClickAsync();
+        await Expect(Page.Locator(".joint-cell[model-id=Task_Groups]")).ToBeVisibleAsync();
+        await SelectAsync("Task_Groups");
+
+        var loops = Page.GetByRole(AriaRole.Group, new() { Name = "Loop Characteristics", Exact = true });
+        var complex = Page.GetByRole(AriaRole.Group, new() { Name = "Complex Behavior Definition", Exact = true });
+        await Expect(loops).ToBeVisibleAsync();
+        await Expect(complex).ToBeVisibleAsync();
+        await Expect(loops.GetByRole(AriaRole.Textbox, new() { Name = "Loop cardinality", Exact = true })).ToHaveValueAsync("4");
+        await Expect(loops.GetByRole(AriaRole.Textbox, new() { Name = "Complex behavior 1 condition", Exact = true })).ToHaveCountAsync(0);
+        var first = complex.GetByRole(AriaRole.Textbox, new() { Name = "Complex behavior 1 condition", Exact = true });
+        var second = complex.GetByRole(AriaRole.Textbox, new() { Name = "Complex behavior 2 condition", Exact = true });
+        await Expect(first).ToHaveValueAsync("first");
+        await Expect(second).ToHaveValueAsync("second");
+        await second.FillAsync("updated");
+        await second.PressAsync("Tab");
+        await Expect(second).ToHaveValueAsync("updated");
+        await Expect(first).ToHaveValueAsync("first");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Undo", Exact = true }).ClickAsync();
+        await Expect(second).ToHaveValueAsync("second");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Redo", Exact = true }).ClickAsync();
+        await Expect(second).ToHaveValueAsync("updated");
+    }
+
+    [Fact]
     public async Task ScriptTaskPropertiesAreEditableAndUndoable()
     {
         await GoToEditorAsync();
@@ -78,7 +141,7 @@ public class PropertyPanelTests(DemoAppFixture app) : PageTest, IClassFixture<De
         await Page.Keyboard.PressAsync("Escape");
         await SelectAsync(taskId);
 
-        var panel = Page.Locator(".bpmn-properties");
+        var panel = Page.Locator("[data-group-id=script-task]");
         var format = panel.GetByRole(AriaRole.Textbox, new() { Name = "Script format", Exact = true });
         var script = panel.GetByRole(AriaRole.Textbox, new() { Name = "Script", Exact = true });
         await Expect(format).ToHaveValueAsync("");
@@ -193,8 +256,7 @@ public class PropertyPanelTests(DemoAppFixture app) : PageTest, IClassFixture<De
         await SelectAsync("ServiceTask_ChargeCard");
 
         // Vendor fields stay in visibly namespaced groups, separate from standard BPMN entries.
-        await Expect(Page.Locator(".bpmn-properties__label").Nth(0)).ToHaveTextAsync("Name");
-        await Expect(Page.Locator(".bpmn-properties__label").Nth(3)).ToHaveTextAsync("Documentation");
+        await Expect(Page.Locator("[data-group-id=general] .bpmn-properties__label")).ToHaveTextAsync(["Name", "Documentation"]);
         await Expect(Page.Locator("[data-group-id='task-definition'] input").First).ToHaveValueAsync("charge-card");
 
         await Page.Locator("[data-group-id='task-definition'] input").First.FillAsync("charge-card-v2");

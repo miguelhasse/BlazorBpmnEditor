@@ -11,6 +11,83 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Components;
 public sealed class GroupedPropertyPanelTests : BunitContext
 {
     [Fact]
+    public void SemanticSectionsRetainTemplateAndRawExtensionGroups()
+    {
+        var snapshot = Snapshot() with
+        {
+            Properties =
+            [
+                new("multiInstance.complexBehavior.0.event", "Complex behavior 1 event", BpmnPropertyKind.Text, null)
+                    { Group = BpmnPropertyGroupKind.ComplexBehaviorDefinition },
+                new("name", "Name", BpmnPropertyKind.Text, "Work"),
+                new("loopCharacteristics", "Loop", BpmnPropertyKind.Choice, "none",
+                    Choices: [new("none", "None")]) { Group = BpmnPropertyGroupKind.LoopCharacteristics },
+                new("documentation", "Documentation", BpmnPropertyKind.MultilineText, "Notes"),
+            ],
+            ExtensionGroups = [new("template:custom", "Template caption", [new("custom", "Custom", BpmnPropertyEntryKind.Text)])
+                { Namespace = "template" }],
+            ExtensionProperties = [new("extension:0@type", "Type", BpmnPropertyKind.Text, "job")],
+        };
+
+        var panel = Panel([snapshot]);
+
+        Assert.Equal(["general", "loop-characteristics", "complex-behavior-definition", "template:custom", "extensions"],
+            panel.FindAll("details[data-group-id]").Select(element => element.GetAttribute("data-group-id")));
+        Assert.Equal(["Name", "Documentation"], panel.FindAll("[data-group-id=general] .bpmn-properties__label").Select(element => element.TextContent));
+        Assert.Equal("Loop Characteristics", panel.Find("[data-group-id=loop-characteristics] summary").TextContent.Trim());
+        Assert.Equal("Complex Behavior Definition", panel.Find("[data-group-id=complex-behavior-definition] summary").TextContent.Trim());
+        Assert.Equal("Template caption", panel.Find("[data-group-id='template:custom'] summary").TextContent.Trim());
+        Assert.Equal(2, panel.FindAll("details.bpmn-properties__group--extension").Count);
+        Assert.All(panel.FindAll("details[data-group-id]"), element => Assert.NotNull(element.GetAttribute("open")));
+    }
+
+    [Theory]
+    [InlineData(BpmnPropertyGroupKind.SendTask, BpmnPropertyGroupKind.ReceiveTask, "general")]
+    [InlineData(BpmnPropertyGroupKind.SendTask, BpmnPropertyGroupKind.SendTask, "send-task")]
+    public void BulkPropertiesKeepAgreedClassificationAndFallbackForDifferentOwners(
+        BpmnPropertyGroupKind firstGroup, BpmnPropertyGroupKind secondGroup, string expectedGroup)
+    {
+        var first = Snapshot() with
+        {
+            Properties = [new("messageRef", "Message", BpmnPropertyKind.Text, "Message_1") { Group = firstGroup }],
+        };
+        var second = first with
+        {
+            ElementId = "Task_2",
+            Properties = [first.Properties[0] with { Group = secondGroup, Value = "Message_2" }],
+        };
+        BpmnEditCommand? command = null;
+        var panel = Panel([first, second], configure: seed => seed.OnCommand(update => command = update));
+
+        var input = panel.Find($"[data-group-id='{expectedGroup}'] input");
+        Assert.Null(input.GetAttribute("value"));
+        input.Change("Message_3");
+
+        var compound = Assert.IsType<CompoundCommand>(command);
+        Assert.Equal(["Task_1", "Task_2"], compound.Commands.Cast<UpdatePropertiesCommand>().Select(update => update.ElementId));
+        Assert.All(compound.Commands, update =>
+            Assert.Equal(new BpmnPropertyValue("messageRef", "Message_3"), Assert.Single(Assert.IsType<UpdatePropertiesCommand>(update).Values)));
+    }
+
+    [Fact]
+    public void ClassifiedTextAreasKeepTheirCommandPropertyPath()
+    {
+        var snapshot = Snapshot() with
+        {
+            Properties = [new("multiInstance.complexBehavior.1.condition", "Complex behavior 2 condition", BpmnPropertyKind.MultilineText, "old")
+                { Group = BpmnPropertyGroupKind.ComplexBehaviorDefinition }],
+        };
+        BpmnEditCommand? command = null;
+        var panel = Panel([snapshot], configure: seed => seed.OnCommand(update => command = update));
+
+        panel.Find("[data-group-id=complex-behavior-definition] textarea").Change("updated");
+
+        var update = Assert.IsType<UpdatePropertiesCommand>(command);
+        Assert.Equal("Task_1", update.ElementId);
+        Assert.Equal(new BpmnPropertyValue("multiInstance.complexBehavior.1.condition", "updated"), Assert.Single(update.Values));
+    }
+
+    [Fact]
     public void StandardAndVendorGroupsStaySeparate()
     {
         var snapshot = Snapshot() with

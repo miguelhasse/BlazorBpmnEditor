@@ -136,6 +136,9 @@ public sealed record BpmnPropertyDescriptor(
     bool IsReadOnly = false,
     IReadOnlyList<BpmnPropertyChoice>? Choices = null)
 {
+    /// <summary>The owning BPMN concept; unclassified descriptors remain in General.</summary>
+    public BpmnPropertyGroupKind Group { get; init; } = BpmnPropertyGroupKind.General;
+
     /// <summary>The options, for a choice property.</summary>
     public IReadOnlyList<BpmnPropertyChoice> Choices { get; init; } = Choices ?? [];
 }

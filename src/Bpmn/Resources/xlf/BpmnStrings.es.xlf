@@ -1447,14 +1447,114 @@
         <target state="translated">Propiedades</target>
         <note />
       </trans-unit>
+      <trans-unit id="PropertyGroup.activity">
+        <source>Activity</source>
+        <target state="translated">Actividad</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.assignment">
+        <source>Assignment</source>
+        <target state="translated">Asignación</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.association">
+        <source>Association</source>
+        <target state="translated">Asociación</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.call-activity">
+        <source>Call Activity</source>
+        <target state="translated">Actividad de llamada</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.complex-behavior-definition">
+        <source>Complex Behavior Definition</source>
+        <target state="translated">Definición de comportamiento complejo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.complex-gateway">
+        <source>Complex Gateway</source>
+        <target state="translated">Pasarela compleja</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.data-object-reference">
+        <source>Data Object Reference</source>
+        <target state="translated">Referencia a objeto de datos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.data-state">
+        <source>Data State</source>
+        <target state="translated">Estado de datos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.data-store-reference">
+        <source>Data Store Reference</source>
+        <target state="translated">Referencia a almacén de datos</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.event">
+        <source>Event</source>
+        <target state="translated">Evento</target>
+        <note />
+      </trans-unit>
       <trans-unit id="PropertyGroup.extensions">
         <source>Extensions</source>
         <target state="translated">Extensiones</target>
         <note />
       </trans-unit>
+      <trans-unit id="PropertyGroup.gateway">
+        <source>Gateway</source>
+        <target state="translated">Pasarela</target>
+        <note />
+      </trans-unit>
       <trans-unit id="PropertyGroup.general">
         <source>General</source>
         <target state="translated">General</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.group">
+        <source>Group</source>
+        <target state="translated">Grupo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.loop-characteristics">
+        <source>Loop Characteristics</source>
+        <target state="translated">Loop Characteristics</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.message-flow">
+        <source>Message Flow</source>
+        <target state="translated">Flujo de mensajes</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.process">
+        <source>Process</source>
+        <target state="translated">Proceso</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.receive-task">
+        <source>Receive Task</source>
+        <target state="translated">Tarea de recepción</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.script-task">
+        <source>Script Task</source>
+        <target state="translated">Tarea de script</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.send-task">
+        <source>Send Task</source>
+        <target state="translated">Tarea de envío</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.sequence-flow">
+        <source>Sequence Flow</source>
+        <target state="translated">Flujo de secuencia</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PropertyGroup.text-annotation">
+        <source>Text Annotation</source>
+        <target state="translated">Anotación de texto</target>
         <note />
       </trans-unit>
       <trans-unit id="PropertyPanel.AriaLabel">

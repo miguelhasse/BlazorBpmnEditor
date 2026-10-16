@@ -13,7 +13,7 @@ public interface IBpmnPropertiesProvider
     public IReadOnlyList<BpmnPropertyGroup> GetGroups(BpmnElementSnapshot element, IReadOnlyList<BpmnPropertyGroup> groups);
 }
 
-/// <summary>Wraps standard property descriptors without changing their command routing.</summary>
+/// <summary>Groups standard property descriptors by BPMN concept without changing command routing.</summary>
 public sealed class BpmnGeneralPropertiesProvider : IBpmnPropertiesProvider
 {
     /// <inheritdoc />
@@ -22,7 +22,9 @@ public sealed class BpmnGeneralPropertiesProvider : IBpmnPropertiesProvider
     /// <inheritdoc />
     public IReadOnlyList<BpmnPropertyGroup> GetGroups(BpmnElementSnapshot element, IReadOnlyList<BpmnPropertyGroup> groups) =>
         element.Properties.Count == 0 ? groups :
-        [.. groups, new("general", "General", element.Properties.Select(property => FromDescriptor(property) with { GroupId = "general" }).ToList()) { HasBuiltInLabels = true }];
+        [.. groups, .. element.Properties.GroupBy(property => property.Group).OrderBy(group => group.Key)
+            .Select(group => new BpmnPropertyGroup(GroupOf(group.Key).Id, GroupOf(group.Key).Label,
+                group.Select(FromDescriptor).ToList()) { HasBuiltInLabels = true })];
 
     /// <summary>Maps a descriptor to an editable property entry.</summary>
     /// <param name="property">The descriptor.</param>
@@ -41,7 +43,35 @@ public sealed class BpmnGeneralPropertiesProvider : IBpmnPropertiesProvider
                 : BpmnExpressionLanguage.None,
             Choices = property.Choices,
             IsReadOnly = property.IsReadOnly,
+            GroupId = GroupOf(property.Group).Id,
         };
+
+    private static (string Id, string Label) GroupOf(BpmnPropertyGroupKind group) => group switch
+    {
+        BpmnPropertyGroupKind.General => ("general", "General"),
+        BpmnPropertyGroupKind.Activity => ("activity", "Activity"),
+        BpmnPropertyGroupKind.Event => ("event", "Event"),
+        BpmnPropertyGroupKind.ScriptTask => ("script-task", "Script Task"),
+        BpmnPropertyGroupKind.CallActivity => ("call-activity", "Call Activity"),
+        BpmnPropertyGroupKind.SendTask => ("send-task", "Send Task"),
+        BpmnPropertyGroupKind.ReceiveTask => ("receive-task", "Receive Task"),
+        BpmnPropertyGroupKind.Gateway => ("gateway", "Gateway"),
+        BpmnPropertyGroupKind.ComplexGateway => ("complex-gateway", "Complex Gateway"),
+        BpmnPropertyGroupKind.SequenceFlow => ("sequence-flow", "Sequence Flow"),
+        BpmnPropertyGroupKind.MessageFlow => ("message-flow", "Message Flow"),
+        BpmnPropertyGroupKind.Association => ("association", "Association"),
+        BpmnPropertyGroupKind.Assignment => ("assignment", "Assignment"),
+        BpmnPropertyGroupKind.TextAnnotation => ("text-annotation", "Text Annotation"),
+        BpmnPropertyGroupKind.Group => ("group", "Group"),
+        BpmnPropertyGroupKind.DataObjectReference => ("data-object-reference", "Data Object Reference"),
+        BpmnPropertyGroupKind.DataStoreReference => ("data-store-reference", "Data Store Reference"),
+        BpmnPropertyGroupKind.DataState => ("data-state", "Data State"),
+        BpmnPropertyGroupKind.Process => ("process", "Process"),
+        BpmnPropertyGroupKind.LoopCharacteristics => ("loop-characteristics", "Loop Characteristics"),
+        BpmnPropertyGroupKind.ComplexBehaviorDefinition => ("complex-behavior-definition", "Complex Behavior Definition"),
+        _ => throw new ArgumentOutOfRangeException(nameof(group), group, "Unknown BPMN property group."),
+    };
+
     private static bool IsExpression(string name) => name is "conditionExpression" or "multiInstance.completionCondition"
         or "multiInstance.loopCardinality" or "standardLoop.loopCondition" or "activationCondition" or "calledElementRef"
         || name.EndsWith(".timeDate", StringComparison.Ordinal) || name.EndsWith(".timeDuration", StringComparison.Ordinal)

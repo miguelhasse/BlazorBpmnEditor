@@ -67,6 +67,66 @@ multiline text in both built-in property panels. Both use `UpdatePropertiesComma
 script whitespace, and support undo/redo. Other task types do not offer these fields; switching
 away from Script Task clears them.
 
+### Standard property groups
+
+`BpmnPropertyDescriptor.Group` is a `BpmnPropertyGroupKind` classifier. The inspector sets it
+from the owning [BPMN 2.0.2 semantic concept](https://www.omg.org/spec/BPMN/20100501/Semantic.xsd);
+both built-in panels use `BpmnGeneralPropertiesProvider` to turn those descriptors into sections.
+The default is `General`, so existing descriptor constructors and deconstruction remain unchanged:
+
+```csharp
+var descriptor = new BpmnPropertyDescriptor(
+    "standardLoop.loopMaximum", "Loop maximum", BpmnPropertyKind.Text, "10")
+{
+    Group = BpmnPropertyGroupKind.LoopCharacteristics,
+};
+```
+
+| Section / stable group id | Properties |
+|---|---|
+| General / `general` | Common names, documentation, unclassified host descriptors |
+| Activity / `activity` | Compensation handler and Activity default flow |
+| Event / `event` | Trigger and interruption |
+| Script Task / `script-task` | Script format and body |
+| Call Activity / `call-activity` | Called-element reference |
+| Send Task / `send-task`; Receive Task / `receive-task` | Respective task's message reference |
+| Gateway / `gateway` | Gateway default flow |
+| Complex Gateway / `complex-gateway` | Activation condition and default flow |
+| Sequence Flow / `sequence-flow` | Condition, language, projected default flag |
+| Message Flow / `message-flow` | Message reference |
+| Association / `association` | Direction |
+| Assignment / `assignment` | Data Association from/to expressions |
+| Text Annotation / `text-annotation` | Text and format |
+| Group / `group` | Category reference |
+| Data Object Reference / `data-object-reference` | Object reference and projected collection flag |
+| Data Store Reference / `data-store-reference` | Store reference |
+| Data State / `data-state` | Data reference state |
+| Process / `process` | Executable, type, closed |
+| Loop Characteristics / `loop-characteristics` | Loop selector, standard/multi-instance details, input/output data items |
+| Complex Behavior Definition / `complex-behavior-definition` | All indexed complex behavior events and conditions |
+
+Expression body, language, and type stay in their owner's section. A Complex Behavior Definition
+belongs to multi-instance Loop Characteristics; it is not a Complex Gateway activation condition.
+Repeated definitions share one section and retain numbered field labels and indexed command paths.
+
+BPMN defines semantic ownership, not accordion layout. Panels deliberately use flat, initially
+expanded sections: General first, element-specific sections next, then Loop Characteristics and
+Complex Behavior Definition. Empty sections are omitted; descriptor order within each section
+is retained. Group headings use `PropertyGroup.{id}` localization resources.
+
+Grouping changes presentation only. Edits still use the descriptor's original property name.
+Bulk selection keeps a shared classifier when selected descriptors agree; otherwise the common
+field appears in General without losing bulk-edit support. Read-only snapshots retain classification.
+Context menus remain flat. Vendor/schema/raw-extension and template groups keep their own ids,
+namespaces, labels, and bindings.
+
+Hosts can supply the classifier in custom snapshots, or use `IBpmnPropertiesProvider` and
+`GroupTemplate` to rename/reorder groups or define custom sections. `BpmnGeneralPropertiesProvider`
+keeps its existing name and priority; `FromDescriptor` copies classification into entry `GroupId`.
+Provider-supplied labels remain host-owned rather than automatically translated.
+
+### Extension commands
+
 | Extension command | Use |
 |---|---|
 | `SetExtensionValueCommand` | Change an attribute or text at an expanded-name extension path |
