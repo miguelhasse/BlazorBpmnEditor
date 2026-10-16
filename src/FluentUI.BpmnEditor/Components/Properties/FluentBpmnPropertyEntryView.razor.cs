@@ -1,5 +1,4 @@
 using Hasseware.AspNetCore.Components.Bpmn;
-using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Microsoft.AspNetCore.Components;
 
 namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn;
