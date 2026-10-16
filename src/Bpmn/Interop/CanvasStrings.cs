@@ -17,6 +17,14 @@ public sealed record CanvasStrings
             values.ToDictionary(entry => entry.Key, entry => entry.Value, StringComparer.Ordinal));
     }
 
+    private CanvasStrings(ReadOnlyDictionary<string, string> adopted) => Values = adopted;
+
+    /// <summary>
+    /// Wraps a dictionary the caller has just built and will not touch again, without the second copy the public constructor makes.
+    /// </summary>
+    internal static CanvasStrings Adopt(Dictionary<string, string> values) =>
+        new(new ReadOnlyDictionary<string, string>(values));
+
     /// <summary>Resource keys and their localized display text.</summary>
     public IReadOnlyDictionary<string, string> Values { get; }
 

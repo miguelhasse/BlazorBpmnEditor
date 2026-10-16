@@ -212,6 +212,36 @@
         <target state="translated">ユーザータスク</target>
         <note />
       </trans-unit>
+      <trans-unit id="AgentConfirmation.AriaLabel">
+        <source>Allow an assistant's action</source>
+        <target state="translated">アシスタントの操作を許可</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Delete.More">
+        <source>… and {0} more</source>
+        <target state="translated">…ほか {0} 件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Delete.Summary">
+        <source>The assistant wants to delete {0} item(s) with their connectors and contents. You can undo this afterwards.</source>
+        <target state="translated">アシスタントが {0} 個の項目を、接続線と内容も含めて削除しようとしています。あとで元に戻せます。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Delete.Title">
+        <source>Delete from the diagram?</source>
+        <target state="translated">図から削除しますか?</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Save.Summary">
+        <source>The assistant wants to save your edits, replacing the stored version of this document.</source>
+        <target state="translated">アシスタントが変更を保存し、このドキュメントの保存済みバージョンを置き換えようとしています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Save.Title">
+        <source>Save the document?</source>
+        <target state="translated">ドキュメントを保存しますか?</target>
+        <note />
+      </trans-unit>
       <trans-unit id="CalledElementPicker.Empty">
         <source>This document has no global Process or Global Task to call. Create one first.</source>
         <target state="translated">このドキュメントには、呼び出せるグローバルプロセスまたはグローバルタスクがありません。先に作成してください。</target>
@@ -675,6 +705,21 @@
       <trans-unit id="Expression.Warnings">
         <source>FEEL warnings ({0}): {1}</source>
         <target state="translated">FEEL の警告 ({0}): {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.AriaLabel">
+        <source>Document changed elsewhere</source>
+        <target state="translated">ドキュメントが別の場所で変更されました</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.Copied">
+        <source>Saved as {0}. You are now editing the copy.</source>
+        <target state="translated">{0} として保存しました。以後はコピーを編集します。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.Failed">
+        <source>That could not be done, and nothing was changed. Try again, or save a copy.</source>
+        <target state="translated">操作を完了できず、何も変更されていません。もう一度試すか、コピーを保存してください。</target>
         <note />
       </trans-unit>
       <trans-unit id="Icon.ad-hoc-marker">

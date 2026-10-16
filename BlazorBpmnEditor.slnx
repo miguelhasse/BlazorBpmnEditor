@@ -11,9 +11,25 @@
       <Deploy />
     </Project>
     <Project Path="src/Bpmn/Hasseware.AspNetCore.Components.Bpmn.csproj" />
+    <Project Path="src/Bpmn.Mcp/Hasseware.AspNetCore.Components.Bpmn.Mcp.csproj" />
+    <Project Path="src/Bpmn.Mcp.AspNetCore/Hasseware.AspNetCore.Components.Bpmn.Mcp.AspNetCore.csproj" />
+    <Project Path="src/Bpmn.Mcp.Tool/Hasseware.AspNetCore.Components.Bpmn.Mcp.Tool.csproj" />
     <Project Path="src/Bpmn.Scripting.CSharp/Hasseware.AspNetCore.Components.Bpmn.Scripting.CSharp.csproj" />
     <Project Path="src/Bpmn.Scripting.JavaScript/Hasseware.AspNetCore.Components.Bpmn.Scripting.JavaScript.csproj" />
     <Project Path="src/Bpmn.Scripting.Lua/Hasseware.AspNetCore.Components.Bpmn.Scripting.Lua.csproj" />
+    <Project Path="src/Bpmn.Storage.AzureBlob/Hasseware.AspNetCore.Components.Bpmn.Storage.AzureBlob.csproj" />
+    <Project Path="src/Bpmn.Storage.EfCore/Hasseware.AspNetCore.Components.Bpmn.Storage.EfCore.csproj" />
+    <Project Path="src/Bpmn.Storage.FileSystem/Hasseware.AspNetCore.Components.Bpmn.Storage.FileSystem.csproj" />
+    <Project Path="src/Bpmn.Storage.ServerSentEvents.Client/Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents.Client.csproj" />
+    <Project Path="src/Bpmn.Storage.ServerSentEvents/Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents.csproj" />
+    <Project Path="src/Bpmn.Storage.SignalR.Client/Hasseware.AspNetCore.Components.Bpmn.Storage.SignalR.Client.csproj" />
+    <Project Path="src/Bpmn.Storage.SignalR/Hasseware.AspNetCore.Components.Bpmn.Storage.SignalR.csproj" />
+    <Project Path="src/Bpmn.Tools/Hasseware.AspNetCore.Components.Bpmn.Tools.csproj" />
+    <Project Path="src/Bpmn.WebMcp.Scripts/Hasseware.AspNetCore.Components.Bpmn.WebMcp.Scripts.esproj">
+      <Build />
+      <Deploy />
+    </Project>
+    <Project Path="src/Bpmn.WebMcp/Hasseware.AspNetCore.Components.Bpmn.WebMcp.csproj" />
     <Project Path="src/BpmnEditor/Hasseware.AspNetCore.Components.BpmnEditor.csproj" />
     <Project Path="src/FluentUI.BpmnEditor/Hasseware.FluentUI.AspNetCore.Components.BpmnEditor.csproj" />
   </Folder>
@@ -21,11 +37,26 @@
     <Project Path="playground/Bpmn.Demo.Client/Bpmn.Demo.Client.csproj" />
     <Project Path="playground/Bpmn.Demo/Bpmn.Demo.csproj" />
   </Folder>
+  <Folder Name="/Samples/">
+    <Project Path="samples/BlobEventGridIngress/BlobEventGridIngress.csproj" />
+    <Project Path="samples/PostgresNotifyIngress/PostgresNotifyIngress.csproj" />
+  </Folder>
   <Folder Name="/Testing/">
     <Project Path="tests/Bpmn.Benchmarks/Hasseware.AspNetCore.Components.Bpmn.Benchmarks.csproj" />
     <Project Path="tests/Bpmn.E2E.Tests/Hasseware.AspNetCore.Components.Bpmn.E2E.Tests.csproj" />
     <Project Path="tests/Bpmn.Editor.Tests/Hasseware.AspNetCore.Components.BpmnEditor.Tests.csproj" />
     <Project Path="tests/Bpmn.FluentEditor.Tests/Hasseware.FluentUI.AspNetCore.Components.BpmnEditor.Tests.csproj" />
+    <Project Path="tests/Bpmn.Mcp.AspNetCore.Tests/Hasseware.AspNetCore.Components.Bpmn.Mcp.AspNetCore.Tests.csproj" />
+    <Project Path="tests/Bpmn.Mcp.Tests/Hasseware.AspNetCore.Components.Bpmn.Mcp.Tests.csproj" />
+    <Project Path="tests/Bpmn.Samples.Tests/Bpmn.Samples.Tests.csproj" />
+    <Project Path="tests/Bpmn.Storage.AzureBlob.Tests/Hasseware.AspNetCore.Components.Bpmn.Storage.AzureBlob.Tests.csproj" />
+    <Project Path="tests/Bpmn.Storage.EfCore.Tests/Hasseware.AspNetCore.Components.Bpmn.Storage.EfCore.Tests.csproj" />
+    <Project Path="tests/Bpmn.Storage.FileSystem.Tests/Hasseware.AspNetCore.Components.Bpmn.Storage.FileSystem.Tests.csproj" />
+    <Project Path="tests/Bpmn.Storage.ServerSentEvents.Tests/Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents.Tests.csproj" />
+    <Project Path="tests/Bpmn.Storage.Testing/Hasseware.AspNetCore.Components.Bpmn.Storage.Testing.csproj" />
+    <Project Path="tests/Bpmn.Storage.SignalR.Tests/Hasseware.AspNetCore.Components.Bpmn.Storage.SignalR.Tests.csproj" />
     <Project Path="tests/Bpmn.Tests/Hasseware.AspNetCore.Components.Bpmn.Tests.csproj" />
+    <Project Path="tests/Bpmn.Tools.Tests/Hasseware.AspNetCore.Components.Bpmn.Tools.Tests.csproj" />
+    <Project Path="tests/Bpmn.WebMcp.Tests/Hasseware.AspNetCore.Components.Bpmn.WebMcp.Tests.csproj" />
   </Folder>
 </Solution>

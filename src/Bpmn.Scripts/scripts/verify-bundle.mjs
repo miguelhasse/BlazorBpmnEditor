@@ -18,11 +18,29 @@ const manifest = path.join(scriptsRoot, 'dist', 'bundle-manifest.json');
 const MIN_JS_BYTES = 50_000;
 const MIN_CSS_BYTES = 200;
 
+/**
+ * Size budgets: a little above what the bundle weighs today (664,044 B JS minified, 12,908 B CSS, Release). They are a tripwire
+ * for an accidental import (a whole library, a bundled data file), not a target; raise them deliberately, with a reason.
+ * A Debug bundle is not minified (1,439,146 B today), so it has a budget of its own: the same tripwire at the size it actually has.
+ */
+const MAX_JS_BYTES_RELEASE = 700_000;
+const MAX_JS_BYTES_DEBUG = 1_600_000;
+const MAX_CSS_BYTES = 16_000;
+
 /** Exported names the Blazor side calls by string — a bundle without them is broken. */
 const REQUIRED_EXPORTS = ['initialize', 'dispose', 'loadDocument', 'setViewport', 'getInitResult'];
 
 /** JointJS+ is commercially licensed and must never reach the shipped artifact. */
 const FORBIDDEN_SUBSTRINGS = ['@joint/plus', 'joint.plus'];
+
+let buildMode = 'Release';
+try {
+  buildMode = JSON.parse(await readFile(manifest, 'utf8')).buildMode === 'Debug' ? 'Debug' : 'Release';
+} catch {
+  // A missing or unreadable manifest is reported below; judge the bundle by the stricter budget meanwhile.
+}
+
+const MAX_JS_BYTES = buildMode === 'Debug' ? MAX_JS_BYTES_DEBUG : MAX_JS_BYTES_RELEASE;
 
 const failures = [];
 
@@ -41,6 +59,11 @@ if (jsSize < 0) {
   failures.push(
     `JS bundle is only ${jsSize} bytes (expected at least ${MIN_JS_BYTES}). ` +
       'The entry point probably exports nothing — check src/index.ts.',
+  );
+} else if (jsSize > MAX_JS_BYTES) {
+  failures.push(
+    `JS bundle is ${jsSize} bytes, over the ${MAX_JS_BYTES} budget. ` +
+      'Find what grew (esbuild --metafile) or raise MAX_JS_BYTES in scripts/verify-bundle.mjs with a reason.',
   );
 } else {
   const contents = await readFile(jsBundle, 'utf8');
@@ -61,6 +84,8 @@ if (cssSize < 0) {
   failures.push(`CSS bundle missing: ${cssBundle}`);
 } else if (cssSize < MIN_CSS_BYTES) {
   failures.push(`CSS bundle is only ${cssSize} bytes (expected at least ${MIN_CSS_BYTES}).`);
+} else if (cssSize > MAX_CSS_BYTES) {
+  failures.push(`CSS bundle is ${cssSize} bytes, over the ${MAX_CSS_BYTES} budget.`);
 }
 
 if ((await sizeOf(manifest)) < 0) {

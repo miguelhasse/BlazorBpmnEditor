@@ -29,7 +29,9 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-          cache-dependency-path: src/Bpmn.Scripts/package-lock.json
+          cache-dependency-path: |
+            src/Bpmn.Scripts/package-lock.json
+            src/Bpmn.WebMcp.Scripts/package-lock.json
 
       - name: Restore .NET dependencies
         run: dotnet restore BlazorBpmnEditor.slnx
@@ -47,11 +49,45 @@ jobs:
         working-directory: src/Bpmn.Scripts
         run: npm run check
 
+      - name: Install WebMCP module dependencies
+        working-directory: src/Bpmn.WebMcp.Scripts
+        run: npm ci
+
+      - name: Check WebMCP module
+        working-directory: src/Bpmn.WebMcp.Scripts
+        run: npm run check
+
       - name: Build
         run: dotnet build BlazorBpmnEditor.slnx -c Release --no-restore
 
       - name: Unit and component tests
         run: dotnet test tests/Bpmn.Tests/Hasseware.AspNetCore.Components.Bpmn.Tests.csproj -c Release --no-build
+
+      - name: Agent tool tests
+        run: dotnet test tests/Bpmn.Tools.Tests/Hasseware.AspNetCore.Components.Bpmn.Tools.Tests.csproj -c Release --no-build
+
+      - name: WebMCP tests
+        run: dotnet test tests/Bpmn.WebMcp.Tests/Hasseware.AspNetCore.Components.Bpmn.WebMcp.Tests.csproj -c Release --no-build
+
+      - name: File store tests
+        run: dotnet test tests/Bpmn.Storage.FileSystem.Tests/Hasseware.AspNetCore.Components.Bpmn.Storage.FileSystem.Tests.csproj -c Release --no-build
+
+      - name: MCP server and tool tests
+        run: dotnet test tests/Bpmn.Mcp.Tests/Hasseware.AspNetCore.Components.Bpmn.Mcp.Tests.csproj -c Release --no-build
+
+      - name: MCP HTTP host tests
+        run: dotnet test tests/Bpmn.Mcp.AspNetCore.Tests/Hasseware.AspNetCore.Components.Bpmn.Mcp.AspNetCore.Tests.csproj -c Release --no-build
+
+      - name: Live-update transport tests
+        run: |
+          dotnet test tests/Bpmn.Storage.ServerSentEvents.Tests/Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents.Tests.csproj -c Release --no-build
+          dotnet test tests/Bpmn.Storage.SignalR.Tests/Hasseware.AspNetCore.Components.Bpmn.Storage.SignalR.Tests.csproj -c Release --no-build
+
+      - name: Storage backend and sample tests
+        run: |
+          dotnet test tests/Bpmn.Storage.AzureBlob.Tests/Hasseware.AspNetCore.Components.Bpmn.Storage.AzureBlob.Tests.csproj -c Release --no-build
+          dotnet test tests/Bpmn.Storage.EfCore.Tests/Hasseware.AspNetCore.Components.Bpmn.Storage.EfCore.Tests.csproj -c Release --no-build
+          dotnet test tests/Bpmn.Samples.Tests/Bpmn.Samples.Tests.csproj -c Release --no-build
 
       - name: Install Playwright browsers
         run: pwsh tests/Bpmn.E2E.Tests/bin/Release/net10.0/playwright.ps1 install chromium --with-deps
@@ -60,7 +96,26 @@ jobs:
         run: dotnet test tests/Bpmn.E2E.Tests/Hasseware.AspNetCore.Components.Bpmn.E2E.Tests.csproj -c Release --no-build
 
       - name: Pack
-        run: dotnet pack src/Bpmn/Hasseware.AspNetCore.Components.Bpmn.csproj -c Release --no-build -o artifacts
+        run: |
+          dotnet pack src/Bpmn/Hasseware.AspNetCore.Components.Bpmn.csproj -c Release --no-build -o artifacts
+          dotnet pack src/Bpmn.Tools/Hasseware.AspNetCore.Components.Bpmn.Tools.csproj -c Release --no-build -o artifacts
+          dotnet pack src/Bpmn.WebMcp/Hasseware.AspNetCore.Components.Bpmn.WebMcp.csproj -c Release --no-build -o artifacts
+          dotnet pack src/Bpmn.Storage.FileSystem/Hasseware.AspNetCore.Components.Bpmn.Storage.FileSystem.csproj -c Release --no-build -o artifacts
+          dotnet pack tests/Bpmn.Storage.Testing/Hasseware.AspNetCore.Components.Bpmn.Storage.Testing.csproj -c Release --no-build -o artifacts
+          dotnet pack src/Bpmn.Mcp/Hasseware.AspNetCore.Components.Bpmn.Mcp.csproj -c Release --no-build -o artifacts
+          dotnet pack src/Bpmn.Mcp.AspNetCore/Hasseware.AspNetCore.Components.Bpmn.Mcp.AspNetCore.csproj -c Release --no-build -o artifacts
+          dotnet pack src/Bpmn.Storage.ServerSentEvents/Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents.csproj -c Release --no-build -o artifacts
+          dotnet pack src/Bpmn.Storage.ServerSentEvents.Client/Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents.Client.csproj -c Release --no-build -o artifacts
+          dotnet pack src/Bpmn.Storage.SignalR/Hasseware.AspNetCore.Components.Bpmn.Storage.SignalR.csproj -c Release --no-build -o artifacts
+          dotnet pack src/Bpmn.Storage.SignalR.Client/Hasseware.AspNetCore.Components.Bpmn.Storage.SignalR.Client.csproj -c Release --no-build -o artifacts
+          dotnet pack src/Bpmn.Storage.AzureBlob/Hasseware.AspNetCore.Components.Bpmn.Storage.AzureBlob.csproj -c Release --no-build -o artifacts
+          dotnet pack src/Bpmn.Storage.EfCore/Hasseware.AspNetCore.Components.Bpmn.Storage.EfCore.csproj -c Release --no-build -o artifacts
+          dotnet pack src/Bpmn.Mcp.Tool/Hasseware.AspNetCore.Components.Bpmn.Mcp.Tool.csproj -c Release --no-build -o artifacts
+
+      - name: Publish the playground and check its precompressed assets
+        run: |
+          dotnet publish playground/Bpmn.Demo/Bpmn.Demo.csproj -c Release -o artifacts/publish-demo
+          node src/Bpmn.Scripts/tools/publish-size.mjs artifacts/publish-demo/wwwroot
 
       - uses: actions/upload-artifact@v4
         if: always()

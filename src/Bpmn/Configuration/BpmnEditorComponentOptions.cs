@@ -30,6 +30,8 @@ public sealed class BpmnEditorComponentOptions
         [BpmnEditorPart.ImportOffer] = typeof(BpmnImportOfferBase),
         [BpmnEditorPart.CalledElementPicker] = typeof(BpmnCalledElementPickerBase),
         [BpmnEditorPart.ShortcutHelp] = typeof(BpmnShortcutHelpBase),
+        [BpmnEditorPart.ExternalChangeOffer] = typeof(BpmnExternalChangeOfferBase),
+        [BpmnEditorPart.AgentConfirmation] = typeof(BpmnAgentConfirmationBase),
     };
 
     internal int Revision { get; private set; }

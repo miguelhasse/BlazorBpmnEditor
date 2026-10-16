@@ -62,6 +62,10 @@ public sealed partial class BpmnEditorSession
 
     private readonly IServiceProvider _profileServices;
 
+    /// <summary>The profile validators in force, including the element-template validator.</summary>
+    /// <remarks>What <see cref="ValidateAsync"/> checks against, for hosts that validate the document themselves.</remarks>
+    public IReadOnlyList<IBpmnProfileValidator> Profiles => TemplateProfiles();
+
     private IBpmnProfileValidator[] TemplateProfiles()
     {
         var profiles = _profileServices.GetServices<IBpmnProfileValidator>().ToArray();

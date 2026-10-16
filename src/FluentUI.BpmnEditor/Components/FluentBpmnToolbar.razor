@@ -4,43 +4,43 @@
 
 <div class="@CssClass("bpmn-toolbar")" role="toolbar" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
     <FluentButton Appearance="ButtonAppearance.Subtle" Type="ButtonType.Button" Class="bpmn-toolbar__button"
-            IconStart="@(new Icons.Regular.Size20.ZoomOut())" IconOnly="true" Title="@EditorText("Toolbar.ZoomOut.Title")"
-            aria-label="@EditorText("Toolbar.ZoomOut")"
-            OnClick="@(() => ExecuteAsync(ViewportCommand.ZoomOut))"></FluentButton>
+                  IconStart="@(new Icons.Regular.Size20.ZoomOut())" IconOnly="true" Title="@EditorText("Toolbar.ZoomOut.Title")"
+                  aria-label="@EditorText("Toolbar.ZoomOut")"
+                  OnClick="@(() => ExecuteAsync(ViewportCommand.ZoomOut))"></FluentButton>
 
     <span class="bpmn-toolbar__zoom" aria-live="polite">@ZoomLabel</span>
 
     <FluentButton Appearance="ButtonAppearance.Subtle" Type="ButtonType.Button" Class="bpmn-toolbar__button"
-            IconStart="@(new Icons.Regular.Size20.ZoomIn())" IconOnly="true" Title="@EditorText("Toolbar.ZoomIn.Title")"
-            aria-label="@EditorText("Toolbar.ZoomIn")"
-            OnClick="@(() => ExecuteAsync(ViewportCommand.ZoomIn))"></FluentButton>
+                  IconStart="@(new Icons.Regular.Size20.ZoomIn())" IconOnly="true" Title="@EditorText("Toolbar.ZoomIn.Title")"
+                  aria-label="@EditorText("Toolbar.ZoomIn")"
+                  OnClick="@(() => ExecuteAsync(ViewportCommand.ZoomIn))"></FluentButton>
 
     <FluentButton Appearance="ButtonAppearance.Subtle" Type="ButtonType.Button" Class="bpmn-toolbar__button"
-            IconStart="@(new Icons.Regular.Size20.ArrowReset())" Title="@EditorText("Toolbar.Reset.Title")"
-            aria-label="@EditorText("Toolbar.Reset")"
-            OnClick="@(() => ExecuteAsync(ViewportCommand.Reset))">@EditorText("Toolbar.Reset.Text")</FluentButton>
+                  IconStart="@(new Icons.Regular.Size20.ArrowReset())" Title="@EditorText("Toolbar.Reset.Title")"
+                  aria-label="@EditorText("Toolbar.Reset")"
+                  OnClick="@(() => ExecuteAsync(ViewportCommand.Reset))">@EditorText("Toolbar.Reset.Text")</FluentButton>
 
     <FluentButton Appearance="ButtonAppearance.Subtle" Type="ButtonType.Button" Class="bpmn-toolbar__button"
-            IconStart="@(new Icons.Regular.Size20.ArrowFit())" Title="@EditorText("Toolbar.Fit.Title")"
-            aria-label="@EditorText("Toolbar.Fit")"
-            OnClick="@(() => ExecuteAsync(ViewportCommand.FitToContent))">@EditorText("Toolbar.Fit.Text")</FluentButton>
+                  IconStart="@(new Icons.Regular.Size20.ArrowFit())" Title="@EditorText("Toolbar.Fit.Title")"
+                  aria-label="@EditorText("Toolbar.Fit")"
+                  OnClick="@(() => ExecuteAsync(ViewportCommand.FitToContent))">@EditorText("Toolbar.Fit.Text")</FluentButton>
 
     <FluentButton Appearance="ButtonAppearance.Subtle" Type="ButtonType.Button" Class="bpmn-toolbar__button"
-            IconStart="@(new Icons.Regular.Size20.ArrowUndo())" Title="@EditorText("Toolbar.Undo")"
-            aria-label="@EditorText("Toolbar.Undo")"
-            Disabled="@(!CanUndo)"
-            OnClick="@(() => UndoAsync())">@EditorText("Toolbar.Undo")</FluentButton>
+                  IconStart="@(new Icons.Regular.Size20.ArrowUndo())" Title="@EditorText("Toolbar.Undo")"
+                  aria-label="@EditorText("Toolbar.Undo")"
+                  Disabled="@(!CanUndo)"
+                  OnClick="@(() => UndoAsync())">@EditorText("Toolbar.Undo")</FluentButton>
 
     <FluentButton Appearance="ButtonAppearance.Subtle" Type="ButtonType.Button" Class="bpmn-toolbar__button"
-            IconStart="@(new Icons.Regular.Size20.ArrowRedo())" Title="@EditorText("Toolbar.Redo")"
-            aria-label="@EditorText("Toolbar.Redo")"
-            Disabled="@(!CanRedo)"
-            OnClick="@(() => RedoAsync())">@EditorText("Toolbar.Redo")</FluentButton>
+                  IconStart="@(new Icons.Regular.Size20.ArrowRedo())" Title="@EditorText("Toolbar.Redo")"
+                  aria-label="@EditorText("Toolbar.Redo")"
+                  Disabled="@(!CanRedo)"
+                  OnClick="@(() => RedoAsync())">@EditorText("Toolbar.Redo")</FluentButton>
 
     <FluentButton Appearance="ButtonAppearance.Subtle" Type="ButtonType.Button" Class="bpmn-toolbar__button"
-            IconStart="@(new Icons.Regular.Size20.QuestionCircle())" IconOnly="true" Title="@EditorText("Toolbar.Shortcuts")"
-            aria-label="@EditorText("Toolbar.Shortcuts")"
-            OnClick="@ShowShortcuts"></FluentButton>
+                  IconStart="@(new Icons.Regular.Size20.QuestionCircle())" IconOnly="true" Title="@EditorText("Toolbar.Shortcuts")"
+                  aria-label="@EditorText("Toolbar.Shortcuts")"
+                  OnClick="@ShowShortcuts"></FluentButton>
 
     @ChildContent
 </div>

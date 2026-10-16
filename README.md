@@ -16,6 +16,19 @@ milestones M0–M7.
 | [`Hasseware.AspNetCore.Components.BpmnEditor`](src/BpmnEditor/README.md) | Standard HTML editor composition and chrome | Core only |
 | [`Hasseware.FluentUI.AspNetCore.Components.BpmnEditor`](src/FluentUI.BpmnEditor/README.md) | Fluent UI v5 editor composition and chrome | Core only; also Fluent UI and Icons |
 | [`Hasseware.AspNetCore.Components.Bpmn.Feel`](src/Bpmn.Feel/README.md) | Optional rich FEEL expression editor | Core only |
+| [`Hasseware.AspNetCore.Components.Bpmn.Tools`](src/Bpmn.Tools/README.md) | Preview: agent tool handlers shared by the WebMCP and MCP packages | Core only |
+| [`Hasseware.AspNetCore.Components.Bpmn.WebMcp`](src/Bpmn.WebMcp/README.md) | Preview: offers an open editor to browser agents through WebMCP; read-only unless the host allows editing | Core and Tools |
+| [`Hasseware.AspNetCore.Components.Bpmn.Mcp`](src/Bpmn.Mcp/README.md) | Preview: an MCP server over stored documents, read-only unless writing is enabled; plain library | Core, Tools and `ModelContextProtocol` |
+| [`Hasseware.AspNetCore.Components.Bpmn.Mcp.AspNetCore`](src/Bpmn.Mcp.AspNetCore/README.md) | Preview: hosts the MCP server over stateless, authenticated streamable HTTP | Mcp and ASP.NET Core |
+| [`Hasseware.AspNetCore.Components.Bpmn.Mcp.Tool`](src/Bpmn.Mcp.Tool/README.md) | Preview: the `bpmn-mcp` dotnet tool, serving a folder over MCP and validating `.bpmn` files in CI | Mcp and Storage.FileSystem |
+| [`Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents`](src/Bpmn.Storage.ServerSentEvents/README.md) | Preview: tells editors that their document changed, over Server-Sent Events (server) | Core and ASP.NET Core |
+| [`Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents.Client`](src/Bpmn.Storage.ServerSentEvents.Client/README.md) | Preview: the Server-Sent Events subscriber, for Blazor WebAssembly and any .NET client | Core only |
+| [`Hasseware.AspNetCore.Components.Bpmn.Storage.SignalR`](src/Bpmn.Storage.SignalR/README.md) | Preview: the same over a SignalR hub (server) | Core and ASP.NET Core |
+| [`Hasseware.AspNetCore.Components.Bpmn.Storage.SignalR.Client`](src/Bpmn.Storage.SignalR.Client/README.md) | Preview: the SignalR subscriber, for Blazor WebAssembly and any .NET client | Core and the SignalR client |
+| [`Hasseware.AspNetCore.Components.Bpmn.Storage.AzureBlob`](src/Bpmn.Storage.AzureBlob/README.md) | Preview: a document store over an Azure Blob Storage container | Core and Azure.Storage.Blobs |
+| [`Hasseware.AspNetCore.Components.Bpmn.Storage.EfCore`](src/Bpmn.Storage.EfCore/README.md) | Preview: a document store over any Entity Framework Core database | Core and EF Core |
+| [`Hasseware.AspNetCore.Components.Bpmn.Storage.FileSystem`](src/Bpmn.Storage.FileSystem/README.md) | Preview: a document store over a folder of files | Core only |
+| [`Hasseware.AspNetCore.Components.Bpmn.Storage.Testing`](tests/Bpmn.Storage.Testing/README.md) | Preview: the contract suite every document store must pass; test-only | Core and xUnit v3 |
 
 Package consumers need .NET 10, not Node.js. Register `AddBpmnEditor()` for the standard kit,
 `AddFluentBpmnEditor()` for the Fluent kit, or `AddBpmnComponents()` for Core alone. The Fluent host
@@ -27,6 +40,19 @@ flowchart LR
     Fluent["FluentUI.BpmnEditor: Fluent kit"] --> Core
     Fluent --> FluentUI["Fluent UI + Icons"]
     Feel["Bpmn.Feel: optional rich editor"] --> Core
+    Tools["Bpmn.Tools: agent tools (preview)"] --> Core
+    WebMcp["Bpmn.WebMcp: browser agent tools (preview)"] --> Core
+    WebMcp --> Tools
+    Mcp["Bpmn.Mcp: MCP server (preview)"] --> Core
+    Mcp --> Tools
+    FileStore["Bpmn.Storage.FileSystem: file store (preview)"] --> Core
+    BlobStore["Bpmn.Storage.AzureBlob: blob store (preview)"] --> Core
+    EfStore["Bpmn.Storage.EfCore: database store (preview)"] --> Core
+    Sse["Bpmn.Storage.ServerSentEvents (+ .Client): live updates (preview)"] --> Core
+    SignalRFeed["Bpmn.Storage.SignalR (+ .Client): live updates (preview)"] --> Core
+    McpHttp["Bpmn.Mcp.AspNetCore: HTTP host (preview)"] --> Mcp
+    McpTool["Bpmn.Mcp.Tool: bpmn-mcp command (preview)"] --> Mcp
+    McpTool --> FileStore
 ```
 
 The two kits never reference one another. Both can coexist in a host; each composition supplies
@@ -43,7 +69,27 @@ its own defaults, with host overrides taking precedence.
 | [`src/Bpmn.Feel`](src/Bpmn.Feel/README.md) | Optional rich FEEL editor Razor class library |
 | [`src/Bpmn.Feel.Scripts`](src/Bpmn.Feel.Scripts/README.md) | esbuild bundle of `@bpmn-io/feel-editor` and CodeMirror for the optional package |
 | [`src/Bpmn.RulesGenerator`](src/Bpmn.RulesGenerator/README.md) | A Roslyn generator emitting the C# half of the shared connection-rule table |
+| [`src/Bpmn.Tools`](src/Bpmn.Tools/README.md) | Preview: the agent tool handlers, results and catalog the WebMCP and MCP surfaces share |
+| [`src/Bpmn.WebMcp`](src/Bpmn.WebMcp/README.md) | Preview: the `BpmnWebMcp` component and bridge that register the read-only tools with the browser |
+| [`src/Bpmn.WebMcp.Scripts`](src/Bpmn.WebMcp.Scripts) | The small ES module that talks to `document.modelContext`, bundled by esbuild for the package |
+| [`src/Bpmn.Mcp`](src/Bpmn.Mcp/README.md) | Preview: the MCP server tools over any `IBpmnDocumentStore`, read-only |
+| [`src/Bpmn.Mcp.AspNetCore`](src/Bpmn.Mcp.AspNetCore/README.md) | Preview: `MapBpmnMcp`, the authenticated, stateless HTTP host for the MCP server |
+| [`src/Bpmn.Mcp.Tool`](src/Bpmn.Mcp.Tool/README.md) | Preview: the `bpmn-mcp` dotnet tool (`serve` over stdio, `validate` for CI) |
+| [`src/Bpmn.Storage.ServerSentEvents`](src/Bpmn.Storage.ServerSentEvents/README.md), [`.Client`](src/Bpmn.Storage.ServerSentEvents.Client/README.md) | Preview: the Server-Sent Events change feed, endpoint and subscriber |
+| [`src/Bpmn.Storage.SignalR`](src/Bpmn.Storage.SignalR/README.md), [`.Client`](src/Bpmn.Storage.SignalR.Client/README.md) | Preview: the SignalR change feed, hub and subscriber |
+| [`src/Bpmn.Storage.AzureBlob`](src/Bpmn.Storage.AzureBlob/README.md), [`src/Bpmn.Storage.EfCore`](src/Bpmn.Storage.EfCore/README.md) | Preview: the Azure Blob and EF Core document stores ([guide](docs/storage-backends.md)) |
+| [`samples`](samples) | Reference ingresses that forward Azure Event Grid blob events and PostgreSQL `NOTIFY` to the change bus; not packages |
+| [`src/Bpmn.Storage.FileSystem`](src/Bpmn.Storage.FileSystem/README.md) | Preview: the folder-backed document store |
+| [`tests/Bpmn.Storage.Testing`](tests/Bpmn.Storage.Testing/README.md) | Preview: the store contract suite, as an xUnit base class |
 | [`tests/Bpmn.Tests`](tests/Bpmn.Tests/README.md) | Core unit, architecture, serialization and intrinsic component tests |
+| [`tests/Bpmn.Tools.Tests`](tests/Bpmn.Tools.Tests) | Agent tool handler, catalog, diff and untrusted-text tests |
+| [`tests/Bpmn.WebMcp.Tests`](tests/Bpmn.WebMcp.Tests) | Session tool host, bridge, tool set and component tests against a fake browser |
+| [`tests/Bpmn.Mcp.Tests`](tests/Bpmn.Mcp.Tests) | The MCP tools, reading and writing, through a real client and server, the `bpmn-mcp` command and a stdio child process |
+| [`tests/Bpmn.Mcp.AspNetCore.Tests`](tests/Bpmn.Mcp.AspNetCore.Tests) | The HTTP host in-process: authentication, tenants from claims, and what is refused at the door |
+| [`tests/Bpmn.Storage.ServerSentEvents.Tests`](tests/Bpmn.Storage.ServerSentEvents.Tests), [`tests/Bpmn.Storage.SignalR.Tests`](tests/Bpmn.Storage.SignalR.Tests) | Each live-update transport against the subscriber and long-session contracts, and its security rules |
+| [`tests/Bpmn.Storage.AzureBlob.Tests`](tests/Bpmn.Storage.AzureBlob.Tests), [`tests/Bpmn.Storage.EfCore.Tests`](tests/Bpmn.Storage.EfCore.Tests) | The blob store against a fake with ETag semantics and the EF Core store on SQLite, each against the store contract; Azurite and SQL Server variants run when their connection variables are set |
+| [`tests/Bpmn.Samples.Tests`](tests/Bpmn.Samples.Tests) | The two ingress samples: parsing, the webhook's authentication and handshake |
+| [`tests/Bpmn.Storage.FileSystem.Tests`](tests/Bpmn.Storage.FileSystem.Tests) | The file store against the store contract, plus links, case, locking and layout |
 | [`tests/Bpmn.Editor.Tests`](tests/Bpmn.Editor.Tests) | Standard chrome, property entry, composition and package-boundary tests |
 | [`tests/Bpmn.FluentEditor.Tests`](tests/Bpmn.FluentEditor.Tests) | Fluent chrome, package-boundary and shared kit parity tests |
 | [`tests/Bpmn.E2E.Tests`](tests/Bpmn.E2E.Tests/README.md) | Playwright tests against the running playground |
@@ -52,7 +98,7 @@ its own defaults, with host overrides taking precedence.
 | [`playground/Bpmn.Demo.Client`](playground/Bpmn.Demo.Client/README.md) | The WebAssembly client and the review pages |
 
 Shared inputs live at the root: [`rules/`](rules/README.md) holds the declarative connection-rule
-table both runtimes read, and [`icons/`](icons/README.md) holds the generated glyph manifest and the
+table both runtimes read, and the case table both evaluate it against, and [`icons/`](icons/README.md) holds the generated glyph manifest and the
 vendored font it derives from.
 
 ## Features
@@ -108,6 +154,7 @@ Diagram sources and focused views:
 |---|---|---|---|
 | System overview | [SVG](assets/diagrams/system-overview.svg) | [Source](assets/diagrams/system-overview.mmd) | [Excalidraw](assets/diagrams/system-overview.excalidraw) |
 | Project dependencies | [SVG](assets/diagrams/project-dependencies.svg) | [Source](assets/diagrams/project-dependencies.mmd) | [Excalidraw](assets/diagrams/project-dependencies.excalidraw) |
+| Headless agent server | [SVG](assets/diagrams/agent-server.svg) | [Source](assets/diagrams/agent-server.mmd) | [Excalidraw](assets/diagrams/agent-server.excalidraw) |
 | Editor composition | [SVG](assets/diagrams/editor-composition.svg) | [Source](assets/diagrams/editor-composition.mmd) | [Excalidraw](assets/diagrams/editor-composition.excalidraw) |
 | Managed render state | [SVG](assets/diagrams/render-state.svg) | [Source](assets/diagrams/render-state.mmd) | [Excalidraw](assets/diagrams/render-state.excalidraw) |
 | Contextual-action anchors | [SVG](assets/diagrams/contextual-actions-anchor.svg) | [Source](assets/diagrams/contextual-actions-anchor.mmd) | [Excalidraw](assets/diagrams/contextual-actions-anchor.excalidraw) |

@@ -234,7 +234,10 @@ export class InteractionController {
     return true;
   }
 
-  readonly #handleMoved = (cell: dia.Cell): void => {
+  readonly #handleMoved = (cell: dia.Cell, _position?: unknown, options?: { readonly reconcile?: boolean }): void => {
+    // A position the document dictated (an undo, a reload) is not the user moving anything.
+    if (options?.reconcile === true) return;
+
     // Before anything else: a Boundary Event never leaves its host's border, mid-drag included.
     if (this.#pinToHost(cell)) return;
 
@@ -553,6 +556,10 @@ export class InteractionController {
   }
 
   readonly #handleRemoved = (): void => {
+    // A render replaces some cells (one that changed kind, a connector whose end was replaced): they leave and come back inside one batch. What is
+    // selected is settled once it ends, by `refresh()`, which keeps what is still drawn and says so if something truly went.
+    if ((this.#graph as unknown as { hasActiveBatch(name: string): boolean }).hasActiveBatch('render')) return;
+
     const retained = this.#selection.retaining((id) => findCell(this.#graph, id) !== undefined);
     if (!retained.equals(this.#selection)) this.#apply(retained);
   };

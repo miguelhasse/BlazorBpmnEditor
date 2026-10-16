@@ -15,6 +15,9 @@ import type {
 } from './contracts.js';
 import type { DotNetObjectRef } from './dotnet.js';
 
+/** The most often the host hears of the viewport while a gesture is moving it. */
+export const VIEWPORT_REPORT_INTERVAL_MS = 100;
+
 /**
  * The single TypeScript -> .NET channel.
  *
@@ -30,9 +33,11 @@ import type { DotNetObjectRef } from './dotnet.js';
  */
 export class BpmnEventBridge {
   readonly #target: DotNetObjectRef;
-  readonly #coalesced = new Map<string, unknown>();
+  #coalesced = new Map<string, unknown>();
   #flushScheduled = false;
   #disposed = false;
+  #viewportPending: ViewportChangedPayload | null = null;
+  #viewportTimer: ReturnType<typeof setTimeout> | undefined;
 
   public constructor(target: DotNetObjectRef) {
     this.#target = target;
@@ -110,8 +115,18 @@ export class BpmnEventBridge {
 
   // --- continuous (coalesced) -----------------------------------------------
 
+  /**
+   * Throttled: the latest viewport is delivered at most once every {@link VIEWPORT_REPORT_INTERVAL_MS}, and always after the last change.
+   *
+   * A wheel or pinch gesture changes the viewport every frame, and each delivery costs an interop call and a Blazor render. The host
+   * wants to know where the gesture ended and roughly what it passed through, not sixty states a second, so a trailing timer replaces
+   * the microtask that used to send one call per event.
+   */
   public viewportChanged(payload: ViewportChangedPayload): void {
-    this.#coalesce('ViewportChanged', payload);
+    if (this.#disposed) return;
+
+    this.#viewportPending = payload;
+    this.#viewportTimer ??= setTimeout(this.#flushViewport, VIEWPORT_REPORT_INTERVAL_MS);
   }
 
   /**
@@ -136,9 +151,23 @@ export class BpmnEventBridge {
    * invoke into a `DotNetObjectReference` the canvas has already released.
    */
   public dispose(): void {
+    // The last viewport is delivered first, so a rebuild that restores it does not land on the one before the final gesture.
+    this.#flushViewport();
     this.#disposed = true;
     this.#coalesced.clear();
   }
+
+  readonly #flushViewport = (): void => {
+    if (this.#viewportTimer !== undefined) clearTimeout(this.#viewportTimer);
+    this.#viewportTimer = undefined;
+
+    const payload = this.#viewportPending;
+    this.#viewportPending = null;
+    if (payload === null || this.#disposed) return;
+
+    // Best effort: the host may already be tearing the component down.
+    this.#send('ViewportChanged', payload).catch(() => undefined);
+  };
 
   async #send(method: string, payload: unknown): Promise<void> {
     if (this.#disposed) return;
@@ -153,8 +182,9 @@ export class BpmnEventBridge {
     this.#flushScheduled = true;
     queueMicrotask(() => {
       this.#flushScheduled = false;
-      const pending = [...this.#coalesced];
-      this.#coalesced.clear();
+      // Iterated in place: a send is awaited by nobody here, so nothing can add to the map while it runs.
+      const pending = this.#coalesced;
+      this.#coalesced = new Map();
       for (const [method_, payload_] of pending) {
         void this.#send(method_, payload_);
       }

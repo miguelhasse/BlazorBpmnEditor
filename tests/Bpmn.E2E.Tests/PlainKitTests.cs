@@ -32,3 +32,5 @@ public sealed class PlainImportTests(DemoAppFixture app) : ImportTests(app);
 public sealed class PlainExecutionOverlayTests(DemoAppFixture app) : ExecutionOverlayTests(app);
 
 public sealed class PlainRoutingTests(DemoAppFixture app) : RoutingTests(app);
+
+public sealed class PlainWebMcpTests(DemoAppFixture app) : WebMcpTests(app);

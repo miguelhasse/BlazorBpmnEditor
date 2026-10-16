@@ -184,6 +184,23 @@ public sealed class BpmnEditorSessionTests
     }
 
     [Fact]
+    public async Task MovingAShapeKeepsTheAccessibleTreeAsItWasBecauseNothingItSaysChanged()
+    {
+        var session = Session();
+        session.ShowAccessibleTree = true;
+        await session.SetSelectionAsync(["Task_1"]);
+        var tree = session.State.Overlays.AccessibleTree;
+        var original = session.Document;
+        var shape = original!.Diagrams[0].Plane.Shapes[0];
+
+        var moved = await session.ApplyAsync(new MoveShapesCommand([new ShapeGeometry(shape.Id, shape.Bounds with { X = shape.Bounds.X + 50 })]));
+
+        Assert.NotSame(original, moved.Document);
+        Assert.Equal(tree.Nodes, session.State.Overlays.AccessibleTree.Nodes);
+        Assert.Same(tree, session.State.Overlays.AccessibleTree);
+    }
+
+    [Fact]
     public async Task DescribeOverrideAndReadOnlyChangesInvalidateSnapshots()
     {
         var session = Session();

@@ -212,6 +212,36 @@
         <target state="translated">Benutzeraufgabe</target>
         <note />
       </trans-unit>
+      <trans-unit id="AgentConfirmation.AriaLabel">
+        <source>Allow an assistant's action</source>
+        <target state="translated">Aktion eines Assistenten zulassen</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Delete.More">
+        <source>… and {0} more</source>
+        <target state="translated">… und {0} weitere</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Delete.Summary">
+        <source>The assistant wants to delete {0} item(s) with their connectors and contents. You can undo this afterwards.</source>
+        <target state="translated">Der Assistent möchte {0} Element(e) mit ihren Verbindungen und Inhalten löschen. Sie können das anschließend rückgängig machen.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Delete.Title">
+        <source>Delete from the diagram?</source>
+        <target state="translated">Aus dem Diagramm löschen?</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Save.Summary">
+        <source>The assistant wants to save your edits, replacing the stored version of this document.</source>
+        <target state="translated">Der Assistent möchte Ihre Änderungen speichern und dabei die gespeicherte Version dieses Dokuments ersetzen.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Save.Title">
+        <source>Save the document?</source>
+        <target state="translated">Dokument speichern?</target>
+        <note />
+      </trans-unit>
       <trans-unit id="CalledElementPicker.Empty">
         <source>This document has no global Process or Global Task to call. Create one first.</source>
         <target state="translated">Dieses Dokument enthält keinen globalen Prozess und keine globale Aufgabe zum Aufrufen. Erstellen Sie zuerst einen.</target>
@@ -675,6 +705,21 @@
       <trans-unit id="Expression.Warnings">
         <source>FEEL warnings ({0}): {1}</source>
         <target state="translated">FEEL-Warnungen ({0}): {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.AriaLabel">
+        <source>Document changed elsewhere</source>
+        <target state="translated">Dokument wurde an anderer Stelle geändert</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.Copied">
+        <source>Saved as {0}. You are now editing the copy.</source>
+        <target state="translated">Gespeichert als {0}. Sie bearbeiten jetzt die Kopie.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.Failed">
+        <source>That could not be done, and nothing was changed. Try again, or save a copy.</source>
+        <target state="translated">Das ließ sich nicht ausführen, und es wurde nichts geändert. Versuchen Sie es erneut oder speichern Sie eine Kopie.</target>
         <note />
       </trans-unit>
       <trans-unit id="Icon.ad-hoc-marker">

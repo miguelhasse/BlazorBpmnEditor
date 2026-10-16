@@ -55,6 +55,15 @@ public sealed class BpmnEditHistory
     /// <summary>What redoing would reapply, for a menu label.</summary>
     public string? RedoLabel => CanRedo ? _redo[^1].Label : null;
 
+    /// <summary>Who asked for the edit undoing would reverse, or null when there is none.</summary>
+    /// <remarks>
+    /// Lets an agent undo only its own work: it checks this is its own origin before undoing.
+    /// </remarks>
+    public BpmnEditOrigin? UndoOrigin => CanUndo ? _undo[^1].Origin : null;
+
+    /// <summary>Who asked for the edit redoing would reapply, or null when there is none.</summary>
+    public BpmnEditOrigin? RedoOrigin => CanRedo ? _redo[^1].Origin : null;
+
     /// <summary>Applies the current host configuration to subsequent commands.</summary>
     /// <remarks>
     /// Configuration can change while a document remains open. In particular, the event edit
@@ -87,7 +96,7 @@ public sealed class BpmnEditHistory
         var result = BpmnDocumentEditor.Apply(Document, command, _options);
         if (!result.IsApplied) return result;
 
-        _undo.Add(new Entry(Document, command.Label));
+        _undo.Add(new Entry(Document, command.Label, command.Origin));
 
         // A new edit invalidates the redo branch: there is no longer a single future to go back to.
         _redo.Clear();
@@ -124,7 +133,7 @@ public sealed class BpmnEditHistory
 
         var entry = _undo[^1];
         _undo.RemoveAt(_undo.Count - 1);
-        _redo.Add(new Entry(Document, entry.Label));
+        _redo.Add(new Entry(Document, entry.Label, entry.Origin));
         Document = entry.Document;
 
         return Document;
@@ -138,7 +147,7 @@ public sealed class BpmnEditHistory
 
         var entry = _redo[^1];
         _redo.RemoveAt(_redo.Count - 1);
-        _undo.Add(new Entry(Document, entry.Label));
+        _undo.Add(new Entry(Document, entry.Label, entry.Origin));
         Document = entry.Document;
 
         return Document;
@@ -149,6 +158,6 @@ public sealed class BpmnEditHistory
         if (entries.Count > depth) entries.RemoveRange(0, entries.Count - depth);
     }
 
-    /// <summary>One step: the document as it was, and the name of the edit that left it.</summary>
-    private sealed record Entry(BpmnDocument Document, string Label);
+    /// <summary>One step: the document as it was, and the name and origin of the edit that left it.</summary>
+    private sealed record Entry(BpmnDocument Document, string Label, BpmnEditOrigin Origin);
 }

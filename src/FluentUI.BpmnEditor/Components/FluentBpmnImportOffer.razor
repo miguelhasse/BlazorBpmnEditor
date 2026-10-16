@@ -1,9 +1,8 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.FluentUI.AspNetCore.Components.Bpmn.Resources.FluentBpmnEditorStrings> EditorL
 @namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
 @inherits BpmnImportOfferBase
-@using Hasseware.AspNetCore.Components.Bpmn.Editing
+
 @using Hasseware.AspNetCore.Components.Bpmn.Serialization
-@using Hasseware.AspNetCore.Components.Bpmn.Validation
 
 @if (Preview is { } preview)
 {
@@ -112,9 +111,9 @@
                 </FluentButton>
 
                 <FluentButton Type="ButtonType.Button"
-                        Class="bpmn-import__accept"
-                        Disabled="@(!preview.CanAccept)"
-                        OnClick="AcceptAsync">
+                              Class="bpmn-import__accept"
+                              Disabled="@(!preview.CanAccept)"
+                              OnClick="AcceptAsync">
                     @EditorText("ImportOffer.Open")
                 </FluentButton>
             </div>

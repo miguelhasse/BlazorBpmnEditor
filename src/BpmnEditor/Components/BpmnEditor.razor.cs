@@ -26,6 +26,13 @@ public sealed partial class BpmnEditor : ComponentBase
     [Parameter]
     public BpmnDocument? Document { get; set; }
 
+    /// <summary>
+    /// A binding to a stored document, instead of <see cref="Document"/>; see
+    /// <see cref="BpmnEditorScope.DocumentBinding"/>.
+    /// </summary>
+    [Parameter]
+    public Hasseware.AspNetCore.Components.Bpmn.Storage.BpmnDocumentBinding? DocumentBinding { get; set; }
+
     /// <summary>Which diagram to show; the first declared one when omitted.</summary>
     [Parameter]
     public string? DiagramId { get; set; }

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Hasseware.AspNetCore.Components.Bpmn.Tools</AssemblyName>
+    <RootNamespace>Hasseware.AspNetCore.Components.Bpmn.Tools</RootNamespace>
+    <PackageId>Hasseware.AspNetCore.Components.Bpmn.Tools</PackageId>
+    <Description>Preview. Agent tool handlers over a BPMN document, shared by the WebMCP and MCP packages: read, validate, export, create, connect, edit, delete and diff, with results that keep diagram text apart from tool messages.</Description>
+    <PackageTags>bpmn;blazor;mcp;webmcp;agents;tools</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bpmn\Hasseware.AspNetCore.Components.Bpmn.csproj" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

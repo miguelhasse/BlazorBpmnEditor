@@ -21,6 +21,15 @@ export class CanvasAccessibility {
   readonly #summary: HTMLElement;
   readonly #strings: CanvasStringsContract;
 
+  /**
+   * The label last computed for a cell, with the inputs it came from.
+   *
+   * The pass below runs on every `render:done` over every cell, and computing a label is a string lookup plus a whitespace
+   * regex plus a formatted message. The inputs almost never change, so the string is reused until they do. The DOM comparison
+   * in `#label` stays, because a view the paper has just remounted is a new element with no label on it.
+   */
+  readonly #labels = new WeakMap<dia.Cell, { readonly kind: string; readonly name: string | undefined; readonly label: string }>();
+
   public constructor(paper: dia.Paper, hostElement: HTMLElement, strings: CanvasStringsContract) {
     this.#paper = paper;
     this.#strings = strings;
@@ -66,29 +75,16 @@ export class CanvasAccessibility {
      * screen reader walks the DOM, not the visible rectangle. Two setAttribute calls per cell is
      * not the expensive part of drawing a diagram.
      */
-    for (const view of this.#viewsOf(this.#paper.model.getElements())) {
-      this.#label(view);
-    }
+    for (const cell of this.#paper.model.getCells()) {
+      // A cell that has not been drawn yet has no view, which the JointJS signature does not admit. The link a connector gesture is
+      // drawing is skipped too: it is scaffolding, not notation, and announcing it would tell a screen-reader user about a
+      // connector that does not exist.
+      if (isProvisional(cell)) continue;
 
-    for (const view of this.#viewsOf(this.#paper.model.getLinks())) {
-      this.#label(view);
+      const view = cell.findView(this.#paper) as dia.CellView | null | undefined;
+      if (view !== null && view !== undefined) this.#label(view);
     }
   };
-
-  /**
-   * The drawn views for a set of cells.
-   *
-   * A cell that has not been drawn yet has no view, which the JointJS signature does not admit —
-   * hence the filter rather than a direct call. The link a connector gesture is drawing is dropped
-   * here too: it is scaffolding, not notation, and announcing it would tell a screen-reader user
-   * about a connector that does not exist.
-   */
-  #viewsOf(cells: readonly dia.Cell[]): readonly dia.CellView[] {
-    return cells
-      .filter((cell) => !isProvisional(cell))
-      .map((cell) => cell.findView(this.#paper))
-      .filter(isPresent);
-  }
 
   #label(view: dia.CellView): void {
     const cell = view.model;
@@ -102,13 +98,20 @@ export class CanvasAccessibility {
     const name = (cell.attr('label/text') as string | undefined) ?? bpmn?.name ?? undefined;
     const kind = bpmn?.elementType ?? (cell.isLink() ? 'connector' : 'element');
 
-    // Read as "User Task: Approve order" — the type first, because the type is what tells a
-    // listener what the thing is, and many BPMN elements legitimately have no name at all.
-    const readable = this.#strings.values[`Type.${kind}`]
-      ?? canvasText(this.#strings, cell.isLink() ? 'Type.connector' : 'Type.element');
-    const label = name === undefined || name.length === 0
-      ? readable
-      : canvasText(this.#strings, 'ElementName', readable, name.replace(/\s+/g, ' ').trim());
+    const known = this.#labels.get(cell);
+    let label: string;
+    if (known?.kind === kind && known.name === name) {
+      label = known.label;
+    } else {
+      // Read as "User Task: Approve order" — the type first, because the type is what tells a
+      // listener what the thing is, and many BPMN elements legitimately have no name at all.
+      const readable = this.#strings.values[`Type.${kind}`]
+        ?? canvasText(this.#strings, cell.isLink() ? 'Type.connector' : 'Type.element');
+      label = name === undefined || name.length === 0
+        ? readable
+        : canvasText(this.#strings, 'ElementName', readable, name.replace(/\s+/g, ' ').trim());
+      this.#labels.set(cell, { kind, name, label });
+    }
 
     /*
      * Written only when it changed. This runs on every `render:done` — which fires on every pan,
@@ -121,5 +124,3 @@ export class CanvasAccessibility {
     view.el.setAttribute('aria-label', label);
   }
 }
-
-const isPresent = <T>(value: T | null | undefined): value is T => value !== null && value !== undefined;

@@ -154,6 +154,22 @@ public static class BpmnElementInspector
     /// <returns>The camelCase BPMN element name.</returns>
     public static string WireNameOf(BpmnFlowNodeType type) => JsonSerializer.Serialize(type).Trim('"');
 
+    /// <summary>The standard properties of one element, without the rest of what <c>Describe</c> works out.</summary>
+    /// <remarks>
+    /// Describing an element also validates the document, which is far more than a caller comparing
+    /// property values needs when it asks about every element in turn.
+    /// </remarks>
+    /// <param name="document">The document to resolve against.</param>
+    /// <param name="elementId">The element.</param>
+    /// <returns>The properties, or an empty list when there is no such element.</returns>
+    public static IReadOnlyList<BpmnPropertyDescriptor> PropertiesOf(BpmnDocument document, string elementId)
+    {
+        ArgumentNullException.ThrowIfNull(document);
+        ArgumentException.ThrowIfNullOrEmpty(elementId);
+
+        return document.Find(elementId) is { } element ? Properties(document, element) : [];
+    }
+
     // --- identity ---------------------------------------------------------------
 
     private static string TypeNameOf(object element) => element switch

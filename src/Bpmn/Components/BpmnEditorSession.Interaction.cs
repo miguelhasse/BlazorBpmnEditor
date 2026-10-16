@@ -75,10 +75,8 @@ public sealed partial class BpmnEditorSession
     /// What the menu offers.
     /// </summary>
     /// <remarks>
-    /// Section 7 requires the canvas-level menu to open even when nothing target-specific applies,
-    /// with "applicable inspection/navigation/export commands (or a disabled empty-state item)".
-    /// Fit-to-content is that navigation command, and it is offered in Readonly too, where it is
-    /// the only one left.
+    /// Section 7 requires the canvas-level menu to open even when nothing target-specific applies. It
+    /// then has no entries: the edit commands need a target, and viewport commands live in the toolbar.
     /// </remarks>
     private IReadOnlyList<BpmnMenuEntry> BuildMenuEntries
     {

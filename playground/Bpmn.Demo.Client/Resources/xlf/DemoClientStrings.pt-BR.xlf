@@ -52,6 +52,11 @@
         <target state="translated">Editado: {0} nós, {1} fluxos.</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.EditedElsewhere">
+        <source>{0} (edited elsewhere)</source>
+        <target state="translated">{0} (editado em outro lugar)</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.ExecutionState">
         <source>Execution state</source>
         <target state="translated">Estado de execução</target>
@@ -117,6 +122,21 @@
         <target state="translated">{0} formas e {1} conectores renderizados em '{2}'</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.Save">
+        <source>Save</source>
+        <target state="translated">Salvar</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SaveConflict">
+        <source>Not saved: the stored document was changed elsewhere.</source>
+        <target state="translated">Não salvo: o documento armazenado foi alterado em outro lugar.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Saved">
+        <source>Saved (revision {0})</source>
+        <target state="translated">Salvo (revisão {0})</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.SelectedElement">
         <source>Selected {0}.</source>
         <target state="translated">{0} selecionado.</target>
@@ -132,6 +152,11 @@
         <target state="translated">O serviço não respondeu a tempo.</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.SimulateExternalChange">
+        <source>Simulate external change</source>
+        <target state="translated">Simular alteração externa</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.SnapToGrid">
         <source>Snap to grid</source>
         <target state="translated">Alinhar à grade</target>
@@ -145,6 +170,41 @@
       <trans-unit id="Editor.Unrendered">
         <source> ({0} DI entries had no matching element)</source>
         <target state="translated"> ({0} entradas DI sem elemento correspondente)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Unsaved">
+        <source>Unsaved changes</source>
+        <target state="translated">Alterações não salvas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcp">
+        <source>Offer to browser agents (WebMCP)</source>
+        <target state="translated">Oferecer a agentes do navegador (WebMCP)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpEdit">
+        <source>Let agents edit (deleting and saving ask you first)</source>
+        <target state="translated">Permitir que os agentes editem (excluir e salvar perguntam antes)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpFailed">
+        <source>The browser refused the tools</source>
+        <target state="translated">O navegador recusou as ferramentas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpRegistered">
+        <source>{0} read-only tools offered</source>
+        <target state="translated">{0} ferramentas somente leitura oferecidas</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpRegisteredEditing">
+        <source>{0} tools offered, editing allowed</source>
+        <target state="translated">{0} ferramentas oferecidas, edição permitida</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpUnsupported">
+        <source>This browser has no WebMCP</source>
+        <target state="translated">Este navegador não tem WebMCP</target>
         <note />
       </trans-unit>
       <trans-unit id="ExportSeverity.Dropped">
@@ -435,6 +495,41 @@
       <trans-unit id="Interchange.Waypoints">
         <source>Waypoints</source>
         <target state="translated">Pontos de passagem</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Change">
+        <source>Change it on the server</source>
+        <target state="translated">Alterar no servidor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Gaps">
+        <source>Reconnections:</source>
+        <target state="translated">Reconexões:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Intro">
+        <source>Watches a document in the server's store over Server-Sent Events, in the browser. Press Watch, then make a change on the server: it arrives here. The stream is closed by the server every few seconds so that you can see the connection reopen.</source>
+        <target state="translated">Observa um documento no armazenamento do servidor por Server-Sent Events, no navegador. Pressione Observar e depois faça uma alteração no servidor: ela chega aqui. O servidor fecha o fluxo a cada poucos segundos para você ver a conexão reabrir.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Path">
+        <source>Document</source>
+        <target state="translated">Documento</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.State">
+        <source>Feed:</source>
+        <target state="translated">Canal:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Title">
+        <source>Live updates</source>
+        <target state="translated">Atualizações ao vivo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Watch">
+        <source>Watch</source>
+        <target state="translated">Observar</target>
         <note />
       </trans-unit>
       <trans-unit id="No">

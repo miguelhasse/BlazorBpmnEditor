@@ -48,8 +48,13 @@ public sealed partial class BpmnEditorSession
         if (!_graphCache.Matches(DrawnDocument, AccessibleGraphOverride, text: ActiveDiagramId)
             || (AccessibleGraphOverride is { } graph && !_graphCache.Items.SequenceEqual(graph)))
         {
-            _graphCache.Store(AccessibleGraphOverride ?? (DrawnDocument is { } document
-                ? BpmnAccessibleGraph.For(document, ActiveDiagramId) : []), DrawnDocument, AccessibleGraphOverride, text: ActiveDiagramId);
+            var rebuilt = AccessibleGraphOverride ?? (DrawnDocument is { } document
+                ? BpmnAccessibleGraph.For(document, ActiveDiagramId) : []);
+
+            // A move, a resize or a style change leaves the graph as it was. Keeping the old list lets the tree see "nothing changed"
+            // by reference and skip rebuilding a thousand items for an edit that did not touch one.
+            if (_graphCache.IsEquivalentTo(rebuilt)) _graphCache.Keep(DrawnDocument, AccessibleGraphOverride, text: ActiveDiagramId);
+            else _graphCache.Store(rebuilt, DrawnDocument, AccessibleGraphOverride, text: ActiveDiagramId);
         }
         return _graphCache.Value;
     }
@@ -229,6 +234,21 @@ public sealed partial class BpmnEditorSession
         internal bool Matches(object? first, object? second = null, object? third = null, string? text = null, int flags = 0) =>
             _initialized && ReferenceEquals(_first, first) && ReferenceEquals(_second, second)
             && ReferenceEquals(_third, third) && _text == text && _flags == flags;
+
+        /// <summary>Whether a rebuilt list holds the same content as the stored one, item by item (only meaningful for graph nodes).</summary>
+        internal bool IsEquivalentTo(IReadOnlyList<BpmnGraphNode> rebuilt) =>
+            _initialized && Items is ImmutableArray<BpmnGraphNode> current && current.Length == rebuilt.Count
+            && Enumerable.Range(0, current.Length).All(index => BpmnGraphNode.SameContent(current[index], rebuilt[index]));
+
+        /// <summary>Records new inputs for the stored list without replacing it.</summary>
+        internal void Keep(object? first, object? second = null, object? third = null, string? text = null, int flags = 0)
+        {
+            _first = first;
+            _second = second;
+            _third = third;
+            _text = text;
+            _flags = flags;
+        }
 
         internal void Store(IEnumerable<T> values, object? first, object? second = null, object? third = null, string? text = null, int flags = 0)
         {

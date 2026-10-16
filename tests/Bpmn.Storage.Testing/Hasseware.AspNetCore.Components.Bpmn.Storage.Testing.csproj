@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Hasseware.AspNetCore.Components.Bpmn.Storage.Testing</AssemblyName>
+    <RootNamespace>Hasseware.AspNetCore.Components.Bpmn.Storage.Testing</RootNamespace>
+    <PackageId>Hasseware.AspNetCore.Components.Bpmn.Storage.Testing</PackageId>
+    <Description>Preview. The test suite every BPMN document store must pass, as an abstract xUnit v3 base class: derive once, implement CreateStore, and the contract is checked against your store. A test-only dependency.</Description>
+    <PackageTags>bpmn;storage;testing;xunit</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <!--
+      Under tests/ like every test project, but this one is published. tests/Directory.Build.props makes the projects there unpackable
+      test projects, so this says otherwise: it has no tests of its own, only the suites other projects derive from.
+    -->
+    <IsPackable>true</IsPackable>
+    <IsTestProject>false</IsTestProject>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+    <!-- The members are test cases, and say what they check in their names. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="xunit.v3.extensibility.core" />
+    <PackageReference Include="xunit.v3.assert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Bpmn\Hasseware.AspNetCore.Components.Bpmn.csproj" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

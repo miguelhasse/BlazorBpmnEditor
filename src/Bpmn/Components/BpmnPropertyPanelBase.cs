@@ -161,14 +161,22 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
     {
         var elementId = Only?.ElementId;
         var document = Document;
-        if (_variableElementId == elementId && ReferenceEquals(_variableDocument, document)) return;
+
+        if (_variableElementId == elementId && ReferenceEquals(_variableDocument, document))
+            return;
+
         _variableElementId = elementId;
         _variableDocument = document;
         _variables = [];
         var request = ++_variableRequest;
-        if (elementId is null || document is null || Services.GetService<IBpmnFeelVariableProvider>() is not { } provider) return;
+
+        if (elementId is null || document is null || Services.GetService<IBpmnFeelVariableProvider>() is not { } provider)
+            return;
+
         var variables = await provider.GetVariablesAsync(document, elementId);
-        if (request == _variableRequest) _variables = variables;
+
+        if (request == _variableRequest)
+            _variables = variables;
     }
 
     /// <inheritdoc />
@@ -185,9 +193,11 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
         IEnumerable<IBpmnPropertiesProvider> providers = Providers ??
             _builtIns.Concat(PanelOptions.Providers).Concat(Services.GetServices<IBpmnPropertiesProvider>());
         var culture = System.Globalization.CultureInfo.CurrentUICulture;
+
         if (_groupsInitialized && ReferenceEquals(_groupDocument, Document) && _groupReadOnly == Inspecting
             && ReferenceEquals(_groupCulture, culture) && _snapshots.SequenceEqual(snapshots)
-            && _groupProviders.SequenceEqual(providers)) return;
+            && _groupProviders.SequenceEqual(providers))
+            return;
 
         _groupsChangedOnParameters = true;
         _groupsInitialized = true;
@@ -198,12 +208,22 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
         _groupProviders = providers.ToArray();
         _entryContexts.Clear();
         _groupContexts.Clear();
+
         if (snapshots.Count == 0)
         {
             _groups = [];
             return;
         }
-        var element = Only ?? snapshots[0] with { Properties = Editable, ExtensionProperties = [], Extensions = [], ExtensionGroups = [], TemplateId = null, TemplateVersion = null };
+
+        var element = Only ?? snapshots[0] with
+        {
+            Properties = Editable,
+            ExtensionProperties = [],
+            Extensions = [],
+            ExtensionGroups = [],
+            TemplateId = null,
+            TemplateVersion = null
+        };
 
         IReadOnlyList<BpmnPropertyGroup> groups = [];
         // Snapshot-computed extension groups can be appended by a later provider at this seam.
@@ -229,7 +249,9 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
         var elementId = Only?.ElementId;
         if (_entryContexts.TryGetValue(entry, out var cached) && cached.Context.Revision == _revision
             && cached.Context.IsReadOnly == readOnly && cached.Context.ElementId == elementId
-            && ReferenceEquals(cached.Context.Variables, _variables)) return cached.Context;
+            && ReferenceEquals(cached.Context.Variables, _variables))
+            return cached.Context;
+
         var context = new BpmnPropertyEntryContext(entry,
             cached.Context?.OnValueChanged ?? EventCallback.Factory.Create<string?>(this, value => ApplyEntryAsync(entry, value, null)),
             cached.Context?.OnRowsChanged ?? EventCallback.Factory.Create<IReadOnlyList<IReadOnlyDictionary<string, string?>>>(this,
@@ -249,7 +271,9 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
     /// <returns>The context.</returns>
     protected BpmnPropertyGroupContext BuildGroupContext(BpmnPropertyGroup group)
     {
-        if (_groupContexts.TryGetValue(group, out var cached)) return cached;
+        if (_groupContexts.TryGetValue(group, out var cached))
+            return cached;
+
         var context = new BpmnPropertyGroupContext(group, group.Entries,
             context => RenderEntry(BuildEntryContext(context.Entry)), Inspecting);
         _groupContexts[group] = context;
@@ -263,7 +287,9 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
         ? template(context)
         : builder =>
         {
-            if (context.Entry.Kind == BpmnPropertyEntryKind.Hidden) return;
+            if (context.Entry.Kind == BpmnPropertyEntryKind.Hidden)
+                return;
+
             builder.OpenComponent<DynamicComponent>(0);
             builder.SetKey($"{context.Entry.Id}:{context.Revision}");
             builder.AddComponentParameter(1, nameof(DynamicComponent.Type), Session.Editors.Resolve(context.Entry));
@@ -280,15 +306,21 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
 
         if (entry.Binding is not null)
         {
-            if (Only is not { } element) return;
+            if (Only is not { } element)
+                return;
+
             _revision++;
             var command = BpmnPropertyEntryCommands.ToCommand(
                 element.ElementId, entry, value, rows, PanelOptions.BindingCommandFactories);
-            if (command is not null) await Session.ApplyPropertyCommandAsync(command);
+
+            if (command is not null)
+                await Session.ApplyPropertyCommandAsync(command);
             return;
         }
 
-        if (rows is not null) return;
+        if (rows is not null)
+            return;
+
         var submitted = entry.Kind is BpmnPropertyEntryKind.Text or BpmnPropertyEntryKind.TextArea && value is { Length: 0 }
             ? null : value;
         await ApplyAsync(new BpmnPropertyEdit(entry.Id, submitted));
@@ -316,8 +348,12 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
         get
         {
             var snapshots = Snapshots;
-            if (Only is { } one) return one.Properties;
-            if (snapshots.Count == 0) return [];
+
+            if (Only is { } one)
+                return one.Properties;
+
+            if (snapshots.Count == 0)
+                return [];
 
             var common = new List<BpmnPropertyDescriptor>();
 
@@ -329,7 +365,8 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
                         .FirstOrDefault(property => property.Name == candidate.Name && property.Kind == candidate.Kind))
                     .ToList();
 
-                if (others.Exists(property => property is null)) continue;
+                if (others.Exists(property => property is null))
+                    continue;
 
                 var agreed = others.TrueForAll(property => property!.Value == candidate.Value);
                 var locked = candidate.IsReadOnly || others.Exists(property => property!.IsReadOnly);

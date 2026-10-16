@@ -17,9 +17,9 @@
             {
                 <li class="bpmn-usages__item">
                     <FluentButton Type="ButtonType.Button"
-                            IconStart="@(new Icons.Regular.Size20.ArrowRight())" Class="bpmn-usages__go"
-                            Title="@TitleOf(usage)"
-                            OnClick="@(() => SelectAsync(usage))">
+                                  IconStart="@(new Icons.Regular.Size20.ArrowRight())" Class="bpmn-usages__go"
+                                  Title="@TitleOf(usage)"
+                                  OnClick="@(() => SelectAsync(usage))">
                         <span class="bpmn-usages__attribute">@usage.Attribute</span>
                         <span class="bpmn-usages__owner">
                             @usage.OwnerId

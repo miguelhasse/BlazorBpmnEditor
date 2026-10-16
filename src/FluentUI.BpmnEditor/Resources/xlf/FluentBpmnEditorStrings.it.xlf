@@ -2,6 +2,26 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
   <file datatype="xml" source-language="en" target-language="it" original="../FluentBpmnEditorStrings.resx">
     <body>
+      <trans-unit id="AgentConfirmation.Allow">
+        <source>Allow</source>
+        <target state="translated">Consenti</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Deny">
+        <source>Don't allow</source>
+        <target state="translated">Non consentire</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Details">
+        <source>Affected items</source>
+        <target state="translated">Elementi interessati</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.RequestedBy">
+        <source>Requested by {0}</source>
+        <target state="translated">Richiesto da {0}</target>
+        <note />
+      </trans-unit>
       <trans-unit id="CalledElementPicker.Cancel">
         <source>Cancel</source>
         <target state="translated">Annulla</target>
@@ -15,6 +35,56 @@
       <trans-unit id="DiagramNavigator.Open">
         <source>Open</source>
         <target state="translated">Apri</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.ConfirmReload">
+        <source>Reloading discards your unsaved edits.</source>
+        <target state="translated">Ricaricando, le modifiche non salvate andranno perse.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.Deleted">
+        <source>{0} was deleted by someone else. Your version is still open here.</source>
+        <target state="translated">{0} è stato eliminato da un altro utente. La tua versione è ancora aperta qui.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.DiscardAndReload">
+        <source>Discard and reload</source>
+        <target state="translated">Scarta e ricarica</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.Dismiss">
+        <source>Dismiss</source>
+        <target state="translated">Chiudi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.KeepEditing">
+        <source>Keep editing</source>
+        <target state="translated">Continua a modificare</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.Reload">
+        <source>Reload</source>
+        <target state="translated">Ricarica</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.SaveAgain">
+        <source>Save again</source>
+        <target state="translated">Salva di nuovo</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.SaveCopy">
+        <source>Save a copy</source>
+        <target state="translated">Salva una copia</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.Updated">
+        <source>{0} was changed by someone else.</source>
+        <target state="translated">{0} è stato modificato da un altro utente.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.UpdatedDirty">
+        <source>{0} was changed by someone else. Your unsaved edits are still here.</source>
+        <target state="translated">{0} è stato modificato da un altro utente. Le modifiche non salvate sono ancora qui.</target>
         <note />
       </trans-unit>
       <trans-unit id="FeelEntry.Toggle">

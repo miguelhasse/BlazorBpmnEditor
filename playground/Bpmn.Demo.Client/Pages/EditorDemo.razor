@@ -1,4 +1,5 @@
 @using Hasseware.AspNetCore.Components.Bpmn.Serialization
+@using Hasseware.AspNetCore.Components.Bpmn.WebMcp
 
 <PageTitle>@Localizer["Editor.Title"]</PageTitle>
 
@@ -12,6 +13,14 @@
                       Value="@_selectedSample"
                       ValueChanged="@LoadSampleAsync"
                       Label="@Localizer["SampleDiagram"]" />
+
+        @*
+            The demo plays a host that stores its documents: Save writes through the store with a
+            revision check, and the second button plays somebody else writing the same document, which
+            is what makes the editor's external-change notice appear.
+        *@
+        <button type="button" class="demo-save" disabled="@(!_binding.IsDirty || _readOnly)" @onclick="SaveAsync">@Localizer["Editor.Save"]</button>
+        <button type="button" class="demo-external-change" disabled="@(_binding.Key is null)" @onclick="SimulateExternalChangeAsync">@Localizer["Editor.SimulateExternalChange"]</button>
 
         <button type="button" class="demo-export" disabled="@(_document is null)" @onclick="ExportXml">@Localizer["Editor.ExportXml"]</button>
         <button type="button" class="demo-export" disabled="@(_document is null)" @onclick="ExportJson">@Localizer["Editor.ExportJson"]</button>
@@ -54,6 +63,23 @@
         </label>
 
         @*
+            Offers the open diagram to the browser's agents through WebMCP, read-only unless editing is allowed. Off by default; where the
+            browser has no WebMCP the status says so and nothing else happens.
+        *@
+        <label class="demo-toggle">
+            <input type="checkbox" class="demo-webmcp" checked="@_webMcp" @onchange="OnWebMcpChanged" />
+            @Localizer["Editor.WebMcp"]
+        </label>
+        <span class="demo-webmcp-status">@_webMcpStatus</span>
+        @if (_webMcp)
+        {
+            <label class="demo-toggle">
+                <input type="checkbox" class="demo-webmcp-edit" checked="@_webMcpEdit" @onchange="OnWebMcpEditChanged" />
+                @Localizer["Editor.WebMcpEdit"]
+            </label>
+        }
+
+        @*
             Execution overlays are the host's to supply, so the demo plays the host: it invents a
             plausible state from whatever sample is loaded and pushes it. The editor never derives
             one, because it does not execute BPMN.
@@ -78,6 +104,7 @@
 
                 <span class="demo-status">@_status</span>
         <span class="demo-edit-status">@_editStatus</span>
+        <span class="demo-save-status">@SaveStatus</span>
     </div>
 
     @if (_path.Count > 1)
@@ -105,7 +132,7 @@
     <BpmnEditor @ref="_plainEditor"
                 Class="demo-editor"
                 Configuration="@_configuration"
-                Document="@_document"
+                DocumentBinding="@_binding"
                 IsReadOnly="@_readOnly"
                 ShowStencil="true"
                 ShowPanel="@_showProperties"
@@ -135,6 +162,12 @@
         <Footer>
             <BpmnValidationPanel Class="demo-validation" />
         </Footer>
+        <Dialogs>
+            @if (_webMcp)
+            {
+                <BpmnWebMcp @key="_webMcpEdit" @ref="_webMcpPart" AllowMutations="_webMcpEdit" OnRegistered="OnWebMcpSettled" OnUnavailable="OnWebMcpSettled" />
+            }
+        </Dialogs>
     </BpmnEditor>
     }
     else
@@ -142,7 +175,7 @@
     <FluentBpmnEditor @ref="_fluentEditor"
                 Class="demo-editor"
                 Configuration="@_configuration"
-                Document="@_document"
+                DocumentBinding="@_binding"
                 IsReadOnly="@_readOnly"
                 ShowStencil="true"
                 ShowPanel="@_showProperties"
@@ -172,6 +205,12 @@
         <Footer>
             <FluentBpmnValidationPanel Class="demo-validation" />
         </Footer>
+        <Dialogs>
+            @if (_webMcp)
+            {
+                <BpmnWebMcp @key="_webMcpEdit" @ref="_webMcpPart" AllowMutations="_webMcpEdit" OnRegistered="OnWebMcpSettled" OnUnavailable="OnWebMcpSettled" />
+            }
+        </Dialogs>
     </FluentBpmnEditor>
     }
 

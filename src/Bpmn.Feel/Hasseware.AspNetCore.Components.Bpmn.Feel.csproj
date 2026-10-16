@@ -23,4 +23,7 @@
   <Target Name="VerifyFeelEditorBundle" AfterTargets="Build">
     <Error Condition="!Exists('..\Bpmn.Feel.Scripts\dist\feel-editor.js')" Text="FEEL bundle missing. Run npm ci and npm run build in src\Bpmn.Feel.Scripts." />
   </Target>
+
+  <Import Project="..\ScriptsStaticAssets.targets" />
+
 </Project>

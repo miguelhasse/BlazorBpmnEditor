@@ -1,0 +1,19 @@
+%% Document store packages (preview)
+%% Solid arrows: dependent → referenced project. Every store passes the contract suite in Bpmn.Storage.Testing.
+%% The two samples forward a backend's own change signal to the change bus through BpmnDocumentChangeIngress.
+flowchart TB
+    blobsample["samples/BlobEventGridIngress<br/>Event Grid blob events → change bus<br/>reference ingress, tested"]:::test
+    azure["Bpmn.Storage.AzureBlob<br/>src/Bpmn.Storage.AzureBlob<br/>ETag revision, If-Match writes"]:::cs
+    ef["Bpmn.Storage.EfCore<br/>src/Bpmn.Storage.EfCore<br/>one table, version column revision"]:::cs
+    fs["Bpmn.Storage.FileSystem<br/>src/Bpmn.Storage.FileSystem<br/>Folder-backed document store"]:::cs
+    core["Bpmn (Core)<br/>src/Bpmn<br/>IBpmnDocumentStore, change bus, ingress"]:::cs
+    pgsample["samples/PostgresNotifyIngress<br/>LISTEN/NOTIFY → change bus<br/>reference ingress, tested"]:::test
+
+    blobsample --> azure
+    azure --> core
+    ef --> core
+    fs --> core
+    pgsample --> core
+
+    classDef cs fill:#a5d8ff,stroke:#343a40,color:#212529
+    classDef test fill:#e9ecef,stroke:#343a40,color:#212529

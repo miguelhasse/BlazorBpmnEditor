@@ -54,7 +54,7 @@
         <details class="bpmn-stencil__templates" open>
             <summary class="bpmn-stencil__title">@EditorText("StencilPanel.Templates")</summary>
             <FluentTextInput Class="bpmn-stencil__search" Immediate="true" AriaLabel="@EditorText("StencilPanel.SearchTemplates")"
-                   Placeholder="@EditorText("StencilPanel.SearchTemplates")" @bind-Value="TemplateSearch" />
+                             Placeholder="@EditorText("StencilPanel.SearchTemplates")" @bind-Value="TemplateSearch" />
             @foreach (var group in TemplateGroups)
             {
                 var entries = MatchingTemplates(group).ToArray();

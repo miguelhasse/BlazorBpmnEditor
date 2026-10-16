@@ -1,0 +1,22 @@
+<Project>
+  <!--
+    Imported by every project that ships the output of a JavaScript SDK (.esproj) project as static web assets: Bpmn, Bpmn.Feel and Bpmn.WebMcp.
+
+    The JavaScript SDK describes the esproj's output (dist/*) as static web assets but sets each one's OriginalItemSpec from an item list that is empty at
+    that point (Sdk.WebAssets.targets, GetCurrentProjectBuildStaticWebAssetItems), so MSBuild falls back to the project file itself. The compression step
+    reads the file named by OriginalItemSpec, so a Release publish compressed the .esproj in place of the bundle: the .br and .gz beside lib.module.js were
+    258 and 318 bytes of project XML, the browser's integrity check refused the module, and no diagram appeared. Point each asset back at its own file
+    before compression runs.
+
+    NuGet consumers were not affected: the package holds the real files, and the consuming app compresses those. tools/publish-size.mjs checks that every
+    precompressed file in a publish decodes to the file beside it.
+  -->
+  <Target Name="PointScriptsAssetsAtTheirOwnFiles"
+          BeforeTargets="ResolveBuildCompressedStaticWebAssetsConfiguration;ResolvePublishCompressedStaticWebAssetsConfiguration">
+    <ItemGroup>
+      <StaticWebAsset Condition="$([System.String]::new('%(StaticWebAsset.OriginalItemSpec)').EndsWith('.esproj', System.StringComparison.OrdinalIgnoreCase))">
+        <OriginalItemSpec>%(StaticWebAsset.Identity)</OriginalItemSpec>
+      </StaticWebAsset>
+    </ItemGroup>
+  </Target>
+</Project>

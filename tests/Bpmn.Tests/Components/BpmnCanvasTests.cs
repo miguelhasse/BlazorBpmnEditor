@@ -7,6 +7,7 @@ using Hasseware.AspNetCore.Components.Bpmn.Resources;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Components;
@@ -229,6 +230,115 @@ public sealed class BpmnCanvasTests : BunitContext
         component.Render();
 
         Assert.Empty(load.Invocations);
+    }
+
+    [Fact]
+    public async Task SendsOneLoadWhenTheCanvasIsRenderedAgainWhileALoadIsStillInFlight()
+    {
+        SetupInitialize(Accepted());
+        var component = Render<BpmnCanvas>(parameters => parameters.Add(p => p.Document, Document()));
+        var load = _canvas.Setup<DocumentLoaded?>("loadDocument", _ => true);
+        var changed = Document();
+
+        component.Render(parameters => parameters.Add(p => p.Document, changed));
+        component.Render();
+        component.Render();
+        load.SetResult(new DocumentLoaded("Diagram_1", 1, 0, []));
+        await component.WaitForStateAsync(() => load.Invocations.Count >= 1);
+        await Task.Delay(100, Xunit.TestContext.Current.CancellationToken);
+
+        // Every render reaches OnAfterRenderAsync, and each saw a document that was not yet recorded as drawn: all sent it.
+        Assert.Single(load.Invocations);
+    }
+
+    [Fact]
+    public async Task LoadsTheDocumentItWasGivenWhileTheCanvasWasStillStarting()
+    {
+        var instance = _module.SetupModule("initialize", _ => true);
+        _canvas = instance;
+        var initResult = _canvas.Setup<CanvasInitResult>("getInitResult", _ => true);
+        var load = _canvas.Setup<DocumentLoaded?>("loadDocument", _ => true).SetResult(new DocumentLoaded("Diagram_1", 1, 0, []));
+
+        var component = Render<BpmnCanvas>(parameters => parameters.Add(p => p.Document, Document()));
+        var changed = Document();
+        component.Render(parameters => parameters.Add(p => p.Document, changed));
+        initResult.SetResult(Accepted());
+        await component.WaitForStateAsync(() => load.Invocations.Count >= 1, TimeSpan.FromSeconds(5));
+
+        // The canvas started with the first document; it must not mark the second as drawn just because that was the parameter when it finished.
+        var sent = Assert.Single(load.Invocations);
+        Assert.NotNull(sent.Arguments[0]);
+    }
+
+    [Fact]
+    public async Task ReleasesTheCanvasItWasStartingWhenTheComponentIsDisposedFirst()
+    {
+        var instance = _module.SetupModule("initialize", _ => true);
+        _canvas = instance;
+        var initResult = _canvas.Setup<CanvasInitResult>("getInitResult", _ => true);
+        var dispose = _canvas.SetupVoid("dispose", _ => true).SetVoidResult();
+        var component = Render<BpmnCanvas>();
+
+        await component.Instance.DisposeAsync();
+        initResult.SetResult(Accepted());
+        await Task.Delay(300, Xunit.TestContext.Current.CancellationToken);
+
+        // initialize had returned a canvas, with its window listeners and paper, and nothing else would ever dispose it.
+        Assert.Single(dispose.Invocations);
+    }
+
+    [Fact]
+    public async Task ResyncDrawsTheCurrentDocumentAgainEvenThoughItWasAcceptedAsDrawn()
+    {
+        SetupInitialize(Accepted());
+        var load = SetupLoadDocument();
+        var document = Document();
+        var component = Render<BpmnCanvas>(parameters => parameters.Add(p => p.Document, document));
+
+        // An optimistic move marks the document as drawn; a refusal then has to undo what the canvas did ahead of it.
+        component.Instance.AcceptRenderedDocument(document);
+        await component.InvokeAsync(component.Instance.ResyncAsync);
+
+        Assert.Single(load.Invocations);
+    }
+
+    [Fact]
+    public async Task LogsAHostHandlerThatThrowsInsteadOfLeavingAFaultedTaskNobodyObserves()
+    {
+        var logs = new CapturingLoggerProvider();
+        Services.AddLogging(builder => builder.AddProvider(logs));
+        SetupInitialize(Accepted());
+        var component = Render<BpmnCanvas>(parameters => parameters
+            .Add(p => p.OnViewportChanged, Microsoft.AspNetCore.Components.EventCallback.Factory.Create<ViewportChanged>(this, _ => throw new InvalidOperationException("host bug"))));
+        var bridge = ((DotNetObjectReference<BpmnCanvasEventBridge>)JSInterop.Invocations["initialize"].Single().Arguments[4]!).Value;
+
+        await component.InvokeAsync(() => bridge.ViewportChanged(new ViewportChanged(1, 0, 0)));
+        await Task.Delay(200, Xunit.TestContext.Current.CancellationToken);
+
+        Assert.Contains(logs.Entries, entry => entry.Level == Microsoft.Extensions.Logging.LogLevel.Error && entry.Exception is InvalidOperationException);
+    }
+
+    private sealed class CapturingLoggerProvider : Microsoft.Extensions.Logging.ILoggerProvider
+    {
+        public List<(Microsoft.Extensions.Logging.LogLevel Level, Exception? Exception)> Entries { get; } = [];
+
+        public Microsoft.Extensions.Logging.ILogger CreateLogger(string categoryName) => new Logger(this);
+
+        public void Dispose()
+        {
+        }
+
+        private sealed class Logger(CapturingLoggerProvider owner) : Microsoft.Extensions.Logging.ILogger
+        {
+            public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+            public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel) => true;
+
+            public void Log<TState>(Microsoft.Extensions.Logging.LogLevel logLevel, Microsoft.Extensions.Logging.EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+            {
+                lock (owner.Entries) owner.Entries.Add((logLevel, exception));
+            }
+        }
     }
 
     private static CanvasInitResult Accepted() =>

@@ -52,6 +52,11 @@
         <target state="translated">Upraveno: uzly {0}, toky {1}.</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.EditedElsewhere">
+        <source>{0} (edited elsewhere)</source>
+        <target state="translated">{0} (upraveno jinde)</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.ExecutionState">
         <source>Execution state</source>
         <target state="translated">Stav provádění</target>
@@ -117,6 +122,21 @@
         <target state="translated">Vykresleno tvarů: {0}, konektorů: {1} na '{2}'</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.Save">
+        <source>Save</source>
+        <target state="translated">Uložit</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SaveConflict">
+        <source>Not saved: the stored document was changed elsewhere.</source>
+        <target state="translated">Neuloženo: uložený dokument byl změněn jinde.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Saved">
+        <source>Saved (revision {0})</source>
+        <target state="translated">Uloženo (revize {0})</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.SelectedElement">
         <source>Selected {0}.</source>
         <target state="translated">Vybráno: {0}.</target>
@@ -132,6 +152,11 @@
         <target state="translated">Služba neodpověděla včas.</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.SimulateExternalChange">
+        <source>Simulate external change</source>
+        <target state="translated">Simulovat změnu jinde</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.SnapToGrid">
         <source>Snap to grid</source>
         <target state="translated">Přichytávat k mřížce</target>
@@ -145,6 +170,41 @@
       <trans-unit id="Editor.Unrendered">
         <source> ({0} DI entries had no matching element)</source>
         <target state="translated"> (položky DI bez odpovídajícího prvku: {0})</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Unsaved">
+        <source>Unsaved changes</source>
+        <target state="translated">Neuložené změny</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcp">
+        <source>Offer to browser agents (WebMCP)</source>
+        <target state="translated">Nabídnout prohlížečovým agentům (WebMCP)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpEdit">
+        <source>Let agents edit (deleting and saving ask you first)</source>
+        <target state="translated">Povolit agentům úpravy (mazání a ukládání se nejdřív zeptá)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpFailed">
+        <source>The browser refused the tools</source>
+        <target state="translated">Prohlížeč nástroje odmítl</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpRegistered">
+        <source>{0} read-only tools offered</source>
+        <target state="translated">Nabízeno nástrojů jen pro čtení: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpRegisteredEditing">
+        <source>{0} tools offered, editing allowed</source>
+        <target state="translated">Nabízeno nástrojů: {0}, úpravy povoleny</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpUnsupported">
+        <source>This browser has no WebMCP</source>
+        <target state="translated">Tento prohlížeč nemá WebMCP</target>
         <note />
       </trans-unit>
       <trans-unit id="ExportSeverity.Dropped">
@@ -435,6 +495,41 @@
       <trans-unit id="Interchange.Waypoints">
         <source>Waypoints</source>
         <target state="translated">Body trasy</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Change">
+        <source>Change it on the server</source>
+        <target state="translated">Změnit na serveru</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Gaps">
+        <source>Reconnections:</source>
+        <target state="translated">Opětovná připojení:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Intro">
+        <source>Watches a document in the server's store over Server-Sent Events, in the browser. Press Watch, then make a change on the server: it arrives here. The stream is closed by the server every few seconds so that you can see the connection reopen.</source>
+        <target state="translated">Sleduje dokument v úložišti serveru přes Server-Sent Events přímo v prohlížeči. Stiskněte Sledovat a pak proveďte změnu na serveru: objeví se tady. Server proud každých pár sekund uzavře, abyste viděli, jak se spojení znovu otevře.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Path">
+        <source>Document</source>
+        <target state="translated">Dokument</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.State">
+        <source>Feed:</source>
+        <target state="translated">Kanál:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Title">
+        <source>Live updates</source>
+        <target state="translated">Živé aktualizace</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Watch">
+        <source>Watch</source>
+        <target state="translated">Sledovat</target>
         <note />
       </trans-unit>
       <trans-unit id="No">

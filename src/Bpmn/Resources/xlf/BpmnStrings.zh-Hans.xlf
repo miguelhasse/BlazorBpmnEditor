@@ -212,6 +212,36 @@
         <target state="translated">用户任务</target>
         <note />
       </trans-unit>
+      <trans-unit id="AgentConfirmation.AriaLabel">
+        <source>Allow an assistant's action</source>
+        <target state="translated">允许助手执行操作</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Delete.More">
+        <source>… and {0} more</source>
+        <target state="translated">……以及另外 {0} 个</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Delete.Summary">
+        <source>The assistant wants to delete {0} item(s) with their connectors and contents. You can undo this afterwards.</source>
+        <target state="translated">助手想要删除 {0} 个项目及其连线和内容。之后您可以撤销。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Delete.Title">
+        <source>Delete from the diagram?</source>
+        <target state="translated">从图中删除?</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Save.Summary">
+        <source>The assistant wants to save your edits, replacing the stored version of this document.</source>
+        <target state="translated">助手想要保存您的更改,并替换此文档已存储的版本。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Save.Title">
+        <source>Save the document?</source>
+        <target state="translated">保存文档?</target>
+        <note />
+      </trans-unit>
       <trans-unit id="CalledElementPicker.Empty">
         <source>This document has no global Process or Global Task to call. Create one first.</source>
         <target state="translated">此文档没有可调用的全局流程或全局任务。请先创建一个。</target>
@@ -675,6 +705,21 @@
       <trans-unit id="Expression.Warnings">
         <source>FEEL warnings ({0}): {1}</source>
         <target state="translated">FEEL 警告（{0}）：{1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.AriaLabel">
+        <source>Document changed elsewhere</source>
+        <target state="translated">文档已在其他位置更改</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.Copied">
+        <source>Saved as {0}. You are now editing the copy.</source>
+        <target state="translated">已另存为 {0}。您现在正在编辑该副本。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.Failed">
+        <source>That could not be done, and nothing was changed. Try again, or save a copy.</source>
+        <target state="translated">无法完成该操作，未做任何更改。请重试，或另存为副本。</target>
         <note />
       </trans-unit>
       <trans-unit id="Icon.ad-hoc-marker">

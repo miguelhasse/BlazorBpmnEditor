@@ -212,6 +212,36 @@
         <target state="translated">Kullanıcı görevi</target>
         <note />
       </trans-unit>
+      <trans-unit id="AgentConfirmation.AriaLabel">
+        <source>Allow an assistant's action</source>
+        <target state="translated">Bir asistan eylemine izin ver</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Delete.More">
+        <source>… and {0} more</source>
+        <target state="translated">… ve {0} tane daha</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Delete.Summary">
+        <source>The assistant wants to delete {0} item(s) with their connectors and contents. You can undo this afterwards.</source>
+        <target state="translated">Yardımcı, bağlantıları ve içerikleriyle birlikte {0} öğeyi silmek istiyor. Sonra geri alabilirsiniz.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Delete.Title">
+        <source>Delete from the diagram?</source>
+        <target state="translated">Diyagramdan silinsin mi?</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Save.Summary">
+        <source>The assistant wants to save your edits, replacing the stored version of this document.</source>
+        <target state="translated">Yardımcı, değişikliklerinizi kaydedip bu belgenin depolanan sürümünün yerine geçmek istiyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Save.Title">
+        <source>Save the document?</source>
+        <target state="translated">Belge kaydedilsin mi?</target>
+        <note />
+      </trans-unit>
       <trans-unit id="CalledElementPicker.Empty">
         <source>This document has no global Process or Global Task to call. Create one first.</source>
         <target state="translated">Bu belgede çağrılacak genel bir Süreç veya Genel Görev yok. Önce bir tane oluşturun.</target>
@@ -675,6 +705,21 @@
       <trans-unit id="Expression.Warnings">
         <source>FEEL warnings ({0}): {1}</source>
         <target state="translated">FEEL uyarıları ({0}): {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.AriaLabel">
+        <source>Document changed elsewhere</source>
+        <target state="translated">Belge başka bir yerde değiştirildi</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.Copied">
+        <source>Saved as {0}. You are now editing the copy.</source>
+        <target state="translated">{0} olarak kaydedildi. Artık kopyayı düzenliyorsunuz.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.Failed">
+        <source>That could not be done, and nothing was changed. Try again, or save a copy.</source>
+        <target state="translated">İşlem yapılamadı ve hiçbir şey değişmedi. Yeniden deneyin veya bir kopya kaydedin.</target>
         <note />
       </trans-unit>
       <trans-unit id="Icon.ad-hoc-marker">

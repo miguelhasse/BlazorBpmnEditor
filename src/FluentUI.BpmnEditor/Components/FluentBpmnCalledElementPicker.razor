@@ -21,11 +21,11 @@
                     {
                         <li>
                             <FluentButton Type="ButtonType.Button"
-                                    Class="bpmn-picker__option"
-                                    role="option"
-                                    aria-selected="false"
-                                    @key="definition.Id"
-                                    OnClick="@(() => ChooseAsync(definition.Id))">
+                                          Class="bpmn-picker__option"
+                                          role="option"
+                                          aria-selected="false"
+                                          @key="definition.Id"
+                                          OnClick="@(() => ChooseAsync(definition.Id))">
                                 <span class="bpmn-picker__name">@(definition.Name ?? definition.Id)</span>
 
                                 @if (definition.Name is { Length: > 0 } && definition.Name != definition.Id)

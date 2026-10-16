@@ -1,0 +1,3 @@
+# This project is a test suite: its test methods are named for what they check, like the tests under tests/.
+[*.cs]
+dotnet_naming_rule.async_methods_end_in_async.severity = none

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Hasseware.AspNetCore.Components.Bpmn.Storage.SignalR</AssemblyName>
+    <RootNamespace>Hasseware.AspNetCore.Components.Bpmn.Storage.SignalR</RootNamespace>
+    <PackageId>Hasseware.AspNetCore.Components.Bpmn.Storage.SignalR</PackageId>
+    <Description>Preview. Tells editors that the BPMN document they have open was changed by someone else, over SignalR: an authenticated hub, one subscription per document, bounded per caller.</Description>
+    <PackageTags>bpmn;storage;signalr;live-updates</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bpmn\Hasseware.AspNetCore.Components.Bpmn.csproj" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

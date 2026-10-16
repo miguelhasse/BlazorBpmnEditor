@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1140 560" role="img" aria-labelledby="title desc">
+  <title id="title">Document store packages (preview)</title>
+  <desc id="desc">The Azure Blob, EF Core and file stores each reference Core. The Event Grid sample references the Azure Blob store; the PostgreSQL sample references Core. Both samples forward a backend change signal to the change bus.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="140%"><feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity=".13"/></filter>
+    <style>
+      text { font-family: Segoe UI, Arial, sans-serif; font-size: 16px; } text:not([fill]) { fill: #1e293b; }
+      .cs { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.5; filter: url(#shadow); }
+      .test { fill: #f1f5f9; stroke: #94a3b8; stroke-width: 1.5; filter: url(#shadow); }
+      .edge { fill: none; stroke: #2563eb; stroke-width: 2; marker-end: url(#arrow); }
+      .heading { font-size: 24px; font-weight: 700; } .name { font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="1140" height="560" fill="#f8fafc"/>
+  <text x="570" y="38" text-anchor="middle" class="heading">Document store packages (preview)</text>
+  <text x="570" y="64" text-anchor="middle" fill="#64748b">Solid: dependent → referenced project. Samples are reference code, not packages.</text>
+  <line x1="40" y1="84" x2="1100" y2="84" stroke="#e2e8f0" stroke-width="1.5"/>
+  <path class="edge" d="M210 190V250"/>
+  <path class="edge" d="M210 350V385H500V420"/>
+  <path class="edge" d="M570 350V420"/>
+  <path class="edge" d="M930 350V385H640V420"/>
+  <path class="edge" d="M780 465H720"/>
+  <g transform="translate(60 90)"><rect class="test" width="300" height="100" rx="8"/>
+    <text x="150" y="34" text-anchor="middle"><tspan class="name">samples/BlobEventGridIngress</tspan><tspan x="150" dy="25">Event Grid blob events → change bus</tspan><tspan x="150" dy="25">reference ingress, tested</tspan></text>
+  </g>
+  <g transform="translate(60 250)"><rect class="cs" width="300" height="100" rx="8"/>
+    <text x="150" y="34" text-anchor="middle"><tspan class="name">Bpmn.Storage.AzureBlob</tspan><tspan x="150" dy="25">src/Bpmn.Storage.AzureBlob</tspan><tspan x="150" dy="25">ETag revision, If-Match writes</tspan></text>
+  </g>
+  <g transform="translate(420 250)"><rect class="cs" width="300" height="100" rx="8"/>
+    <text x="150" y="34" text-anchor="middle"><tspan class="name">Bpmn.Storage.EfCore</tspan><tspan x="150" dy="25">src/Bpmn.Storage.EfCore</tspan><tspan x="150" dy="25">one table, version column revision</tspan></text>
+  </g>
+  <g transform="translate(780 250)"><rect class="cs" width="300" height="100" rx="8"/>
+    <text x="150" y="34" text-anchor="middle"><tspan class="name">Bpmn.Storage.FileSystem</tspan><tspan x="150" dy="25">src/Bpmn.Storage.FileSystem</tspan><tspan x="150" dy="25">Folder-backed document store</tspan></text>
+  </g>
+  <g transform="translate(420 420)"><rect class="cs" width="300" height="90" rx="8"/>
+    <text x="150" y="28" text-anchor="middle"><tspan class="name">Bpmn (Core)</tspan><tspan x="150" dy="25">src/Bpmn</tspan><tspan x="150" dy="25">IBpmnDocumentStore, change bus, ingress</tspan></text>
+  </g>
+  <g transform="translate(780 420)"><rect class="test" width="300" height="90" rx="8"/>
+    <text x="150" y="28" text-anchor="middle"><tspan class="name">samples/PostgresNotifyIngress</tspan><tspan x="150" dy="25">LISTEN/NOTIFY → change bus</tspan><tspan x="150" dy="25">reference ingress, tested</tspan></text>
+  </g>
+</svg>

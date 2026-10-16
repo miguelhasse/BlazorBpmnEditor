@@ -101,6 +101,21 @@ describe('targetAt', () => {
     expect(targetAt(graph, { x: 300, y: 200 }, 'task', noSnap).containerId).toBe('SubProcess_1');
   });
 
+  it('does not take a Task that only carries a Boundary Event for a container', () => {
+    const host = place('Task_1', 'task', { x: 100, y: 100, width: 400, height: 300 });
+    host.embed(place('Boundary_1', 'boundaryEvent', { x: 480, y: 200, width: 36, height: 36 }));
+
+    // The boundary event is embedded so that it travels with its host; a drop on the host is a drop on the plane, not into the Task.
+    expect(targetAt(graph, { x: 300, y: 250 }, 'task', noSnap).containerId).toBeNull();
+  });
+
+  it('still takes a Task that holds another element for a container', () => {
+    const host = place('Task_1', 'task', { x: 100, y: 100, width: 400, height: 300 });
+    host.embed(place('Inner_1', 'task', { x: 150, y: 150, width: 100, height: 80 }));
+
+    expect(targetAt(graph, { x: 400, y: 330 }, 'task', noSnap).containerId).toBe('Task_1');
+  });
+
   it('reports the deepest container, not the outermost', () => {
     const outer = place('SubProcess_1', 'subProcess', { x: 0, y: 0, width: 600, height: 500 });
     const inner = place('SubProcess_2', 'subProcess', { x: 100, y: 100, width: 400, height: 300 });

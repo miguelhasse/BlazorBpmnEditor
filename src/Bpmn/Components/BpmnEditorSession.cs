@@ -142,6 +142,12 @@ public sealed partial class BpmnEditorSession
     /// <summary>Whether there is an edit to redo.</summary>
     public bool CanRedo => _history?.CanRedo ?? false;
 
+    /// <summary>Who asked for the edit <see cref="UndoAsync"/> would reverse, or null when there is none.</summary>
+    public BpmnEditOrigin? UndoOrigin => _history?.UndoOrigin;
+
+    /// <summary>Who asked for the edit <see cref="RedoAsync"/> would reapply, or null when there is none.</summary>
+    public BpmnEditOrigin? RedoOrigin => _history?.RedoOrigin;
+
     /// <summary>Steps back one edit.</summary>
     public Task UndoAsync() => ReplayAsync(history => history.Undo());
 
@@ -602,7 +608,13 @@ public sealed partial class BpmnEditorSession
                 .ConfigureAwait(true);
         }
 
-        if (!result.IsApplied) return;
+        if (!result.IsApplied)
+        {
+            // A drag or a re-routed connector is shown on the canvas before the document hears of it. A refusal leaves the document as it was, so its
+            // parameter does not change and nothing would put the shape back: draw it again.
+            if (result.Rejections.Any() && _canvas is { } canvas) await canvas.ResyncAsync().ConfigureAwait(true);
+            return;
+        }
 
         await PublishAsync(result.Document).ConfigureAwait(true);
         NotifyStateChanged();
@@ -633,6 +645,10 @@ public sealed partial class BpmnEditorSession
     private Task PublishAsync(BpmnDocument document)
     {
         _lastPublished = document;
+
+        // Before the host hears of it, so a host that re-renders on the event already hands back the
+        // binding's document, and the echo is recognised as this editor's own edit.
+        DocumentBinding?.Track(document);
         return OnDocumentChanged.InvokeAsync(document);
     }
 

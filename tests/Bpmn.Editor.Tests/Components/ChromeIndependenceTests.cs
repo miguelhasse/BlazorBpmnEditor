@@ -12,7 +12,7 @@ public sealed class ChromeIndependenceTests
     [
         typeof(BpmnContextMenu), typeof(BpmnContextualActions), typeof(BpmnToolbar), typeof(BpmnStencilPanel),
         typeof(BpmnPropertyPanel), typeof(BpmnValidationPanel), typeof(BpmnDiagramNavigator), typeof(BpmnShortcutHelp),
-        typeof(BpmnImportOffer), typeof(BpmnCalledElementPicker), typeof(BpmnTemplateChooser), typeof(BpmnReferenceBrowser),
+        typeof(BpmnImportOffer), typeof(BpmnExternalChangeOffer), typeof(BpmnAgentConfirmation), typeof(BpmnCalledElementPicker), typeof(BpmnTemplateChooser), typeof(BpmnReferenceBrowser),
     ];
 
     private static readonly Dictionary<short, OpCode> OpCodes = typeof(OpCodes)

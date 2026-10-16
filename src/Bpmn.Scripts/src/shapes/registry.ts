@@ -221,7 +221,7 @@ function createEventCell(
   const center = { cx: shape.bounds.width / 2, cy: shape.bounds.height / 2 };
   const radiusScale = shape.bounds.width / constants.EVENT_SIZE;
   const icon = templateIconOf(node);
-  const iconSize = constants.EVENT_ICON_BOX * radiusScale;
+  const iconSize = constants.EVENT_TEMPLATE_ICON_BOX * radiusScale;
 
   const cell = new BpmnEventElement({
     id: node.id,

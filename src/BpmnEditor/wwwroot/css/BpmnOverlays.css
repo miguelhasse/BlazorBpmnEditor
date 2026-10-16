@@ -676,6 +676,165 @@
   opacity: 0.5;
 }
 
+/* --- agent confirmation -------------------------------------------------------- */
+
+.bpmn-confirm {
+  position: absolute;
+  inset: 0;
+  z-index: 45;
+  display: grid;
+  place-items: center;
+  font-family: var(--bpmn-font-family);
+}
+
+.bpmn-confirm__backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--bpmn-overlay-scrim);
+}
+
+.bpmn-confirm__panel {
+  position: relative;
+  min-inline-size: 20rem;
+  max-inline-size: min(30rem, calc(100% - 2rem));
+  max-block-size: calc(100% - 2rem);
+  overflow: auto;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--bpmn-surface-border);
+  border-radius: 6px;
+  background: var(--bpmn-surface-background);
+  color: var(--bpmn-surface-foreground);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 25%);
+  font-size: 0.8125rem;
+}
+
+.bpmn-confirm__panel--destructive {
+  border-color: var(--bpmn-error-color);
+}
+
+.bpmn-confirm__origin {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
+
+.bpmn-confirm__title {
+  margin-block: 0 0.5rem;
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+
+.bpmn-confirm__summary {
+  margin: 0;
+}
+
+/* Quoted diagram content: set apart, so it never reads as part of the question. */
+.bpmn-confirm__details {
+  margin: 0.6rem 0 0;
+  padding: 0.4rem 0.6rem 0.4rem 1.6rem;
+  border-inline-start: 3px solid var(--bpmn-surface-border);
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+  opacity: 0.9;
+}
+
+.bpmn-confirm__actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-block-start: 1rem;
+}
+
+.bpmn-confirm__deny,
+.bpmn-confirm__allow {
+  padding: 0.35rem 1rem;
+  border: 1px solid var(--bpmn-surface-border);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.bpmn-confirm__allow {
+  border-color: var(--bpmn-selection-color);
+  background: var(--bpmn-selection-color);
+  color: var(--bpmn-fill);
+}
+
+.bpmn-confirm__panel--destructive .bpmn-confirm__allow {
+  border-color: var(--bpmn-error-color);
+  background: var(--bpmn-error-color);
+}
+
+.bpmn-confirm__deny:hover {
+  background: var(--bpmn-surface-hover);
+}
+
+/* --- external change offer ---------------------------------------------------- */
+
+/*
+ * A notice rather than a dialog: anchored to the top of the editor, it leaves the diagram usable so the
+ * user can look at what they have before choosing.
+ */
+.bpmn-change {
+  position: absolute;
+  inset-block-start: 0.75rem;
+  inset-inline: 0;
+  z-index: 35;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  inline-size: fit-content;
+  max-inline-size: calc(100% - 2rem);
+  margin-inline: auto;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--bpmn-warning-color);
+  border-radius: 6px;
+  background: var(--bpmn-surface-background);
+  color: var(--bpmn-surface-foreground);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
+  font-family: var(--bpmn-font-family);
+  font-size: 0.8125rem;
+}
+
+.bpmn-change__message {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.bpmn-change__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.bpmn-change__action {
+  padding: 0.3rem 0.85rem;
+  border: 1px solid var(--bpmn-surface-border);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.bpmn-change__action:hover {
+  background: var(--bpmn-surface-hover);
+}
+
+.bpmn-change__action--primary {
+  border-color: var(--bpmn-selection-color);
+  background: var(--bpmn-selection-color);
+  color: var(--bpmn-fill);
+}
+
+.bpmn-change__action:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 .bpmn-properties details.bpmn-properties__group { display: block; }
 .bpmn-properties details.bpmn-properties__group > summary {
     cursor: pointer;
@@ -684,16 +843,6 @@
 .bpmn-properties__group--extension {
     border-inline-start: 3px solid var(--bpmn-chrome-border);
     padding-inline-start: .6rem;
-}
-.bpmn-properties__namespace-badge {
-    display: inline-block;
-    margin-inline-start: .4rem;
-    padding: .1rem .3rem;
-    border: 1px solid currentColor;
-    border-radius: .25rem;
-    font-size: .7rem;
-    font-weight: normal;
-    overflow-wrap: anywhere;
 }
 .bpmn-properties__description, .bpmn-properties__error {
     display: block;

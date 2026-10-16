@@ -34,11 +34,11 @@
                 @foreach (var command in Entries)
                 {
                     <FluentButton Type="ButtonType.Button"
-                            Class="bpmn-menu__item"
-                            role="menuitem"
-                            @key="command.Command"
-                            Disabled="@(!command.IsEnabled)"
-                            OnClick="@(() => InvokeAsync(command.Command))">
+                                  Class="bpmn-menu__item"
+                                  role="menuitem"
+                                  @key="command.Command"
+                                  Disabled="@(!command.IsEnabled)"
+                                  OnClick="@(() => InvokeAsync(command.Command))">
                         @LabelFor(command)
                     </FluentButton>
                 }
@@ -58,12 +58,12 @@
                 @foreach (var option in switchable.SwitchableTypes)
                 {
                     <FluentButton Type="ButtonType.Button"
-                            Class="bpmn-menu__item bpmn-menu__item--type"
-                            role="menuitemradio"
-                            aria-checked="@(option.IsCurrent ? "true" : "false")"
-                            @key="@($"{option.Type}:{option.EventDefinition}")"
-                            Disabled="@option.IsCurrent"
-                            OnClick="@(() => SwitchTypeAsync(option))">
+                                  Class="bpmn-menu__item bpmn-menu__item--type"
+                                  role="menuitemradio"
+                                  aria-checked="@(option.IsCurrent ? "true" : "false")"
+                                  @key="@($"{option.Type}:{option.EventDefinition}")"
+                                  Disabled="@option.IsCurrent"
+                                  OnClick="@(() => SwitchTypeAsync(option))">
                         @Display.TypeOption(option)
                     </FluentButton>
                 }
@@ -77,8 +77,8 @@
                 <p class="bpmn-menu__heading">@PropertiesLabel</p>
 
                 <FluentBpmnPropertyForm Properties="@described.Properties"
-                                  Revision="@Revision"
-                                  OnEdit="@SetAsync" />
+                                        Revision="@Revision"
+                                        OnEdit="@SetAsync" />
             </div>
         }
 

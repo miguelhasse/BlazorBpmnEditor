@@ -190,6 +190,30 @@ public sealed class BpmnDocumentEditorTests
     }
 
     [Fact]
+    public void PreviewsEverythingADeleteWouldRemoveWithoutChangingTheDocument()
+    {
+        var document = Diagram();
+
+        var closure = BpmnDocumentEditor.DeletionClosure(document, ["Task_1", "No_Such_Element"]);
+
+        // The task, and the flow that touches it; an id that names nothing is ignored (the delete itself would refuse it).
+        Assert.Equal(["Flow_1", "Task_1"], closure.Order(StringComparer.Ordinal));
+        Assert.Contains("Task_1", document.FlowNodes.Select(node => node.Id));
+    }
+
+    [Fact]
+    public void PreviewsTheContentsOfASubProcessAsPartOfItsDeletion()
+    {
+        var document = new BpmnDocumentBuilder("Process_1")
+            .Node("Sub_1", BpmnFlowNodeType.SubProcess, new Bounds(100, 100, 400, 300), "Sub", isExpanded: true)
+            .Node("A", BpmnFlowNodeType.Task, new Bounds(150, 150, 100, 80), "A", containerId: "Sub_1")
+            .Node("B", BpmnFlowNodeType.Task, new Bounds(300, 150, 100, 80), "B", containerId: "Sub_1")
+            .Build();
+
+        Assert.Equal(["A", "B", "Sub_1"], BpmnDocumentEditor.DeletionClosure(document, ["Sub_1"]).Order(StringComparer.Ordinal));
+    }
+
+    [Fact]
     public void LeavesNoDanglingDiBehind()
     {
         // Section 10.1: a shape or edge whose bpmnElement no longer resolves must not survive.

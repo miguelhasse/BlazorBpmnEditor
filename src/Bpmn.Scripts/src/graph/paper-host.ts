@@ -213,6 +213,31 @@ export class PaperHost {
 }
 
 /**
+ * The visible area, inflated by itself in every direction: where a cell is worth drawing.
+ *
+ * Worked out once per pass, not once per cell. `paper.getArea()` asks the browser for the paper's computed size, which
+ * forces a style recalculation, and the pass asks about every cell: on the six-hundred-shape benchmark that call was the
+ * hottest function in a delete and in a zoom-out. The answer cannot change inside one task unless the transform does, so
+ * it is kept until the task ends and thrown away at once if the paper's matrix moves.
+ */
+let visibleMarginCache: { readonly paper: dia.Paper; readonly key: string; readonly margin: g.Rect } | null = null;
+
+function visibleMargin(paper: dia.Paper): g.Rect {
+  const { a, d, e, f } = paper.matrix();
+  const key = [a, d, e, f].join();
+  if (visibleMarginCache?.paper === paper && visibleMarginCache.key === key) return visibleMarginCache.margin;
+
+  const area = paper.getArea();
+  const margin = area.inflate(area.width, area.height);
+  const entry = { paper, key, margin };
+  visibleMarginCache = entry;
+  queueMicrotask(() => {
+    if (visibleMarginCache === entry) visibleMarginCache = null;
+  });
+  return margin;
+}
+
+/**
  * Whether a cell is near enough to the visible area to be worth drawing.
  *
  * Measured against the model's own bounds rather than the rendered view: the view is what this is
@@ -222,8 +247,7 @@ function isWithinViewport(view: { readonly model?: unknown }, paper: dia.Paper):
   const cell = view.model;
   if (!(cell instanceof dia.Cell)) return true;
 
-  const area = paper.getArea();
-  const margin = area.inflate(area.width, area.height);
+  const margin = visibleMargin(paper);
 
   if (cell.isElement()) return margin.intersect(cell.getBBox()) !== null;
 

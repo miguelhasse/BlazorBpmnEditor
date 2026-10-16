@@ -4,7 +4,6 @@
 @using Hasseware.AspNetCore.Components.Bpmn.Validation
 
 <div class="@(Block + "__property " + Block + "__list")" title="@Entry.Tooltip">
-    <span class="@(Block + "__label")">@Entry.Label</span>
     <table class="@(Block + "__table")" aria-label="@Entry.Label">
         <thead><tr>
             @foreach (var column in VisibleColumns)

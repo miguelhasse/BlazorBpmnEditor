@@ -52,6 +52,11 @@
         <target state="translated">Изменено: узлов — {0}, потоков — {1}.</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.EditedElsewhere">
+        <source>{0} (edited elsewhere)</source>
+        <target state="translated">{0} (изменено в другом месте)</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.ExecutionState">
         <source>Execution state</source>
         <target state="translated">Состояние выполнения</target>
@@ -117,6 +122,21 @@
         <target state="translated">Отрисовано фигур: {0}, соединителей: {1} на «{2}»</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.Save">
+        <source>Save</source>
+        <target state="translated">Сохранить</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SaveConflict">
+        <source>Not saved: the stored document was changed elsewhere.</source>
+        <target state="translated">Не сохранено: сохраненный документ был изменен в другом месте.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Saved">
+        <source>Saved (revision {0})</source>
+        <target state="translated">Сохранено (ревизия {0})</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.SelectedElement">
         <source>Selected {0}.</source>
         <target state="translated">Выбран {0}.</target>
@@ -132,6 +152,11 @@
         <target state="translated">Служба не ответила вовремя.</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.SimulateExternalChange">
+        <source>Simulate external change</source>
+        <target state="translated">Имитировать внешнее изменение</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.SnapToGrid">
         <source>Snap to grid</source>
         <target state="translated">Привязка к сетке</target>
@@ -145,6 +170,41 @@
       <trans-unit id="Editor.Unrendered">
         <source> ({0} DI entries had no matching element)</source>
         <target state="translated"> (записей DI без соответствующего элемента: {0})</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Unsaved">
+        <source>Unsaved changes</source>
+        <target state="translated">Несохраненные изменения</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcp">
+        <source>Offer to browser agents (WebMCP)</source>
+        <target state="translated">Предложить агентам браузера (WebMCP)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpEdit">
+        <source>Let agents edit (deleting and saving ask you first)</source>
+        <target state="translated">Разрешить агентам редактировать (удаление и сохранение сначала спрашивают)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpFailed">
+        <source>The browser refused the tools</source>
+        <target state="translated">Браузер отклонил инструменты</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpRegistered">
+        <source>{0} read-only tools offered</source>
+        <target state="translated">Предложено инструментов только для чтения: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpRegisteredEditing">
+        <source>{0} tools offered, editing allowed</source>
+        <target state="translated">Предложено инструментов: {0}, редактирование разрешено</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpUnsupported">
+        <source>This browser has no WebMCP</source>
+        <target state="translated">В этом браузере нет WebMCP</target>
         <note />
       </trans-unit>
       <trans-unit id="ExportSeverity.Dropped">
@@ -435,6 +495,41 @@
       <trans-unit id="Interchange.Waypoints">
         <source>Waypoints</source>
         <target state="translated">Опорные точки</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Change">
+        <source>Change it on the server</source>
+        <target state="translated">Изменить на сервере</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Gaps">
+        <source>Reconnections:</source>
+        <target state="translated">Переподключения:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Intro">
+        <source>Watches a document in the server's store over Server-Sent Events, in the browser. Press Watch, then make a change on the server: it arrives here. The stream is closed by the server every few seconds so that you can see the connection reopen.</source>
+        <target state="translated">Следит за документом в хранилище сервера через Server-Sent Events прямо в браузере. Нажмите «Следить», затем внесите изменение на сервере: оно появится здесь. Сервер закрывает поток каждые несколько секунд, чтобы вы видели, как соединение открывается заново.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Path">
+        <source>Document</source>
+        <target state="translated">Документ</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.State">
+        <source>Feed:</source>
+        <target state="translated">Канал:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Title">
+        <source>Live updates</source>
+        <target state="translated">Обновления в реальном времени</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Watch">
+        <source>Watch</source>
+        <target state="translated">Следить</target>
         <note />
       </trans-unit>
       <trans-unit id="No">

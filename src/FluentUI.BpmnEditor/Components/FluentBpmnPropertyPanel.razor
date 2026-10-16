@@ -3,133 +3,149 @@
 @inherits BpmnPropertyPanelBase
 
 <BpmnPropertyScopeProvider Block="bpmn-properties" MultilineRows="3" Editors="@Session.Editors" IsReadOnly="@Inspecting" Document="@Document" Revision="@Revision">
-<section class="@CssClass("bpmn-properties")" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
-    @if (Snapshots.Count == 0)
-    {
-        @if (EmptyTemplate is not null) { @EmptyTemplate }
-        else { <p class="bpmn-properties__empty">@EditorText("PropertyPanel.Empty")</p> }
-    }
-    else
-    {
-        <header class="bpmn-properties__header">
-            <h2 class="bpmn-properties__title">@Title</h2>
-            @if (Subtitle is { Length: > 0 } subtitle)
+    <section class="@CssClass("bpmn-properties")" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+        @if (Snapshots.Count == 0)
+        {
+            @if (EmptyTemplate is not null)
             {
-                <p class="bpmn-properties__subtitle">@subtitle</p>
-            }
-        </header>
-
-        @if (Only is { } one)
-        {
-            <FluentBpmnTemplateChooser Element="@one" />
-            <dl class="bpmn-properties__identity">
-                <div class="bpmn-properties__fact">
-                    <dt>@EditorText("PropertyPanel.Id")</dt>
-                    <dd>
-
-                        <FluentTextInput Class="bpmn-properties__text bpmn-properties__id" ReadOnly="@Inspecting"
-                                         Value="@one.ElementId" AriaLabel="@EditorText("PropertyPanel.ElementId")"
-                                         @key="@($"id:{one.ElementId}:{Revision}")"
-                                         ValueChanged="@(value => RenameAsync(one.ElementId, value))" />
-                    </dd>
-                </div>
-                @if (one.ContainerId is { Length: > 0 } container)
-                {
-                    <div class="bpmn-properties__fact">
-                        <dt>@EditorText("PropertyPanel.Container")</dt>
-                        <dd>@container</dd>
-                    </div>
-                }
-                @if (one.LaneId is { Length: > 0 } lane)
-                {
-                    <div class="bpmn-properties__fact">
-                        <dt>@EditorText("PropertyPanel.Lane")</dt>
-                        <dd>@lane</dd>
-                    </div>
-                }
-                @if (one.PoolId is { Length: > 0 } pool)
-                {
-                    <div class="bpmn-properties__fact">
-                        <dt>@EditorText("PropertyPanel.Pool")</dt>
-                        <dd>@pool</dd>
-                    </div>
-                }
-            </dl>
-        }
-
-        @if (Groups.Count == 0)
-        {
-            if (EmptyTemplate is not null) { @EmptyTemplate }
-            else { <p class="bpmn-properties__empty">@NothingToEdit</p> }
-        }
-        @foreach (var group in Groups)
-        {
-            var context = BuildGroupContext(group);
-            if (GroupTemplate is not null)
-            {
-                @GroupTemplate(context)
+                @EmptyTemplate
             }
             else
             {
-                <FluentAccordion><FluentAccordionItem Class="@("bpmn-properties__group " + (group.Namespace is not null ? "bpmn-properties__group--extension" : null))"
-                         Expanded="@group.OpenByDefault" data-group-id="@group.Id" @key="@(group.Id + ":" + Only?.ElementId)">
-                    <HeaderTemplate><span class="bpmn-properties__heading" title="@group.Tooltip">
-                        @(group.Label ?? group.Id)
-                        @if (group.Namespace is not null)
-                        {
-                            <span class="bpmn-properties__namespace-badge">@group.Namespace</span>
-                        }
-                    </span></HeaderTemplate>
-                    <ChildContent><div class="bpmn-properties__properties" role="group" aria-label="@(group.Label ?? group.Id)">
-                        @foreach (var entry in context.Entries)
-                        {
-                            @RenderEntry(BuildEntryContext(entry))
-                        }
-                    </div>
-                </ChildContent></FluentAccordionItem></FluentAccordion>
+
+                <p class="bpmn-properties__empty">@EditorText("PropertyPanel.Empty")</p>
             }
         }
-        @if (Only is not null)
+        else
         {
-            <div class="bpmn-properties__group">
-                <FluentBpmnReferenceBrowser />
-            </div>
-        }
+            <header class="bpmn-properties__header">
+                <h2 class="bpmn-properties__title">@Title</h2>
+                @if (Subtitle is { Length: > 0 } subtitle)
+                {
+                    <p class="bpmn-properties__subtitle">@subtitle</p>
+                }
+            </header>
 
-        @if (Diagnostics.Count > 0)
-        {
-            <div class="bpmn-properties__group">
-                <h3 class="bpmn-properties__heading">@EditorText("PropertyPanel.Problems")</h3>
-                <ul class="bpmn-properties__diagnostics">
-                    @foreach (var diagnostic in Diagnostics)
+            @if (Only is { } one)
+            {
+                <FluentBpmnTemplateChooser Element="@one" />
+                <dl class="bpmn-properties__identity">
+                    <div class="bpmn-properties__fact">
+                        <dt>@EditorText("PropertyPanel.Id")</dt>
+                        <dd>
+
+                            <FluentTextInput Class="bpmn-properties__text bpmn-properties__id" ReadOnly="@Inspecting"
+                                             Value="@one.ElementId" AriaLabel="@EditorText("PropertyPanel.ElementId")"
+                                             @key="@($"id:{one.ElementId}:{Revision}")"
+                                             ValueChanged="@(value => RenameAsync(one.ElementId, value))" />
+                        </dd>
+                    </div>
+                    @if (one.ContainerId is { Length: > 0 } container)
                     {
-                        <li class="bpmn-properties__diagnostic bpmn-properties__diagnostic--@(diagnostic.Severity.ToString().ToLowerInvariant())">
-                            <span class="bpmn-properties__code">@diagnostic.RuleId</span>
-                            <span>@MessageOf(diagnostic)</span>
-                        </li>
+                        <div class="bpmn-properties__fact">
+                            <dt>@EditorText("PropertyPanel.Container")</dt>
+                            <dd>@container</dd>
+                        </div>
                     }
-                </ul>
-            </div>
-        }
-
-        @if (Extensions.Count > 0)
-        {
-
-            <div class="bpmn-properties__group">
-                <h3 class="bpmn-properties__heading">@EditorText("PropertyPanel.Extensions")</h3>
-                <ul class="bpmn-properties__extensions">
-                    @foreach (var extension in Extensions)
+                    @if (one.LaneId is { Length: > 0 } lane)
                     {
-                        <li class="bpmn-properties__extension">
-                            <code>@extension.Name</code>
-                            <span class="bpmn-properties__namespace">@extension.Namespace</span>
-                        </li>
+                        <div class="bpmn-properties__fact">
+                            <dt>@EditorText("PropertyPanel.Lane")</dt>
+                            <dd>@lane</dd>
+                        </div>
                     }
-                </ul>
+                    @if (one.PoolId is { Length: > 0 } pool)
+                    {
+                        <div class="bpmn-properties__fact">
+                            <dt>@EditorText("PropertyPanel.Pool")</dt>
+                            <dd>@pool</dd>
+                        </div>
+                    }
+                </dl>
+            }
 
-                <p class="bpmn-properties__note">@EditorText("PropertyPanel.ExtensionsNote")</p>
-            </div>
+            @if (Groups.Count == 0)
+            {
+                if (EmptyTemplate is not null)
+                {
+                    @EmptyTemplate
+                }
+                else
+                {
+
+                    <p class="bpmn-properties__empty">@NothingToEdit</p>
+                }
+            }
+            @foreach (var group in Groups)
+            {
+                var context = BuildGroupContext(group);
+                if (GroupTemplate is not null)
+                {
+                    @GroupTemplate(context)
+                }
+                else
+                {
+                    <FluentAccordion>
+                        <FluentAccordionItem Class="@("bpmn-properties__group " + (group.Namespace is not null ? "bpmn-properties__group--extension" : null))"
+                                             Expanded="@group.OpenByDefault" data-group-id="@group.Id" @key="@(group.Id + ":" + Only?.ElementId)">
+                            <HeaderTemplate>
+                                <span class="bpmn-properties__heading" title="@group.Tooltip">
+                                    @(group.Label ?? group.Id)
+                                </span>
+                            </HeaderTemplate>
+                            <ChildContent>
+                                <div class="bpmn-properties__properties" role="group" aria-label="@(group.Label ?? group.Id)">
+                                    @foreach (var entry in context.Entries)
+                                    {
+                                        @RenderEntry(BuildEntryContext(entry))
+                                    }
+                                </div>
+                            </ChildContent>
+                        </FluentAccordionItem>
+                    </FluentAccordion>
+                }
+            }
+            @if (Only is not null)
+            {
+                <div class="bpmn-properties__group">
+                    <FluentBpmnReferenceBrowser />
+                </div>
+            }
+
+            @if (Diagnostics.Count > 0)
+            {
+                <div class="bpmn-properties__group">
+                    <h3 class="bpmn-properties__heading">@EditorText("PropertyPanel.Problems")</h3>
+                    <ul class="bpmn-properties__diagnostics">
+                        @foreach (var diagnostic in Diagnostics)
+                        {
+                            <li class="bpmn-properties__diagnostic bpmn-properties__diagnostic--@(diagnostic.Severity.ToString().ToLowerInvariant())">
+                                <span class="bpmn-properties__code">@diagnostic.RuleId</span>
+                                <span>@MessageOf(diagnostic)</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            @if (Extensions.Count > 0)
+            {
+
+                <div class="bpmn-properties__group">
+                    <h3 class="bpmn-properties__heading">@EditorText("PropertyPanel.Extensions")</h3>
+                    <ul class="bpmn-properties__extensions">
+                        @foreach (var extension in Extensions)
+                        {
+                            <li class="bpmn-properties__extension">
+                                <code>@extension.Name</code>
+                                <span class="bpmn-properties__namespace">@extension.Namespace</span>
+                            </li>
+                        }
+                    </ul>
+
+                    <p class="bpmn-properties__note">@EditorText("PropertyPanel.ExtensionsNote")</p>
+                </div>
+            }
         }
-    }
-</section>
+    </section>
 </BpmnPropertyScopeProvider>

@@ -12,6 +12,9 @@ import { GuideLayer } from './guide-layer.js';
  */
 interface MoveOptions {
   readonly translateBy?: unknown;
+
+  /** Set by a render that is making the graph match the document: the position is dictated, not dragged. */
+  readonly reconcile?: boolean;
 }
 
 /**
@@ -56,6 +59,9 @@ export class SnapController {
     // The correction below is itself a position change; without this guard it would re-enter
     // and snap against the peer it just aligned to.
     if (this.#applying || !cell.isElement()) return;
+
+    // The document says where it goes: an undo or a reload must not nudge it toward a neighbour.
+    if (options?.reconcile === true) return;
 
     /*
      * Not when an ancestor is carrying it.

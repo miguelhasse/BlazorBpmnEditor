@@ -89,9 +89,9 @@ export interface PointContract {
  * text field here could only ever shadow it with an empty value.
  */
 export interface BpmnLabelContract {
-  readonly id: string | null;
+  readonly id?: string | null;
   readonly bounds: BoundsContract | null;
-  readonly styleId: string | null;
+  readonly styleId?: string | null;
 }
 
 /**
@@ -104,7 +104,7 @@ export interface BpmnShapeContract {
   readonly bounds: BoundsContract;
   readonly isHorizontal: boolean | null;
   readonly isExpanded: boolean | null;
-  readonly isMarkerVisible: boolean | null;
+  readonly isMarkerVisible?: boolean | null;
   readonly label: BpmnLabelContract | null;
 }
 
@@ -146,9 +146,9 @@ export interface BpmnExtensionElementContract {
  * holds it: dictionary keys are not camel-cased on the way across.
  */
 export interface BpmnElementExtrasContract {
-  readonly documentation: string | null;
+  readonly documentation?: string | null;
   readonly foreignAttributes: Readonly<Record<string, string>>;
-  readonly extensions: readonly BpmnExtensionElementContract[];
+  readonly extensions?: readonly BpmnExtensionElementContract[];
 }
 
 /** Section 6 flowNode. */
@@ -164,7 +164,7 @@ export interface BpmnFlowNodeContract {
   readonly laneId: string | null;
   readonly isForCompensation: boolean;
   readonly loopCharacteristics: BpmnLoopCharacteristics;
-  readonly instantiate: boolean;
+  readonly instantiate?: boolean;
   readonly calledElementRef: string | null;
   readonly flowElementsOwned: boolean;
   /** Preserved vendor content; optional because hand-built documents may omit it. */
@@ -186,7 +186,7 @@ export interface BpmnMessageFlowContract {
   readonly name: string | null;
   readonly sourceRef: string;
   readonly targetRef: string;
-  readonly messageRef: string | null;
+  readonly messageRef?: string | null;
 }
 
 export interface BpmnAssociationContract {
@@ -203,7 +203,7 @@ export interface BpmnDataAssociationContract {
   readonly sourceRefs: readonly string[];
   readonly targetRef: string;
   readonly containerId: string;
-  readonly transformation: string | null;
+  readonly transformation?: string | null;
 }
 
 /** Section 1.6 artifacts and section 1.4 data — none of which are flow nodes. */
@@ -216,7 +216,7 @@ export interface BpmnTextAnnotationContract {
 export interface BpmnGroupContract {
   readonly id: string;
   readonly name: string | null;
-  readonly categoryValueRef: string | null;
+  readonly categoryValueRef?: string | null;
   readonly containerId: string;
 }
 
@@ -278,7 +278,7 @@ export interface BpmnDefinitionsContract {
 
 export interface BpmnDocumentContract {
   readonly definitions: BpmnDefinitionsContract;
-  readonly processes: readonly BpmnProcessContract[];
+  readonly processes?: readonly BpmnProcessContract[];
   readonly collaboration: BpmnCollaborationContract | null;
   readonly laneSets: readonly BpmnLaneSetContract[];
   readonly lanes: readonly BpmnLaneContract[];

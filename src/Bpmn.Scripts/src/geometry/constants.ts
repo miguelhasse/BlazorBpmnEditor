@@ -90,6 +90,9 @@ export const TASK_ICON_INSET = 8;
 /** Event trigger glyph, centred in the rings (section 4.2). */
 export const EVENT_ICON_BOX = 28;
 
+/** An element-template icon drawn in place of an Event glyph: the same 18 units as on an Activity. */
+export const EVENT_TEMPLATE_ICON_BOX = 18;
+
 /** Gateway glyph, centred in the diamond (section 4.1). */
 export const GATEWAY_ICON_BOX = 34;
 

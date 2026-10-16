@@ -17,10 +17,10 @@
     }
 
     <FluentButton Type="ButtonType.Button"
-            IconStart="@(new Icons.Regular.Size20.ArrowRight())" Class="bpmn-diagrams__open"
-            Disabled="@(!CanDrill)"
-            Title="@OpenTitle"
-            OnClick="@(() => DrillAsync())">
+                  IconStart="@(new Icons.Regular.Size20.ArrowRight())" Class="bpmn-diagrams__open"
+                  Disabled="@(!CanDrill)"
+                  Title="@OpenTitle"
+                  OnClick="@(() => DrillAsync())">
         @EditorText("DiagramNavigator.Open")
     </FluentButton>
 </div>

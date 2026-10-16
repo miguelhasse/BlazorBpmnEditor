@@ -1,0 +1,39 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.AspNetCore.Components.Bpmn.Resources.BpmnEditorStrings> EditorL
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnAgentConfirmationBase
+
+@if (Request is { } request)
+{
+    <div class="@CssClass("bpmn-confirm")" role="alertdialog" aria-modal="true" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+        <div class="bpmn-confirm__backdrop" @onclick="DenyAsync"></div>
+
+        <div class="bpmn-confirm__panel @(request.IsDestructive ? "bpmn-confirm__panel--destructive" : null)">
+            <p class="bpmn-confirm__origin">@EditorText("AgentConfirmation.RequestedBy", AgentName)</p>
+            <h2 class="bpmn-confirm__title">@request.Title</h2>
+            <p class="bpmn-confirm__summary">@request.Summary</p>
+
+            @if (request.Details.Count > 0)
+            {
+                @*
+                    Quoted diagram content, which anyone who could edit the document could have written.
+                    Plain text in its own list, so it can never read as part of the question.
+                *@
+                <ul class="bpmn-confirm__details" aria-label="@EditorText("AgentConfirmation.Details")">
+                    @foreach (var detail in request.Details)
+                    {
+                        <li>@detail</li>
+                    }
+                </ul>
+            }
+
+            <div class="bpmn-confirm__actions">
+                <button type="button" class="bpmn-confirm__deny" @onclick="DenyAsync">
+                    @EditorText("AgentConfirmation.Deny")
+                </button>
+                <button type="button" class="bpmn-confirm__allow" @onclick="AllowAsync">
+                    @EditorText("AgentConfirmation.Allow")
+                </button>
+            </div>
+        </div>
+    </div>
+}

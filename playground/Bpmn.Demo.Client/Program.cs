@@ -1,4 +1,6 @@
 using Hasseware.AspNetCore.Components.Bpmn.Feel;
+using Hasseware.AspNetCore.Components.Bpmn.Storage;
+using Hasseware.AspNetCore.Components.Bpmn.WebMcp;
 using Hasseware.FluentUI.AspNetCore.Components.Bpmn;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.FluentUI.AspNetCore.Components;
@@ -8,6 +10,13 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 builder.Services.AddFluentUIComponents();
 builder.Services.AddFluentBpmnEditor().AddBpmnFeelEditor();
+
+// Offers an open editor to browser agents through WebMCP, read-only, where the browser has it.
+builder.Services.AddBpmnWebMcp();
+
+// Documents load and save through the document store, and editors hear about writes by anyone else.
+// In memory here; a real host registers its own store (blob, database, file share) the same way.
+builder.Services.AddBpmnInMemoryDocumentStore().AddBpmnDocumentChanges();
 builder.Services.Configure<Hasseware.AspNetCore.Components.Bpmn.Configuration.BpmnOptions>(options =>
 {
     options.Extensions.AddZeebe().AddCamunda7();

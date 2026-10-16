@@ -2,6 +2,26 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
   <file datatype="xml" source-language="en" target-language="ru" original="../FluentBpmnEditorStrings.resx">
     <body>
+      <trans-unit id="AgentConfirmation.Allow">
+        <source>Allow</source>
+        <target state="translated">Разрешить</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Deny">
+        <source>Don't allow</source>
+        <target state="translated">Не разрешать</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.Details">
+        <source>Affected items</source>
+        <target state="translated">Затрагиваемые элементы</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AgentConfirmation.RequestedBy">
+        <source>Requested by {0}</source>
+        <target state="translated">Запрос от: {0}</target>
+        <note />
+      </trans-unit>
       <trans-unit id="CalledElementPicker.Cancel">
         <source>Cancel</source>
         <target state="translated">Отмена</target>
@@ -15,6 +35,56 @@
       <trans-unit id="DiagramNavigator.Open">
         <source>Open</source>
         <target state="translated">Открыть</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.ConfirmReload">
+        <source>Reloading discards your unsaved edits.</source>
+        <target state="translated">При перезагрузке несохраненные изменения будут потеряны.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.Deleted">
+        <source>{0} was deleted by someone else. Your version is still open here.</source>
+        <target state="translated">Документ {0} удален другим пользователем. Ваша версия по-прежнему открыта здесь.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.DiscardAndReload">
+        <source>Discard and reload</source>
+        <target state="translated">Отменить изменения и перезагрузить</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.Dismiss">
+        <source>Dismiss</source>
+        <target state="translated">Закрыть</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.KeepEditing">
+        <source>Keep editing</source>
+        <target state="translated">Продолжить редактирование</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.Reload">
+        <source>Reload</source>
+        <target state="translated">Перезагрузить</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.SaveAgain">
+        <source>Save again</source>
+        <target state="translated">Сохранить снова</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.SaveCopy">
+        <source>Save a copy</source>
+        <target state="translated">Сохранить копию</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.Updated">
+        <source>{0} was changed by someone else.</source>
+        <target state="translated">Документ {0} изменен другим пользователем.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExternalChangeOffer.UpdatedDirty">
+        <source>{0} was changed by someone else. Your unsaved edits are still here.</source>
+        <target state="translated">Документ {0} изменен другим пользователем. Ваши несохраненные изменения по-прежнему здесь.</target>
         <note />
       </trans-unit>
       <trans-unit id="FeelEntry.Toggle">

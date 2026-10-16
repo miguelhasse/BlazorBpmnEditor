@@ -22,7 +22,6 @@ public sealed class GroupedPropertyPanelTests : BunitContext
 
         Assert.Equal("General", panel.Find("details[data-group-id=general] summary").TextContent.Trim());
         Assert.NotNull(panel.Find("details[data-group-id=general]").GetAttribute("open"));
-        Assert.Equal("*", panel.Find(".bpmn-properties__namespace-badge").TextContent);
         Assert.Single(panel.FindAll("details.bpmn-properties__group--extension"));
         Assert.Equal(["Name", "Type"], panel.FindAll(".bpmn-properties__label").Select(e => e.TextContent));
     }

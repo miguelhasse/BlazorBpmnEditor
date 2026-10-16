@@ -901,6 +901,72 @@
   cursor: not-allowed;
   opacity: 0.5;
 }
+.fluent-bpmn-editor .bpmn-confirm__panel {
+  min-inline-size: 20rem;
+  max-inline-size: 30rem;
+}
+.fluent-bpmn-editor .bpmn-confirm__origin {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
+.fluent-bpmn-editor .bpmn-confirm__title {
+  margin-block: 0 0.5rem;
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+.fluent-bpmn-editor .bpmn-confirm__summary {
+  margin: 0;
+}
+.fluent-bpmn-editor .bpmn-confirm__details {
+  margin: 0.6rem 0 0;
+  padding: 0.4rem 0.6rem 0.4rem 1.6rem;
+  border-inline-start: 3px solid var(--bpmn-surface-border);
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+}
+.fluent-bpmn-editor .bpmn-confirm__actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-block-start: 1rem;
+}
+.fluent-bpmn-editor .bpmn-confirm__allow {
+  border-color: var(--bpmn-selection-color);
+  background: var(--bpmn-selection-color);
+  color: var(--bpmn-fill);
+}
+.fluent-bpmn-editor .bpmn-confirm__panel--destructive .bpmn-confirm__allow {
+  border-color: var(--bpmn-error-color);
+  background: var(--bpmn-error-color);
+}
+.fluent-bpmn-editor .bpmn-change {
+  position: absolute;
+  inset-block-start: 0.75rem;
+  inset-inline: 0;
+  z-index: 35;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  inline-size: fit-content;
+  max-inline-size: min(36rem, calc(100% - 2rem));
+  margin-inline: auto;
+  padding: 0.5rem;
+  border-radius: 6px;
+  background: var(--bpmn-surface-background);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
+}
+.fluent-bpmn-editor .bpmn-change__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+.fluent-bpmn-editor .bpmn-change__action--primary {
+  border-color: var(--bpmn-selection-color);
+  background: var(--bpmn-selection-color);
+  color: var(--bpmn-fill);
+}
 .fluent-bpmn-editor .bpmn-properties details.bpmn-properties__group { display: block; }
 .fluent-bpmn-editor .bpmn-properties details.bpmn-properties__group > summary {
     cursor: pointer;
@@ -909,16 +975,6 @@
 .fluent-bpmn-editor .bpmn-properties__group--extension {
     border-inline-start: 3px solid var(--bpmn-chrome-border);
     padding-inline-start: .6rem;
-}
-.fluent-bpmn-editor .bpmn-properties__namespace-badge {
-    display: inline-block;
-    margin-inline-start: .4rem;
-    padding: .1rem .3rem;
-    border: 1px solid currentColor;
-    border-radius: .25rem;
-    font-size: .7rem;
-    font-weight: normal;
-    overflow-wrap: anywhere;
 }
 .fluent-bpmn-editor .bpmn-properties__description,
 .fluent-bpmn-editor .bpmn-properties__error {

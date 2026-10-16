@@ -5,6 +5,8 @@ using Hasseware.AspNetCore.Components.Bpmn.Execution;
 using Hasseware.AspNetCore.Components.Bpmn.Interop;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
 using Hasseware.AspNetCore.Components.Bpmn.Serialization;
+using Hasseware.AspNetCore.Components.Bpmn.Storage;
+using Hasseware.AspNetCore.Components.Bpmn.WebMcp;
 using Hasseware.FluentUI.AspNetCore.Components.Bpmn;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -16,7 +18,7 @@ namespace Bpmn.Demo.Client.Pages;
 /// Loads a sample BPMN file and renders it, exercising the whole path from XML through the
 /// semantic model, across interop, onto the JointJS paper and back out as events.
 /// </summary>
-public sealed partial class EditorDemo : ComponentBase
+public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
 {
     private FluentBpmnEditor? _fluentEditor;
     private BpmnEditor? _plainEditor;
@@ -119,10 +121,63 @@ public sealed partial class EditorDemo : ComponentBase
         "global-catalog.bpmn",
     ];
 
+    [Inject]
+    private IBpmnDocumentStore Store { get; init; } = default!;
+
+    [Inject]
+    private IBpmnDocumentBindingFactory Bindings { get; init; } = default!;
+
+    /// <summary>The stored document the editor shows; created once, loaded with each sample.</summary>
+    private BpmnDocumentBinding _binding = default!;
+
+    private string? _saveMessage;
+
+    /// <summary>Where the binding stands: a save result, unsaved edits, or the stored revision.</summary>
+    private string SaveStatus => _saveMessage
+        ?? (_binding.IsDirty ? Localizer["Editor.Unsaved"].Value : _binding.StoredRevision is { } revision ? Localizer["Editor.Saved", revision].Value : string.Empty);
+
     protected override Task OnInitializedAsync()
     {
         _editStatus = Localizer["Editor.NothingSelected"];
+
+        _binding = Bindings.Create();
+        _binding.Changed += (_, _) =>
+        {
+            _saveMessage = null;
+            _ = InvokeAsync(StateHasChanged);
+        };
+
         return LoadSampleAsync(_selectedSample);
+    }
+
+    /// <summary>Releases the binding's change subscription when the page goes away.</summary>
+    /// <returns>A task that completes once the binding is disposed.</returns>
+    public ValueTask DisposeAsync() => _binding?.DisposeAsync() ?? ValueTask.CompletedTask;
+
+    private async Task SaveAsync()
+    {
+        var result = await _binding.SaveAsync().ConfigureAwait(true);
+
+        // A conflict also raises the editor's own notice; this line only says why nothing was saved.
+        _saveMessage = result.Succeeded ? null : Localizer["Editor.SaveConflict"].Value;
+    }
+
+    /// <summary>
+    /// Plays another user saving the same document: renames its first named element through the store,
+    /// at the stored revision, exactly as a second editor or an agent would.
+    /// </summary>
+    private async Task SimulateExternalChangeAsync()
+    {
+        if (_binding.Key is not { } key || await Store.LoadDocumentAsync(key).ConfigureAwait(true) is not { } stored) return;
+
+        var nodes = stored.Document.FlowNodes;
+        var node = nodes.FirstOrDefault(candidate => !string.IsNullOrEmpty(candidate.Name)) ?? (nodes.Count > 0 ? nodes[0] : null);
+        if (node is null) return;
+
+        var renamed = BpmnDocumentEditor.Apply(
+            stored.Document,
+            new UpdatePropertiesCommand(node.Id, "name", Localizer["Editor.EditedElsewhere", node.Name ?? node.Id]));
+        if (renamed.IsApplied) await Store.SaveDocumentAsync(key, renamed.Document, stored.Revision).ConfigureAwait(true);
     }
 
     private async Task LoadSampleAsync(string sample)
@@ -141,14 +196,23 @@ public sealed partial class EditorDemo : ComponentBase
 
         try
         {
-            var xml = await Http.GetStringAsync($"samples/{sample}").ConfigureAwait(true);
-            var result = BpmnXmlReader.Read(xml);
+            // The samples are copied into the store the first time they are chosen, so edits saved to
+            // one survive switching to another sample and back.
+            var key = new BpmnDocumentKey(null, BpmnDocumentPath.Parse($"samples/{sample}"));
+            if (await Store.StatAsync(key).ConfigureAwait(true) is null)
+            {
+                var xml = await Http.GetByteArrayAsync($"samples/{sample}").ConfigureAwait(true);
+                await Store.SaveAsync(key, new BpmnDocumentContent(xml, BpmnFileFormat.Xml), ifMatchRevision: null).ConfigureAwait(true);
+            }
 
-            _document = result.Document;
+            await _binding.LoadAsync(key).ConfigureAwait(true);
+            var document = _binding.Document!;
+
+            _document = document;
             _executionStale = true;
-            _diagnostics = result.Diagnostics;
-            _status = Localizer["DocumentSummary", result.Document.FlowNodes.Count,
-                result.Document.SequenceFlows.Count, result.Document.Diagrams.Count];
+            _diagnostics = _binding.ImportDiagnostics;
+            _status = Localizer["DocumentSummary", document.FlowNodes.Count,
+                document.SequenceFlows.Count, document.Diagrams.Count];
         }
         catch (BpmnXmlException exception)
         {
@@ -232,6 +296,36 @@ public sealed partial class EditorDemo : ComponentBase
     }
 
     private void OnReadOnlyChanged(ChangeEventArgs args) => _readOnly = args.Value is true;
+
+    private bool _webMcp;
+
+    private bool _webMcpEdit;
+
+    private string _webMcpStatus = string.Empty;
+
+    private BpmnWebMcp? _webMcpPart;
+
+    private void OnWebMcpChanged(ChangeEventArgs args)
+    {
+        _webMcp = args.Value is true;
+        _webMcpStatus = string.Empty;
+        if (!_webMcp) _webMcpPart = null;
+    }
+
+    // The component reads the option once, at registration, so changing it makes a new component.
+    private void OnWebMcpEditChanged(ChangeEventArgs args)
+    {
+        _webMcpEdit = args.Value is true;
+        _webMcpStatus = string.Empty;
+    }
+
+    private void OnWebMcpSettled() => _webMcpStatus = _webMcpPart?.Status switch
+    {
+        BpmnWebMcpState.Registered => Localizer[_webMcpEdit ? "Editor.WebMcpRegisteredEditing" : "Editor.WebMcpRegistered", _webMcpPart.RegisteredTools.Count],
+        BpmnWebMcpState.Unsupported => Localizer["Editor.WebMcpUnsupported"],
+        BpmnWebMcpState.Failed => Localizer["Editor.WebMcpFailed"],
+        _ => string.Empty,
+    };
 
     private bool _showExecution;
 

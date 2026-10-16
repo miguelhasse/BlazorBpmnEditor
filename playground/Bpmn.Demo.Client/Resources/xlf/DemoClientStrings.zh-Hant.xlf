@@ -52,6 +52,11 @@
         <target state="translated">已編輯：{0} 個節點、{1} 條流。</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.EditedElsewhere">
+        <source>{0} (edited elsewhere)</source>
+        <target state="translated">{0}（已在其他位置編輯）</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.ExecutionState">
         <source>Execution state</source>
         <target state="translated">執行狀態</target>
@@ -117,6 +122,21 @@
         <target state="translated">已在「{2}」上繪製 {0} 個圖形與 {1} 條連接線</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.Save">
+        <source>Save</source>
+        <target state="translated">儲存</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SaveConflict">
+        <source>Not saved: the stored document was changed elsewhere.</source>
+        <target state="translated">未儲存：已儲存的文件已在其他位置變更。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Saved">
+        <source>Saved (revision {0})</source>
+        <target state="translated">已儲存（修訂 {0}）</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.SelectedElement">
         <source>Selected {0}.</source>
         <target state="translated">已選取 {0}。</target>
@@ -132,6 +152,11 @@
         <target state="translated">服務未在時限內回應。</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.SimulateExternalChange">
+        <source>Simulate external change</source>
+        <target state="translated">模擬外部變更</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.SnapToGrid">
         <source>Snap to grid</source>
         <target state="translated">貼齊格線</target>
@@ -145,6 +170,41 @@
       <trans-unit id="Editor.Unrendered">
         <source> ({0} DI entries had no matching element)</source>
         <target state="translated">（{0} 個 DI 項目沒有對應的元素）</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Unsaved">
+        <source>Unsaved changes</source>
+        <target state="translated">未儲存的變更</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcp">
+        <source>Offer to browser agents (WebMCP)</source>
+        <target state="translated">向瀏覽器代理提供 (WebMCP)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpEdit">
+        <source>Let agents edit (deleting and saving ask you first)</source>
+        <target state="translated">允許代理編輯(刪除和儲存會先詢問)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpFailed">
+        <source>The browser refused the tools</source>
+        <target state="translated">瀏覽器拒絕了這些工具</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpRegistered">
+        <source>{0} read-only tools offered</source>
+        <target state="translated">已提供 {0} 個唯讀工具</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpRegisteredEditing">
+        <source>{0} tools offered, editing allowed</source>
+        <target state="translated">已提供 {0} 個工具,允許編輯</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpUnsupported">
+        <source>This browser has no WebMCP</source>
+        <target state="translated">此瀏覽器不支援 WebMCP</target>
         <note />
       </trans-unit>
       <trans-unit id="ExportSeverity.Dropped">
@@ -435,6 +495,41 @@
       <trans-unit id="Interchange.Waypoints">
         <source>Waypoints</source>
         <target state="translated">路徑點</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Change">
+        <source>Change it on the server</source>
+        <target state="translated">在伺服器上變更</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Gaps">
+        <source>Reconnections:</source>
+        <target state="translated">重新連線次數:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Intro">
+        <source>Watches a document in the server's store over Server-Sent Events, in the browser. Press Watch, then make a change on the server: it arrives here. The stream is closed by the server every few seconds so that you can see the connection reopen.</source>
+        <target state="translated">在瀏覽器中透過 Server-Sent Events 監看伺服器儲存區中的文件。按下「監看」,然後在伺服器上做一次變更:它會出現在這裡。伺服器每隔幾秒會關閉資料流,讓您看到連線重新開啟。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Path">
+        <source>Document</source>
+        <target state="translated">文件</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.State">
+        <source>Feed:</source>
+        <target state="translated">摘要來源:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Title">
+        <source>Live updates</source>
+        <target state="translated">即時更新</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Watch">
+        <source>Watch</source>
+        <target state="translated">監看</target>
         <note />
       </trans-unit>
       <trans-unit id="No">

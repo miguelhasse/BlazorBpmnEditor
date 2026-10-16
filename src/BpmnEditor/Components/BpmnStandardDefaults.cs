@@ -38,6 +38,8 @@ public static class BpmnStandardDefaults
             .UseDefault<BpmnContextMenu>(BpmnEditorPart.ContextMenu)
             .UseDefault<BpmnContextualActions>(BpmnEditorPart.ContextualActions)
             .UseDefault<BpmnImportOffer>(BpmnEditorPart.ImportOffer)
+            .UseDefault<BpmnExternalChangeOffer>(BpmnEditorPart.ExternalChangeOffer)
+            .UseDefault<BpmnAgentConfirmation>(BpmnEditorPart.AgentConfirmation)
             .UseDefault<BpmnCalledElementPicker>(BpmnEditorPart.CalledElementPicker)
             .UseDefault<BpmnShortcutHelp>(BpmnEditorPart.ShortcutHelp);
     }

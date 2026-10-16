@@ -3,9 +3,8 @@
 
 <FluentBpmnPropertyEntryFrame Context="@ValidationContext">
     <FluentTextInput Class="@(Block + "__text")" ReadOnly="@ReadOnly" Value="@_value"
-              AriaLabel="@Entry.Label" Placeholder="@Entry.Placeholder" Immediate="true"
-              aria-invalid="@(ValidationContext.Entry.Error is not null ? "true" : null)"
-              aria-describedby="@(ValidationContext.Entry.Error is not null ? ErrorId : null)"
-              ValueChanged="DraftChanged" OnFocusOut="CommitAsync" />
-
+                     AriaLabel="@Entry.Label" Placeholder="@Entry.Placeholder" Immediate="true"
+                     aria-invalid="@(ValidationContext.Entry.Error is not null ? "true" : null)"
+                     aria-describedby="@(ValidationContext.Entry.Error is not null ? ErrorId : null)"
+                     ValueChanged="DraftChanged" OnFocusOut="CommitAsync" />
 </FluentBpmnPropertyEntryFrame>

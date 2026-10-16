@@ -19,6 +19,12 @@ public sealed partial class FluentBpmnShortcutHelp;
 /// <summary>Fluent UI rendering of <see cref="BpmnImportOfferBase"/>.</summary>
 public sealed partial class FluentBpmnImportOffer;
 
+/// <summary>Fluent UI rendering of <see cref="BpmnExternalChangeOfferBase"/>.</summary>
+public sealed partial class FluentBpmnExternalChangeOffer;
+
+/// <summary>Fluent UI rendering of <see cref="BpmnAgentConfirmationBase"/>.</summary>
+public sealed partial class FluentBpmnAgentConfirmation;
+
 /// <summary>Fluent UI rendering of <see cref="BpmnCalledElementPickerBase"/>.</summary>
 public sealed partial class FluentBpmnCalledElementPicker;
 

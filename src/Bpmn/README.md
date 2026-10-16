@@ -404,6 +404,10 @@ model and diagnostics without changing the open document. `CancelImport()` disca
 `AcceptImportAsync()` replaces the document, clears history/selection/navigation and raises
 `OnImported`. Import is not an undoable edit of the previous file.
 
+To load and save documents kept in a store (a file share, blob container or database), bind the editor
+to a `BpmnDocumentBinding` instead of passing `Document`; it tracks unsaved edits, saves with a revision
+check and reports changes made by others. See [Document storage](../../docs/document-storage.md).
+
 ```mermaid
 flowchart LR
     File["File text or canvas drop"] --> Detect["BpmnFileFormats"]

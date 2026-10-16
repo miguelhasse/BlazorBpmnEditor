@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents</AssemblyName>
+    <RootNamespace>Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents</RootNamespace>
+    <PackageId>Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents</PackageId>
+    <Description>Preview. Tells editors that the BPMN document they have open was changed by someone else, over Server-Sent Events: an authenticated ASP.NET Core endpoint, one stream per document, with heartbeats and a per-caller limit. No JavaScript.</Description>
+    <PackageTags>bpmn;storage;sse;server-sent-events;live-updates</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bpmn\Hasseware.AspNetCore.Components.Bpmn.csproj" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

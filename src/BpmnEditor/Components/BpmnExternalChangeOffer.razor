@@ -1,0 +1,60 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.AspNetCore.Components.Bpmn.Resources.BpmnEditorStrings> EditorL
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnExternalChangeOfferBase
+
+@if (HasNotice)
+{
+    @*
+        A notice rather than a dialog: the user can keep working, and may want to look at what they have
+        before deciding. role="alert" so a screen reader hears about it the moment it appears.
+    *@
+    <div class="@CssClass("bpmn-change")" role="alert" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+        @if (IsConfirmingReload)
+        {
+            <p class="bpmn-change__message">@EditorText("ExternalChangeOffer.ConfirmReload")</p>
+
+            <div class="bpmn-change__actions">
+                <button type="button" class="bpmn-change__action" disabled="@IsBusy" @onclick="CancelReload">
+                    @EditorText("ExternalChangeOffer.KeepEditing")
+                </button>
+                <button type="button" class="bpmn-change__action bpmn-change__action--primary" disabled="@IsBusy" @onclick="ConfirmReloadAsync">
+                    @EditorText("ExternalChangeOffer.DiscardAndReload")
+                </button>
+            </div>
+        }
+        else
+        {
+            @if (Outcome is not null)
+            {
+                <p class="bpmn-change__message">@Outcome</p>
+            }
+
+            @if (Change is not null)
+            {
+                <p class="bpmn-change__message">@Message</p>
+            }
+
+            <div class="bpmn-change__actions">
+                <button type="button" class="bpmn-change__action" disabled="@IsBusy" @onclick="Dismiss">
+                    @EditorText("ExternalChangeOffer.Dismiss")
+                </button>
+
+                @if (IsDeleted)
+                {
+                    <button type="button" class="bpmn-change__action bpmn-change__action--primary" disabled="@IsBusy" @onclick="SaveAgainAsync">
+                        @EditorText("ExternalChangeOffer.SaveAgain")
+                    </button>
+                }
+                else if (Change is not null)
+                {
+                    <button type="button" class="bpmn-change__action" disabled="@IsBusy" @onclick="SaveCopyAsync">
+                        @EditorText("ExternalChangeOffer.SaveCopy")
+                    </button>
+                    <button type="button" class="bpmn-change__action bpmn-change__action--primary" disabled="@IsBusy" @onclick="ReloadAsync">
+                        @EditorText("ExternalChangeOffer.Reload")
+                    </button>
+                }
+            </div>
+        }
+    </div>
+}

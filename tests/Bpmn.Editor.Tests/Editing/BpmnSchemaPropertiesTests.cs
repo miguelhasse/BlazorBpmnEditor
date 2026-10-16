@@ -130,7 +130,6 @@ public sealed class BpmnSchemaPropertiesTests : BunitContext
         var panel = this.RenderSeeded<BpmnPropertyPanel>(seed => seed.Snapshots([snapshot]));
         Assert.NotNull(panel.Find("details[data-group-id=task-definition]"));
         Assert.NotNull(panel.Find("details[data-group-id=inputs]"));
-        Assert.Equal(Zeebe, panel.Find("details[data-group-id=inputs] .bpmn-properties__namespace-badge").TextContent);
     }
 
     private static Hasseware.AspNetCore.Components.Bpmn.Model.BpmnDocument WithoutTaskDefinition(

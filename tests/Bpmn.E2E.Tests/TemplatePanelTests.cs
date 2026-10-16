@@ -69,7 +69,7 @@ public sealed class TemplatePanelTests(DemoAppFixture app) : PageTest, IClassFix
         await Expect(Page.Locator(".bpmn-templates__option")).ToHaveCountAsync(2);
         await Page.Locator(".bpmn-templates__list").GetByRole(AriaRole.Option, new() { Name = "HTTP request", Exact = false }).ClickAsync();
         await Expect(Page.Locator(".bpmn-templates__row .bpmn-templates__name")).ToHaveTextAsync("HTTP request");
-        await Expect(Page.Locator(".bpmn-properties__subtitle")).ToHaveTextAsync("serviceTask");
+        await Expect(Page.Locator(".bpmn-properties__subtitle")).ToHaveTextAsync("Service Task");
         await Page.Locator("details[data-group-id='template:auth'] > summary").ClickAsync();
         await Page.Locator("details[data-group-id='template:auth'] select").SelectOptionAsync("key");
         var apiKey = Page.Locator(".bpmn-properties__property", new() { HasTextString = "API key" }).Locator("input");

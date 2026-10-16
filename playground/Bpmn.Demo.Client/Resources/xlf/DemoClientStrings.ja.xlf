@@ -52,6 +52,11 @@
         <target state="translated">編集しました: ノード {0} 個、フロー {1} 本。</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.EditedElsewhere">
+        <source>{0} (edited elsewhere)</source>
+        <target state="translated">{0} (別の場所で編集)</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.ExecutionState">
         <source>Execution state</source>
         <target state="translated">実行状態</target>
@@ -117,6 +122,21 @@
         <target state="translated">'{2}' に図形 {0} 個とコネクタ {1} 本を描画しました</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.Save">
+        <source>Save</source>
+        <target state="translated">保存</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.SaveConflict">
+        <source>Not saved: the stored document was changed elsewhere.</source>
+        <target state="translated">保存されませんでした: 保存されたドキュメントが別の場所で変更されています。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Saved">
+        <source>Saved (revision {0})</source>
+        <target state="translated">保存済み (リビジョン {0})</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.SelectedElement">
         <source>Selected {0}.</source>
         <target state="translated">{0} を選択しました。</target>
@@ -132,6 +152,11 @@
         <target state="translated">サービスが時間内に応答しませんでした。</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.SimulateExternalChange">
+        <source>Simulate external change</source>
+        <target state="translated">外部での変更をシミュレート</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.SnapToGrid">
         <source>Snap to grid</source>
         <target state="translated">グリッドにスナップ</target>
@@ -145,6 +170,41 @@
       <trans-unit id="Editor.Unrendered">
         <source> ({0} DI entries had no matching element)</source>
         <target state="translated"> (対応する要素のない DI エントリが {0} 件あります)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Unsaved">
+        <source>Unsaved changes</source>
+        <target state="translated">未保存の変更</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcp">
+        <source>Offer to browser agents (WebMCP)</source>
+        <target state="translated">ブラウザーのエージェントに提供 (WebMCP)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpEdit">
+        <source>Let agents edit (deleting and saving ask you first)</source>
+        <target state="translated">エージェントに編集を許可する(削除と保存は事前に確認)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpFailed">
+        <source>The browser refused the tools</source>
+        <target state="translated">ブラウザーがツールを拒否しました</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpRegistered">
+        <source>{0} read-only tools offered</source>
+        <target state="translated">読み取り専用ツールを {0} 件提供しています</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpRegisteredEditing">
+        <source>{0} tools offered, editing allowed</source>
+        <target state="translated">{0} 個のツールを提供中、編集を許可</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.WebMcpUnsupported">
+        <source>This browser has no WebMCP</source>
+        <target state="translated">このブラウザーは WebMCP に対応していません</target>
         <note />
       </trans-unit>
       <trans-unit id="ExportSeverity.Dropped">
@@ -435,6 +495,41 @@
       <trans-unit id="Interchange.Waypoints">
         <source>Waypoints</source>
         <target state="translated">ウェイポイント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Change">
+        <source>Change it on the server</source>
+        <target state="translated">サーバーで変更</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Gaps">
+        <source>Reconnections:</source>
+        <target state="translated">再接続:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Intro">
+        <source>Watches a document in the server's store over Server-Sent Events, in the browser. Press Watch, then make a change on the server: it arrives here. The stream is closed by the server every few seconds so that you can see the connection reopen.</source>
+        <target state="translated">サーバーのストア内のドキュメントを、ブラウザー上で Server-Sent Events を使って監視します。[監視] を押してからサーバー側で変更すると、ここに届きます。接続が再び開く様子を確認できるよう、サーバーは数秒ごとにストリームを閉じます。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Path">
+        <source>Document</source>
+        <target state="translated">ドキュメント</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.State">
+        <source>Feed:</source>
+        <target state="translated">フィード:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Title">
+        <source>Live updates</source>
+        <target state="translated">ライブ更新</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Live.Watch">
+        <source>Watch</source>
+        <target state="translated">監視</target>
         <note />
       </trans-unit>
       <trans-unit id="No">

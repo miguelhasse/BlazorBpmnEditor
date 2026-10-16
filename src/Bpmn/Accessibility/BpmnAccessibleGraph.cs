@@ -45,6 +45,15 @@ public sealed record BpmnGraphNode(
     /// </remarks>
     public bool? IsExpanded { get; init; }
 
+    /// <summary>Whether two nodes say the same thing, comparing the lists by their contents (record equality compares them by reference).</summary>
+    internal static bool SameContent(BpmnGraphNode first, BpmnGraphNode second) =>
+        ReferenceEquals(first, second)
+        || (first.ElementId == second.ElementId && first.TypeName == second.TypeName && first.Label == second.Label
+            && first.ContainerId == second.ContainerId && first.LaneId == second.LaneId && first.Depth == second.Depth
+            && first.IsExpanded == second.IsExpanded
+            && first.Outgoing.SequenceEqual(second.Outgoing) && first.Incoming.SequenceEqual(second.Incoming)
+            && first.Attached.SequenceEqual(second.Attached) && first.AttachedTypes.SequenceEqual(second.AttachedTypes));
+
     /// <summary>Whether this is a container rather than something a flow passes through.</summary>
     private bool IsContainer => TypeName is "pool" or "lane";
 

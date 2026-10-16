@@ -74,6 +74,9 @@
   <ItemGroup>
     <EmbeddedResource Include="..\..\icons\bpmn-icons.json"
                       LogicalName="Hasseware.AspNetCore.Components.Bpmn.bpmn-icons.json" />
+    <!-- The live connection rules are evaluated in C# too (BpmnConnectionRules), from the same table. -->
+    <EmbeddedResource Include="..\..\rules\bpmn-rules.json"
+                      LogicalName="Hasseware.AspNetCore.Components.Bpmn.bpmn-rules.json" />
   </ItemGroup>
 
   <!--
@@ -97,5 +100,7 @@
     <None Update="Model\Extensions\Schema\Resources\LICENSE-*.txt" Pack="true" PackagePath="licenses\" />
     <None Update="Model\Extensions\Schema\Resources\THIRD-PARTY-NOTICES.txt" Pack="true" PackagePath="licenses\" />
   </ItemGroup>
+
+  <Import Project="..\ScriptsStaticAssets.targets" />
 
 </Project>

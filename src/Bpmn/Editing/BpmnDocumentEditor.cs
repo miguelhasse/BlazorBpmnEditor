@@ -892,11 +892,11 @@ public static partial class BpmnDocumentEditor
         return null;
     }
 
-    private static bool ParticipatesInCollisions(BpmnFlowNode node) =>
+    internal static bool ParticipatesInCollisions(BpmnFlowNode node) =>
         node.Type != BpmnFlowNodeType.BoundaryEvent && !node.FlowElementsOwned;
 
     /// <summary>Positive-area overlap after growing both rectangles by half the clearance each.</summary>
-    private static bool Overlaps(Bounds first, Bounds second, double clearance)
+    internal static bool Overlaps(Bounds first, Bounds second, double clearance)
     {
         var pad = clearance / 2d;
 
@@ -2205,6 +2205,25 @@ public static partial class BpmnDocumentEditor
         var requested = added.ToDictionary(shape => shape.Id, shape => shape.Bounds, StringComparer.Ordinal);
 
         return FindCollision(document, shapes, requested, clearance);
+    }
+
+    /// <summary>
+    /// Everything a delete of these elements would remove: what was named and everything that cannot outlive it.
+    /// </summary>
+    /// <remarks>
+    /// For a question put to a person before the delete runs: deleting a Sub-Process takes its nested graph and the flows attached to what goes, so
+    /// "one element" is rarely the whole of it. Ids that name nothing are ignored, and the delete itself still refuses them.
+    /// </remarks>
+    /// <param name="document">The document the delete would run on.</param>
+    /// <param name="elementIds">The elements named.</param>
+    /// <returns>The ids of every element and connector that would go.</returns>
+    public static IReadOnlySet<string> DeletionClosure(BpmnDocument document, IEnumerable<string> elementIds)
+    {
+        ArgumentNullException.ThrowIfNull(document);
+        ArgumentNullException.ThrowIfNull(elementIds);
+
+        var roots = new HashSet<string>(elementIds.Where(id => document.Find(id) is not null), StringComparer.Ordinal);
+        return ExpandDeletion(document, roots, []);
     }
 
     private static BpmnEditResult ApplyDelete(BpmnDocument document, DeleteElementsCommand command)

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Hasseware.AspNetCore.Components.Bpmn.Mcp</AssemblyName>
+    <RootNamespace>Hasseware.AspNetCore.Components.Bpmn.Mcp</RootNamespace>
+    <PackageId>Hasseware.AspNetCore.Components.Bpmn.Mcp</PackageId>
+    <Description>Preview. A Model Context Protocol server over stored BPMN documents: list, open, validate, describe and export, with results that keep diagram text apart from tool messages. Plain library, no Blazor; pair it with any IBpmnDocumentStore.</Description>
+    <PackageTags>bpmn;mcp;agents;storage</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="ModelContextProtocol" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bpmn\Hasseware.AspNetCore.Components.Bpmn.csproj" />
+    <ProjectReference Include="..\Bpmn.Tools\Hasseware.AspNetCore.Components.Bpmn.Tools.csproj" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

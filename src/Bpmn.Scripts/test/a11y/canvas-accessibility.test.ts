@@ -61,7 +61,7 @@ describe('CanvasAccessibility', () => {
     };
     const on = vi.fn();
     const off = vi.fn();
-    const paper = { on, off, model: { getElements: () => [cell], getLinks: () => [] } } as unknown as dia.Paper;
+    const paper = { on, off, model: { getCells: () => [cell] } } as unknown as dia.Paper;
     const host = document.createElement('div');
     const strings = { values: {
       ...canvasStrings.values,
@@ -81,5 +81,60 @@ describe('CanvasAccessibility', () => {
     accessibility.destroy();
     expect(host.children).toHaveLength(0);
     expect(off).toHaveBeenCalledWith('render:done', labelCells);
+  });
+});
+
+describe('CanvasAccessibility label memo', () => {
+  function setup() {
+    const element = { current: document.createElement('g') };
+    const bpmn = { elementType: 'userTask', name: 'Approve' };
+    const lookups = { count: 0 };
+    const values = new Proxy({ ...canvasStrings.values }, {
+      get: (target, key: string) => {
+        if (key === 'Type.userTask') lookups.count++;
+        return target[key];
+      },
+    });
+    const cell = {
+      get: () => bpmn,
+      attr: () => undefined,
+      isLink: () => false,
+      findView: () => ({ model: cell, el: element.current }),
+    };
+    const on = vi.fn();
+    const paper = { on, off: vi.fn(), model: { getCells: () => [cell] } } as unknown as dia.Paper;
+    new CanvasAccessibility(paper, document.createElement('div'), { values });
+    return { element, bpmn, lookups, run: on.mock.calls[0]?.[1] as () => void };
+  }
+
+  it('computes a cell label once while its name and type are unchanged', () => {
+    const { lookups, run } = setup();
+
+    run();
+    run();
+    run();
+
+    expect(lookups.count).toBe(1);
+  });
+
+  it('relabels when the name changes', () => {
+    const { element, bpmn, run } = setup();
+
+    run();
+    bpmn.name = 'Reject';
+    run();
+
+    expect(element.current.getAttribute('aria-label')).toContain('Reject');
+  });
+
+  it('labels a freshly mounted view of a cell whose label did not change', () => {
+    const { element, run } = setup();
+
+    run();
+    element.current = document.createElement('g');
+    run();
+
+    expect(element.current.getAttribute('aria-label')).toContain('Approve');
+    expect(element.current.getAttribute('role')).toBe('graphics-symbol');
   });
 });

@@ -1,5 +1,6 @@
 @namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
 @inherits BpmnValidationPanelBase
+
 @using Hasseware.AspNetCore.Components.Bpmn.Validation
 
 <div class="@CssClass("bpmn-validation")" role="region" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
@@ -40,11 +41,11 @@
                     @key="@($"{diagnostic.RuleId}:{diagnostic.ElementId}:{diagnostic.Message}")">
 
                     <FluentButton Type="ButtonType.Button"
-                            Class="bpmn-validation__go"
-                            IconStart="@(diagnostic.Severity == BpmnSeverity.Error ? new Icons.Regular.Size20.ErrorCircle() : (Icon)new Icons.Regular.Size20.Warning())"
-                            Disabled="@(diagnostic.ElementId is null)"
-                            Title="@MessageOf(diagnostic)"
-                            OnClick="@(() => SelectAsync(diagnostic))">
+                                  Class="bpmn-validation__go"
+                                  IconStart="@(diagnostic.Severity == BpmnSeverity.Error ? new Icons.Regular.Size20.ErrorCircle() : (Icon)new Icons.Regular.Size20.Warning())"
+                                  Disabled="@(diagnostic.ElementId is null)"
+                                  Title="@MessageOf(diagnostic)"
+                                  OnClick="@(() => SelectAsync(diagnostic))">
 
                         <span class="bpmn-validation__code">@diagnostic.RuleId</span>
                         <span class="bpmn-validation__message">@MessageOf(diagnostic)</span>

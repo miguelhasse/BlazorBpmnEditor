@@ -1,3 +1,4 @@
+using Hasseware.AspNetCore.Components.Bpmn;
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;

@@ -1,4 +1,4 @@
-import type { dia } from '@joint/core';
+import { util, type dia } from '@joint/core';
 
 import { centerOf, normalizedEndpoint, outlineOf, type Outline } from '../geometry/outline.js';
 import type { FontMetricsProvider } from '../labels/font-metrics.js';
@@ -152,10 +152,14 @@ export function renderDocument(
   }
 
   // --- commit --------------------------------------------------------------
+  // Paint order is the order of the list: shapes first, then connectors over them. It is written down, with gaps, so that a cell added
+  // later can take a place between two neighbours without renumbering the rest.
+  cells.forEach((cell, position) => cell.set('z', (position + 1) * Z_STEP));
+
   graph.startBatch('render');
   try {
-    graph.resetCells(cells);
-    applyEmbedding(graph, buildEmbeddingTree(index, plane, renderedIds));
+    reconcileCells(graph, cells);
+    reconcileEmbedding(graph, buildEmbeddingTree(index, plane, renderedIds));
   } finally {
     graph.stopBatch('render');
   }
@@ -216,17 +220,190 @@ function createCellForShape(
 }
 
 /**
- * Applies the derived containment tree through JointJS embedding.
- *
- * Parents are embedded before their own children so a deep chain (Pool -> Lane ->
- * Sub-Process -> Task) is built top-down and no intermediate state has a cell embedded
- * in something not yet embedded itself.
- *
- * Connectors stay at the graph root for now. Scoping them to their lowest common
- * container (CT-006) only changes behaviour once containers can be dragged, which
- * arrives with the M4 interaction work.
+ * Attributes JointJS or the embedding pass owns, which a freshly built cell does not carry and a drawn one always does.
  */
-function applyEmbedding(graph: dia.Graph, tree: ReadonlyMap<string, string>): void {
+const RUNTIME_ATTRIBUTES: ReadonlySet<string> = new Set(['parent', 'embeds', 'z']);
+
+/** The gap left between the paint order of neighbouring cells. */
+const Z_STEP = 1000;
+
+/**
+ * Makes the graph hold the cells a render produced, touching only what differs from what is drawn.
+ *
+ * A load used to `resetCells`, which destroys every cell view and builds them again; an edit changes a handful of cells and paid
+ * for all of them (about a second at the default zoom on the stress diagram, five when zoomed out, where every cell is mounted).
+ * The cells are still built from the document exactly as before, so what ends up in the graph is what a reset would have produced:
+ * a cell that is the same keeps its view, one that differs is updated in place, a new one is added, one the document no longer
+ * has is removed. A cell of another kind is replaced, because its view class differs. Attributes other code wrote onto a drawn cell and
+ * the document does not describe are cleared, as a reset cleared them.
+ */
+function reconcileCells(graph: dia.Graph, cells: readonly dia.Cell[]): void {
+  const current = graph.getCells();
+
+  // Nothing drawn yet: a reset is cheaper than looking.
+  if (current.length === 0) {
+    graph.resetCells(cells as dia.Cell[]);
+    return;
+  }
+
+  const drawn = new Map(current.map((cell) => [String(cell.id), cell]));
+  const wanted = new Set(cells.map((cell) => String(cell.id)));
+
+  const additions: dia.Cell[] = [];
+  const updates: { readonly drawn: dia.Cell; readonly next: dia.Cell }[] = [];
+  const removals: dia.Cell[] = [];
+
+  for (const cell of current) {
+    if (!wanted.has(String(cell.id))) removals.push(cell);
+  }
+
+  for (const next of cells) {
+    const existing = drawn.get(String(next.id));
+    if (existing === undefined) {
+      additions.push(next);
+    } else if (Object.getPrototypeOf(existing) !== Object.getPrototypeOf(next)) {
+      removals.push(existing);
+      additions.push(next);
+    } else {
+      updates.push({ drawn: existing, next });
+    }
+  }
+
+  // A different diagram, or an unrelated document, has nothing in common with what is drawn: one reset is cheaper than removing and adding cell by cell.
+  if (updates.length === 0) {
+    graph.resetCells(cells as dia.Cell[]);
+    return;
+  }
+
+  // Removing an element removes the connectors attached to it, so one that is kept has to be put back.
+  const removedIds = new Set(removals.map((cell) => String(cell.id)));
+  const attached = (link: dia.Cell): boolean => ['source', 'target'].some((end) => {
+    const id = (link.get(end) as { readonly id?: string } | undefined)?.id;
+    return id !== undefined && removedIds.has(id);
+  });
+  const surviving = updates.filter(({ next }) => !(next.isLink() && attached(next)));
+  for (const { next } of updates) {
+    if (next.isLink() && attached(next)) additions.push(next);
+  }
+
+  if (removals.length > 0) {
+    // Joint removes whatever is embedded in a cell it removes, and has no option to spare it. A child the document keeps (the tasks of a deleted
+    // lane or sub-process) is taken out of its parent first, so that the removal reaches nothing that survives; it is embedded again below.
+    for (const removed of removals) {
+      for (const child of removed.getEmbeddedCells()) {
+        if (!removedIds.has(String(child.id))) removed.unembed(child);
+      }
+    }
+
+    graph.removeCells(removals);
+  }
+
+  for (const { drawn: existing, next } of surviving) updateCell(existing, next);
+
+  if (additions.length > 0) {
+    placeAdditions(cells, new Set(additions.map((cell) => String(cell.id))), drawn);
+    graph.addCells(additions);
+  }
+
+  ensurePaintOrder(graph, cells);
+}
+
+/**
+ * Renumbers the paint order when it no longer follows the list.
+ *
+ * Kept cells keep the order they have, and new ones are placed between their neighbours, which is right while the drawn order is the
+ * list's. It stops being right if the document reorders what it draws, if a cell was brought to the front, or if repeated insertions
+ * between the same two neighbours have halved the gap until two cells share a value. Then every cell is numbered again, which is what a
+ * full render would have done.
+ */
+function ensurePaintOrder(graph: dia.Graph, cells: readonly dia.Cell[]): void {
+  // A cell the render wanted but could not place is not in the graph; paint order is about the ones that are.
+  const live = cells.map((cell) => graph.getCell(String(cell.id)) as dia.Cell | undefined).filter((cell): cell is dia.Cell => cell !== undefined);
+
+  let previous = Number.NEGATIVE_INFINITY;
+  let ordered = true;
+  for (const cell of live) {
+    const order = cell.get('z');
+    if (typeof order !== 'number' || order <= previous) {
+      ordered = false;
+      break;
+    }
+    previous = order;
+  }
+
+  if (ordered) return;
+
+  live.forEach((cell, position) => {
+    const order = (position + 1) * Z_STEP;
+    if (cell.get('z') !== order) cell.set('z', order);
+  });
+}
+
+/**
+ * Gives each new cell the paint order it would have had in a full render: between the cells that come before and after it in the list.
+ * Cells that are already drawn keep the order they have; only the new ones are placed.
+ */
+function placeAdditions(cells: readonly dia.Cell[], added: ReadonlySet<string>, drawn: ReadonlyMap<string, dia.Cell>): void {
+  const known = cells.map((cell) => (added.has(String(cell.id)) ? undefined : (drawn.get(String(cell.id))?.get('z'))));
+
+  // The next cell with a known order after each position.
+  const after: (number | undefined)[] = new Array<number | undefined>(cells.length);
+  let ahead: number | undefined;
+  for (let position = cells.length - 1; position >= 0; position--) {
+    after[position] = ahead;
+    ahead = known[position] ?? ahead;
+  }
+
+  let before: number | undefined;
+  cells.forEach((cell, position) => {
+    const order = known[position];
+    if (order !== undefined) {
+      before = order;
+      return;
+    }
+    if (!added.has(String(cell.id))) return;
+
+    const next = after[position];
+    const placed = before === undefined
+      ? (next === undefined ? (position + 1) * Z_STEP : next - Z_STEP)
+      : next === undefined ? before + Z_STEP : (before + next) / 2;
+
+    cell.set('z', placed);
+    before = placed;
+  });
+}
+
+/** Brings one drawn cell to the attributes of the cell the document now describes, writing only what changed. */
+function updateCell(existing: dia.Cell, next: dia.Cell): void {
+  const changes: Record<string, unknown> = {};
+  const nextAttributes = next.attributes as Record<string, unknown>;
+  const existingAttributes = existing.attributes as Record<string, unknown>;
+
+  for (const key of Object.keys(nextAttributes)) {
+    if (RUNTIME_ATTRIBUTES.has(key)) continue;
+    if (!util.isEqual(existingAttributes[key], nextAttributes[key])) changes[key] = nextAttributes[key];
+  }
+
+  // Marked as a render's own: what the document says is the truth, so nothing that reacts to a user moving a cell (snapping to peers, pinning a
+  // boundary event to its host) should answer it.
+  if (Object.keys(changes).length > 0) existing.set(changes, { reconcile: true });
+
+  for (const key of Object.keys(existingAttributes)) {
+    if (!RUNTIME_ATTRIBUTES.has(key) && !(key in nextAttributes)) existing.unset(key);
+  }
+}
+
+/**
+ * Makes the graph's embedding match the derived containment tree.
+ *
+ * Parents are embedded before their own children so a deep chain (Pool -> Lane -> Sub-Process -> Task) is built top-down and no
+ * intermediate state has a cell embedded in something not yet embedded itself. A child already in the right parent is left alone,
+ * one in the wrong parent is moved, and one the tree no longer contains is taken out.
+ *
+ * Connectors stay at the graph root for now. Scoping them to their lowest common container (CT-006) only changes behaviour once
+ * containers can be dragged, which arrives with the M4 interaction work.
+ */
+function reconcileEmbedding(graph: dia.Graph, tree: ReadonlyMap<string, string>): void {
   const depths = new Map<string, number>();
   const visiting = new Set<string>();
   const depthOf = (id: string): number => {
@@ -245,12 +422,24 @@ function applyEmbedding(graph: dia.Graph, tree: ReadonlyMap<string, string>): vo
     return depth;
   };
 
+  // Out first: whatever is embedded but no longer belongs, or belongs somewhere else, leaves its parent.
+  for (const cell of graph.getCells()) {
+    const parentId = cell.get('parent');
+    if (parentId === undefined || tree.get(String(cell.id)) === parentId) continue;
+
+    const oldParent = cellOrUndefined(graph, parentId);
+    if (oldParent === undefined) cell.unset('parent');
+    else oldParent.unembed(cell);
+  }
+
   const ordered = [...tree].sort(([a], [b]) => depthOf(a) - depthOf(b));
 
   for (const [childId, parentId] of ordered) {
     const child = cellOrUndefined(graph, childId);
     const parent = cellOrUndefined(graph, parentId);
     if (child === undefined || parent === undefined) continue;
+    if (child.get('parent') === parentId) continue;
+
     parent.embed(child);
   }
 }

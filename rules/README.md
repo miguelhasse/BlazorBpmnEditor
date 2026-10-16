@@ -11,6 +11,15 @@
 - **C#** — a Roslyn incremental source generator (`src/Bpmn.RulesGenerator`) that emits a typed
   `BpmnRules` catalog (id/scope/connectorKind/message/severity per rule) from the same file, so the
   rule catalog is never hand-duplicated.
+- **C#, live rules** — `BpmnConnectionRules` (`src/Bpmn/Validation`) evaluates the `live` rules from
+  the same table, embedded in Core, for callers that connect elements without the canvas, such as
+  agent tools. It is a port of the TypeScript evaluator, not a second rule set.
+
+`connection-cases.json` holds connection cases with their exact expected rule ids and inferred
+connector kind. Both runtimes evaluate every case — `test/rules/connection-cases.test.ts` in
+TypeScript and `ConnectionRulesTests` in `tests/Bpmn.Tests` — so a rule that fires in one runtime
+and not the other fails at least one suite. A deliberate change to a rule updates the affected
+cases in the same change.
 
 The split follows the architecture: TypeScript evaluates `scope: "live"` rules during a
 connection gesture, because a drag has to be judged at pointer speed. C# evaluates

@@ -28,6 +28,23 @@ export class ViewportController {
 
   #panning = false;
 
+  /*
+   * Wheel and pointer input is accumulated and applied once per animation frame.
+   *
+   * A trackpad or a high-rate mouse delivers wheel and pointermove events faster than the screen refreshes, and each applied change
+   * writes the paper's transform and re-decides visibility. Doing that per event meant several full passes per frame, which is
+   * where the worst zoom frames came from. Pending input is a screen-space pan, a product of zoom factors and the latest focus point.
+   */
+  #pendingDx = 0;
+  #pendingDy = 0;
+  #pendingFactor = 1;
+  #pendingFocus: { x: number; y: number } | null = null;
+  #frame = 0;
+  #destroyed = false;
+
+  /** The paper element's rectangle, read once per frame rather than once per event (it forces layout). */
+  #rect: DOMRect | null = null;
+
   public constructor(
     paper: dia.Paper,
     config: AcceptedConfig,
@@ -58,6 +75,9 @@ export class ViewportController {
   }
 
   public execute(command: ViewportCommand): void {
+    // A command is ordered after the input that came before it, so what the wheel already asked for lands first.
+    this.#flushNow();
+
     switch (command.kind) {
       case 'zoomIn':
         this.#zoomBy(this.#config.viewport.zoomStep, null);
@@ -66,7 +86,7 @@ export class ViewportController {
         this.#zoomBy(1 / this.#config.viewport.zoomStep, null);
         break;
       case 'setZoom':
-        this.#applyZoom(command.zoom, null);
+        if (this.#applyZoom(command.zoom, null)) this.#report();
         break;
       case 'panBy':
         this.#panBy(command.dx, command.dy);
@@ -142,17 +162,91 @@ export class ViewportController {
   }
 
   public get state(): ViewportChangedPayload {
+    this.#flushNow();
     const { sx } = this.#paper.scale();
     const { tx, ty } = this.#paper.translate();
     return { zoom: sx, translateX: tx, translateY: ty };
   }
 
   public destroy(): void {
+    // What the wheel already asked for is applied and reported first, so a rebuild that restores the viewport restores the one the user left.
+    this.#flushNow();
+    this.#destroyed = true;
+    this.#cancelFrame();
+    this.#pendingDx = 0;
+    this.#pendingDy = 0;
+    this.#pendingFactor = 1;
+    this.#pendingFocus = null;
     this.#abort.abort();
     this.#gestures.clear();
   }
 
-  /** Translates the paper by a screen-space delta. */
+  /** Queues a screen-space pan for the next frame. */
+  #queuePan(dx: number, dy: number): void {
+    if (dx === 0 && dy === 0) return;
+
+    this.#pendingDx += dx;
+    this.#pendingDy += dy;
+    this.#schedule();
+  }
+
+  /** Queues a zoom for the next frame; the latest focus point wins, the factors multiply. */
+  #queueZoom(factor: number, focus: { x: number; y: number } | null): void {
+    this.#pendingFactor *= factor;
+    if (focus !== null) this.#pendingFocus = focus;
+    this.#schedule();
+  }
+
+  #schedule(): void {
+    if (this.#frame === 0 && !this.#destroyed) this.#frame = requestAnimationFrame(this.#flushFrame);
+  }
+
+  #cancelFrame(): void {
+    if (this.#frame === 0) return;
+
+    cancelAnimationFrame(this.#frame);
+    this.#frame = 0;
+  }
+
+  /** Applies whatever is pending now, instead of at the next frame. */
+  #flushNow(): void {
+    if (this.#frame === 0) return;
+
+    this.#cancelFrame();
+    this.#applyPending();
+  }
+
+  readonly #flushFrame = (): void => {
+    this.#frame = 0;
+    this.#applyPending();
+  };
+
+  /** Pan first, so the zoom's focus point is where the pointer is now; one transform write each, one report. */
+  #applyPending(): void {
+    const dx = this.#pendingDx;
+    const dy = this.#pendingDy;
+    const factor = this.#pendingFactor;
+    const focus = this.#pendingFocus;
+    this.#pendingDx = 0;
+    this.#pendingDy = 0;
+    this.#pendingFactor = 1;
+    this.#pendingFocus = null;
+    this.#rect = null;
+    if (this.#destroyed) return;
+
+    let changed = false;
+    if (dx !== 0 || dy !== 0) {
+      const { tx, ty } = this.#paper.translate();
+      this.#paper.translate(tx + dx, ty + dy);
+      changed = true;
+    }
+
+    if (factor !== 1 && this.#applyZoom(this.#paper.scale().sx * factor, focus)) changed = true;
+
+    if (changed) this.#report();
+  }
+
+  /** Translates the paper by a screen-space delta, now. Commands use this; gestures queue instead. */
   #panBy(dx: number, dy: number): void {
     if (dx === 0 && dy === 0) return;
 
@@ -175,7 +269,7 @@ export class ViewportController {
 
     if (zooming) {
       const direction = event.deltaY < 0 ? zoomStep : 1 / zoomStep;
-      this.#zoomBy(direction, this.#elementPoint(event.clientX, event.clientY));
+      this.#queueZoom(direction, this.#elementPoint(event.clientX, event.clientY));
       return;
     }
 
@@ -184,7 +278,7 @@ export class ViewportController {
     const delta = this.#wheelDelta(event);
     const dx = event.shiftKey ? -delta.y : -delta.x;
     const dy = event.shiftKey ? 0 : -delta.y;
-    this.#panBy(dx * wheelPanSpeed, dy * wheelPanSpeed);
+    this.#queuePan(dx * wheelPanSpeed, dy * wheelPanSpeed);
   };
 
   /**
@@ -224,6 +318,7 @@ export class ViewportController {
       this.#paper.el.closest<HTMLElement>('[tabindex]')?.focus({ preventScroll: true });
     }
 
+    this.#rect = null;
     const point = this.#elementPoint(event.clientX, event.clientY);
     this.#gestures.start({ id: event.pointerId, ...point });
 
@@ -240,13 +335,13 @@ export class ViewportController {
 
     switch (intent.kind) {
       case 'pan':
-        this.#panBy(intent.dx, intent.dy);
+        this.#queuePan(intent.dx, intent.dy);
         break;
       case 'pinch':
-        // Translation is applied first so the zoom's focus point is where the fingers are now,
+        // Translation is applied first (see #applyPending) so the zoom's focus point is where the fingers are now,
         // not where they were when the gesture started.
-        this.#panBy(intent.dx, intent.dy);
-        this.#zoomBy(intent.scale, { x: intent.centerX, y: intent.centerY });
+        this.#queuePan(intent.dx, intent.dy);
+        this.#queueZoom(intent.scale, { x: intent.centerX, y: intent.centerY });
         break;
       case 'none':
         break;
@@ -290,20 +385,20 @@ export class ViewportController {
   }
 
   #elementPoint(clientX: number, clientY: number): { x: number; y: number } {
-    const rect = this.#paper.el.getBoundingClientRect();
+    const rect = (this.#rect ??= this.#paper.el.getBoundingClientRect());
     return { x: clientX - rect.left, y: clientY - rect.top };
   }
 
   #zoomBy(factor: number, focus: { x: number; y: number } | null): void {
-    this.#applyZoom(this.#paper.scale().sx * factor, focus);
+    if (this.#applyZoom(this.#paper.scale().sx * factor, focus)) this.#report();
   }
 
-  /** Clamps to the configured bounds and keeps the focus point visually stationary. */
-  #applyZoom(requested: number, focus: { x: number; y: number } | null): void {
+  /** Clamps to the configured bounds and keeps the focus point visually stationary. Returns whether the scale changed; the caller reports. */
+  #applyZoom(requested: number, focus: { x: number; y: number } | null): boolean {
     const { minZoom, maxZoom } = this.#config.viewport;
     const next = Math.min(maxZoom, Math.max(minZoom, requested));
     const current = this.#paper.scale().sx;
-    if (next === current) return;
+    if (next === current) return false;
 
     if (focus !== null) {
       const { tx, ty } = this.#paper.translate();
@@ -312,7 +407,7 @@ export class ViewportController {
     }
 
     this.#paper.scale(next, next);
-    this.#report();
+    return true;
   }
 
   #report(): void {

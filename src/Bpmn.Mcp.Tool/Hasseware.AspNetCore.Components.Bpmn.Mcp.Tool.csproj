@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Hasseware.AspNetCore.Components.Bpmn.Mcp.Tool</AssemblyName>
+    <RootNamespace>Hasseware.AspNetCore.Components.Bpmn.Mcp.Tool</RootNamespace>
+    <PackageId>Hasseware.AspNetCore.Components.Bpmn.Mcp.Tool</PackageId>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>bpmn-mcp</ToolCommandName>
+    <Description>Preview. bpmn-mcp: serves a folder of BPMN diagrams to AI agents over MCP (stdio), and validates .bpmn files from the command line for CI.</Description>
+    <PackageTags>bpmn;mcp;agents;cli;validation</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+    <!-- The symbols are embedded; a separate symbol package would have nothing in it. -->
+    <IncludeSymbols>false</IncludeSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bpmn.Mcp\Hasseware.AspNetCore.Components.Bpmn.Mcp.csproj" />
+    <ProjectReference Include="..\Bpmn.Storage.FileSystem\Hasseware.AspNetCore.Components.Bpmn.Storage.FileSystem.csproj" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

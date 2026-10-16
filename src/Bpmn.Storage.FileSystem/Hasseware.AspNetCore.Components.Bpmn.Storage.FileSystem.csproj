@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Hasseware.AspNetCore.Components.Bpmn.Storage.FileSystem</AssemblyName>
+    <RootNamespace>Hasseware.AspNetCore.Components.Bpmn.Storage.FileSystem</RootNamespace>
+    <PackageId>Hasseware.AspNetCore.Components.Bpmn.Storage.FileSystem</PackageId>
+    <Description>Preview. A BPMN document store over a folder of .bpmn, .xml and .json files, with atomic writes, revision checks across processes, and no path that can leave the folder. For the bpmn-mcp tool, CI, and Blazor Server hosts.</Description>
+    <PackageTags>bpmn;storage;filesystem</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bpmn\Hasseware.AspNetCore.Components.Bpmn.csproj" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

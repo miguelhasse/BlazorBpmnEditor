@@ -1,0 +1,33 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.FluentUI.AspNetCore.Components.Bpmn.Resources.FluentBpmnEditorStrings> EditorL
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
+@inherits BpmnAgentConfirmationBase
+
+@if (Request is { } request)
+{
+    <FluentBpmnDialog Class="@CssClass("bpmn-confirm")" OnDismiss="DenyAsync" role="alertdialog" aria-modal="true" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+        <div class="bpmn-confirm__panel @(request.IsDestructive ? "bpmn-confirm__panel--destructive" : null)">
+            <p class="bpmn-confirm__origin">@EditorText("AgentConfirmation.RequestedBy", AgentName)</p>
+            <h2 class="bpmn-confirm__title">@request.Title</h2>
+            <p class="bpmn-confirm__summary">@request.Summary</p>
+
+            @if (request.Details.Count > 0)
+            {
+                <ul class="bpmn-confirm__details" aria-label="@EditorText("AgentConfirmation.Details")">
+                    @foreach (var detail in request.Details)
+                    {
+                        <li>@detail</li>
+                    }
+                </ul>
+            }
+
+            <div class="bpmn-confirm__actions">
+                <FluentButton Type="ButtonType.Button" IconStart="@(new Icons.Regular.Size20.Dismiss())" Class="bpmn-confirm__deny" OnClick="DenyAsync">
+                    @EditorText("AgentConfirmation.Deny")
+                </FluentButton>
+                <FluentButton Type="ButtonType.Button" Class="bpmn-confirm__allow" OnClick="AllowAsync">
+                    @EditorText("AgentConfirmation.Allow")
+                </FluentButton>
+            </div>
+        </div>
+    </FluentBpmnDialog>
+}

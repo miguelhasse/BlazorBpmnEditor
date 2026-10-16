@@ -39,6 +39,8 @@ public static class FluentBpmnDefaults
             .UseDefault<FluentBpmnContextMenu>(BpmnEditorPart.ContextMenu)
             .UseDefault<FluentBpmnContextualActions>(BpmnEditorPart.ContextualActions)
             .UseDefault<FluentBpmnImportOffer>(BpmnEditorPart.ImportOffer)
+            .UseDefault<FluentBpmnExternalChangeOffer>(BpmnEditorPart.ExternalChangeOffer)
+            .UseDefault<FluentBpmnAgentConfirmation>(BpmnEditorPart.AgentConfirmation)
             .UseDefault<FluentBpmnCalledElementPicker>(BpmnEditorPart.CalledElementPicker)
             .UseDefault<FluentBpmnShortcutHelp>(BpmnEditorPart.ShortcutHelp)
             .UseDefault<BpmnLabelEditor>(BpmnEditorPart.LabelEditor)

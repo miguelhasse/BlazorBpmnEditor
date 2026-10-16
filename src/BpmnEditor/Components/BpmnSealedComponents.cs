@@ -18,6 +18,12 @@ public sealed partial class BpmnShortcutHelp;
 /// <summary>Standard HTML rendering of <see cref="BpmnImportOfferBase"/>.</summary>
 public sealed partial class BpmnImportOffer;
 
+/// <summary>Standard HTML rendering of <see cref="BpmnExternalChangeOfferBase"/>.</summary>
+public sealed partial class BpmnExternalChangeOffer;
+
+/// <summary>Standard HTML rendering of <see cref="BpmnAgentConfirmationBase"/>.</summary>
+public sealed partial class BpmnAgentConfirmation;
+
 /// <summary>Standard HTML rendering of <see cref="BpmnCalledElementPickerBase"/>.</summary>
 public sealed partial class BpmnCalledElementPicker;
 

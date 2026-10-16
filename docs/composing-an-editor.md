@@ -34,7 +34,9 @@ This example uses the standard kit's registered defaults but replaces its layout
         <header><BpmnPart Part="BpmnEditorPart.Toolbar" /></header>
         <div class="my-editor__body">
             <aside aria-label="Shapes"><BpmnPart Part="BpmnEditorPart.Stencil" /></aside>
-            <BpmnEditorCanvas />
+            <BpmnEditorCanvas>
+                <BpmnPart Part="BpmnEditorPart.ExternalChangeOffer" />
+            </BpmnEditorCanvas>
             <aside aria-label="Properties"><BpmnPart Part="BpmnEditorPart.PropertyPanel" /></aside>
         </div>
         <BpmnPart Part="BpmnEditorPart.ValidationPanel" />
@@ -136,6 +138,20 @@ Resolution order:
 Each kit composition supplies its own defaults, so both kits can share one DI container without
 registration order changing their appearance. A bare custom scope uses application defaults unless
 it supplies `KitDefaults`, for example `KitDefaults="@BpmnStandardDefaults.Kit"`.
+
+## Offering the editor to browser agents
+
+`<BpmnWebMcp />` from the optional `Bpmn.WebMcp` package belongs inside the editor's scope and draws nothing, so the
+`Dialogs` slot is where it goes; see [Offering the editor to browser agents](webmcp.md):
+
+```razor
+<BpmnEditor Document="@document">
+    <Dialogs><BpmnWebMcp /></Dialogs>
+</BpmnEditor>
+```
+
+Agents can only look until the host sets `AllowMutations`; then they can edit, and deleting and saving ask the user
+through the editor's `AgentConfirmation` part, which both kits include.
 
 ## Typed cascades and required parents
 

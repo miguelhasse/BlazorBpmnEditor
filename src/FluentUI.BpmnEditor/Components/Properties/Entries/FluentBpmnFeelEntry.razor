@@ -6,25 +6,25 @@
     @if (Entry.Feel == BpmnFeelMode.Optional)
     {
         <FluentButton Type="ButtonType.Button" Class="@(Block + "__feel-toggle")" aria-label="@EditorL["FeelEntry.Toggle"]"
-                aria-pressed="@(FeelActive ? "true" : "false")" Disabled="@ReadOnly" OnClick="ToggleAsync">@Text("Expression.Function")</FluentButton>
+                      aria-pressed="@(FeelActive ? "true" : "false")" Disabled="@ReadOnly" OnClick="ToggleAsync">@Text("Expression.Function")</FluentButton>
     }
     @if (ReadOnly || FeelActive)
     {
         <FluentBpmnPropertyEntryFrame Context="@(Context with { ErrorId = ErrorId })">
             <span class="@(Block + "__feel-control")">
-            @if (FeelActive)
-            {
-                <span class="@(Block + "__feel-badge")">@Text("Expression.Feel")</span>
-            }
-            <FluentTextArea Class="@(Block + "__text " + Block + "__feel")" Height="@(MultilineRows * 1.5 + "em")"
-                            ReadOnly="@ReadOnly" Value="@(ReadOnly ? _value : Expression)" Placeholder="@Entry.Placeholder"
-                            AriaLabel="@Entry.Label" Immediate="true" aria-invalid="@(Entry.Error is not null || Warning is not null ? "true" : null)"
-                            aria-describedby="@DescribedBy" @key="Context.Revision"
-                            ValueChanged="DraftChanged" OnFocusOut="CommitExpressionAsync" />
-            @if (Warning is { } warning)
-            {
-                <span id="@_warningId" class="@(Block + "__feel-warning")" role="status">@warning</span>
-            }
+                @if (FeelActive)
+                {
+                    <span class="@(Block + "__feel-badge")">@Text("Expression.Feel")</span>
+                }
+                <FluentTextArea Class="@(Block + "__text " + Block + "__feel")" Height="@(MultilineRows * 1.5 + "em")"
+                                ReadOnly="@ReadOnly" Value="@(ReadOnly ? _value : Expression)" Placeholder="@Entry.Placeholder"
+                                AriaLabel="@Entry.Label" Immediate="true" aria-invalid="@(Entry.Error is not null || Warning is not null ? "true" : null)"
+                                aria-describedby="@DescribedBy" @key="Context.Revision"
+                                ValueChanged="DraftChanged" OnFocusOut="CommitExpressionAsync" />
+                @if (Warning is { } warning)
+                {
+                    <span id="@_warningId" class="@(Block + "__feel-warning")" role="status">@warning</span>
+                }
             </span>
         </FluentBpmnPropertyEntryFrame>
     }

@@ -33,7 +33,20 @@
   <data name="Editor.SnapToGrid" xml:space="preserve"><value>Snap to grid</value></data>
   <data name="Editor.Properties" xml:space="preserve"><value>Properties</value></data>
   <data name="Editor.HighContrast" xml:space="preserve"><value>High contrast</value></data>
+  <data name="Live.Title" xml:space="preserve"><value>Live updates</value></data>
+  <data name="Live.Intro" xml:space="preserve"><value>Watches a document in the server's store over Server-Sent Events, in the browser. Press Watch, then make a change on the server: it arrives here. The stream is closed by the server every few seconds so that you can see the connection reopen.</value></data>
+  <data name="Live.Path" xml:space="preserve"><value>Document</value></data>
+  <data name="Live.Watch" xml:space="preserve"><value>Watch</value></data>
+  <data name="Live.Change" xml:space="preserve"><value>Change it on the server</value></data>
+  <data name="Live.State" xml:space="preserve"><value>Feed:</value></data>
+  <data name="Live.Gaps" xml:space="preserve"><value>Reconnections:</value></data>
   <data name="Editor.ReadOnly" xml:space="preserve"><value>Read only</value></data>
+  <data name="Editor.WebMcp" xml:space="preserve"><value>Offer to browser agents (WebMCP)</value></data>
+  <data name="Editor.WebMcpRegistered" xml:space="preserve"><value>{0} read-only tools offered</value></data>
+  <data name="Editor.WebMcpEdit" xml:space="preserve"><value>Let agents edit (deleting and saving ask you first)</value></data>
+  <data name="Editor.WebMcpRegisteredEditing" xml:space="preserve"><value>{0} tools offered, editing allowed</value></data>
+  <data name="Editor.WebMcpUnsupported" xml:space="preserve"><value>This browser has no WebMCP</value></data>
+  <data name="Editor.WebMcpFailed" xml:space="preserve"><value>The browser refused the tools</value></data>
   <data name="Editor.ExecutionState" xml:space="preserve"><value>Execution state</value></data>
   <data name="Editor.AnimateTokens" xml:space="preserve"><value>Animate tokens</value></data>
   <data name="Editor.DiagramPath" xml:space="preserve"><value>Diagram path</value></data>
@@ -94,4 +107,10 @@
   <data name="Interchange.ForeignAttributes" xml:space="preserve"><value>Foreign attributes</value></data>
   <data name="Interchange.Stable" xml:space="preserve"><value>Stable on rewrite</value></data>
   <data name="Interchange.Was" xml:space="preserve"><value>{0} (was {1})</value></data>
+  <data name="Editor.Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Editor.SimulateExternalChange" xml:space="preserve"><value>Simulate external change</value></data>
+  <data name="Editor.Saved" xml:space="preserve"><value>Saved (revision {0})</value></data>
+  <data name="Editor.Unsaved" xml:space="preserve"><value>Unsaved changes</value></data>
+  <data name="Editor.SaveConflict" xml:space="preserve"><value>Not saved: the stored document was changed elsewhere.</value></data>
+  <data name="Editor.EditedElsewhere" xml:space="preserve"><value>{0} (edited elsewhere)</value></data>
 </root>

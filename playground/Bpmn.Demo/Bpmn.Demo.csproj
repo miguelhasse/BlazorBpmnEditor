@@ -16,5 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Bpmn.Demo.Client\Bpmn.Demo.Client.csproj" />
+    <ProjectReference Include="..\..\src\Bpmn.Storage.ServerSentEvents\Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents.csproj" />
   </ItemGroup>
 </Project>

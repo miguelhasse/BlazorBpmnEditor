@@ -1,3 +1,4 @@
+using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Microsoft.AspNetCore.Components;
 
 namespace Hasseware.AspNetCore.Components.Bpmn;

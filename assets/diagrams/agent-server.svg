@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1140 560" role="img" aria-labelledby="title desc">
+  <title id="title">Headless agent server (preview)</title>
+  <desc id="desc">The bpmn-mcp tool references the MCP server library and the file store. The MCP library references the shared tool handlers and Core; the file store references Core. The contract test suite for stores references Core.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="140%"><feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity=".13"/></filter>
+    <style>
+      text { font-family: Segoe UI, Arial, sans-serif; font-size: 16px; } text:not([fill]) { fill: #1e293b; }
+      .cs { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.5; filter: url(#shadow); }
+      .test { fill: #f1f5f9; stroke: #94a3b8; stroke-width: 1.5; filter: url(#shadow); }
+      .edge { fill: none; stroke: #2563eb; stroke-width: 2; marker-end: url(#arrow); }
+      .heading { font-size: 24px; font-weight: 700; } .name { font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="1140" height="560" fill="#f8fafc"/>
+  <text x="570" y="38" text-anchor="middle" class="heading">Headless agent server (preview)</text>
+  <text x="570" y="64" text-anchor="middle" fill="#64748b">Solid: dependent → referenced project. Plain libraries: no Blazor, no JavaScript.</text>
+  <line x1="40" y1="84" x2="1100" y2="84" stroke="#e2e8f0" stroke-width="1.5"/>
+  <path class="edge" d="M110 190V250"/>
+  <path class="edge" d="M480 190V220H210V250"/>
+  <path class="edge" d="M660 190V220H930V250"/>
+  <path class="edge" d="M110 350V420"/>
+  <path class="edge" d="M260 350V385H500V420"/>
+  <path class="edge" d="M930 350V385H640V420"/>
+  <path class="edge" d="M360 465H420"/>
+  <path class="edge" d="M780 465H720"/>
+  <g transform="translate(420 90)"><rect class="cs" width="300" height="100" rx="8"/>
+    <text x="150" y="34" text-anchor="middle"><tspan class="name">Bpmn.Mcp.Tool</tspan><tspan x="150" dy="25">src/Bpmn.Mcp.Tool</tspan><tspan x="150" dy="25">dotnet tool bpmn-mcp: serve, validate</tspan></text>
+  </g>
+  <g transform="translate(60 90)"><rect class="cs" width="300" height="100" rx="8"/>
+    <text x="150" y="34" text-anchor="middle"><tspan class="name">Bpmn.Mcp.AspNetCore</tspan><tspan x="150" dy="25">src/Bpmn.Mcp.AspNetCore</tspan><tspan x="150" dy="25">HTTP host: stateless, authenticated</tspan></text>
+  </g>
+  <g transform="translate(60 250)"><rect class="cs" width="300" height="100" rx="8"/>
+    <text x="150" y="34" text-anchor="middle"><tspan class="name">Bpmn.Mcp</tspan><tspan x="150" dy="25">src/Bpmn.Mcp</tspan><tspan x="150" dy="25">MCP server tools, reading and writing</tspan></text>
+  </g>
+  <g transform="translate(780 250)"><rect class="cs" width="300" height="100" rx="8"/>
+    <text x="150" y="34" text-anchor="middle"><tspan class="name">Bpmn.Storage.FileSystem</tspan><tspan x="150" dy="25">src/Bpmn.Storage.FileSystem</tspan><tspan x="150" dy="25">Folder-backed document store</tspan></text>
+  </g>
+  <g transform="translate(60 420)"><rect class="cs" width="300" height="90" rx="8"/>
+    <text x="150" y="28" text-anchor="middle"><tspan class="name">Bpmn.Tools</tspan><tspan x="150" dy="25">src/Bpmn.Tools</tspan><tspan x="150" dy="25">Shared tool handlers</tspan></text>
+  </g>
+  <g transform="translate(420 420)"><rect class="cs" width="300" height="90" rx="8"/>
+    <text x="150" y="28" text-anchor="middle"><tspan class="name">Bpmn (Core)</tspan><tspan x="150" dy="25">src/Bpmn</tspan><tspan x="150" dy="25">IBpmnDocumentStore, model, validation</tspan></text>
+  </g>
+  <g transform="translate(780 420)"><rect class="test" width="300" height="90" rx="8"/>
+    <text x="150" y="28" text-anchor="middle"><tspan class="name">Bpmn.Storage.Testing</tspan><tspan x="150" dy="25">tests/Bpmn.Storage.Testing</tspan><tspan x="150" dy="25">Store contract tests (xUnit)</tspan></text>
+  </g>
+</svg>

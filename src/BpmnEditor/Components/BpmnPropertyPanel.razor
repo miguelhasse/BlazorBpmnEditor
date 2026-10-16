@@ -83,10 +83,6 @@
                          open="@group.OpenByDefault" data-group-id="@group.Id" @key="@(group.Id + ":" + Only?.ElementId)">
                     <summary class="bpmn-properties__heading" title="@group.Tooltip">
                         @(group.Label ?? group.Id)
-                        @if (group.Namespace is not null)
-                        {
-                            <span class="bpmn-properties__namespace-badge">@group.Namespace</span>
-                        }
                     </summary>
                     <div class="bpmn-properties__properties" role="group" aria-label="@(group.Label ?? group.Id)">
                         @foreach (var entry in context.Entries)

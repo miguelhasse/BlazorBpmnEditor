@@ -26,6 +26,8 @@
     <ProjectReference Include="..\..\src\BpmnEditor\Hasseware.AspNetCore.Components.BpmnEditor.csproj" />
     <ProjectReference Include="..\..\src\FluentUI.BpmnEditor\Hasseware.FluentUI.AspNetCore.Components.BpmnEditor.csproj" />
     <ProjectReference Include="..\..\src\Bpmn.Feel\Hasseware.AspNetCore.Components.Bpmn.Feel.csproj" />
+    <ProjectReference Include="..\..\src\Bpmn.WebMcp\Hasseware.AspNetCore.Components.Bpmn.WebMcp.csproj" />
+    <ProjectReference Include="..\..\src\Bpmn.Storage.ServerSentEvents.Client\Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents.Client.csproj" />
   </ItemGroup>
 
 </Project>

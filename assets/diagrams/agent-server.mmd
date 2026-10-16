@@ -1,0 +1,23 @@
+%% Headless agent server (preview)
+%% Solid arrows: dependent → referenced project. All plain class libraries; Bpmn.Mcp.Tool is a dotnet tool.
+%% Bpmn.Mcp is built on ModelContextProtocol 2.2.0; Bpmn.Storage.Testing carries the contract suite every store must pass.
+flowchart TB
+    http["Bpmn.Mcp.AspNetCore<br/>src/Bpmn.Mcp.AspNetCore<br/>HTTP host: stateless, authenticated"]:::cs
+    tool["Bpmn.Mcp.Tool<br/>src/Bpmn.Mcp.Tool<br/>dotnet tool bpmn-mcp: serve, validate"]:::cs
+    mcp["Bpmn.Mcp<br/>src/Bpmn.Mcp<br/>MCP server tools, reading and writing"]:::cs
+    fs["Bpmn.Storage.FileSystem<br/>src/Bpmn.Storage.FileSystem<br/>Folder-backed document store"]:::cs
+    tools["Bpmn.Tools<br/>src/Bpmn.Tools<br/>Shared tool handlers"]:::cs
+    core["Bpmn (Core)<br/>src/Bpmn<br/>IBpmnDocumentStore, model, validation"]:::cs
+    testing["Bpmn.Storage.Testing<br/>tests/Bpmn.Storage.Testing<br/>Store contract tests (xUnit)"]:::test
+
+    http --> mcp
+    tool --> mcp
+    tool --> fs
+    mcp --> tools
+    mcp --> core
+    fs --> core
+    tools --> core
+    testing --> core
+
+    classDef cs fill:#a5d8ff,stroke:#343a40,color:#212529
+    classDef test fill:#e9ecef,stroke:#343a40,color:#212529

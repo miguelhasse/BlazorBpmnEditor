@@ -61,6 +61,19 @@ public sealed partial class BpmnEditorScope : ComponentBase, IDisposable
     [Parameter]
     public BpmnDocument? Document { get; set; }
 
+    /// <summary>
+    /// A binding to a stored document, instead of <see cref="Document"/>: the editor shows the binding's
+    /// document, reports every edit to it, and shows its external changes.
+    /// </summary>
+    /// <remarks>
+    /// The host creates the binding through <see cref="Storage.IBpmnDocumentBindingFactory"/>, loads and
+    /// saves through it, and disposes it. One binding serves one editor at a time; an editor given a binding
+    /// another editor holds takes it over, and the other stops reporting to it. Setting both this and
+    /// <see cref="Document"/> is an error.
+    /// </remarks>
+    [Parameter]
+    public Storage.BpmnDocumentBinding? DocumentBinding { get; set; }
+
     /// <summary>Which diagram to show; the first declared one when omitted.</summary>
     [Parameter]
     public string? DiagramId { get; set; }
@@ -260,7 +273,8 @@ public sealed partial class BpmnEditorScope : ComponentBase, IDisposable
         Session.OnImported = OnImported;
         Session.OnDiagramNavigated = OnDiagramNavigated;
         Session.Configuration = Configuration;
-        Session.Document = Document;
+        AttachBinding();
+        Session.Document = DocumentBinding?.Document ?? Document;
         Session.DiagramId = DiagramId;
         Session.IsReadOnly = IsReadOnly;
         Session.ExecutionAnimation = ExecutionAnimation;
@@ -286,6 +300,63 @@ public sealed partial class BpmnEditorScope : ComponentBase, IDisposable
     }
 
     private void HandleStateChanged(object? sender, EventArgs args) => _ = InvokeAsync(StateHasChanged);
+
+    private void AttachBinding()
+    {
+        if (DocumentBinding is not null && Document is not null)
+        {
+            throw new InvalidOperationException($"Set either {nameof(Document)} or {nameof(DocumentBinding)} on {nameof(BpmnEditorScope)}, not both.");
+        }
+
+        var binding = DocumentBinding;
+        if (ReferenceEquals(Session.DocumentBinding, binding)) return;
+
+        DetachBinding();
+        if (binding is null) return;
+
+        // The most recently attached editor owns the binding. Blazor gives a replacement editor its
+        // parameters before it disposes the one being replaced, so swapping one editor for another in a
+        // single render must hand the binding over rather than fail.
+        binding.Release?.Invoke();
+
+        binding.Owner = this;
+        binding.Release = DetachBinding;
+        binding.Dispatcher = work => InvokeAsync(work);
+        binding.IsBusy = () => Session.IsEditingLabel;
+        binding.Changed += HandleBindingChanged;
+        Session.DocumentBinding = binding;
+    }
+
+    private void DetachBinding()
+    {
+        if (Session.DocumentBinding is not { } binding) return;
+
+        binding.Changed -= HandleBindingChanged;
+        Session.DocumentBinding = null;
+
+        // Leave the hooks alone if another editor has already taken the binding over.
+        if (!ReferenceEquals(binding.Owner, this)) return;
+
+        binding.Owner = null;
+        binding.Release = null;
+        binding.Dispatcher = null;
+        binding.IsBusy = null;
+    }
+
+    // A load or reload replaces the document without the host re-rendering, so the session is told here.
+    // An edit the session published itself is recognised as its own and does not reset history.
+    private void HandleBindingChanged(object? sender, EventArgs args) => _ = InvokeAsync(() =>
+    {
+        if (Session.DocumentBinding is not { } binding) return;
+
+        if (!ReferenceEquals(Session.Document, binding.Document))
+        {
+            Session.Document = binding.Document;
+            Session.UpdateParameters(_snapshot);
+        }
+
+        Session.BindingChanged();
+    });
 
     private BpmnSchemaChildOrder? _extensionOrder;
 
@@ -320,6 +391,13 @@ public sealed partial class BpmnEditorScope : ComponentBase, IDisposable
         };
     }
 
-    /// <summary>Unsubscribes from session changes when the scope is removed.</summary>
-    public void Dispose() => Session.StateChanged -= HandleStateChanged;
+    /// <summary>Unsubscribes from session changes and detaches any document binding when the scope is removed.</summary>
+    public void Dispose()
+    {
+        Session.StateChanged -= HandleStateChanged;
+        DetachBinding();
+
+        // An agent waiting on the user must not wait forever for an editor that is gone.
+        Session.ResolveConfirmation(allowed: false);
+    }
 }

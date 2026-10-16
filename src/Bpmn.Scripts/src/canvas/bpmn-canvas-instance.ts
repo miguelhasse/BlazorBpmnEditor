@@ -570,30 +570,46 @@ export class BpmnCanvasInstance {
     if (this.#disposed) return;
     this.#disposed = true;
 
-    this.#contextMenu.dispose();
-    this.#paperHost.graph.off('change:position change:size', this.#handleGeometryChanged);
-    this.#anchorReporter?.destroy();
-    this.#anchorReporter = null;
-    this.#stencilDrag.destroy();
-    this.#execution.destroy();
-    this.#labelEdit.dispose();
-    this.#expandControls.dispose();
-    this.#linkEdit?.destroy();
-    this.#segmentDrag?.destroy();
-    this.#resize?.destroy();
-    this.#laneSplitters?.destroy();
-    this.#releaseNativeMenu();
-    this.#rubberBand?.destroy();
-    this.#connect.destroy();
-    this.#interaction.destroy();
-    this.#fileDrop.detach();
-    this.#shortcuts.destroy();
-    this.#snapping.destroy();
-    this.#accessibility.destroy();
-    this.#viewport.destroy();
-    this.#paperHost.destroy();
-    this.#bridge.dispose();
+    // Every step runs even if an earlier one throws: a controller that fails to let go must not leave the ones after it, and the window listeners some of
+    // them hold, attached to a canvas nobody owns any more. The failures are reported once all of them have run.
+    const steps: (() => void)[] = [
+      () => { this.#contextMenu.dispose(); },
+      () => { this.#paperHost.graph.off('change:position change:size', this.#handleGeometryChanged); },
+      () => { this.#anchorReporter?.destroy(); },
+      () => { this.#anchorReporter = null; },
+      () => { this.#stencilDrag.destroy(); },
+      () => { this.#execution.destroy(); },
+      () => { this.#labelEdit.dispose(); },
+      () => { this.#expandControls.dispose(); },
+      () => { this.#linkEdit?.destroy(); },
+      () => { this.#segmentDrag?.destroy(); },
+      () => { this.#resize?.destroy(); },
+      () => { this.#laneSplitters?.destroy(); },
+      () => { this.#releaseNativeMenu(); },
+      () => { this.#rubberBand?.destroy(); },
+      () => { this.#connect.destroy(); },
+      () => { this.#interaction.destroy(); },
+      () => { this.#fileDrop.detach(); },
+      () => { this.#shortcuts.destroy(); },
+      () => { this.#snapping.destroy(); },
+      () => { this.#accessibility.destroy(); },
+      () => { this.#viewport.destroy(); },
+      () => { this.#paperHost.destroy(); },
+      () => { this.#bridge.dispose(); },
+    ];
+
+    const failures: unknown[] = [];
+    for (const step of steps) {
+      try {
+        step();
+      } catch (failure) {
+        failures.push(failure);
+      }
+    }
     this.#document = null;
+
+    if (failures.length === 1) throw failures[0];
+    if (failures.length > 1) throw new AggregateError(failures, 'Several parts of the canvas failed to release.');
   }
 
   #assertUsable(): void {

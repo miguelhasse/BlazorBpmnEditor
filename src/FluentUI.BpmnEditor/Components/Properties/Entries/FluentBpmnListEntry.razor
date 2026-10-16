@@ -4,7 +4,6 @@
 @using Hasseware.AspNetCore.Components.Bpmn.Validation
 
 <div class="@(Block + "__property " + Block + "__list")" title="@Entry.Tooltip">
-    <span class="@(Block + "__label")">@Entry.Label</span>
     <table class="@(Block + "__table")" aria-label="@Entry.Label">
         <thead><tr>
             @foreach (var column in VisibleColumns)
@@ -37,9 +36,9 @@
                     @if (!ReadOnly)
                     {
                         <td class="@(Block + "__row-actions")">
-                            <FluentButton Type="ButtonType.Button" aria-label="@EditorL["ListEntry.RemoveLabel", rowIndex + 1]" IconStart="@(new Icons.Regular.Size20.Delete())" OnClick="@(() => RemoveAsync(rowIndex))">@EditorL["ListEntry.Remove"]</FluentButton>
-                            <FluentButton Type="ButtonType.Button" aria-label="@EditorL["ListEntry.MoveUp", rowIndex + 1]" Disabled="@(rowIndex == 0)" IconStart="@(new Icons.Regular.Size20.ArrowUp())" IconOnly="true" OnClick="@(() => MoveAsync(rowIndex, -1))">↑</FluentButton>
-                            <FluentButton Type="ButtonType.Button" aria-label="@EditorL["ListEntry.MoveDown", rowIndex + 1]" Disabled="@(rowIndex == _rows.Count - 1)" IconStart="@(new Icons.Regular.Size20.ArrowDown())" IconOnly="true" OnClick="@(() => MoveAsync(rowIndex, 1))">↓</FluentButton>
+                            <FluentButton Type="ButtonType.Button" aria-label="@EditorL["ListEntry.RemoveLabel", rowIndex + 1]" IconStart="@(new Icons.Regular.Size20.Delete())" Tooltip="@EditorL["ListEntry.Remove", rowIndex + 1]" IconOnly="true" OnClick="@(() => RemoveAsync(rowIndex))" />
+                            <FluentButton Type="ButtonType.Button" aria-label="@EditorL["ListEntry.MoveUp", rowIndex + 1]" Disabled="@(rowIndex == 0)" IconStart="@(new Icons.Regular.Size20.ArrowUp())" IconOnly="true" OnClick="@(() => MoveAsync(rowIndex, -1))" />
+                            <FluentButton Type="ButtonType.Button" aria-label="@EditorL["ListEntry.MoveDown", rowIndex + 1]" Disabled="@(rowIndex == _rows.Count - 1)" IconStart="@(new Icons.Regular.Size20.ArrowDown())" IconOnly="true" OnClick="@(() => MoveAsync(rowIndex, 1))" />
                         </td>
                     }
                 </tr>

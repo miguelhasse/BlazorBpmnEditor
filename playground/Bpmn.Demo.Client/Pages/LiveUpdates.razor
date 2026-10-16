@@ -1,0 +1,30 @@
+@page "/live-updates"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+@implements IAsyncDisposable
+
+<PageTitle>@Localizer["Live.Title"]</PageTitle>
+
+<h1>@Localizer["Live.Title"]</h1>
+
+<p>@Localizer["Live.Intro"]</p>
+
+<div class="live-controls">
+    <label>
+        @Localizer["Live.Path"]
+        <input class="live-path" @bind="_path" disabled="@_watching" />
+    </label>
+    <button type="button" class="live-watch" @onclick="WatchAsync" disabled="@_watching">@Localizer["Live.Watch"]</button>
+    <button type="button" class="live-change" @onclick="ChangeAsync">@Localizer["Live.Change"]</button>
+</div>
+
+<p>
+    @Localizer["Live.State"] <span class="live-state">@_state</span>
+    · @Localizer["Live.Gaps"] <span class="live-gaps">@_gaps</span>
+</p>
+
+<ul class="live-events">
+    @foreach (var line in _events)
+    {
+        <li>@line</li>
+    }
+</ul>

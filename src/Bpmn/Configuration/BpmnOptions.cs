@@ -47,6 +47,10 @@ public sealed class BpmnOptions
 
     /// <summary>Execution overlay options applied to every editor unless overridden.</summary>
     public ExecutionOptions Execution { get; set; } = ExecutionOptions.Default;
+
+    /// <summary>Document storage behaviour, such as the response to external changes.</summary>
+    public StorageOptions Storage { get; set; } = StorageOptions.Default;
+
     /// <summary>Element-template registry and loading options.</summary>
     public BpmnTemplateOptions Templates { get; } = new();
     /// <summary>Opt-in extension schemas used by extension editors.</summary>

@@ -42,4 +42,16 @@ public enum BpmnEditorPart
 
     /// <summary>The keyboard shortcut help dialog; derives from <see cref="BpmnShortcutHelpBase"/>.</summary>
     ShortcutHelp,
+
+    /// <summary>
+    /// The notice that someone else changed the bound stored document; derives from
+    /// <see cref="BpmnExternalChangeOfferBase"/>.
+    /// </summary>
+    ExternalChangeOffer,
+
+    /// <summary>
+    /// The question asking the user to allow an agent's consequential action; derives from
+    /// <see cref="BpmnAgentConfirmationBase"/>.
+    /// </summary>
+    AgentConfirmation,
 }

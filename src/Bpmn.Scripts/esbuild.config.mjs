@@ -90,6 +90,6 @@ for (const [file, meta] of Object.entries({ ...jsResult.metafile.outputs, ...css
 
 await writeFile(
   'dist/bundle-manifest.json',
-  `${JSON.stringify({ buildMode, generatedAt: new Date().toISOString(), componentCss, outputs }, null, 2)}\n`,
+  `${JSON.stringify({ buildMode, componentCss, outputs }, null, 2)}\n`,
   'utf8',
 );

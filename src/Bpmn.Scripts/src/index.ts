@@ -80,12 +80,23 @@ export async function initialize(
 
   if (BUILD_MODE === 'Debug') tracked.set(hostElement, instance);
 
-  if (document !== null) {
-    const loaded = instance.loadDocument(document, null);
-    await bridge.documentLoaded(loaded);
-  }
+  try {
+    if (document !== null) {
+      const loaded = instance.loadDocument(document, null);
+      await bridge.documentLoaded(loaded);
+    }
 
-  await bridge.initialized({ instanceId: instance.id, configRevision: result.config.revision });
+    await bridge.initialized({ instanceId: instance.id, configRevision: result.config.revision });
+  } catch (failure) {
+    // No handle is returned for .NET to dispose, so nothing else will: the instance holds window listeners and a paper.
+    try {
+      handle.dispose();
+    } catch {
+      // The failure being reported is the one that matters.
+    }
+
+    throw failure;
+  }
 
   return handle;
 }

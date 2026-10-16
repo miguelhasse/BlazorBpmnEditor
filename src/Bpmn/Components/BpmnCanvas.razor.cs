@@ -11,6 +11,7 @@ using Hasseware.AspNetCore.Components.Bpmn.Resources;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 
 namespace Hasseware.AspNetCore.Components.Bpmn;
@@ -37,7 +38,31 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
 {
     private static readonly ResourceManager CanvasResources = new(typeof(BpmnCanvasStrings));
 
+    /// <summary>The resource keys, which are the invariant resource set's and never change, read once.</summary>
+    private static readonly Lazy<string[]> CanvasResourceKeys = new(() =>
+        (CanvasResources.GetResourceSet(CultureInfo.InvariantCulture, true, true)
+            ?? throw new MissingManifestResourceException("Canvas display resources are missing."))
+        .Cast<DictionaryEntry>()
+        .Select(entry => (string)entry.Key)
+        .ToArray());
+
+    /// <summary>The localized strings for <see cref="_localizedStringsCulture"/>, built once per culture for this component.</summary>
+    private CanvasStrings? _localizedStrings;
+
+    private string? _localizedStringsCulture;
+
     private readonly CancellationTokenSource _disposalCts = new();
+
+    /// <summary>
+    /// Lets one pass at a time reconcile the canvas with the parameters.
+    /// </summary>
+    /// <remarks>
+    /// Every render reaches <see cref="OnAfterRenderAsync"/>, and a pass awaits the browser. A second pass that starts meanwhile would see the document
+    /// not yet recorded as drawn and send it again, so passes wait for each other and the one that follows judges what the one before left.
+    /// </remarks>
+    private readonly SemaphoreSlim _synchronization = new(1, 1);
+
+    private bool _disposed;
 
     private ElementReference _hostElement;
 
@@ -91,6 +116,9 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
 
     [Inject]
     private IJSRuntime JS { get; init; } = default!;
+
+    [Inject]
+    private IServiceProvider Services { get; init; } = default!;
 
     [Inject]
     private IStringLocalizer<BpmnCanvasStrings> Strings { get; init; } = default!;
@@ -223,27 +251,54 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        try
         {
-            await InitializeAsync().ConfigureAwait(true);
+            await _synchronization.WaitAsync(_disposalCts.Token).ConfigureAwait(true);
+        }
+        catch (Exception exception) when (exception is OperationCanceledException or ObjectDisposedException && _disposed)
+        {
             return;
         }
 
-        // A configuration is applied when the instance is built and never afterwards, so a host
-        // that changes one has to be given a new instance. Checked before the document, because
-        // rebuilding loads it anyway and doing both would render twice.
-        if (await SynchronizeConfigurationAsync().ConfigureAwait(true)) return;
+        try
+        {
+            if (firstRender)
+            {
+                await InitializeAsync().ConfigureAwait(true);
 
-        // The document parameter can change before the module finishes loading, so the render
-        // is reconciled here rather than in OnParametersSetAsync.
-        await SynchronizeDocumentAsync().ConfigureAwait(true);
+                // The parameters may have changed while the canvas was starting, and nothing renders them again for it.
+                await SynchronizeDocumentAsync().ConfigureAwait(true);
+                return;
+            }
+
+            // A configuration is applied when the instance is built and never afterwards, so a host
+            // that changes one has to be given a new instance. Checked before the document, because
+            // rebuilding loads it anyway and doing both would render twice.
+            if (await SynchronizeConfigurationAsync().ConfigureAwait(true))
+            {
+                await SynchronizeDocumentAsync().ConfigureAwait(true);
+                return;
+            }
+
+            // The document parameter can change before the module finishes loading, so the render
+            // is reconciled here rather than in OnParametersSetAsync.
+            await SynchronizeDocumentAsync().ConfigureAwait(true);
+        }
+        catch (Exception exception) when (exception is OperationCanceledException or ObjectDisposedException && _disposed)
+        {
+            // Disposed while a call was in flight: the work it was doing is the work disposal does.
+        }
+        finally
+        {
+            if (!_disposed) _synchronization.Release();
+        }
     }
 
     /// <summary>Applies a viewport command. Ignored before initialisation.</summary>
     public async ValueTask SetViewportAsync(ViewportCommand command)
     {
         ArgumentNullException.ThrowIfNull(command);
-        if (_instance is null) return;
+        if (_instance is null || _disposed) return;
 
         await InvokeSafelyAsync(async () =>
             await _instance.InvokeVoidAsync("setViewport", _disposalCts.Token, command)
@@ -254,7 +309,7 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
     public async ValueTask SetActiveDiagramAsync(string diagramId)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(diagramId);
-        if (_instance is null) return;
+        if (_instance is null || _disposed) return;
 
         var loaded = await _instance
             .InvokeAsync<DocumentLoaded?>("setActiveDiagram", _disposalCts.Token, diagramId)
@@ -279,9 +334,21 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
             return;
         }
 
-        _module = await JS
+        // The module import and the localized strings are independent: start the import, build the strings while it is in flight,
+        // then wait. On Blazor Server the import is a network round trip and the strings are the work that used to follow it.
+        var importing = JS
             .InvokeAsync<IJSObjectReference>("import", _disposalCts.Token, BpmnInteropContract.ModulePath)
-            .ConfigureAwait(true);
+            .AsTask();
+        _ = LocalizedStrings();
+        var module = await importing.ConfigureAwait(true);
+        if (_disposed)
+        {
+            // Disposed while the module was loading: disposal found nothing to release, so it is released here.
+            await InvokeSafelyAsync(async () => await module.DisposeAsync().ConfigureAwait(true)).ConfigureAwait(true);
+            return;
+        }
+
+        _module = module;
 
         _bridge = new BpmnCanvasEventBridge();
         _bridge.InitializedReceived += HandleInitialized;
@@ -303,19 +370,37 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
         await StartInstanceAsync(config).ConfigureAwait(true);
     }
 
+    /// <summary>
+    /// The canvas's display strings in the current UI culture, built once per culture for this component.
+    /// </summary>
+    /// <remarks>
+    /// Per component and not static, because the injected localizer can be replaced by the host; keyed on the culture so that a
+    /// culture switch rebuilds them. The same instance is returned until then, so comparing two configurations that carry it is a
+    /// reference check and not a walk over every string.
+    /// </remarks>
+    private CanvasStrings LocalizedStrings()
+    {
+        var culture = CultureInfo.CurrentUICulture.Name;
+        if (_localizedStrings is not null && _localizedStringsCulture == culture) return _localizedStrings;
+
+        var keys = CanvasResourceKeys.Value;
+        var values = new Dictionary<string, string>(keys.Length, StringComparer.Ordinal);
+        foreach (var key in keys) values[key] = Strings[key].Value;
+
+        _localizedStringsCulture = culture;
+        return _localizedStrings = CanvasStrings.Adopt(values);
+    }
+
     /// <summary>Builds a canvas instance from a configuration, and records what it was built with.</summary>
     private async Task StartInstanceAsync(EditorConfig config)
     {
         if (_module is null || _bridgeReference is null) return;
 
-        var resourceSet = CanvasResources.GetResourceSet(CultureInfo.InvariantCulture, true, true)
-            ?? throw new MissingManifestResourceException("Canvas display resources are missing.");
-        var localizedConfig = config with
-        {
-            Strings = new CanvasStrings(resourceSet.Cast<DictionaryEntry>()
-                .ToDictionary(entry => (string)entry.Key, entry => Strings[(string)entry.Key].Value,
-                    StringComparer.Ordinal)),
-        };
+        var localizedConfig = config with { Strings = LocalizedStrings() };
+
+        // What is sent is what is recorded as drawn: the parameters may change while the browser works, and the next pass has to see that.
+        var sentDocument = Document;
+        var sentDiagramId = DiagramId;
 
         var instance = await _module
             .InvokeAsync<IJSObjectReference>(
@@ -323,14 +408,30 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
                 _disposalCts.Token,
                 _hostElement,
                 _paperElement,
-                Document,
+                CanvasDocumentPayload.For(sentDocument),
                 localizedConfig,
                 _bridgeReference)
             .ConfigureAwait(true);
 
-        var result = await instance
-            .InvokeAsync<CanvasInitResult>("getInitResult", _disposalCts.Token)
-            .ConfigureAwait(true);
+        CanvasInitResult result;
+        try
+        {
+            result = await instance
+                .InvokeAsync<CanvasInitResult>("getInitResult", _disposalCts.Token)
+                .ConfigureAwait(true);
+        }
+        catch
+        {
+            // The canvas exists, with listeners on the window and a paper, and no reference to it is recorded yet: disposal cannot find it.
+            await ReleaseInstanceAsync(instance).ConfigureAwait(true);
+            throw;
+        }
+
+        if (_disposed)
+        {
+            await ReleaseInstanceAsync(instance).ConfigureAwait(true);
+            return;
+        }
 
         if (result.ContractVersion != BpmnInteropContract.Version || !result.Accepted)
         {
@@ -349,8 +450,8 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
 
         _instance = instance;
         _appliedConfig = config;
-        _renderedDocument = Document;
-        _renderedDiagramId = DiagramId;
+        _renderedDocument = sentDocument;
+        _renderedDiagramId = sentDiagramId;
 
         if (_pendingInitialized is { } pending)
         {
@@ -397,16 +498,18 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
             return false;
         }
 
-        var view = _viewport;
         var selected = _selected;
         var previous = _instance;
 
         _instance = null;
         await ReleaseInstanceAsync(previous).ConfigureAwait(true);
 
+        // Read after the release: releasing makes the canvas report the last view it had, which it only holds back for a moment while a gesture is moving it.
+        var view = _viewport;
+
         await StartInstanceAsync(config).ConfigureAwait(true);
 
-        if (_instance is null) return true;
+        if (_instance is null || _disposed) return true;
 
         await RestoreAsync(view, selected).ConfigureAwait(true);
         return true;
@@ -437,18 +540,56 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
     /// <param name="document">The document the canvas is already displaying.</param>
     internal void AcceptRenderedDocument(BpmnDocument document) => _renderedDocument = document;
 
+    /// <summary>
+    /// Draws the current document again, for a canvas that was changed ahead of the document and then refused.
+    /// </summary>
+    /// <remarks>
+    /// A move or a re-routed connector is applied on the canvas first. When the document refuses it the parameter does not change, so nothing
+    /// would ever put the shape back; this forgets what was recorded as drawn and reconciles.
+    /// </remarks>
+    /// <returns>A task that completes when the canvas shows the document again.</returns>
+    internal async Task ResyncAsync()
+    {
+        if (_disposed || _instance is null) return;
+
+        try
+        {
+            await _synchronization.WaitAsync(_disposalCts.Token).ConfigureAwait(true);
+        }
+        catch (Exception exception) when (exception is OperationCanceledException or ObjectDisposedException && _disposed)
+        {
+            return;
+        }
+
+        try
+        {
+            _renderedDocument = null;
+            await SynchronizeDocumentAsync().ConfigureAwait(true);
+        }
+        catch (Exception exception) when (exception is OperationCanceledException or ObjectDisposedException && _disposed)
+        {
+        }
+        finally
+        {
+            if (!_disposed) _synchronization.Release();
+        }
+    }
+
     private async Task SynchronizeDocumentAsync()
     {
-        if (_instance is null) return;
+        if (_instance is null || _disposed) return;
         if (ReferenceEquals(_renderedDocument, Document) && _renderedDiagramId == DiagramId) return;
         if (Document is null) return;
 
+        var sentDocument = Document;
+        var sentDiagramId = DiagramId;
         var loaded = await _instance
-            .InvokeAsync<DocumentLoaded?>("loadDocument", _disposalCts.Token, Document, DiagramId)
+            .InvokeAsync<DocumentLoaded?>("loadDocument", _disposalCts.Token, CanvasDocumentPayload.For(sentDocument), sentDiagramId)
             .ConfigureAwait(true);
 
-        _renderedDocument = Document;
-        _renderedDiagramId = DiagramId;
+        // Recorded as what was sent, not as whatever the parameters are by now: a host that moved on while the browser worked is loaded again by the next pass.
+        _renderedDocument = sentDocument;
+        _renderedDiagramId = sentDiagramId;
 
         if (loaded is not null)
         {
@@ -465,7 +606,7 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
     /// instance and be silently dropped.
     /// </remarks>
     private void HandleInitialized(CanvasInitialized payload) =>
-        _ = InvokeAsync(async () =>
+        Dispatch(async () =>
         {
             if (_instance is null)
             {
@@ -482,46 +623,73 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
         StateHasChanged();
     }
 
-    private void HandleConfigApplied(ConfigApplied payload) => _ = InvokeAsync(StateHasChanged);
+    // The callbacks come from the browser with nobody awaiting them. A host handler that throws used to leave a faulted task that nothing ever looked at, so the
+    // failure vanished (or surfaced later as an unobserved task exception); it is logged, and a callback that arrives after disposal is not worth reporting.
+    private void Dispatch(Func<Task> work) => _ = DispatchAsync(work);
+
+    private async Task DispatchAsync(Func<Task> work)
+    {
+        try
+        {
+            await InvokeAsync(work).ConfigureAwait(true);
+        }
+        catch (Exception exception) when (_disposed && exception is OperationCanceledException or ObjectDisposedException or JSDisconnectedException)
+        {
+            // Torn down while the callback ran.
+        }
+        catch (Exception exception) when (exception is not OutOfMemoryException)
+        {
+            if (Services.GetService(typeof(ILogger<BpmnCanvas>)) is ILogger logger) LogCallbackFailed(logger, exception);
+        }
+    }
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "A handler of an event from the BPMN canvas failed.")]
+    private static partial void LogCallbackFailed(ILogger logger, Exception exception);
+
+    private void HandleConfigApplied(ConfigApplied payload) => Dispatch(() =>
+    {
+        StateHasChanged();
+        return Task.CompletedTask;
+    });
 
     private void HandleConfigRejected(ConfigRejected payload) =>
-        _ = InvokeAsync(async () => await OnConfigRejected.InvokeAsync(payload).ConfigureAwait(true));
+        Dispatch(async () => await OnConfigRejected.InvokeAsync(payload).ConfigureAwait(true));
 
     private void HandleDocumentLoaded(DocumentLoaded payload) =>
-        _ = InvokeAsync(async () => await OnDocumentLoaded.InvokeAsync(payload).ConfigureAwait(true));
+        Dispatch(async () => await OnDocumentLoaded.InvokeAsync(payload).ConfigureAwait(true));
 
     private void HandleViewportChanged(ViewportChanged payload)
     {
         _viewport = payload;
-        _ = InvokeAsync(async () => await OnViewportChanged.InvokeAsync(payload).ConfigureAwait(true));
+        Dispatch(async () => await OnViewportChanged.InvokeAsync(payload).ConfigureAwait(true));
     }
 
     private void HandleShortcutInvoked(ShortcutInvoked payload) =>
-        _ = InvokeAsync(async () => await OnShortcutInvoked.InvokeAsync(payload).ConfigureAwait(true));
+        Dispatch(async () => await OnShortcutInvoked.InvokeAsync(payload).ConfigureAwait(true));
 
     private void HandleSelectionChanged(SelectionChanged payload)
     {
         _selected = payload.ElementIds;
-        _ = InvokeAsync(async () => await OnSelectionChanged.InvokeAsync(payload).ConfigureAwait(true));
+        Dispatch(async () => await OnSelectionChanged.InvokeAsync(payload).ConfigureAwait(true));
     }
 
     private void HandleSelectionAnchorChanged(SelectionAnchorChanged payload) =>
-        _ = InvokeAsync(async () => await OnSelectionAnchorChanged.InvokeAsync(payload).ConfigureAwait(true));
+        Dispatch(async () => await OnSelectionAnchorChanged.InvokeAsync(payload).ConfigureAwait(true));
 
     private void HandleEditRequested(EditRequest payload) =>
-        _ = InvokeAsync(async () => await OnEditRequested.InvokeAsync(payload).ConfigureAwait(true));
+        Dispatch(async () => await OnEditRequested.InvokeAsync(payload).ConfigureAwait(true));
 
     private void HandleEditRejected(EditRejected payload) =>
-        _ = InvokeAsync(async () => await OnEditRejected.InvokeAsync(payload).ConfigureAwait(true));
+        Dispatch(async () => await OnEditRejected.InvokeAsync(payload).ConfigureAwait(true));
 
     private void HandleContextMenuRequested(ContextMenuRequested payload) =>
-        _ = InvokeAsync(async () => await OnContextMenuRequested.InvokeAsync(payload).ConfigureAwait(true));
+        Dispatch(async () => await OnContextMenuRequested.InvokeAsync(payload).ConfigureAwait(true));
 
     private void HandleLabelEditRequested(LabelEditRequested payload) =>
-        _ = InvokeAsync(async () => await OnLabelEditRequested.InvokeAsync(payload).ConfigureAwait(true));
+        Dispatch(async () => await OnLabelEditRequested.InvokeAsync(payload).ConfigureAwait(true));
 
     private void HandleFileDropped(FileDropped payload) =>
-        _ = InvokeAsync(async () => await OnFileDropped.InvokeAsync(payload).ConfigureAwait(true));
+        Dispatch(async () => await OnFileDropped.InvokeAsync(payload).ConfigureAwait(true));
 
     /// <summary>
     /// Resolves a stencil drop into paper geometry and an owning container.
@@ -537,7 +705,7 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
     /// <returns>The drop target, or <see langword="null"/> if the canvas is not ready.</returns>
     internal async ValueTask<DropTarget?> ResolveDropAsync(double clientX, double clientY, string elementType)
     {
-        if (_instance is null) return null;
+        if (_instance is null || _disposed) return null;
 
         return await _instance
             .InvokeAsync<DropTarget?>("resolveDrop", _disposalCts.Token, clientX, clientY, elementType)
@@ -551,7 +719,7 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
     /// <returns>The target, or <see langword="null"/> if the canvas is not ready.</returns>
     internal async ValueTask<DropTarget?> ResolveCreationPointAsync(string elementType)
     {
-        if (_instance is null) return null;
+        if (_instance is null || _disposed) return null;
 
         return await _instance
             .InvokeAsync<DropTarget?>("resolveCreationPoint", _disposalCts.Token, elementType)
@@ -564,7 +732,7 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
     /// <returns>The target, or <see langword="null"/> if the source is not drawn.</returns>
     internal async ValueTask<DropTarget?> ResolveAppendPointAsync(string sourceId, string elementType)
     {
-        if (_instance is null) return null;
+        if (_instance is null || _disposed) return null;
 
         return await _instance
             .InvokeAsync<DropTarget?>("resolveAppendPoint", _disposalCts.Token, sourceId, elementType)
@@ -582,7 +750,7 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
     /// <param name="elementId">The element to anchor on, or <see langword="null"/> for the canvas.</param>
     /// <param name="source">One of <c>pointer</c>, <c>keyboard</c> or <c>longPress</c>.</param>
     internal ValueTask RequestContextMenuAsync(string? elementId, string source) =>
-        _instance is null
+        _instance is null || _disposed
             ? ValueTask.CompletedTask
             : _instance.InvokeVoidAsync("requestContextMenu", _disposalCts.Token, elementId, source);
 
@@ -591,7 +759,7 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
     /// <returns>False when it has no label to edit, or the canvas is not ready.</returns>
     internal async ValueTask<bool> EditLabelAsync(string elementId)
     {
-        if (_instance is null) return false;
+        if (_instance is null || _disposed) return false;
 
         return await _instance
             .InvokeAsync<bool>("editLabel", _disposalCts.Token, elementId)
@@ -603,7 +771,7 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
     /// <returns>The anchor, or <see langword="null"/> if it is not drawn on the active plane.</returns>
     internal async ValueTask<Anchor?> AnchorOfAsync(string elementId)
     {
-        if (_instance is null) return null;
+        if (_instance is null || _disposed) return null;
 
         return await _instance
             .InvokeAsync<Anchor?>("anchorOf", _disposalCts.Token, elementId)
@@ -621,26 +789,27 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
     /// </remarks>
     /// <param name="state">The state to draw.</param>
     internal ValueTask SetExecutionStateAsync(BpmnExecutionState state) =>
-        _instance is null
+        _instance is null || _disposed
             ? ValueTask.CompletedTask
             : _instance.InvokeVoidAsync("setExecutionState", _disposalCts.Token, state);
 
     /// <summary>Removes every execution overlay.</summary>
     internal ValueTask ClearExecutionStateAsync() =>
-        _instance is null
+        _instance is null || _disposed
             ? ValueTask.CompletedTask
             : _instance.InvokeVoidAsync("clearExecutionState", _disposalCts.Token);
 
     /// <summary>Replaces the canvas selection.</summary>
     /// <param name="elementIds">The elements to select.</param>
     internal ValueTask SetSelectionAsync(IReadOnlyList<string> elementIds) =>
-        _instance is null
+        _instance is null || _disposed
             ? ValueTask.CompletedTask
             : _instance.InvokeVoidAsync("setSelection", _disposalCts.Token, elementIds);
 
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
+        _disposed = true;
         await _disposalCts.CancelAsync().ConfigureAwait(false);
 
         await ReleaseInstanceAsync(_instance).ConfigureAwait(false);
@@ -654,6 +823,7 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
         _bridgeReference?.Dispose();
         _bridge?.Dispose();
         _disposalCts.Dispose();
+        _synchronization.Dispose();
 
         _module = null;
         _bridge = null;

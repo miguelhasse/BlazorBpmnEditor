@@ -9,6 +9,7 @@
                  OnDiagramNavigated="@OnDiagramNavigated"
                  Configuration="@Configuration"
                  Document="@Document"
+                 DocumentBinding="@DocumentBinding"
                  DiagramId="@DiagramId"
                  IsReadOnly="@IsReadOnly"
                  ExecutionAnimation="@ExecutionAnimation"
@@ -85,7 +86,14 @@
         trap the themes work around with descendant selectors, which a host's arbitrary token name
         has no stylesheet rule to match.
     *@
-    <BpmnEditorCanvas>@CanvasOverlays</BpmnEditorCanvas>
+    <BpmnEditorCanvas>
+        @*
+            Inside the canvas rather than over the whole editor: the notice floats above the diagram
+            without covering the toolbar, where Undo may be exactly what the user wants first.
+        *@
+        <BpmnPart Part="BpmnEditorPart.ExternalChangeOffer" />
+        @CanvasOverlays
+    </BpmnEditorCanvas>
 
     @*
         Read-only is cascaded, not left to the host to remember. Section 7 asks read-only to remove
@@ -107,6 +115,7 @@
     }
 
     <BpmnPart Part="BpmnEditorPart.ImportOffer" />
+    <BpmnPart Part="BpmnEditorPart.AgentConfirmation" />
 
     <BpmnPart Part="BpmnEditorPart.CalledElementPicker" />
 

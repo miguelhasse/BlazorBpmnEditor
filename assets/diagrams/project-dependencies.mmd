@@ -1,14 +1,19 @@
 %% Project dependencies
 %% Solid arrows: dependent → referenced project. Dashed arrows: shared input / produced assets.
 %% Bpmn references Scripts privately and RulesGenerator as Analyzer (ReferenceOutputAssembly=false).
+%% WebMcp references Bpmn + Tools + WebMcp.Scripts privately.
 %% Feel references Bpmn + Feel.Scripts privately. Icons manifest is embedded in Bpmn and imported by TypeScript.
 flowchart TB
     feel["Bpmn.Feel<br/>src/Bpmn.Feel<br/>Optional FEEL component"]:::cs
+    tools["Bpmn.Tools<br/>src/Bpmn.Tools<br/>Agent tool handlers (preview)"]:::cs
+    webmcp["Bpmn.WebMcp<br/>src/Bpmn.WebMcp<br/>Browser agent tools (preview)"]:::cs
+    wscripts["Bpmn.WebMcp.Scripts<br/>src/Bpmn.WebMcp.Scripts<br/>JavaScript SDK .esproj"]:::js
+    webmcptests["Bpmn.WebMcp.Tests<br/>tests/Bpmn.WebMcp.Tests"]:::test
     core["Bpmn<br/>src/Bpmn<br/>Canvas, model, behavior, localization<br/>No Fluent UI dependency"]:::cs
     standard["BpmnEditor<br/>Standard Blazor UI kit<br/>No Fluent UI dependency"]:::cs
     fluent["FluentUI.BpmnEditor<br/>Fluent UI composition<br/>Components + Icons packages"]:::cs
     scripts["Bpmn.Scripts<br/>src/Bpmn.Scripts<br/>JavaScript SDK .esproj"]:::js
-    assets["Static web assets<br/>Core + optional FEEL bundles"]:::data
+    assets["Static web assets<br/>Core + optional FEEL and WebMCP bundles"]:::data
     fscripts["Bpmn.Feel.Scripts<br/>src/Bpmn.Feel.Scripts<br/>JavaScript SDK .esproj"]:::js
     generator["Bpmn.RulesGenerator<br/>src/Bpmn.RulesGenerator<br/>Roslyn analyzer only"]:::cs
     rules["rules/bpmn-rules.json<br/>Shared C# / TypeScript rules"]:::data
@@ -18,7 +23,15 @@ flowchart TB
     tests["Bpmn.Tests + editor test projects<br/>Core, standard, Fluent<br/>Shared behavior + architecture tests"]:::test
     bench["Bpmn.Benchmarks<br/>tests/Bpmn.Benchmarks<br/>References Bpmn"]:::test
     e2e["Bpmn.E2E.Tests<br/>tests/Bpmn.E2E.Tests<br/>Demo build dependency only"]:::test
+    toolstests["Bpmn.Tools.Tests<br/>tests/Bpmn.Tools.Tests"]:::test
     feel --> core
+    tools --> core
+    toolstests --> tools
+    webmcp --> core
+    webmcp --> tools
+    webmcp --> wscripts
+    webmcptests --> webmcp
+    wscripts -.->|"assets"| assets
     standard --> core
     fluent --> core
     core --> scripts
@@ -27,9 +40,11 @@ flowchart TB
     fscripts -.->|"assets"| assets
     core --> generator
     rules -.->|"input"| generator
+    rules -.->|"embedded"| core
     rules -.->|"input"| scripts
     icons -.->|"input"| scripts
     client --> feel
+    client --> webmcp
     client --> core
     client --> standard
     client --> fluent

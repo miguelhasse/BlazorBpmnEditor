@@ -191,4 +191,18 @@
   <data name="DiagramNavigator.Open" xml:space="preserve"><value>Open</value></data>
   <data name="ImportOffer.Cancel" xml:space="preserve"><value>Cancel</value></data>
   <data name="ImportOffer.Open" xml:space="preserve"><value>Open</value></data>
+  <data name="ExternalChangeOffer.Updated" xml:space="preserve"><value>{0} was changed by someone else.</value></data>
+  <data name="ExternalChangeOffer.UpdatedDirty" xml:space="preserve"><value>{0} was changed by someone else. Your unsaved edits are still here.</value></data>
+  <data name="ExternalChangeOffer.Deleted" xml:space="preserve"><value>{0} was deleted by someone else. Your version is still open here.</value></data>
+  <data name="ExternalChangeOffer.Reload" xml:space="preserve"><value>Reload</value></data>
+  <data name="ExternalChangeOffer.ConfirmReload" xml:space="preserve"><value>Reloading discards your unsaved edits.</value></data>
+  <data name="ExternalChangeOffer.DiscardAndReload" xml:space="preserve"><value>Discard and reload</value></data>
+  <data name="ExternalChangeOffer.KeepEditing" xml:space="preserve"><value>Keep editing</value></data>
+  <data name="ExternalChangeOffer.SaveCopy" xml:space="preserve"><value>Save a copy</value></data>
+  <data name="ExternalChangeOffer.SaveAgain" xml:space="preserve"><value>Save again</value></data>
+  <data name="ExternalChangeOffer.Dismiss" xml:space="preserve"><value>Dismiss</value></data>
+  <data name="AgentConfirmation.RequestedBy" xml:space="preserve"><value>Requested by {0}</value></data>
+  <data name="AgentConfirmation.Details" xml:space="preserve"><value>Affected items</value></data>
+  <data name="AgentConfirmation.Allow" xml:space="preserve"><value>Allow</value></data>
+  <data name="AgentConfirmation.Deny" xml:space="preserve"><value>Don't allow</value></data>
 </root>

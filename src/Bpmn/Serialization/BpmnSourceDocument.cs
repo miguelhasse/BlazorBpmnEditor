@@ -55,12 +55,16 @@ public sealed class BpmnSourceDocument
     /// </remarks>
     internal string? Declaration { get; private init; }
 
-    /// <summary>Captures a parsed document, taking a private copy.</summary>
+    /// <summary>Captures a parsed document, taking a private copy unless the caller hands over the only reference.</summary>
     /// <param name="document">The document as parsed.</param>
-    /// <returns>A retained, immutable copy.</returns>
-    internal static BpmnSourceDocument Capture(XDocument document)
+    /// <param name="ownsDocument">
+    /// True when nothing else holds or will change <paramref name="document"/> (the reader's own freshly loaded tree), so it can be kept
+    /// as it is. The copy it saves is a second full tree for every import.
+    /// </param>
+    /// <returns>A retained, immutable source.</returns>
+    internal static BpmnSourceDocument Capture(XDocument document, bool ownsDocument = false)
     {
-        var copy = new XDocument(document);
+        var copy = ownsDocument ? document : new XDocument(document);
         var root = copy.Root;
 
         var prefixes = root is null

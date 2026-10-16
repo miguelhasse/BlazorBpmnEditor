@@ -191,7 +191,8 @@ public partial class CanvasNavigationTests(DemoAppFixture app) : PageTest, IClas
             }
             """);
 
-        var panned = await ReadTransformAsync();
+        // Input is applied on the next animation frame, so a pan dispatched as events has not landed when the dispatch returns.
+        var panned = await ReadTransformWhenAsync(transform => transform.TranslateX == 60d);
         Assert.Equal(60d, panned.TranslateX);
         Assert.Equal(40d, panned.TranslateY);
 
@@ -214,7 +215,7 @@ public partial class CanvasNavigationTests(DemoAppFixture app) : PageTest, IClas
             """);
 
         // Fingers 200 apart spread to 400: exactly twice the distance, so exactly twice the scale.
-        Assert.Equal(2d, (await ReadTransformAsync()).Scale, 3);
+        Assert.Equal(2d, (await ReadTransformWhenAsync(transform => Math.Abs(transform.Scale - 2d) < 0.001)).Scale, 3);
         await Expect(Page.Locator(".bpmn-canvas--panning")).ToHaveCountAsync(0);
     }
 
@@ -377,6 +378,20 @@ public partial class CanvasNavigationTests(DemoAppFixture app) : PageTest, IClas
             """).ConfigureAwait(true);
 
         Assert.SkipUnless(available, "The loaded canvas bundle is a Release build, which excludes the move hook.");
+    }
+
+    /// <summary>Reads the transform once the page has applied it; fails with what it last saw if that takes more than five seconds.</summary>
+    private async Task<(double Scale, double TranslateX, double TranslateY)> ReadTransformWhenAsync(Func<(double Scale, double TranslateX, double TranslateY), bool> applied)
+    {
+        var transform = await ReadTransformAsync();
+        for (var attempt = 0; attempt < 50 && !applied(transform); attempt++)
+        {
+            await Task.Delay(100);
+            transform = await ReadTransformAsync();
+        }
+
+        Assert.True(applied(transform), $"The canvas never applied the expected transform within five seconds; it last had scale {transform.Scale}, translate {transform.TranslateX},{transform.TranslateY}.");
+        return transform;
     }
 
     private async Task<(double Scale, double TranslateX, double TranslateY)> ReadTransformAsync()

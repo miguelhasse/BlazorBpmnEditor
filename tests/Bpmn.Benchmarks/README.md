@@ -13,6 +13,17 @@ dotnet run -c Release --project tests\Bpmn.Benchmarks -- --filter "*WriteCanonic
 options, not application arguments. No demo server or Playwright browser is needed. The core RCL's
 normal build dependencies still apply when building the project.
 
+## What stays in memory
+
+BenchmarkDotNet reports what a call allocates, not what a document, a history or a source tree keeps alive. `MemoryReport` does, after forced collections:
+
+```powershell
+dotnet run -c Release --project tests\Bpmn.Benchmarks -- memory [path-to.bpmn]
+```
+
+It prints allocation and time for the XML read and canonical write, the size of the `loadDocument` interop payload, and retained megabytes for a document with and without its
+source XML tree and for a 100-step undo history. The figures recorded on the stress fixture are in [docs/performance.md](../../docs/performance.md).
+
 ## What EditorBenchmarks measures
 
 `GlobalSetup` loads `large-virtualization-stress.bpmn` from the benchmark output directory and

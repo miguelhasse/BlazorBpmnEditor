@@ -1,0 +1,944 @@
+{
+  "$comment": "Shared connection-rule cases: both src/Bpmn.Scripts (vitest) and tests/Bpmn.Tests (xUnit) evaluate every case against rules/bpmn-rules.json and must produce exactly these rule ids and kinds.",
+  "cases": [
+    {
+      "name": "start event to task",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "startEvent",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": "none",
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "userTask",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "out of an end event",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "endEvent",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": "none",
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "userTask",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "SF-002"
+      ],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "into a start event",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "userTask",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "startEvent",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": "none",
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "SF-003"
+      ],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "across containers",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Sub_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "SF-007"
+      ],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "across pools",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": "Pool_A",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_2",
+        "poolId": "Pool_B",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "SF-006",
+        "SF-007"
+      ],
+      "inferredKind": "messageFlow"
+    },
+    {
+      "name": "from a compensation boundary event",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "boundaryEvent",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": "compensation",
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": true
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "SF-008",
+        "SF-009"
+      ],
+      "inferredKind": "association"
+    },
+    {
+      "name": "event-based gateway to a plain task",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "eventBasedGateway",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "SF-011"
+      ],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "event-based gateway to a receive task",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "eventBasedGateway",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "receiveTask",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "event-based gateway to a timer catch",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "eventBasedGateway",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "intermediateCatchEvent",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": "timer",
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "event-based gateway to a none catch",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "eventBasedGateway",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "intermediateCatchEvent",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": "none",
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "SF-011"
+      ],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "conditional out of an exclusive gateway",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "exclusiveGateway",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": true,
+      "isDefault": false,
+      "violations": [],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "conditional out of a parallel gateway",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "parallelGateway",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": true,
+      "isDefault": false,
+      "violations": [
+        "SF-013",
+        "SF-016"
+      ],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "default out of a parallel gateway",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "parallelGateway",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": true,
+      "violations": [
+        "SF-014"
+      ],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "default out of an exclusive gateway",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "exclusiveGateway",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": true,
+      "violations": [],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "out of a link throw",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "intermediateThrowEvent",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": "link",
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "SF-017"
+      ],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "into a link catch",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "intermediateCatchEvent",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": "link",
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "SF-018"
+      ],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "into an event sub-process",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "eventSubProcess",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "SF-005"
+      ],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "out of an event sub-process",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "eventSubProcess",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "SF-005"
+      ],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "from a data object",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "dataObjectReference",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "SF-001"
+      ],
+      "inferredKind": "dataAssociation"
+    },
+    {
+      "name": "to a text annotation",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "textAnnotation",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "SF-001"
+      ],
+      "inferredKind": "association"
+    },
+    {
+      "name": "to a pool",
+      "kind": "sequenceFlow",
+      "source": {
+        "id": "a",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": "Pool_A",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "pool",
+        "containerId": null,
+        "poolId": "Pool_B",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "SF-001",
+        "SF-006"
+      ],
+      "inferredKind": "messageFlow"
+    },
+    {
+      "name": "task to task across pools",
+      "kind": "messageFlow",
+      "source": {
+        "id": "a",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": "Pool_A",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_2",
+        "poolId": "Pool_B",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [],
+      "inferredKind": "messageFlow"
+    },
+    {
+      "name": "task to task in one pool",
+      "kind": "messageFlow",
+      "source": {
+        "id": "a",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": "Pool_A",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": "Pool_A",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "MF-002"
+      ],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "pool to pool",
+      "kind": "messageFlow",
+      "source": {
+        "id": "a",
+        "elementType": "pool",
+        "containerId": null,
+        "poolId": "Pool_A",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "pool",
+        "containerId": null,
+        "poolId": "Pool_B",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [],
+      "inferredKind": "messageFlow"
+    },
+    {
+      "name": "task to a message start",
+      "kind": "messageFlow",
+      "source": {
+        "id": "a",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": "Pool_A",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "startEvent",
+        "containerId": "Process_2",
+        "poolId": "Pool_B",
+        "eventDefinitionType": "message",
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [],
+      "inferredKind": "messageFlow"
+    },
+    {
+      "name": "task to a none start",
+      "kind": "messageFlow",
+      "source": {
+        "id": "a",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": "Pool_A",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "startEvent",
+        "containerId": "Process_2",
+        "poolId": "Pool_B",
+        "eventDefinitionType": "none",
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "MF-008"
+      ],
+      "inferredKind": "messageFlow"
+    },
+    {
+      "name": "task to an end event",
+      "kind": "messageFlow",
+      "source": {
+        "id": "a",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": "Pool_A",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "endEvent",
+        "containerId": "Process_2",
+        "poolId": "Pool_B",
+        "eventDefinitionType": "none",
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "MF-006",
+        "MF-008"
+      ],
+      "inferredKind": "messageFlow"
+    },
+    {
+      "name": "message throw to a task",
+      "kind": "messageFlow",
+      "source": {
+        "id": "a",
+        "elementType": "intermediateThrowEvent",
+        "containerId": "Process_1",
+        "poolId": "Pool_A",
+        "eventDefinitionType": "message",
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_2",
+        "poolId": "Pool_B",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [],
+      "inferredKind": "messageFlow"
+    },
+    {
+      "name": "gateway to a task",
+      "kind": "messageFlow",
+      "source": {
+        "id": "a",
+        "elementType": "exclusiveGateway",
+        "containerId": "Process_1",
+        "poolId": "Pool_A",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_2",
+        "poolId": "Pool_B",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "MF-001",
+        "MF-003"
+      ],
+      "inferredKind": "messageFlow"
+    },
+    {
+      "name": "message end to a pool",
+      "kind": "messageFlow",
+      "source": {
+        "id": "a",
+        "elementType": "endEvent",
+        "containerId": "Process_1",
+        "poolId": "Pool_A",
+        "eventDefinitionType": "message",
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "pool",
+        "containerId": null,
+        "poolId": "Pool_B",
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [],
+      "inferredKind": "messageFlow"
+    },
+    {
+      "name": "annotation to a task",
+      "kind": "association",
+      "source": {
+        "id": "a",
+        "elementType": "textAnnotation",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [],
+      "inferredKind": "association"
+    },
+    {
+      "name": "compensation boundary to its handler",
+      "kind": "association",
+      "source": {
+        "id": "a",
+        "elementType": "boundaryEvent",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": "compensation",
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": true
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [],
+      "inferredKind": "association"
+    },
+    {
+      "name": "task to task",
+      "kind": "association",
+      "source": {
+        "id": "a",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [],
+      "inferredKind": "sequenceFlow"
+    },
+    {
+      "name": "data object to a task",
+      "kind": "dataAssociation",
+      "source": {
+        "id": "a",
+        "elementType": "dataObjectReference",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [],
+      "inferredKind": "dataAssociation"
+    },
+    {
+      "name": "task to a data store",
+      "kind": "dataAssociation",
+      "source": {
+        "id": "a",
+        "elementType": "task",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "dataStoreReference",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [],
+      "inferredKind": "dataAssociation"
+    },
+    {
+      "name": "data object to a data store",
+      "kind": "dataAssociation",
+      "source": {
+        "id": "a",
+        "elementType": "dataObjectReference",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "dataStoreReference",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "DA-005",
+        "DA-006"
+      ],
+      "inferredKind": "dataAssociation"
+    },
+    {
+      "name": "gateway to a data object",
+      "kind": "dataAssociation",
+      "source": {
+        "id": "a",
+        "elementType": "exclusiveGateway",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "target": {
+        "id": "b",
+        "elementType": "dataObjectReference",
+        "containerId": "Process_1",
+        "poolId": null,
+        "eventDefinitionType": null,
+        "isForCompensation": false
+      },
+      "isConditional": false,
+      "isDefault": false,
+      "violations": [
+        "DA-006"
+      ],
+      "inferredKind": "dataAssociation"
+    }
+  ]
+}

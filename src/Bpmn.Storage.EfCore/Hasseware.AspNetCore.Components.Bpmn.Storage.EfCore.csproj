@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Hasseware.AspNetCore.Components.Bpmn.Storage.EfCore</AssemblyName>
+    <RootNamespace>Hasseware.AspNetCore.Components.Bpmn.Storage.EfCore</RootNamespace>
+    <PackageId>Hasseware.AspNetCore.Components.Bpmn.Storage.EfCore</PackageId>
+    <Description>Preview. A BPMN document store over any Entity Framework Core database: one table, a version column as the revision, compare-and-write in a single UPDATE, and folder listing by ordinal prefix range.</Description>
+    <PackageTags>bpmn;storage;efcore;entityframeworkcore</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bpmn\Hasseware.AspNetCore.Components.Bpmn.csproj" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

@@ -96,7 +96,8 @@ public class ContextMenuTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
 
         Assert.True(prevented);
         await Expect(Page.Locator(".bpmn-menu__title")).ToHaveTextAsync("Canvas");
-        await Expect(Page.Locator(".bpmn-menu__item", new() { HasText = "Fit to content" })).ToHaveCountAsync(1);
+        // Nothing target-specific applies to blank paper, so the menu offers no commands, but it is still the editor's menu.
+        await Expect(Page.Locator(".bpmn-menu__item")).ToHaveCountAsync(0);
     }
 
     [Fact]

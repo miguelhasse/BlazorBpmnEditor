@@ -110,6 +110,18 @@ public sealed record BpmnEditorState
     /// <summary>The file offered for import.</summary>
     public BpmnImportPreview? PendingImport { get; init; }
 
+    /// <summary>Whether the document comes from a <see cref="Storage.BpmnDocumentBinding"/>.</summary>
+    public bool HasDocumentBinding { get; init; }
+
+    /// <summary>Whether the bound document has edits that are not stored; false without a binding.</summary>
+    public bool IsDirty { get; init; }
+
+    /// <summary>A change to the stored document by another party that the user has not resolved.</summary>
+    public Storage.BpmnExternalChange? ExternalChange { get; init; }
+
+    /// <summary>An agent's request awaiting the user's permission.</summary>
+    public BpmnConfirmationRequest? PendingConfirmation { get; init; }
+
     /// <summary>Whether a Call Activity awaits a definition.</summary>
     public bool IsPickingCalledElement { get; init; }
 

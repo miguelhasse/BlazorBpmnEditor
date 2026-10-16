@@ -24,6 +24,10 @@ public abstract record BpmnEditCommand
 {
     /// <summary>A short description, suitable for an undo menu.</summary>
     public abstract string Label { get; }
+
+    /// <summary>Who asked for the edit; the user unless set.</summary>
+    /// <remarks>Recorded in history with the edit; see <see cref="BpmnEditHistory.UndoOrigin"/>.</remarks>
+    public BpmnEditOrigin Origin { get; init; }
 }
 
 /// <summary>One shape's new geometry.</summary>

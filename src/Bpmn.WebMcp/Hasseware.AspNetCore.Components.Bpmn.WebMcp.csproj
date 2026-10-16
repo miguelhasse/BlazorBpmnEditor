@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Hasseware.AspNetCore.Components.Bpmn.WebMcp</AssemblyName>
+    <RootNamespace>Hasseware.AspNetCore.Components.Bpmn.WebMcp</RootNamespace>
+    <PackageId>Hasseware.AspNetCore.Components.Bpmn.WebMcp</PackageId>
+    <Description>Preview: offers an open Hasseware Blazor BPMN editor to browser agents through WebMCP, read-only.</Description>
+    <PackageTags>bpmn;blazor;webmcp;mcp;agents</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+    <DisableScopedCssBundling>true</DisableScopedCssBundling>
+    <ScopedCssEnabled>false</ScopedCssEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+    <ProjectReference Include="..\Bpmn\Hasseware.AspNetCore.Components.Bpmn.csproj" />
+    <ProjectReference Include="..\Bpmn.Tools\Hasseware.AspNetCore.Components.Bpmn.Tools.csproj" />
+    <ProjectReference Include="..\Bpmn.WebMcp.Scripts\Hasseware.AspNetCore.Components.Bpmn.WebMcp.Scripts.esproj" PrivateAssets="All" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <!-- The esproj supplies its dist output as static web assets. Fail fast if its npm build produces no bundle. -->
+  <Target Name="VerifyWebMcpBundle" AfterTargets="Build">
+    <Error Condition="!Exists('..\Bpmn.WebMcp.Scripts\dist\webmcp.js')" Text="WebMCP bundle missing. Run npm ci and npm run build in src\Bpmn.WebMcp.Scripts." />
+  </Target>
+
+  <Import Project="..\ScriptsStaticAssets.targets" />
+
+</Project>

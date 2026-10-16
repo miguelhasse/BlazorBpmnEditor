@@ -69,6 +69,8 @@ public static class BpmnXmlReader
     {
         ArgumentNullException.ThrowIfNull(xml);
 
+        EnsureNotTooDeep(() => XmlReader.Create(new StringReader(xml), SafeSettings));
+
         using var stringReader = new StringReader(xml);
         using var reader = XmlReader.Create(stringReader, SafeSettings);
         return Read(reader, schemas);
@@ -89,8 +91,42 @@ public static class BpmnXmlReader
     {
         ArgumentNullException.ThrowIfNull(stream);
 
+        // The depth is checked on a pass of its own, so the stream has to be able to start again.
+        if (!stream.CanSeek)
+        {
+            var buffered = new MemoryStream();
+            stream.CopyTo(buffered);
+            buffered.Position = 0;
+            stream = buffered;
+        }
+
+        var start = stream.Position;
+        EnsureNotTooDeep(() => XmlReader.Create(stream, SafeSettings));
+        stream.Position = start;
+
         using var reader = XmlReader.Create(stream, SafeSettings);
         return Read(reader, schemas);
+    }
+
+    // Loading a document into a tree costs more than linear in how deep it nests (a hundred thousand levels took half a minute on a megabyte), and the walks that
+    // follow recurse once per level. So depth is checked first, on a plain reader that only counts, which is fast however deep the input goes.
+    private static void EnsureNotTooDeep(Func<XmlReader> open)
+    {
+        try
+        {
+            using var scan = open();
+            while (scan.Read())
+            {
+                if (scan.NodeType == XmlNodeType.Element && scan.Depth >= MaxElementDepth)
+                {
+                    throw new BpmnXmlException($"The document nests elements more than {MaxElementDepth.ToString(CultureInfo.InvariantCulture)} levels deep, which no BPMN document does.");
+                }
+            }
+        }
+        catch (XmlException exception)
+        {
+            throw new BpmnXmlException("The document is not well-formed XML.", exception);
+        }
     }
 
     private static BpmnImportResult Read(XmlReader reader, XmlSchemaSet? schemas)
@@ -112,13 +148,67 @@ public static class BpmnXmlReader
                 "The document root is not a BPMN 2.0 <definitions> element in the BPMN MODEL namespace.");
         }
 
+        // Before anything walks the tree: reading, copying and writing all recurse once per level, so what they are given has to be bounded first.
+        var shape = Measure(document);
+        if (shape.Depth > MaxElementDepth)
+        {
+            throw new BpmnXmlException($"The document nests elements more than {MaxElementDepth.ToString(CultureInfo.InvariantCulture)} levels deep, which no BPMN document does.");
+        }
+
+        List<BpmnImportDiagnostic> preliminary = [];
+        if (shape.NonFiniteNumbers > 0)
+        {
+            preliminary.Add(new BpmnImportDiagnostic(
+                BpmnImportSeverity.Degraded,
+                $"{shape.NonFiniteNumbers.ToString(CultureInfo.InvariantCulture)} number(s) in the diagram layout were not a finite number and were ignored."));
+        }
+
         var schemaDiagnostics = ValidateSchema(document, schemas);
         var schemaStatus = schemas is not { Count: > 0 }
             ? BpmnSchemaValidationStatus.NotRun
             : schemaDiagnostics.Count == 0
                 ? BpmnSchemaValidationStatus.Passed
                 : BpmnSchemaValidationStatus.Failed;
-        return new ReadContext(definitions, BpmnSourceDocument.Capture(document), schemaDiagnostics, schemaStatus).Build();
+        return new ReadContext(definitions, BpmnSourceDocument.Capture(document, ownsDocument: true), schemaDiagnostics, schemaStatus, preliminary).Build();
+    }
+
+    /// <summary>The deepest element nesting a document may have; the JSON reader allows the same.</summary>
+    private const int MaxElementDepth = 256;
+
+    // The depth of the tree and how many layout numbers are not finite, found without recursion: a tree this is run on may be as deep as the input made it.
+    private static (int Depth, int NonFiniteNumbers) Measure(XDocument document)
+    {
+        var depth = 0;
+        var nonFinite = 0;
+        var pending = new Stack<(XElement Element, int Depth)>();
+        if (document.Root is { } root) pending.Push((root, 1));
+
+        while (pending.Count > 0)
+        {
+            var (element, level) = pending.Pop();
+            depth = Math.Max(depth, level);
+
+            // Past the limit there is no point in looking further: the answer is already no.
+            if (depth > MaxElementDepth) return (depth, nonFinite);
+
+            if (element.Name.Namespace == BpmnXmlNames.DiagramCommon || element.Name.Namespace == BpmnXmlNames.DiagramInterchange)
+            {
+                foreach (var attribute in element.Attributes())
+                {
+                    if (attribute.Name.Namespace == XNamespace.None
+                        && attribute.Name.LocalName is "x" or "y" or "width" or "height" or "size"
+                        && double.TryParse(attribute.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var number)
+                        && !double.IsFinite(number))
+                    {
+                        nonFinite++;
+                    }
+                }
+            }
+
+            foreach (var child in element.Elements()) pending.Push((child, level + 1));
+        }
+
+        return (depth, nonFinite);
     }
 
     private static List<BpmnImportDiagnostic> ValidateSchema(XDocument document, XmlSchemaSet? schemas)
@@ -144,7 +234,8 @@ public static class BpmnXmlReader
         XElement definitions,
         BpmnSourceDocument source,
         IReadOnlyList<BpmnImportDiagnostic> schemaDiagnostics,
-        BpmnSchemaValidationStatus schemaValidationStatus)
+        BpmnSchemaValidationStatus schemaValidationStatus,
+        IReadOnlyList<BpmnImportDiagnostic> preliminary)
     {
         private readonly List<BpmnImportDiagnostic> _diagnostics = [];
         private readonly List<BpmnProcess> _processes = [];
@@ -167,6 +258,7 @@ public static class BpmnXmlReader
 
         public BpmnImportResult Build()
         {
+            _diagnostics.AddRange(preliminary);
             _diagnostics.AddRange(schemaDiagnostics);
             ReportExcludedElements();
 
@@ -1414,12 +1506,14 @@ public static class BpmnXmlReader
         private static bool? BoolAttribute(XElement element, string name) =>
             bool.TryParse(element.Attribute(name)?.Value, out var value) ? value : null;
 
+        // Only a finite number: NaN, Infinity and anything that overflows parse, and serializing one throws, so a layout that carries one is read as if it had none.
         private static double? DoubleAttribute(XElement element, string name) =>
             double.TryParse(
                 element.Attribute(name)?.Value,
                 NumberStyles.Float,
                 CultureInfo.InvariantCulture,
                 out var value)
+            && double.IsFinite(value)
                 ? value
                 : null;
     }

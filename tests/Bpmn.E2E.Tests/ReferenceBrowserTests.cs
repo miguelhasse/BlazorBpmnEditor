@@ -43,7 +43,7 @@ public class ReferenceBrowserTests(DemoAppFixture app) : PageTest, IClassFixture
 
         // A finding you cannot get to is a finding you cannot act on — the same rule the validation
         // panel follows.
-        await Expect(Page.Locator(".bpmn-properties__subtitle")).ToHaveTextAsync("sequenceFlow");
+        await Expect(Page.Locator(".bpmn-properties__subtitle")).ToHaveTextAsync("Sequence Flow");
     }
 
     [Fact]

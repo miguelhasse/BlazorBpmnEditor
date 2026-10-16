@@ -19,6 +19,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="bunit" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
     <PackageReference Include="AngleSharp" />
   </ItemGroup>
 
@@ -32,6 +33,7 @@
     <ProjectReference Include="..\..\src\Bpmn.Scripting.CSharp\Hasseware.AspNetCore.Components.Bpmn.Scripting.CSharp.csproj" />
     <ProjectReference Include="..\..\src\Bpmn.Scripting.JavaScript\Hasseware.AspNetCore.Components.Bpmn.Scripting.JavaScript.csproj" />
     <ProjectReference Include="..\..\src\Bpmn.Scripting.Lua\Hasseware.AspNetCore.Components.Bpmn.Scripting.Lua.csproj" />
+    <ProjectReference Include="..\Bpmn.Storage.Testing\Hasseware.AspNetCore.Components.Bpmn.Storage.Testing.csproj" />
   </ItemGroup>
 
 </Project>

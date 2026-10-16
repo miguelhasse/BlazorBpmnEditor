@@ -408,5 +408,8 @@ function isContainer(element: dia.Element): boolean {
     return facts?.isExpanded === true;
   }
 
-  return element.getEmbeddedCells().length > 0 || type === 'pool' || type === 'lane';
+  // A Boundary Event is embedded in its host so that it travels with it, which does not make the host a place to drop things: the document would
+  // refuse the element for a container that is not one.
+  const holdsElements = element.getEmbeddedCells().some((child) => (child.get('bpmn') as { readonly elementType?: string } | undefined)?.elementType !== 'boundaryEvent');
+  return holdsElements || type === 'pool' || type === 'lane';
 }

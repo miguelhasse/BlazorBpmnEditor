@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Hasseware.AspNetCore.Components.Bpmn.Mcp.AspNetCore</AssemblyName>
+    <RootNamespace>Hasseware.AspNetCore.Components.Bpmn.Mcp.AspNetCore</RootNamespace>
+    <PackageId>Hasseware.AspNetCore.Components.Bpmn.Mcp.AspNetCore</PackageId>
+    <Description>Preview. Hosts the BPMN MCP server over streamable HTTP in an ASP.NET Core app: stateless, authenticated, with the tenant taken from the caller's claims and DNS-rebinding, body-size and rate-limit protections.</Description>
+    <PackageTags>bpmn;mcp;agents;aspnetcore;http</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="ModelContextProtocol.AspNetCore" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bpmn.Mcp\Hasseware.AspNetCore.Components.Bpmn.Mcp.csproj" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

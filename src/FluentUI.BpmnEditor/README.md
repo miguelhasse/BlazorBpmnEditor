@@ -70,6 +70,7 @@ checked against the installed **5.0.0** assembly, not v4 documentation.
 | `FluentBpmnDiagramNavigator` | `FluentSelect<BpmnDiagramTarget, string>`, `FluentButton` | `ArrowRight` |
 | `FluentBpmnShortcutHelp` | Inline `FluentDialog` via `FluentBpmnDialog`, `FluentButton` | `Dismiss` |
 | `FluentBpmnImportOffer` | Inline `FluentDialog`, `FluentMessageBar` for parse errors, `FluentButton` | `Dismiss` |
+| `FluentBpmnExternalChangeOffer` | Non-modal notice over the canvas, `FluentMessageBar`, `FluentButton` | `Dismiss` |
 | `FluentBpmnCalledElementPicker` | Inline `FluentDialog`, `FluentButton`, semantic listbox options | None |
 
 Native fallbacks are intentional: the stencil must expose DOM drag targets and Core keyboard

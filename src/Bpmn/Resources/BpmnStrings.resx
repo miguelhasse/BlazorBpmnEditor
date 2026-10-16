@@ -122,6 +122,33 @@
   <data name="ImportOffer.Open" xml:space="preserve">
     <value>Open</value>
   </data>
+  <data name="ExternalChangeOffer.AriaLabel" xml:space="preserve">
+    <value>Document changed elsewhere</value>
+  </data>
+  <data name="ExternalChangeOffer.Copied" xml:space="preserve">
+    <value>Saved as {0}. You are now editing the copy.</value>
+  </data>
+  <data name="ExternalChangeOffer.Failed" xml:space="preserve">
+    <value>That could not be done, and nothing was changed. Try again, or save a copy.</value>
+  </data>
+  <data name="AgentConfirmation.AriaLabel" xml:space="preserve">
+    <value>Allow an assistant's action</value>
+  </data>
+  <data name="AgentConfirmation.Delete.Title" xml:space="preserve">
+    <value>Delete from the diagram?</value>
+  </data>
+  <data name="AgentConfirmation.Delete.Summary" xml:space="preserve">
+    <value>The assistant wants to delete {0} item(s) with their connectors and contents. You can undo this afterwards.</value>
+  </data>
+  <data name="AgentConfirmation.Delete.More" xml:space="preserve">
+    <value>… and {0} more</value>
+  </data>
+  <data name="AgentConfirmation.Save.Title" xml:space="preserve">
+    <value>Save the document?</value>
+  </data>
+  <data name="AgentConfirmation.Save.Summary" xml:space="preserve">
+    <value>The assistant wants to save your edits, replacing the stored version of this document.</value>
+  </data>
   <data name="PropertyPanel.AriaLabel" xml:space="preserve">
     <value>Properties</value>
   </data>
