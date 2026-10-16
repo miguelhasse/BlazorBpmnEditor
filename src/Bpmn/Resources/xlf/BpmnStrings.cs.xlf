@@ -1312,6 +1312,16 @@
         <target state="translated">Typ procesu</target>
         <note />
       </trans-unit>
+      <trans-unit id="Property.script">
+        <source>Script</source>
+        <target state="translated">Skript</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.scriptFormat">
+        <source>Script format</source>
+        <target state="translated">Formát skriptu</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Property.standardLoop.loopCondition">
         <source>Loop condition</source>
         <target state="translated">Podmínka smyčky</target>

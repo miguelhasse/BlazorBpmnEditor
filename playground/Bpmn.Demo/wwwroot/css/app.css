@@ -293,7 +293,7 @@ table {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    block-size: calc(100vh - 160px);
+    block-size: calc(100vh - 100px);
 }
 
 /*
@@ -382,6 +382,12 @@ table {
     overflow: auto;
 }
 
+.demo-scroll-page {
+    block-size: 100%;
+    min-inline-size: 0;
+    overflow: auto;
+}
+
 /* --- icon manifest review page ------------------------------------------ */
 .icons-meta {
     font-size: 0.85rem;
@@ -420,9 +426,8 @@ table {
 /*
  * This page is a report, not a canvas, so it scrolls instead of filling the viewport exactly.
  */
-.demo-shell:has(.demo-table) {
+.demo-report {
     block-size: auto;
-    overflow: visible;
 }
 
 .demo-intro {

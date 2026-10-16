@@ -406,6 +406,8 @@ public static partial class BpmnDocumentEditor
             },
             "defaultFlowRef" => node with { DefaultFlowRef = AsReference(value.Value) },
             "messageRef" => node with { MessageRef = AsReference(value.Value) },
+            "scriptFormat" => node with { ScriptFormat = value.Value },
+            "script" => node with { Script = value.Value },
             "eventDefinition" => WithTrigger(node, ParseTrigger(value.Value), notes),
             _ => SetFlowNodeDetail(node, value, namespaces),
         };

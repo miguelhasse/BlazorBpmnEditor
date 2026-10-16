@@ -1312,6 +1312,16 @@
         <target state="translated">流程類型</target>
         <note />
       </trans-unit>
+      <trans-unit id="Property.script">
+        <source>Script</source>
+        <target state="translated">指令碼</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.scriptFormat">
+        <source>Script format</source>
+        <target state="translated">指令碼格式</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Property.standardLoop.loopCondition">
         <source>Loop condition</source>
         <target state="translated">迴圈條件</target>

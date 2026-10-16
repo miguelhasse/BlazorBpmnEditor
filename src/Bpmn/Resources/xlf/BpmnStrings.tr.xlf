@@ -1312,6 +1312,16 @@
         <target state="translated">Süreç türü</target>
         <note />
       </trans-unit>
+      <trans-unit id="Property.script">
+        <source>Script</source>
+        <target state="translated">Betik</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Property.scriptFormat">
+        <source>Script format</source>
+        <target state="translated">Betik biçimi</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Property.standardLoop.loopCondition">
         <source>Loop condition</source>
         <target state="translated">Döngü koşulu</target>

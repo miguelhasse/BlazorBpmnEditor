@@ -67,6 +67,47 @@ public class PropertyPanelTests(DemoAppFixture app) : PageTest, IClassFixture<De
     }
 
     [Fact]
+    public async Task ScriptTaskPropertiesAreEditableAndUndoable()
+    {
+        await GoToEditorAsync();
+        await ShowPanelAsync();
+        var taskId = await TaskIdAsync();
+        var body = Page.Locator($".joint-cell[model-id='{taskId}'] [joint-selector='body']").First;
+        await body.ClickAsync(new() { Button = MouseButton.Right });
+        await Page.Locator(".bpmn-menu__item--type", new() { HasTextString = "Script Task" }).ClickAsync();
+        await Page.Keyboard.PressAsync("Escape");
+        await SelectAsync(taskId);
+
+        var panel = Page.Locator(".bpmn-properties");
+        var format = panel.GetByRole(AriaRole.Textbox, new() { Name = "Script format", Exact = true });
+        var script = panel.GetByRole(AriaRole.Textbox, new() { Name = "Script", Exact = true });
+        await Expect(format).ToHaveValueAsync("");
+        await Expect(script).ToHaveValueAsync("");
+        await Expect(script).ToHaveJSPropertyAsync("tagName", "TEXTAREA");
+
+        await format.FillAsync("text/javascript");
+        await format.PressAsync("Tab");
+        await Expect(format).ToHaveValueAsync("text/javascript");
+        const string source = "  var x = 1;\n  return x < 2;\n";
+        await script.FillAsync(source);
+        await script.PressAsync("Tab");
+        await Expect(script).ToHaveValueAsync(source);
+
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Undo", Exact = true }).ClickAsync();
+        await Expect(script).ToHaveValueAsync("");
+        await Expect(format).ToHaveValueAsync("text/javascript");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Redo", Exact = true }).ClickAsync();
+        await Expect(script).ToHaveValueAsync(source);
+
+        await script.FillAsync("");
+        await script.PressAsync("Tab");
+        await format.FillAsync("");
+        await format.PressAsync("Tab");
+        await Expect(script).ToHaveValueAsync("");
+        await Expect(format).ToHaveValueAsync("");
+    }
+
+    [Fact]
     public async Task DocumentationIsEditable()
     {
         // The one field every element carries, and the one the property schema had no entry for

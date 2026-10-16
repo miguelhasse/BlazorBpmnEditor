@@ -721,6 +721,12 @@ public static class BpmnElementInspector
                         .Select(definition => new BpmnPropertyChoice(definition.Id, definition.Name ?? definition.Id))]));
             }
 
+            if (node.Type == BpmnFlowNodeType.ScriptTask)
+            {
+                properties.Add(Text("scriptFormat", "Script format", node.ScriptFormat));
+                properties.Add(new("script", "Script", BpmnPropertyKind.MultilineText, node.Script));
+            }
+
             if (node.Type is BpmnFlowNodeType.SendTask or BpmnFlowNodeType.ReceiveTask)
             {
                 properties.Add(Choice("messageRef", "Message", node.MessageRef, Optional(document.Catalog.Messages

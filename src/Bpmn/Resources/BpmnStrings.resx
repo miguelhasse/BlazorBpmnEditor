@@ -235,6 +235,8 @@
   <data name="Property.activationCondition.type" xml:space="preserve"><value>Activation condition type</value></data>
   <data name="Property.associationDirection" xml:space="preserve"><value>Direction</value></data>
   <data name="Property.calledElementRef" xml:space="preserve"><value>Calls</value></data>
+  <data name="Property.scriptFormat" xml:space="preserve"><value>Script format</value></data>
+  <data name="Property.script" xml:space="preserve"><value>Script</value></data>
   <data name="Property.categoryValueRef" xml:space="preserve"><value>Category</value></data>
   <data name="Property.conditionLanguage" xml:space="preserve"><value>Condition language</value></data>
   <data name="Property.dataObjectRef" xml:space="preserve"><value>Data Object</value></data>

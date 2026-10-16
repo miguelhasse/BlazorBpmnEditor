@@ -62,6 +62,11 @@ Core scalar edits use `UpdatePropertiesCommand`; id changes use `RenameElementCo
 references can be updated with the rename. Bulk property edits use `CompoundCommand`, making
 the selection-wide edit one atomic history step.
 
+Script Tasks expose `scriptFormat` as a free-text language name or media type and `script` as
+multiline text in both built-in property panels. Both use `UpdatePropertiesCommand`, preserve
+script whitespace, and support undo/redo. Other task types do not offer these fields; switching
+away from Script Task clears them.
+
 | Extension command | Use |
 |---|---|
 | `SetExtensionValueCommand` | Change an attribute or text at an expanded-name extension path |
