@@ -119,6 +119,34 @@ public sealed class ReferenceBrowserTests : FluentTestContext
     }
 
     [Fact]
+    public void RendersSemanticSubgroupsInsideTheirParent()
+    {
+        var snapshot = Snapshot("Task_1") with
+        {
+            Properties =
+            [
+                new BpmnPropertyDescriptor("loopCharacteristics", "Loop", BpmnPropertyKind.Choice, "multiInstanceParallel")
+                    { Group = BpmnPropertyGroupKind.LoopCharacteristics },
+                new BpmnPropertyDescriptor("multiInstance.inputDataItem.id", "Input data item id", BpmnPropertyKind.Text, "Input")
+                    { Group = BpmnPropertyGroupKind.MultiInstanceInputDataItem },
+                new BpmnPropertyDescriptor("multiInstance.outputDataItem.name", "Output data item name", BpmnPropertyKind.Text, "Output")
+                    { Group = BpmnPropertyGroupKind.MultiInstanceOutputDataItem },
+            ],
+        };
+
+        var panel = this.RenderSeeded<FluentBpmnPropertyPanel>(seed => seed.Snapshots([snapshot]));
+
+        Assert.NotNull(panel.Find("[data-group-id='loop-characteristics'] [data-group-id='multi-instance-input-data-item']"));
+        Assert.NotNull(panel.Find("[data-group-id='loop-characteristics'] [data-group-id='multi-instance-output-data-item']"));
+        Assert.NotNull(panel.Find("details[data-group-id='multi-instance-input-data-item'] > summary"));
+        Assert.NotNull(panel.Find("details[data-group-id='multi-instance-output-data-item'] > summary"));
+        Assert.Single(panel.FindComponents<FluentAccordion>().Where(accordion =>
+            accordion.Markup.Contains("loop-characteristics", StringComparison.Ordinal)));
+        Assert.Contains("Input", panel.Markup, StringComparison.Ordinal);
+        Assert.Contains("Output", panel.Markup, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void ReadonlyOffersTheIdForReadingOnly()
     {
         BpmnEditCommand? submitted = null;

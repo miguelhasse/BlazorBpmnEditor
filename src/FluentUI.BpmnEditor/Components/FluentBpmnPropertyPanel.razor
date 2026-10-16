@@ -79,31 +79,7 @@
             @foreach (var group in Groups)
             {
                 var context = BuildGroupContext(group);
-                if (GroupTemplate is not null)
-                {
-                    @GroupTemplate(context)
-                }
-                else
-                {
-                    <FluentAccordion>
-                        <FluentAccordionItem Class="@("bpmn-properties__group " + (group.Namespace is not null ? "bpmn-properties__group--extension" : null))"
-                                             Expanded="@group.OpenByDefault" data-group-id="@group.Id" @key="@(group.Id + ":" + Only?.ElementId)">
-                            <HeaderTemplate>
-                                <span class="bpmn-properties__heading" title="@group.Tooltip">
-                                    @(group.Label ?? group.Id)
-                                </span>
-                            </HeaderTemplate>
-                            <ChildContent>
-                                <div class="bpmn-properties__properties" role="group" aria-label="@(group.Label ?? group.Id)">
-                                    @foreach (var entry in context.Entries)
-                                    {
-                                        @RenderEntry(BuildEntryContext(entry))
-                                    }
-                                </div>
-                            </ChildContent>
-                        </FluentAccordionItem>
-                    </FluentAccordion>
-                }
+                <FluentBpmnPropertyGroupView Context="@context" GroupTemplate="@GroupTemplate" IsTopLevel="true" @key="@(group.Id + ":" + Only?.ElementId)" />
             }
             @if (Only is not null)
             {

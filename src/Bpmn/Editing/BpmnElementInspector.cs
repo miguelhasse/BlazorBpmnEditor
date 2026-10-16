@@ -679,7 +679,8 @@ public static class BpmnElementInspector
                 properties.AddRange(LoopDataItemProperties(
                     "multiInstance.inputDataItem",
                     "Input data item",
-                    multi.InputDataItem));
+                    multi.InputDataItem,
+                    BpmnPropertyGroupKind.MultiInstanceInputDataItem));
                 properties.AddRange(ExpressionProperties(
                     "multiInstance.completionCondition",
                     "Completion condition",
@@ -691,7 +692,8 @@ public static class BpmnElementInspector
                 properties.AddRange(LoopDataItemProperties(
                     "multiInstance.outputDataItem",
                     "Output data item",
-                    multi.OutputDataItem));
+                    multi.OutputDataItem,
+                    BpmnPropertyGroupKind.MultiInstanceOutputDataItem));
 
                 var behaviors = multi.ComplexBehaviorDefinitions ?? [];
                 for (var index = 0; index < behaviors.Count; index++)
@@ -787,15 +789,16 @@ public static class BpmnElementInspector
     private static IReadOnlyList<BpmnPropertyDescriptor> LoopDataItemProperties(
         string prefix,
         string label,
-        BpmnLoopDataItem? item)
+        BpmnLoopDataItem? item,
+        BpmnPropertyGroupKind group)
     {
         item ??= new BpmnLoopDataItem();
         return
         [
-            Text($"{prefix}.id", $"{label} id", item.Id, BpmnPropertyGroupKind.LoopCharacteristics),
-            Text($"{prefix}.name", $"{label} name", item.Name, BpmnPropertyGroupKind.LoopCharacteristics),
-            Text($"{prefix}.itemSubjectRef", $"{label} item subject reference", item.ItemSubjectRef, BpmnPropertyGroupKind.LoopCharacteristics),
-            Flag($"{prefix}.isCollection", $"{label} is collection", item.IsCollection, BpmnPropertyGroupKind.LoopCharacteristics),
+            Text($"{prefix}.id", $"{label} id", item.Id, group),
+            Text($"{prefix}.name", $"{label} name", item.Name, group),
+            Text($"{prefix}.itemSubjectRef", $"{label} item subject reference", item.ItemSubjectRef, group),
+            Flag($"{prefix}.isCollection", $"{label} is collection", item.IsCollection, group),
         ];
     }
 

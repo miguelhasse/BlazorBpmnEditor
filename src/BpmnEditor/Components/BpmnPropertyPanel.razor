@@ -73,25 +73,7 @@
         @foreach (var group in Groups)
         {
             var context = BuildGroupContext(group);
-            if (GroupTemplate is not null)
-            {
-                @GroupTemplate(context)
-            }
-            else
-            {
-                <details class="bpmn-properties__group @(group.Namespace is not null ? "bpmn-properties__group--extension" : null)"
-                         open="@group.OpenByDefault" data-group-id="@group.Id" @key="@(group.Id + ":" + Only?.ElementId)">
-                    <summary class="bpmn-properties__heading" title="@group.Tooltip">
-                        @(group.Label ?? group.Id)
-                    </summary>
-                    <div class="bpmn-properties__properties" role="group" aria-label="@(group.Label ?? group.Id)">
-                        @foreach (var entry in context.Entries)
-                        {
-                            @RenderEntry(BuildEntryContext(entry))
-                        }
-                    </div>
-                </details>
-            }
+            <BpmnPropertyGroupView Context="@context" GroupTemplate="@GroupTemplate" @key="@(group.Id + ":" + Only?.ElementId)" />
         }
         @if (Only is not null)
         {

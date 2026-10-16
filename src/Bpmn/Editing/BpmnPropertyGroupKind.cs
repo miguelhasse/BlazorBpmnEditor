@@ -44,8 +44,12 @@ public enum BpmnPropertyGroupKind
     DataState,
     /// <summary>Process execution, type, and closure properties.</summary>
     Process,
-    /// <summary>Standard and multi-instance Loop Characteristics, including loop data items.</summary>
+    /// <summary>Standard and multi-instance Loop Characteristics.</summary>
     LoopCharacteristics,
+    /// <summary>Multi-instance input data item properties.</summary>
+    MultiInstanceInputDataItem,
+    /// <summary>Multi-instance output data item properties.</summary>
+    MultiInstanceOutputDataItem,
     /// <summary>Multi-instance Complex Behavior Definition condition and event.</summary>
     ComplexBehaviorDefinition,
 }

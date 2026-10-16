@@ -81,7 +81,7 @@ public sealed class PropertyGroupingTests
     [Theory]
     [InlineData(BpmnLoopCharacteristics.MultiInstanceParallel)]
     [InlineData(BpmnLoopCharacteristics.MultiInstanceSequential)]
-    public void MultiInstanceDetailsSeparateComplexBehaviorDefinitions(BpmnLoopCharacteristics loop)
+    public void MultiInstanceDetailsNestDataItemsAndComplexBehaviorDefinitions(BpmnLoopCharacteristics loop)
     {
         var document = TaskDocument(new BpmnFlowNode("Task", BpmnFlowNodeType.Task, "Process_1")
         {
@@ -91,20 +91,29 @@ public sealed class PropertyGroupingTests
         });
 
         var groups = Groups(document, "Task");
+        var properties = BpmnElementInspector.PropertiesOf(document, "Task");
 
-        Assert.Equal(["general", "activity", "loop-characteristics", "complex-behavior-definition"], groups.Select(group => group.Id));
+        Assert.Equal(["general", "activity", "loop-characteristics"], groups.Select(group => group.Id));
+        Assert.Equal(BpmnPropertyGroupKind.MultiInstanceInputDataItem,
+            Assert.Single(properties, property => property.Name == "multiInstance.inputDataItem.id").Group);
+        Assert.Equal(BpmnPropertyGroupKind.MultiInstanceOutputDataItem,
+            Assert.Single(properties, property => property.Name == "multiInstance.outputDataItem.name").Group);
         Assert.Equal("Loop Characteristics", groups[2].Label);
-        Assert.Equal("Complex Behavior Definition", groups[3].Label);
+        Assert.Equal(["multi-instance-input-data-item", "multi-instance-output-data-item", "complex-behavior-definition"],
+            groups[2].Children.Select(group => group.Id));
+        Assert.Equal(["multiInstance.inputDataItem.id", "multiInstance.inputDataItem.name",
+            "multiInstance.inputDataItem.itemSubjectRef", "multiInstance.inputDataItem.isCollection"],
+            groups[2].Children[0].Entries.Select(entry => entry.Id));
+        Assert.Equal(["multiInstance.outputDataItem.id", "multiInstance.outputDataItem.name",
+            "multiInstance.outputDataItem.itemSubjectRef", "multiInstance.outputDataItem.isCollection"],
+            groups[2].Children[1].Entries.Select(entry => entry.Id));
         Assert.Equal(["multiInstance.complexBehavior.0.event", "multiInstance.complexBehavior.0.condition",
             "multiInstance.complexBehavior.0.condition.language", "multiInstance.complexBehavior.0.condition.type",
             "multiInstance.complexBehavior.1.event", "multiInstance.complexBehavior.1.condition",
             "multiInstance.complexBehavior.1.condition.language", "multiInstance.complexBehavior.1.condition.type"],
-            groups[3].Entries.Select(entry => entry.Id));
-        Assert.Contains(groups[2].Entries, entry => entry.Id == "multiInstance.inputDataItem.id");
-        Assert.Contains(groups[2].Entries, entry => entry.Id == "multiInstance.outputDataItem.name");
-        Assert.DoesNotContain(groups[2].Entries, entry => entry.Id.Contains(".complexBehavior.", StringComparison.Ordinal));
-        Assert.Equal(8, groups[3].Entries.Count);
-        Assert.All(groups, group => Assert.All(group.Entries, entry => Assert.Equal(group.Id, entry.GroupId)));
+            groups[2].Children[2].Entries.Select(entry => entry.Id));
+        Assert.Equal(8, groups[2].Children[2].Entries.Count);
+        Assert.All(AllGroups(groups), group => Assert.All(group.Entries, entry => Assert.Equal(group.Id, entry.GroupId)));
     }
 
     [Fact]
@@ -167,7 +176,9 @@ public sealed class PropertyGroupingTests
     {
         var snapshot = new BpmnElementSnapshot
         {
-            ElementId = "Task", ElementType = "task", Category = BpmnElementCategory.Activity,
+            ElementId = "Task",
+            ElementType = "task",
+            Category = BpmnElementCategory.Activity,
             Properties = [.. Enum.GetValues<BpmnPropertyGroupKind>().Reverse().Select(group =>
                 new BpmnPropertyDescriptor(group.ToString(), group.ToString(), BpmnPropertyKind.Text, null) { Group = group })],
         };
@@ -177,11 +188,23 @@ public sealed class PropertyGroupingTests
         var groups = provider.GetGroups(snapshot, [existing]);
 
         Assert.Same(existing, groups[0]);
-        Assert.Equal(Enum.GetValues<BpmnPropertyGroupKind>().Select(group => group.ToString()),
+        var nestedKinds = new[]
+        {
+            BpmnPropertyGroupKind.MultiInstanceInputDataItem,
+            BpmnPropertyGroupKind.MultiInstanceOutputDataItem,
+            BpmnPropertyGroupKind.ComplexBehaviorDefinition,
+        };
+        Assert.Equal(Enum.GetValues<BpmnPropertyGroupKind>().Except(nestedKinds).Select(group => group.ToString()),
             groups.Skip(1).Select(group => Assert.Single(group.Entries).Id));
-        Assert.All(groups.Skip(1), group => Assert.True(group.HasBuiltInLabels));
+        Assert.Equal(nestedKinds.Select(group => group.ToString()),
+            groups.Single(group => group.Id == "loop-characteristics").Children
+                .Select(group => Assert.Single(group.Entries).Id));
+        Assert.All(AllGroups(groups.Skip(1)), group => Assert.True(group.HasBuiltInLabels));
         Assert.Same(groups, provider.GetGroups(snapshot with { Properties = [] }, groups));
     }
+
+    private static IEnumerable<BpmnPropertyGroup> AllGroups(IEnumerable<BpmnPropertyGroup> groups) =>
+        groups.SelectMany(group => new[] { group }.Concat(AllGroups(group.Children)));
 
     private static IReadOnlyList<BpmnPropertyGroup> Groups(BpmnDocument document, string id) =>
         new BpmnGeneralPropertiesProvider().GetGroups(BpmnElementInspector.Describe(document, id)!, []);

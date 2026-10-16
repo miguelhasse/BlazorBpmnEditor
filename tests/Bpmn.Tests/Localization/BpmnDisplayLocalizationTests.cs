@@ -19,12 +19,18 @@ public sealed class BpmnDisplayLocalizationTests
     {
         var display = Display(("PropertyGroup.loop-characteristics", "Translated loops"),
             ("PropertyGroup.complex-behavior-definition", "Translated complex behavior"),
+            ("PropertyGroup.multi-instance-input-data-item", "Translated input item"),
             ("Property.multiInstance.complexBehavior.condition", "Translated condition {0}"));
         var descriptor = new BpmnPropertyDescriptor("multiInstance.complexBehavior.1.condition", "Complex behavior 2 condition",
-            BpmnPropertyKind.MultilineText, "unchanged") { Group = BpmnPropertyGroupKind.ComplexBehaviorDefinition };
+            BpmnPropertyKind.MultilineText, "unchanged")
+        {
+            Group = BpmnPropertyGroupKind.ComplexBehaviorDefinition
+        };
         var snapshot = new BpmnElementSnapshot
         {
-            ElementId = "Task", ElementType = "task", Category = BpmnElementCategory.Activity,
+            ElementId = "Task",
+            ElementType = "task",
+            Category = BpmnElementCategory.Activity,
             Properties = [descriptor, new("loopCharacteristics", "Loop", BpmnPropertyKind.Text, "none")
                 { Group = BpmnPropertyGroupKind.LoopCharacteristics }],
         };
@@ -33,12 +39,39 @@ public sealed class BpmnDisplayLocalizationTests
         var groups = new BpmnGeneralPropertiesProvider().GetGroups(localized, []).Select(display.Group).ToArray();
 
         Assert.Equal(BpmnPropertyGroupKind.ComplexBehaviorDefinition, localized.Properties[0].Group);
-        Assert.Equal(["Translated loops", "Translated complex behavior"], groups.Select(group => group.Label));
-        var entry = Assert.Single(groups[1].Entries);
+        Assert.Equal(["Translated loops"], groups.Select(group => group.Label));
+        Assert.Equal(["Translated complex behavior"], groups[0].Children.Select(group => group.Label));
+        var entry = Assert.Single(groups[0].Children[0].Entries);
         Assert.Equal("Translated condition 2", entry.Label);
         Assert.Equal("multiInstance.complexBehavior.1.condition", entry.Id);
         Assert.Equal("complex-behavior-definition", entry.GroupId);
         Assert.Equal("unchanged", entry.Value);
+    }
+
+    [Fact]
+    public void LocalizesNestedBuiltInDataItemGroups()
+    {
+        var display = Display(("PropertyGroup.loop-characteristics", "Translated loops"),
+            ("PropertyGroup.multi-instance-input-data-item", "Translated input item"));
+        var snapshot = new BpmnElementSnapshot
+        {
+            ElementId = "Task",
+            ElementType = "task",
+            Category = BpmnElementCategory.Activity,
+            Properties =
+            [
+                new("loopCharacteristics", "Loop", BpmnPropertyKind.Choice, "multiInstanceParallel")
+                    { Group = BpmnPropertyGroupKind.LoopCharacteristics },
+                new("multiInstance.inputDataItem.id", "Input data item id", BpmnPropertyKind.Text, "Item")
+                    { Group = BpmnPropertyGroupKind.MultiInstanceInputDataItem },
+            ],
+        };
+
+        var group = new BpmnGeneralPropertiesProvider().GetGroups(snapshot, []).Single();
+        var localized = display.Group(group);
+
+        Assert.Equal("Translated loops", localized.Label);
+        Assert.Equal("Translated input item", Assert.Single(localized.Children).Label);
     }
 
     [Fact]

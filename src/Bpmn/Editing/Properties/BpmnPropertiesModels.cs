@@ -100,7 +100,7 @@ public sealed record BpmnPropertyEntry(string Id, string Label, BpmnPropertyEntr
     public string? Error { get; init; }
 }
 
-/// <summary>A group of snapshot-derived properties.</summary>
+/// <summary>A group of snapshot-derived properties and nested semantic groups.</summary>
 /// <param name="Id">Stable group identifier.</param>
 /// <param name="Label">Displayed heading.</param>
 /// <param name="Entries">Entries in display order.</param>
@@ -114,4 +114,6 @@ public sealed record BpmnPropertyGroup(string Id, string? Label, IReadOnlyList<B
     public bool OpenByDefault { get; init; } = true;
     /// <summary>Vendor namespace; null identifies a standard property group.</summary>
     public string? Namespace { get; init; }
+    /// <summary>Nested semantic groups, rendered beneath this group.</summary>
+    public IReadOnlyList<BpmnPropertyGroup> Children { get; init; } = [];
 }
