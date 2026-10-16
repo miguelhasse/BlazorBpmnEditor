@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text;
 using System.Xml.Linq;
 
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
@@ -34,6 +35,50 @@ public sealed class BpmnXmlWriterTests
         Assert.Equal(
             BpmnXmlWriter.Write(document).Xml,
             BpmnXmlWriter.Write(document).Xml);
+    }
+
+    [Theory]
+    [InlineData(BpmnWriteMode.Canonical, true)]
+    [InlineData(BpmnWriteMode.Canonical, false)]
+    [InlineData(BpmnWriteMode.Fidelity, true)]
+    public void StreamOutputMatchesStringOutputAndLeavesStreamOpen(BpmnWriteMode mode, bool indent)
+    {
+        var document = InterchangeFixtures.Read("vendor-extensions.bpmn").Document;
+        var options = new BpmnWriteOptions
+        {
+            Mode = mode,
+            Indent = indent,
+            AllowLossyCanonicalExport = true,
+        };
+        var expected = BpmnXmlWriter.Write(document, options);
+        using var stream = new MemoryStream();
+
+        var diagnostics = BpmnXmlWriter.Write(document, stream, options);
+
+        var bytes = stream.ToArray();
+        Assert.Equal(Encoding.UTF8.GetBytes(expected.Xml), bytes);
+        Assert.Equal(expected.Diagnostics, diagnostics);
+        Assert.Equal((byte)'<', bytes[0]);
+        Assert.True(stream.CanWrite);
+    }
+
+    [Fact]
+    public void FidelityStreamOutputDoesNotAddAnAbsentXmlDeclaration()
+    {
+        var document = BpmnXmlReader.Read("""
+            <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                         id="Definitions_1" targetNamespace="https://example.test">
+              <process id="Process_1" />
+            </definitions>
+            """).Document;
+        var expected = BpmnXmlWriter.Write(document, BpmnWriteOptions.Fidelity);
+        using var stream = new MemoryStream();
+
+        BpmnXmlWriter.Write(document, stream, BpmnWriteOptions.Fidelity);
+
+        var output = Encoding.UTF8.GetString(stream.ToArray());
+        Assert.Equal(expected.Xml, output);
+        Assert.False(output.StartsWith("<?xml", StringComparison.Ordinal));
     }
 
     [Fact]

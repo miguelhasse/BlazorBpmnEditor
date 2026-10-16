@@ -22,7 +22,7 @@ dotnet run -c Release --project tests\Bpmn.Benchmarks -- memory [path-to.bpmn]
 ```
 
 It prints allocation and time for the XML read and canonical write, the size of the `loadDocument` interop payload, and retained megabytes for a document with and without its
-source XML tree and for a 100-step undo history. The figures recorded on the stress fixture are in [docs/performance.md](../../docs/performance.md).
+source XML tree and for a 100-step undo history. It also compares canonical XML returned as a string with canonical XML written directly to a stream. The figures recorded on the stress fixture are in [docs/performance.md](../../docs/performance.md).
 
 ## What EditorBenchmarks measures
 

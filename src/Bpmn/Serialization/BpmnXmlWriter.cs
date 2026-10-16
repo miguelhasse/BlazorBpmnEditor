@@ -65,6 +65,37 @@ public static class BpmnXmlWriter
     /// <returns>The XML and the export diagnostics manifest.</returns>
     public static BpmnExportResult Write(BpmnDocument document, BpmnWriteOptions options)
     {
+        var prepared = Prepare(document, options);
+        return new BpmnExportResult(
+            Serialize(prepared.Output, prepared.Indent, prepared.Declaration),
+            prepared.Mode,
+            prepared.Diagnostics);
+    }
+
+    /// <summary>Writes a document to a stream.</summary>
+    /// <param name="document">The document to write.</param>
+    /// <param name="stream">The stream to write UTF-8 XML to.</param>
+    /// <param name="options">Which mode to write in.</param>
+    /// <returns>The export diagnostics manifest.</returns>
+    public static IReadOnlyList<BpmnExportDiagnostic> Write(
+        BpmnDocument document,
+        Stream stream,
+        BpmnWriteOptions? options = null)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+
+        var prepared = Prepare(document, options ?? BpmnWriteOptions.Canonical);
+        Serialize(prepared.Output, stream, prepared.Indent, prepared.Declaration);
+        return prepared.Diagnostics;
+    }
+
+    private static (
+        XDocument Output,
+        bool Indent,
+        string? Declaration,
+        BpmnWriteMode Mode,
+        List<BpmnExportDiagnostic> Diagnostics) Prepare(BpmnDocument document, BpmnWriteOptions options)
+    {
         ArgumentNullException.ThrowIfNull(document);
         ArgumentNullException.ThrowIfNull(options);
 
@@ -83,9 +114,6 @@ public static class BpmnXmlWriter
 
         if (mode == BpmnWriteMode.Fidelity && document.Source is null)
         {
-            // Not an error: a document the editor created has no original to preserve, so the two
-            // modes would produce the same bytes anyway. Saying so keeps the manifest honest about
-            // which mode actually ran.
             diagnostics.Add(new BpmnExportDiagnostic(
                 BpmnExportSeverity.Info,
                 "Fidelity mode was requested for a document that was not read from XML; wrote canonical output instead."));
@@ -104,27 +132,7 @@ public static class BpmnXmlWriter
             ? (MergeOntoSource(document, canonical, diagnostics), false, document.Source!.Declaration)
             : (canonical, options.Indent, DefaultDeclaration);
 
-        return new BpmnExportResult(Serialize(output, indent, declaration), mode, diagnostics);
-    }
-
-    /// <summary>Writes a document to a stream.</summary>
-    /// <param name="document">The document to write.</param>
-    /// <param name="stream">The stream to write UTF-8 XML to.</param>
-    /// <param name="options">Which mode to write in.</param>
-    /// <returns>The export diagnostics manifest.</returns>
-    public static IReadOnlyList<BpmnExportDiagnostic> Write(
-        BpmnDocument document,
-        Stream stream,
-        BpmnWriteOptions? options = null)
-    {
-        ArgumentNullException.ThrowIfNull(stream);
-
-        var result = Write(document, options ?? BpmnWriteOptions.Canonical);
-
-        using var writer = new StreamWriter(stream, Utf8, leaveOpen: true);
-        writer.Write(result.Xml);
-
-        return result.Diagnostics;
+        return (output, indent, declaration, mode, diagnostics);
     }
 
     private static XDocument MergeOntoSource(
@@ -168,6 +176,34 @@ public static class BpmnXmlWriter
 
         // Normalising the trailing newline keeps file comparisons stable across platforms.
         return declaration is null ? body + "\n" : declaration + "\n" + body + "\n";
+    }
+
+    private static void Serialize(XDocument document, Stream stream, bool indent, string? declaration)
+    {
+        if (declaration is not null)
+        {
+            stream.Write(Utf8.GetBytes(declaration));
+            stream.WriteByte((byte)'\n');
+        }
+
+        var firstNode = document.FirstNode;
+        while (firstNode is XText firstText && string.IsNullOrWhiteSpace(firstText.Value))
+            firstNode = firstNode.NextNode;
+
+        var lastNode = document.LastNode;
+        while (lastNode is XText lastText && string.IsNullOrWhiteSpace(lastText.Value))
+            lastNode = lastNode.PreviousNode;
+
+        using (var writer = XmlWriter.Create(stream, indent ? IndentedSettings : CompactSettings))
+        {
+            for (var node = firstNode; node is not null; node = node.NextNode)
+            {
+                node.WriteTo(writer);
+                if (ReferenceEquals(node, lastNode)) break;
+            }
+        }
+
+        stream.WriteByte((byte)'\n');
     }
 
     /// <summary>A <see cref="StringWriter"/> that tells <see cref="XmlWriter"/> the truth about encoding.</summary>

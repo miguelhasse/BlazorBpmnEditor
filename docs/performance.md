@@ -191,6 +191,10 @@ edit that is not a plain move sends it again and resets the graph. Pan holds its
 The element index adds about 0.05 MB a document and the history figure already includes it, so it is not the multiplier it looked like from reading the code. The source tree
 is what a document costs.
 
+The stream overload of the canonical XML writer now serializes directly to the destination instead of first creating the full XML string. On the same stress fixture,
+`MemoryReport` measured 5.6 MB allocated for a stream write versus 7.4 MB for the string-returning write (about 24% less); elapsed times were 92.2 ms and 86.2 ms
+respectively in that run. The canonical tree and diagnostics are still built, so this reduces transient output allocation rather than retained document memory.
+
 ### Known gaps found while measuring
 
 - **Fixed: a Release publish of this repository's playground shipped a broken editor.** The JavaScript SDK sets each esproj asset's `OriginalItemSpec` from an empty item list, so MSBuild
