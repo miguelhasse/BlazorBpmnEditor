@@ -1,7 +1,7 @@
 import { dia } from '@joint/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { renderDocument } from '../../src/graph/document-renderer.js';
+import { removeDocumentElements, renderDocument } from '../../src/graph/document-renderer.js';
 import { TableFontMetrics } from '../../src/labels/font-metrics.js';
 import { bpmnCellNamespace } from '../../src/shapes/index.js';
 import { emptyDocument, flowNode, linearProcess, pooledProcess, shape } from '../fixtures/documents.js';
@@ -28,6 +28,66 @@ describe('renderDocument', () => {
     expect(result.shapeCount).toBe(3);
     expect(result.edgeCount).toBe(2);
     expect(graph.getCells()).toHaveLength(5);
+  });
+
+  describe('removeDocumentElements', () => {
+    it('removes the deletion closure from the graph and every diagram plane', () => {
+      const document = linearProcess();
+      const secondDiagram = {
+        ...document.diagrams[0]!,
+        id: 'Diagram_2',
+        plane: { ...document.diagrams[0]!.plane, id: 'Plane_2' },
+      };
+      const multiDiagramDocument = { ...document, diagrams: [...document.diagrams, secondDiagram] };
+      renderDocument(graph, multiDiagramDocument, 'Diagram_1', metrics);
+
+      const updated = removeDocumentElements(graph, multiDiagramDocument, ['Task_1', 'Flow_1', 'Flow_2']);
+
+      expect(updated).not.toBeNull();
+      expect(updated?.flowNodes.map((node) => node.id)).toEqual(['StartEvent_1', 'EndEvent_1']);
+      expect(updated?.sequenceFlows).toEqual([]);
+      expect(updated?.diagrams.every((diagram) =>
+        diagram.plane.shapes.every((shape) => shape.bpmnElement !== 'Task_1')
+        && diagram.plane.edges.every((edge) => !['Flow_1', 'Flow_2'].includes(edge.bpmnElement)))).toBe(true);
+      expect(graph.getCells().map((cell) => String(cell.id)).sort()).toEqual(['EndEvent_1', 'StartEvent_1']);
+
+      const result = renderDocument(graph, updated!, 'Diagram_1', metrics);
+      expect(result.shapeCount).toBe(2);
+      expect(result.edgeCount).toBe(0);
+      expect(graph.getCells().map((cell) => String(cell.id)).sort()).toEqual(['EndEvent_1', 'StartEvent_1']);
+    });
+
+    it('prunes removed nodes from surviving Lane membership', () => {
+      const document = pooledProcess();
+      renderDocument(graph, document, null, metrics);
+
+      const updated = removeDocumentElements(graph, document, ['Task_1']);
+
+      expect(updated?.lanes[0]?.flowNodeRefs).toEqual([]);
+      expect(updated?.lanes[1]?.flowNodeRefs).toEqual(['Task_2']);
+      expect(updated?.flowNodes.map((node) => node.id)).toEqual(['Task_2']);
+      expect(graph.getCell('Task_1')).toBeUndefined();
+      expect(graph.getCell('Task_2')).toBeDefined();
+    });
+
+    it('leaves the graph unchanged when a Lane requires full layout reconciliation', () => {
+      const document = pooledProcess();
+      renderDocument(graph, document, null, metrics);
+
+      expect(removeDocumentElements(graph, document, ['Lane_1'])).toBeNull();
+      expect(graph.getCell('Lane_1')).toBeDefined();
+      expect(graph.getCell('Task_1')).toBeDefined();
+    });
+
+    it('leaves the graph unchanged when a surviving connector would be detached', () => {
+      const document = linearProcess();
+      renderDocument(graph, document, null, metrics);
+
+      expect(removeDocumentElements(graph, document, ['Task_1'])).toBeNull();
+      expect(graph.getCell('Task_1')).toBeDefined();
+      expect(graph.getCell('Flow_1')).toBeDefined();
+      expect(graph.getCell('Flow_2')).toBeDefined();
+    });
   });
 
   it('uses the BPMN element id as the cell id', () => {

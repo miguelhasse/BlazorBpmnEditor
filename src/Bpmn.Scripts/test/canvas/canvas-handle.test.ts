@@ -19,18 +19,25 @@ function initResult(accepted: boolean): CanvasInitResult {
   };
 }
 
-function fakeInstance(): { instance: BpmnCanvasInstance; dispose: ReturnType<typeof vi.fn>; setViewport: ReturnType<typeof vi.fn> } {
+function fakeInstance(): {
+  instance: BpmnCanvasInstance;
+  deleteElements: ReturnType<typeof vi.fn>;
+  dispose: ReturnType<typeof vi.fn>;
+  setViewport: ReturnType<typeof vi.fn>;
+} {
+  const deleteElements = vi.fn(() => true);
   const dispose = vi.fn();
   const setViewport = vi.fn();
 
   const instance = {
     dispose,
+    deleteElements,
     setViewport,
     editLabel: vi.fn(() => true),
     loadDocument: vi.fn(() => ({ diagramId: 'd', shapeCount: 1, edgeCount: 0, unrenderedElementIds: [] })),
   } as unknown as BpmnCanvasInstance;
 
-  return { instance, dispose, setViewport };
+  return { instance, deleteElements, dispose, setViewport };
 }
 
 describe('CanvasHandle', () => {
@@ -41,7 +48,7 @@ describe('CanvasHandle', () => {
   });
 
   it('forwards calls to its canvas', () => {
-    const { instance, setViewport } = fakeInstance();
+    const { instance, deleteElements, setViewport } = fakeInstance();
     const handle = new CanvasHandle(instance, initResult(true));
 
     handle.setViewport({ kind: 'zoomIn' });
@@ -49,6 +56,8 @@ describe('CanvasHandle', () => {
     expect(setViewport).toHaveBeenCalledWith({ kind: 'zoomIn' });
     expect(handle.editLabel('Task_1')).toBe(true);
     expect(handle.loadDocument({} as never, null)?.shapeCount).toBe(1);
+    expect(handle.deleteElements(['Task_1', 'Flow_1'])).toBe(true);
+    expect(deleteElements).toHaveBeenCalledWith(['Task_1', 'Flow_1']);
   });
 
   it('answers neutrally when the configuration was rejected and nothing was built', () => {
@@ -56,6 +65,7 @@ describe('CanvasHandle', () => {
 
     expect(handle.getInitResult().accepted).toBe(false);
     expect(handle.loadDocument({} as never, null)).toBeNull();
+    expect(handle.deleteElements(['Task_1'])).toBe(false);
     expect(handle.editLabel('Task_1')).toBe(false);
     expect(handle.resolveDrop(0, 0, 'task')).toBeNull();
     expect(() => { handle.setViewport({ kind: 'zoomIn' }); }).not.toThrow();

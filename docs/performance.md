@@ -328,3 +328,9 @@ render budgets and cache identity/invalidation tests alongside the browser suite
 ## After the correctness fixes
 
 Re-measured on the same machine with two interleaved rounds of two fresh browsers, against the earlier publish `publish-c3`, which did not yet have the reconcile path: the correctness work (reconcile unembedding, the reconcile marker, the viewport flush, the canvas synchronization gate) did not give any of the gains back. Zoom p95 stays at 17.2-17.3 ms (worst frame 33 ms, no long task), a plain wheel and a pan at 17 ms; a delete on the stress diagram blocks the main thread for 287-324 ms (was 715-743), zoomed out 183-191 ms (was 481-566), and an undo 128-139 ms (was 368-381). Cold load 1.7-1.8 s, warm 1.1 s.
+
+## Deletion fast path
+
+On the 602-shape stress diagram, a host-confirmed delete now sends only its deletion closure to the canvas and removes those cells in one graph batch; the resident semantic model, lane membership, and DI planes are updated without rebuilding cell projections. Lane deletion still uses the full renderer because it changes layout; Pool and Process deletion remain refused by the editor. The direct path also falls back if a removal would detach an unlisted connector or embedded survivor.
+
+Measured with `perf-bench.mjs` in Edge on the same machine: delete main-thread blocking fell from 3,133 ms (2,402–3,133; 2 runs) to 721 ms (673–765; 3 runs) at the default zoom, and from 2,625 ms (2,415–2,625) to 653 ms (580–751) zoomed out — reductions of about 77% and 75%. Compare these before/after figures with each other; browser setup differs from earlier samples above. Undo still uses the full document render and measured 1,050 ms at default zoom and 858 ms zoomed out. The fast path avoids serializing and reconstructing the full canvas projection for a deletion; these browser runs do not isolate managed allocation counts.

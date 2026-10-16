@@ -388,7 +388,21 @@ public sealed partial class BpmnEditorSession
                 break;
 
             case "delete" when request.ElementIds is { Count: > 0 } ids:
-                await AfterEditAsync(history.Apply(new DeleteElementsCommand(ids))).ConfigureAwait(true);
+                var documentBeforeDelete = history.Document;
+                var deletion = history.Apply(new DeleteElementsCommand(ids));
+                if (deletion.IsApplied
+                    && diagramId == ActiveDiagramId
+                    && !ids.Any(id => documentBeforeDelete.Find(id) is BpmnLane))
+                {
+                    var removed = deletion.DeletedElementIds;
+                    if (_canvas is not null && removed is not null
+                        && await _canvas.DeleteElementsAsync(documentBeforeDelete, deletion.Document, removed).ConfigureAwait(true))
+                    {
+                        _canvas.AcceptRenderedDocument(deletion.Document);
+                    }
+                }
+
+                await AfterEditAsync(deletion).ConfigureAwait(true);
                 break;
 
             case "reconnect" when request is { ElementId: { } reconnected, SourceRef: { } newSource, TargetRef: { } newTarget }:

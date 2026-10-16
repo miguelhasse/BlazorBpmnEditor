@@ -18,7 +18,7 @@ import { RubberBandController } from '../editing/rubber-band.js';
 import { ExecutionOverlay } from '../execution/execution-overlay.js';
 import { StencilDragImage } from '../editing/stencil-drag.js';
 import { findCell, findElement, findView } from '../graph/cells.js';
-import { renderDocument } from '../graph/document-renderer.js';
+import { removeDocumentElements, renderDocument } from '../graph/document-renderer.js';
 import { PaperHost } from '../graph/paper-host.js';
 import { SelectionAnchorReporter } from './selection-anchor.js';
 import type { BpmnEventBridge } from '../interop/event-bridge.js';
@@ -527,6 +527,27 @@ export class BpmnCanvasInstance {
       edgeCount: result.edgeCount,
       unrenderedElementIds: result.unrenderedElementIds,
     };
+  }
+
+  /** Applies a host-confirmed deletion without rebuilding unaffected cells. */
+  public deleteElements(elementIds: readonly string[]): boolean {
+    this.#assertUsable();
+    const document = this.#document;
+    if (document === null || this.#activeDiagramId === null) return false;
+
+    const updated = removeDocumentElements(this.#paperHost.graph, document, elementIds);
+    if (updated === null) return false;
+
+    this.#document = updated;
+    this.#accessibility.describe(
+      this.#activeDiagramId,
+      this.#paperHost.graph.getElements().length,
+      this.#paperHost.graph.getLinks().length,
+    );
+    this.#interaction.refresh();
+    this.#anchorReporter?.scheduleShow();
+    this.#execution.draw();
+    return true;
   }
 
   /** Switches planes without discarding the resident model. */
