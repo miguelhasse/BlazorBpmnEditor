@@ -49,6 +49,10 @@ export class CanvasHandle {
     return this.#instance?.loadDocument(document, diagramId) ?? null;
   }
 
+  public deleteElements(elementIds: readonly string[]): boolean {
+    return this.#instance?.deleteElements(elementIds) ?? false;
+  }
+
   public setActiveDiagram(diagramId: string): DocumentLoadedPayload | null {
     return this.#instance?.setActiveDiagram(diagramId) ?? null;
   }

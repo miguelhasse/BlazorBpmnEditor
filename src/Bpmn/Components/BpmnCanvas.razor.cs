@@ -541,6 +541,56 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
     internal void AcceptRenderedDocument(BpmnDocument document) => _renderedDocument = document;
 
     /// <summary>
+    /// Applies a host-confirmed deletion directly to the rendered graph when its semantics need no
+    /// layout changes.
+    /// </summary>
+    /// <param name="document">The document the graph will represent after deletion.</param>
+    /// <param name="elementIds">Every semantic element removed by the delete.</param>
+    /// <returns>Whether the live canvas applied the deletion.</returns>
+    internal async ValueTask<bool> DeleteElementsAsync(
+        BpmnDocument expectedDocument,
+        BpmnDocument document,
+        IReadOnlyCollection<string> elementIds)
+    {
+        ArgumentNullException.ThrowIfNull(expectedDocument);
+        ArgumentNullException.ThrowIfNull(document);
+        ArgumentNullException.ThrowIfNull(elementIds);
+        if (elementIds.Count == 0 || _instance is null || _disposed) return false;
+
+        try
+        {
+            await _synchronization.WaitAsync(_disposalCts.Token).ConfigureAwait(true);
+        }
+        catch (Exception exception) when (exception is OperationCanceledException or ObjectDisposedException && _disposed)
+        {
+            return false;
+        }
+
+        try
+        {
+            var instance = _instance;
+            if (instance is null || _disposed
+                || !ReferenceEquals(_renderedDocument, expectedDocument)
+                || !ReferenceEquals(Document, expectedDocument)
+                || _renderedDiagramId != DiagramId)
+            {
+                return false;
+            }
+
+            if (!await instance.InvokeAsync<bool>("deleteElements", _disposalCts.Token, elementIds).ConfigureAwait(true))
+                return false;
+
+            _renderedDocument = document;
+            _renderedDiagramId = DiagramId;
+            return true;
+        }
+        finally
+        {
+            if (!_disposed) _synchronization.Release();
+        }
+    }
+
+    /// <summary>
     /// Draws the current document again, for a canvas that was changed ahead of the document and then refused.
     /// </summary>
     /// <remarks>

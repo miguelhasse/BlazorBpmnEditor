@@ -53,6 +53,8 @@ public sealed record BpmnEditResult(
     /// </remarks>
     public IReadOnlyList<string> CreatedIds { get; init; } = [];
 
+    internal IReadOnlySet<string>? DeletedElementIds { get; init; }
+
     /// <summary>The reasons the command was refused, if it was.</summary>
     public IEnumerable<BpmnEditDiagnostic> Rejections =>
         Diagnostics.Where(diagnostic => diagnostic.Severity == BpmnEditSeverity.Rejected);

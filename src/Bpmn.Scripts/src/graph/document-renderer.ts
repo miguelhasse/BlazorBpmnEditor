@@ -23,6 +23,75 @@ export interface RenderResult {
 }
 
 /**
+ * Removes a deletion closure from the resident document and its graph without rebuilding every
+ * cell. Lane, Pool, and Process deletion still require the full renderer because they change the
+ * geometry or ownership of surviving cells.
+ */
+export function removeDocumentElements(
+  graph: dia.Graph,
+  document: BpmnDocumentContract,
+  elementIds: readonly string[],
+): BpmnDocumentContract | null {
+  const removed = new Set(elementIds);
+  if (removed.size === 0
+    || document.lanes.some((lane) => removed.has(lane.id))
+    || document.processes?.some((process) => removed.has(process.id)) === true
+    || document.collaboration?.participants.some((participant) => removed.has(participant.id)) === true) {
+    return null;
+  }
+
+  const cells = graph.getCells().filter((cell) => removed.has(String(cell.id)));
+  for (const cell of cells) {
+    if (cell.isElement() && cell.getEmbeddedCells().some((child) => !removed.has(String(child.id)))) {
+      return null;
+    }
+  }
+  for (const link of graph.getLinks()) {
+    const sourceId = (link.get('source') as { readonly id?: string } | undefined)?.id;
+    const targetId = (link.get('target') as { readonly id?: string } | undefined)?.id;
+    if ((sourceId !== undefined && removed.has(sourceId) || targetId !== undefined && removed.has(targetId))
+      && !removed.has(String(link.id))) {
+      return null;
+    }
+  }
+
+  graph.startBatch('render');
+  try {
+    graph.removeCells(cells);
+  } finally {
+    graph.stopBatch('render');
+  }
+
+  const retain = <T extends { readonly id: string }>(items: readonly T[]): readonly T[] =>
+    items.filter((item) => !removed.has(item.id));
+
+  return {
+    ...document,
+    flowNodes: retain(document.flowNodes),
+    sequenceFlows: retain(document.sequenceFlows),
+    messageFlows: retain(document.messageFlows),
+    associations: retain(document.associations),
+    dataAssociations: retain(document.dataAssociations),
+    textAnnotations: retain(document.textAnnotations),
+    groups: retain(document.groups),
+    dataObjectReferences: retain(document.dataObjectReferences),
+    dataStoreReferences: retain(document.dataStoreReferences),
+    lanes: document.lanes.map((lane) => ({
+      ...lane,
+      flowNodeRefs: lane.flowNodeRefs.filter((reference) => !removed.has(reference)),
+    })),
+    diagrams: document.diagrams.map((diagram) => ({
+      ...diagram,
+      plane: {
+        ...diagram.plane,
+        shapes: diagram.plane.shapes.filter((shape) => !removed.has(shape.bpmnElement)),
+        edges: diagram.plane.edges.filter((edge) => !removed.has(edge.bpmnElement)),
+      },
+    })),
+  };
+}
+
+/**
  * Projects a document onto a JointJS graph.
  *
  * DI drives the pass, not the semantic model: every BPMNShape on the plane becomes

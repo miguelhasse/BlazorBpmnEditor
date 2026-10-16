@@ -2284,7 +2284,11 @@ public static partial class BpmnDocumentEditor
 
         var edited = RefillPools(RemoveElements(document, removed, lanes), pools);
 
-        return BpmnEditResult.Applied(edited, diagnostics);
+        removed.UnionWith(lanes);
+        return BpmnEditResult.Applied(edited, diagnostics) with
+        {
+            DeletedElementIds = removed.ToFrozenSet(StringComparer.Ordinal),
+        };
     }
 
     /// <summary>

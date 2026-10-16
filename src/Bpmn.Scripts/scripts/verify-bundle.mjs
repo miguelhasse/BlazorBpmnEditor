@@ -28,7 +28,7 @@ const MAX_JS_BYTES_DEBUG = 1_600_000;
 const MAX_CSS_BYTES = 16_000;
 
 /** Exported names the Blazor side calls by string — a bundle without them is broken. */
-const REQUIRED_EXPORTS = ['initialize', 'dispose', 'loadDocument', 'setViewport', 'getInitResult'];
+const REQUIRED_EXPORTS = ['initialize', 'dispose', 'loadDocument', 'deleteElements', 'setViewport', 'getInitResult'];
 
 /** JointJS+ is commercially licensed and must never reach the shipped artifact. */
 const FORBIDDEN_SUBSTRINGS = ['@joint/plus', 'joint.plus'];
