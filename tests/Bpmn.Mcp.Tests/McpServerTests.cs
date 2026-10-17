@@ -4,8 +4,6 @@ using Hasseware.AspNetCore.Components.Bpmn.Storage;
 using Hasseware.AspNetCore.Components.Bpmn.Storage.FileSystem;
 using Hasseware.AspNetCore.Components.Bpmn.Tools;
 
-using ModelContextProtocol.Protocol;
-
 using static Hasseware.AspNetCore.Components.Bpmn.Mcp.Tests.McpHarness;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Mcp.Tests;

@@ -1,7 +1,5 @@
 using System.Text.Json;
 
-using Hasseware.AspNetCore.Components.Bpmn.WebMcp;
-
 using Microsoft.JSInterop;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.WebMcp.Tests.Support;

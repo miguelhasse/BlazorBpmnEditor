@@ -1,8 +1,6 @@
 using System.Net;
 using System.Net.ServerSentEvents;
 using System.Text.Json;
-
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents.Tests;

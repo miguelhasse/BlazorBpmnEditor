@@ -2,7 +2,6 @@ using System.Diagnostics;
 using System.Text.Json;
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
-using Hasseware.AspNetCore.Components.Bpmn.Model;
 using Hasseware.AspNetCore.Components.Bpmn.Serialization;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Benchmarks;

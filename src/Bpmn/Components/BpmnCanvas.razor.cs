@@ -544,6 +544,7 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
     /// Applies a host-confirmed deletion directly to the rendered graph when its semantics need no
     /// layout changes.
     /// </summary>
+    /// <param name="expectedDocument">The document the canvas is expected to be showing before deletion.</param>
     /// <param name="document">The document the graph will represent after deletion.</param>
     /// <param name="elementIds">Every semantic element removed by the delete.</param>
     /// <returns>Whether the live canvas applied the deletion.</returns>

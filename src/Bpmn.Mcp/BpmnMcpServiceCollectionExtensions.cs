@@ -3,8 +3,6 @@ using Hasseware.AspNetCore.Components.Bpmn.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-using ModelContextProtocol.Server;
-
 namespace Hasseware.AspNetCore.Components.Bpmn.Mcp;
 
 /// <summary>Registers the BPMN tools of an MCP server.</summary>

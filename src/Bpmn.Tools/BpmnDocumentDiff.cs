@@ -1,6 +1,5 @@
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
-using Hasseware.AspNetCore.Components.Bpmn.Model.Di;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Tools;
 

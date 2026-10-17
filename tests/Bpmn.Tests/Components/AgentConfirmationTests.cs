@@ -2,8 +2,6 @@ using Bunit;
 
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
 
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Components;
 
 /// <summary>

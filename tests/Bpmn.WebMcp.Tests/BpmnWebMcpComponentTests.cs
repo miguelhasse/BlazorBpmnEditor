@@ -1,6 +1,4 @@
 using Bunit;
-
-using Hasseware.AspNetCore.Components.Bpmn.Model;
 using Hasseware.AspNetCore.Components.Bpmn.WebMcp.Tests.Support;
 
 using Microsoft.AspNetCore.Components;

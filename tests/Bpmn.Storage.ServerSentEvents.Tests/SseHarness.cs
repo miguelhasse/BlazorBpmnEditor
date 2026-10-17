@@ -1,15 +1,10 @@
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-
-using Hasseware.AspNetCore.Components.Bpmn.Storage;
-using Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents;
 using Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents.Client;
 using Hasseware.AspNetCore.Components.Bpmn.Storage.Testing;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

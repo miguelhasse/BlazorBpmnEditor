@@ -140,8 +140,8 @@ public sealed class ReferenceBrowserTests : FluentTestContext
         Assert.NotNull(panel.Find("[data-group-id='loop-characteristics'] [data-group-id='multi-instance-output-data-item']"));
         Assert.NotNull(panel.Find("details[data-group-id='multi-instance-input-data-item'] > summary"));
         Assert.NotNull(panel.Find("details[data-group-id='multi-instance-output-data-item'] > summary"));
-        Assert.Single(panel.FindComponents<FluentAccordion>().Where(accordion =>
-            accordion.Markup.Contains("loop-characteristics", StringComparison.Ordinal)));
+        Assert.Single(panel.FindComponents<FluentAccordion>(), accordion =>
+            accordion.Markup.Contains("loop-characteristics", StringComparison.Ordinal));
         Assert.Contains("Input", panel.Markup, StringComparison.Ordinal);
         Assert.Contains("Output", panel.Markup, StringComparison.Ordinal);
     }

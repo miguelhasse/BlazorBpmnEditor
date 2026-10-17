@@ -1,14 +1,10 @@
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-
-using Hasseware.AspNetCore.Components.Bpmn.Storage;
-using Hasseware.AspNetCore.Components.Bpmn.Storage.SignalR;
 using Hasseware.AspNetCore.Components.Bpmn.Storage.SignalR.Client;
 using Hasseware.AspNetCore.Components.Bpmn.Storage.Testing;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
