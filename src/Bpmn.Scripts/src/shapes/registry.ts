@@ -365,7 +365,7 @@ function createActivityCell(
        * container's interior belongs to its children.
        */
       label: isExpandedContainer(node, shape.isExpanded)
-        ? { display: 'none' }
+        ? { ...labelAttrsForShape(node.name, shape, internalLabelBox(localBox(shape.bounds)), context), display: 'none' }
         : labelAttrsForShape(node.name, shape, internalLabelBox(localBox(shape.bounds)), context),
     },
   });
@@ -762,11 +762,10 @@ function labelAttrsForShape(
 ): Record<string, unknown> {
   // The semantic name is the only source of label text; DI supplies geometry and style.
   const content = text ?? '';
-  if (content === '') return { display: 'none' };
 
   // Explicit BPMNLabel.Bounds win, converted to element-local coordinates; a fixed
   // imported box clips rather than growing (section 4.5).
-  const imported = shape.label?.bounds;
+  const imported = content === '' ? undefined : shape.label?.bounds;
   const local = imported
     ? {
         x: imported.x - shape.bounds.x,
@@ -786,7 +785,7 @@ function labelAttrsForShape(
   // A box shorter than one line (exporters write heights like 5) cannot clip without hiding the text.
   const clips = explicit !== undefined && explicit.height >= constants.LABEL_FONT_SIZE * constants.LABEL_LINE_HEIGHT;
   const style = clips ? { ...fallback.style, clipOverflow: true } : fallback.style;
-  return { display: 'inline', ...labelAttrsFor(content, box, style, context.metrics) };
+  return { display: content === '' ? 'none' : 'inline', ...labelAttrsFor(content, box, style, context.metrics) };
 }
 
 function edgeLabels(

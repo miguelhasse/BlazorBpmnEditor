@@ -23,6 +23,21 @@ the pointer is still down; `BpmnDocumentEditor` is the model of record and must 
 that arrives from a host calling the API directly. Neither side can assume the other looked — the
 same argument the specification makes for configuration.
 
+## Inline labels
+
+Double-click a shape or connector, or use the keyboard label-edit action, to edit its semantic
+text in place. Empty labels start with a compact single-line editor at their default position:
+inside activities, outside events/gateways/data shapes, and halfway along connector routes.
+They do not inherit the whole shape or connector bounding rectangle.
+
+The editor grows and shrinks vertically to fit explicit line breaks and wrapped text. Scrolling
+remains enabled: the editor follows the label through canvas panning, zooming, and page scrolling
+without resetting the draft or moving keyboard focus. Input sizing and viewport tracking happen
+in the browser, without a Blazor round trip.
+
+Enter commits, Shift+Enter inserts a line break, Escape cancels, and leaving the input commits.
+Only committing changes the document; resizing or repositioning the editor does not change label DI.
+
 ## Commands
 
 `BpmnEditCommand` describes intent, not a mutation. `BpmnDocumentEditor.Apply` is pure: a document

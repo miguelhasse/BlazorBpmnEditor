@@ -49,6 +49,11 @@ Core supplies `BpmnLabelEditor` and `BpmnAccessibleTree`; reuse them unless repl
 is necessary. `BpmnTemplateChooserBase` and `BpmnReferenceBrowserBase` support auxiliary chrome,
 but are not enum registry parts.
 
+A replacement inline label editor should retain a `.bpmn-label-editor` wrapper with
+`data-bpmn-element="@Edit.ElementId"` and a native `textarea` inside it. The canvas uses that
+markup to size the input to its content and keep the editor anchored during scrolling and zooming.
+Keep the base's focus target, text binding, and commit/cancel handlers.
+
 ## Register defaults, not host overrides
 
 Use `UseDefault<TComponent>`, never `Use<TComponent>`, in a kit registration extension. Defaults

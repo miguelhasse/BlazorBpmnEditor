@@ -12,6 +12,8 @@ export interface LabelAttrs {
   readonly fontSize: number;
   readonly fontWeight: string;
   readonly lineHeight: number;
+  /** Available wrapping width, also retained on hidden labels for the inline editor. */
+  readonly 'data-bpmn-label-width': number;
   readonly annotations?: never;
 }
 
@@ -45,6 +47,7 @@ export function toLabelAttrs(layout: LabelLayout, refPosition: { x: number; y: n
     // layout.lineHeight is already fontSize multiplied by the ratio, and it is the same value
     // the layout used to size the box, so box and rendering cannot disagree.
     lineHeight: layout.lineHeight,
+    'data-bpmn-label-width': Math.max(0, layout.bounds.width - style.paddingX * 2),
   };
 }
 

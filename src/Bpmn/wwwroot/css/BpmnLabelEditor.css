@@ -11,6 +11,8 @@
  * is a caret and a focus ring.
  */
 .bpmn-label-editor__input {
+  display: block;
+  box-sizing: border-box;
   inline-size: 100%;
   block-size: 100%;
   margin: 0;

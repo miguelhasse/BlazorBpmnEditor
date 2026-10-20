@@ -12,7 +12,8 @@ namespace Hasseware.AspNetCore.Components.Bpmn;
 /// <para>
 /// Section 4.5 permits no popup, dialog or modal, and asks the editor to match the canvas's own
 /// text metrics. The box is positioned at the label's client rectangle, drawn with the font the
-/// canvas reported and scaled by the paper's scale. Nothing here measures anything.
+/// canvas reported and scaled by the paper's scale. Browser-side behavior keeps the box aligned
+/// as the viewport moves and resizes the input as its content changes.
 /// </para>
 /// <para>
 /// Enter commits and Shift+Enter inserts a line break, because a BPMN label legitimately contains
@@ -50,7 +51,8 @@ public abstract class BpmnLabelEditorBase : BpmnCanvasWidgetBase<BpmnLabelEditSt
 
     /// <summary>
     /// The box, placed and sized in client pixels, centred on the label's own centre so a widened
-    /// box grows evenly and the text does not jump sideways as editing starts.
+    /// box grows evenly and the text does not jump sideways as editing starts. This is the initial
+    /// placement; the canvas keeps it current while editing without a Blazor round trip.
     /// </summary>
     protected string BoxStyle
     {

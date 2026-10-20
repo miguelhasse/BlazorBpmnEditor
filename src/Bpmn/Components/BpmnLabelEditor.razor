@@ -6,7 +6,7 @@
 
     So this is a textarea drawn over the label it is replacing, at the label's own box, in the
     label's own font at the canvas's own scale. The canvas measured all of that and sent it; this
-    does not recompute any of it, because a second measurement is a second answer.
+    seeds the placement; the canvas tracks viewport changes and measures the input's content height.
 *@
 @if (IsOpen && Edit is not null)
 {

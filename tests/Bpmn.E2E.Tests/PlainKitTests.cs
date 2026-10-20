@@ -21,6 +21,8 @@ public sealed class PlainReferenceBrowserTests(DemoAppFixture app) : ReferenceBr
 
 public sealed class PlainContextMenuTests(DemoAppFixture app) : ContextMenuTests(app);
 
+public sealed class PlainLabelEditingTests(DemoAppFixture app) : LabelEditingTests(app);
+
 public sealed class PlainStencilTests(DemoAppFixture app) : StencilTests(app);
 
 public sealed class PlainValidationTests(DemoAppFixture app) : ValidationTests(app);
