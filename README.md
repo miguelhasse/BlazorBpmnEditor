@@ -1,4 +1,4 @@
-# BlazorBpmnEditor
+# ![Blazor BPMN Editor](assets/blazor-bpmn-editor-logo.svg)
 
 A BPMN 2.0 diagram editor component library for Blazor. Blazor owns the chrome; a TypeScript module
 owns an SVG canvas rendered by JointJS (`@joint/core`, open source only).
@@ -8,10 +8,10 @@ Built against two documents in `assets/`: a 1389-line notation and behaviour
 [implementation plan](assets/BPMN-2.0-Editor-Implementation-Plan.md) that sequences it into
 milestones M0–M7.
 
-## Packages (2.0.0)
+## Packages
 
 | NuGet package | Purpose | BPMN dependency |
-|---|---|---|
+| --- | --- | --- |
 | [`Hasseware.AspNetCore.Components.Bpmn`](src/Bpmn/README.md) | Core model, session/state, canvas, base contracts and intrinsic overlays; no Fluent dependency | None |
 | [`Hasseware.AspNetCore.Components.BpmnEditor`](src/BpmnEditor/README.md) | Standard HTML editor composition and chrome | Core only |
 | [`Hasseware.FluentUI.AspNetCore.Components.BpmnEditor`](src/FluentUI.BpmnEditor/README.md) | Fluent UI v5 editor composition and chrome | Core only; also Fluent UI and Icons |
@@ -61,7 +61,7 @@ its own defaults, with host overrides taking precedence.
 ## Projects
 
 | Project | What it is |
-|---|---|
+| --- | --- |
 | [`src/Bpmn`](src/Bpmn/README.md) | Core model, headless editor, canvas and intrinsic overlays; no Fluent dependency |
 | [`src/BpmnEditor`](src/BpmnEditor/README.md) | `Hasseware.AspNetCore.Components.BpmnEditor`: standard HTML composition and chrome; depends only on Core |
 | [`src/FluentUI.BpmnEditor`](src/FluentUI.BpmnEditor/README.md) | Fluent UI v5 composition and chrome; independent of Standard |
@@ -151,7 +151,7 @@ flowchart LR
 Diagram sources and focused views:
 
 | View | Rendered diagram | Mermaid source | Editable drawing |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | System overview | [SVG](assets/diagrams/system-overview.svg) | [Source](assets/diagrams/system-overview.mmd) | [Excalidraw](assets/diagrams/system-overview.excalidraw) |
 | Project dependencies | [SVG](assets/diagrams/project-dependencies.svg) | [Source](assets/diagrams/project-dependencies.mmd) | [Excalidraw](assets/diagrams/project-dependencies.excalidraw) |
 | Headless agent server | [SVG](assets/diagrams/agent-server.svg) | [Source](assets/diagrams/agent-server.mmd) | [Excalidraw](assets/diagrams/agent-server.excalidraw) |
@@ -219,7 +219,7 @@ Version 2.0.0 is a source and binary breaking change; Core cannot type-forward m
 into packages that depend on it. Rebuild consumers against the chosen kit.
 
 | Previous usage | Version 2.0.0 |
-|---|---|
+| --- | --- |
 | Core package supplied `BpmnEditor`, toolbar, panels and property entries | Add the standard editor package; component namespace remains `Hasseware.AspNetCore.Components.Bpmn`. Or choose the Fluent package and `FluentBpmnEditor` / Fluent-prefixed components in `Hasseware.FluentUI.AspNetCore.Components.Bpmn` |
 | `AddBpmnComponents()` enabled complete editor chrome | Call `AddBpmnEditor()` or `AddFluentBpmnEditor()`; both include Core services. Core alone remains valid for standalone canvas/headless composition |
 | Core brought Fluent UI transitively | Core and Standard no longer depend on Fluent. Fluent hosts explicitly call `AddFluentUIComponents()` and supply any required providers |
