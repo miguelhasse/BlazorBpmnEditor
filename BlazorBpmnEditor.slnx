@@ -40,6 +40,7 @@
   <Folder Name="/Samples/">
     <Project Path="samples/BlobEventGridIngress/BlobEventGridIngress.csproj" />
     <Project Path="samples/PostgresNotifyIngress/PostgresNotifyIngress.csproj" />
+    <Project Path="samples/SqlServerChangeIngress/SqlServerChangeIngress.csproj" />
   </Folder>
   <Folder Name="/Testing/">
     <Project Path="tests/Bpmn.Benchmarks/Hasseware.AspNetCore.Components.Bpmn.Benchmarks.csproj" />

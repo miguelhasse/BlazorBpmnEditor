@@ -59,7 +59,8 @@ they read again, and they will still be protected at save time by the revision c
 |---|---|---|
 | Azure Blob | Event Grid `BlobCreated` / `BlobDeleted` (the event carries the ETag, which is the revision) | [`samples/BlobEventGridIngress`](../samples/BlobEventGridIngress) |
 | PostgreSQL | `LISTEN` / `NOTIFY` from a trigger | [`samples/PostgresNotifyIngress`](../samples/PostgresNotifyIngress) |
-| SQL Server and others | pull-based (Change Tracking, CDC) or none; poll in your own service and call the ingress | none |
+| SQL Server | Service Broker message from a trigger (push), or Change Tracking polled on an interval | [`samples/SqlServerChangeIngress`](../samples/SqlServerChangeIngress) |
+| Others | pull-based or none; poll in your own service and call the ingress | none |
 
 The samples are reference code, not packages: they build with the solution and their parsing and endpoint are tested, but a real host owns authentication, hosting and the broker.
 With more than one instance, the bus itself must span instances (a broker-backed `IBpmnDocumentChangeBus`); the in-process bus reaches only its own process.

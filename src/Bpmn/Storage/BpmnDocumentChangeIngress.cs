@@ -11,7 +11,10 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Storage;
 /// signals are delivered at least once and in no particular order, so a signal whose revision is the one last announced for the document
 /// is dropped; nothing else is assumed about order, because the binding only asks "is the stored revision still mine".
 /// </para>
-/// <para>The samples in the repository's <c>samples</c> folder forward an Azure Event Grid blob event and a PostgreSQL <c>NOTIFY</c> through this.</para>
+/// <para>
+/// The samples in the repository's <c>samples</c> folder forward an Azure Event Grid blob event, a PostgreSQL <c>NOTIFY</c>, and a SQL Server Service Broker
+/// message or Change Tracking row through this.
+/// </para>
 /// </remarks>
 public sealed class BpmnDocumentChangeIngress
 {

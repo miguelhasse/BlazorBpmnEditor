@@ -9,5 +9,6 @@ it (a script, another application, an ETL job) are announced by the database its
 - If the connection drops, the service reconnects after five seconds; notifications sent meanwhile are lost, and editors learn of what they missed at their next save or when their
   own live-update feed reconnects.
 
-Other databases differ: SQL Server's Change Tracking and CDC are pull-based, and MySQL and SQLite have no practical push, so there is no generic "EF Core ingress"; this sample is
+Other databases differ: SQL Server has no `NOTIFY`, but a trigger can send a Service Broker message, or Change Tracking can be polled (see
+[`SqlServerChangeIngress`](../SqlServerChangeIngress)); MySQL and SQLite have no practical push, so there is no generic "EF Core ingress"; this sample is
 the PostgreSQL one. Configure `ConnectionStrings:Documents`.
