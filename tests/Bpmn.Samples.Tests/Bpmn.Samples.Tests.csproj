@@ -32,6 +32,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\samples\BlobEventGridIngress\BlobEventGridIngress.csproj" />
     <ProjectReference Include="..\..\samples\PostgresNotifyIngress\PostgresNotifyIngress.csproj" />
+    <ProjectReference Include="..\..\samples\SqlServerChangeIngress\SqlServerChangeIngress.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1055,8 +1055,9 @@ should become one code with one meaning), the `untrustedText` convention, and th
   version number the store increments, so it is identical on every provider; an update is `ExecuteUpdate … WHERE Version = @held` and a create an insert the key refuses on a duplicate.
   Folder queries are the ordinal range `[folder/, folder0)`, never `LIKE`, which is why SQL Server needs a `BIN2` collation on the path column. Listing projects only path, size and time.
 - **Ingress.** `BpmnDocumentChangeIngress` in Core turns a backend signal into a bus change and drops a repeated revision (bounded memory: 4,096 keys). **Deviation from the sketch:**
-  no hosted-service base class; the helper is the whole contract, and the samples show two hosts around it. `samples/BlobEventGridIngress` (webhook with the validation handshake,
-  `aeg-sas-key` checked in constant time, body cap) and `samples/PostgresNotifyIngress` (`LISTEN`/`NOTIFY` service, trigger script) are built in CI and tested by `tests/Bpmn.Samples.Tests`.
+  no hosted-service base class; the helper is the whole contract, and the samples show three hosts around it. `samples/BlobEventGridIngress` (webhook with the validation handshake,
+  `aeg-sas-key` checked in constant time, body cap), `samples/PostgresNotifyIngress` (`LISTEN`/`NOTIFY` service, trigger script) and `samples/SqlServerChangeIngress` (Service Broker
+  trigger and `WAITFOR (RECEIVE …)` service, or Change Tracking polled on an interval, chosen by configuration) are built in CI and tested by `tests/Bpmn.Samples.Tests`.
 - **Tests without containers.** AzureBlob: 64 (20 gated), EfCore on SQLite: 34 run (20 gated), ingress: 6, samples: 25. The Azurite class runs when `BPMN_AZURITE_CONNECTION` is set,
   the SQL Server class when `BPMN_SQLSERVER_CONNECTION` is set; both compile always and skip otherwise. Mutation checks: dropping `If-Match` in the blob store and dropping the
   `Version` predicate in EF Core each fail the concurrency tests.

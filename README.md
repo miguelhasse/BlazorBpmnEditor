@@ -78,7 +78,7 @@ its own defaults, with host overrides taking precedence.
 | [`src/Bpmn.Storage.ServerSentEvents`](src/Bpmn.Storage.ServerSentEvents/README.md), [`.Client`](src/Bpmn.Storage.ServerSentEvents.Client/README.md) | Preview: the Server-Sent Events change feed, endpoint and subscriber |
 | [`src/Bpmn.Storage.SignalR`](src/Bpmn.Storage.SignalR/README.md), [`.Client`](src/Bpmn.Storage.SignalR.Client/README.md) | Preview: the SignalR change feed, hub and subscriber |
 | [`src/Bpmn.Storage.AzureBlob`](src/Bpmn.Storage.AzureBlob/README.md), [`src/Bpmn.Storage.EfCore`](src/Bpmn.Storage.EfCore/README.md) | Preview: the Azure Blob and EF Core document stores ([guide](docs/storage-backends.md)) |
-| [`samples`](samples) | Reference ingresses that forward Azure Event Grid blob events and PostgreSQL `NOTIFY` to the change bus; not packages |
+| [`samples`](samples) | Reference ingresses that forward Azure Event Grid blob events, PostgreSQL `NOTIFY` and SQL Server Service Broker or Change Tracking to the change bus; not packages |
 | [`src/Bpmn.Storage.FileSystem`](src/Bpmn.Storage.FileSystem/README.md) | Preview: the folder-backed document store |
 | [`tests/Bpmn.Storage.Testing`](tests/Bpmn.Storage.Testing/README.md) | Preview: the store contract suite, as an xUnit base class |
 | [`tests/Bpmn.Tests`](tests/Bpmn.Tests/README.md) | Core unit, architecture, serialization and intrinsic component tests |
