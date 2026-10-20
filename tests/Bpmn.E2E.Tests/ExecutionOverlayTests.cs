@@ -136,7 +136,7 @@ public class ExecutionOverlayTests(DemoAppFixture app) : PageTest, IClassFixture
 
         Assert.Equal("none", await FlowAnimationAsync());
 
-        await Page.Locator(".demo-execution-animation").CheckAsync();
+        await Page.SetDemoSwitchAsync("Animate tokens");
         await Page.WaitForTimeoutAsync(500);
 
         Assert.Equal("bpmn-exec-token", await FlowAnimationAsync());
@@ -175,6 +175,7 @@ public class ExecutionOverlayTests(DemoAppFixture app) : PageTest, IClassFixture
         await GoToEditorAsync("simple-process.bpmn");
         await ShowExecutionAsync();
 
+        await Page.OpenDemoFilesAsync();
         await Page.GetByRole(AriaRole.Combobox, new() { Name = "Sample diagram" }).ClickAsync();
         await Page.Locator("fluent-option", new() { HasTextString = "order-process.bpmn" }).ClickAsync();
 
@@ -190,7 +191,7 @@ public class ExecutionOverlayTests(DemoAppFixture app) : PageTest, IClassFixture
         await Expect(Page.Locator(".bpmn-canvas .bpmn-exec--active")).ToHaveCountAsync(1);
 
         // A configuration change rebuilds the canvas instance.
-        await Page.Locator(".demo-snap input").CheckAsync();
+        await Page.SetDemoSwitchAsync("Snap to grid");
 
         await Expect(Page.Locator(".bpmn-canvas .bpmn-exec--active")).ToHaveCountAsync(1);
         await Expect(Page.Locator(".bpmn-canvas .bpmn-exec--failed")).ToHaveCountAsync(1);
@@ -202,7 +203,7 @@ public class ExecutionOverlayTests(DemoAppFixture app) : PageTest, IClassFixture
         await GoToEditorAsync("order-process.bpmn");
         await ShowExecutionAsync();
 
-        await Page.Locator(".demo-execution").UncheckAsync();
+        await Page.SetDemoSwitchAsync("Execution state", false);
         await Page.WaitForTimeoutAsync(700);
 
         // Additive throughout, so removing it must leave the diagram exactly as it was found.
@@ -244,7 +245,7 @@ public class ExecutionOverlayTests(DemoAppFixture app) : PageTest, IClassFixture
 
     private async Task ShowExecutionAsync()
     {
-        await Page.Locator(".demo-execution").CheckAsync();
+        await Page.SetDemoSwitchAsync("Execution state");
         await Page.WaitForTimeoutAsync(900);
     }
 
@@ -255,6 +256,7 @@ public class ExecutionOverlayTests(DemoAppFixture app) : PageTest, IClassFixture
         await Expect(Page.Locator(".bpmn-canvas__paper > svg")).ToBeVisibleAsync(new() { Timeout = 30_000 });
         await Expect(Page.Locator(".bpmn-canvas .joint-cell").First).ToBeVisibleAsync();
 
+        await Page.OpenDemoFilesAsync();
         await Page.GetByRole(AriaRole.Combobox, new() { Name = "Sample diagram" }).ClickAsync();
         await Page.Locator("fluent-option", new() { HasTextString = sample }).ClickAsync();
         await Page.WaitForTimeoutAsync(1800);

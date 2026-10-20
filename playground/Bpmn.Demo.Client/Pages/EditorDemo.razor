@@ -1,110 +1,141 @@
+@page "/editor"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 @using Hasseware.AspNetCore.Components.Bpmn.Serialization
 @using Hasseware.AspNetCore.Components.Bpmn.WebMcp
+@using FluentIcons = Microsoft.FluentUI.AspNetCore.Components.Icons
 
 <PageTitle>@Localizer["Editor.Title"]</PageTitle>
 
 <div class="demo-shell">
-    <div class="demo-controls">
-        <FluentSelect TOption="string"
-                      TValue="string"
-                      Items="@SampleFiles"
-                      OptionText="@(file => file)"
-                      OptionValue="@(file => file)"
-                      Value="@_selectedSample"
-                      ValueChanged="@LoadSampleAsync"
-                      Label="@Localizer["SampleDiagram"]" />
+    <div class="demo-controls demo-editor-controls">
+        <div data-controls="actions">
+            <FluentButton @ref="_filesButton" Id="@_filesButtonId" Type="ButtonType.Button"
+                          Title="@Localizer["Editor.Files"]"
+                          IconStart="@(new FluentIcons.Regular.Size20.FolderOpen())"
+                          IconEnd="@(new FluentIcons.Regular.Size16.ChevronDown())"
+                          aria-haspopup="dialog" aria-controls="@($"{_filesButtonId}-popover")"
+                          aria-expanded="@(_filesOpened ? "true" : "false")"
+                          OnClick="@ToggleFiles">
+                @Localizer["Editor.Files"]
+            </FluentButton>
+            <FluentButton @ref="_settingsButton" Id="@_settingsButtonId" Type="ButtonType.Button"
+                          Title="@Localizer["Editor.Settings"]"
+                          IconStart="@(new FluentIcons.Regular.Size20.Settings())"
+                          IconEnd="@(new FluentIcons.Regular.Size16.ChevronDown())"
+                          aria-haspopup="dialog" aria-controls="@($"{_settingsButtonId}-popover")"
+                          aria-expanded="@(_settingsOpened ? "true" : "false")"
+                          OnClick="@ToggleSettings">
+                @Localizer["Editor.Settings"]
+            </FluentButton>
+            <FluentSwitch Class="demo-show-properties"
+                          role="switch" aria-checked="@(_showProperties ? "true" : "false")"
+                          Value="@_showProperties" ValueChanged="@OnShowPropertiesChanged"
+                          Label="@Localizer["Editor.Properties"]" />
+            <FluentButton Type="ButtonType.Button" Appearance="ButtonAppearance.Subtle"
+                          Title="@Localizer["Editor.SimulateExternalChange"]"
+                          Class="demo-external-change" Disabled="@(_binding.Key is null)"
+                          OnClick="@SimulateExternalChangeAsync">
+                @Localizer["Editor.SimulateExternalChange"]
+            </FluentButton>
+        </div>
 
-        @*
-            The demo plays a host that stores its documents: Save writes through the store with a
-            revision check, and the second button plays somebody else writing the same document, which
-            is what makes the editor's external-change notice appear.
-        *@
-        <button type="button" class="demo-save" disabled="@(!_binding.IsDirty || _readOnly)" @onclick="SaveAsync">@Localizer["Editor.Save"]</button>
-        <button type="button" class="demo-external-change" disabled="@(_binding.Key is null)" @onclick="SimulateExternalChangeAsync">@Localizer["Editor.SimulateExternalChange"]</button>
+        <FluentPopover Id="@($"{_filesButtonId}-popover")" AnchorId="@_filesButtonId"
+                       @bind-Opened="@_filesOpened" Class="demo-control-popover"
+                       @onkeydown="@(args => OnPopoverKeyDown(args, _filesButton))"
+                       Width="min(23rem, calc(100vw - 2rem))" Padding="1rem" OffsetVertical="8"
+                       role="dialog" aria-label="@Localizer["Editor.Files"]">
+            <div data-controls="panel">
+                <h2>@Localizer["Editor.Files"]</h2>
+                <FluentButton @ref="_openFileButton" Id="@($"{_filesButtonId}-open")" Type="ButtonType.Button"
+                              Title="@Localizer["Editor.OpenFile"]"
+                              IconStart="@(new FluentIcons.Regular.Size20.FolderOpen())">
+                    @Localizer["Editor.OpenFile"]
+                </FluentButton>
+                <FluentInputFile AnchorId="@($"{_filesButtonId}-open")" Style="display: none"
+                                 Accept="@BpmnFileFormats.Accept" Multiple="false"
+                                 OnInputFileChange="@OpenFileAsync" />
+                <FluentSelect TOption="string"
+                              TValue="string"
+                              Items="@SampleFiles"
+                              OptionText="@(file => file)"
+                              OptionValue="@(file => file)"
+                              Value="@_selectedSample"
+                              ValueChanged="@LoadSampleAsync"
+                              Label="@Localizer["SampleDiagram"]" />
+                <div data-controls="file-actions">
+                    <FluentButton Type="ButtonType.Button" Class="demo-export"
+                                  Title="@Localizer["Editor.ExportXml"]"
+                                  Disabled="@(_document is null)" OnClick="@ExportXml">
+                        @Localizer["Editor.ExportXml"]
+                    </FluentButton>
+                    <FluentButton Type="ButtonType.Button" Class="demo-export"
+                                  Title="@Localizer["Editor.ExportJson"]"
+                                  Disabled="@(_document is null)" OnClick="@ExportJson">
+                        @Localizer["Editor.ExportJson"]
+                    </FluentButton>
+                </div>
+                <FluentButton Type="ButtonType.Button" Appearance="ButtonAppearance.Primary"
+                              Title="@Localizer["Editor.Save"]"
+                              IconStart="@(new FluentIcons.Regular.Size20.Save())"
+                              Class="demo-save" Disabled="@(!_binding.IsDirty || _readOnly)"
+                              OnClick="@SaveAsync">
+                    @Localizer["Editor.Save"]
+                </FluentButton>
+            </div>
+        </FluentPopover>
 
-        <button type="button" class="demo-export" disabled="@(_document is null)" @onclick="ExportXml">@Localizer["Editor.ExportXml"]</button>
-        <button type="button" class="demo-export" disabled="@(_document is null)" @onclick="ExportJson">@Localizer["Editor.ExportJson"]</button>
+        <FluentPopover Id="@($"{_settingsButtonId}-popover")" AnchorId="@_settingsButtonId"
+                       @bind-Opened="@_settingsOpened" Class="demo-control-popover"
+                       @onkeydown="@(args => OnPopoverKeyDown(args, _settingsButton))"
+                       Width="min(23rem, calc(100vw - 2rem))" Padding="1rem" OffsetVertical="8"
+                       role="dialog" aria-label="@Localizer["Editor.Settings"]">
+            <div data-controls="panel">
+                <h2>@Localizer["Editor.Settings"]</h2>
+                <div data-controls="settings-group">
+                    <FluentSwitch @ref="_contrastSwitch" Class="demo-high-contrast"
+                                  role="switch" aria-checked="@(_highContrast ? "true" : "false")"
+                                  Value="@_highContrast" ValueChanged="@OnContrastChanged"
+                                  Label="@Localizer["Editor.HighContrast"]" />
+                    <FluentSwitch Class="demo-read-only"
+                                  role="switch" aria-checked="@(_readOnly ? "true" : "false")"
+                                  Value="@_readOnly" ValueChanged="@OnReadOnlyChanged"
+                                  Label="@Localizer["Editor.ReadOnly"]" />
+                    <FluentSwitch role="switch" aria-checked="@(_snapToGrid ? "true" : "false")"
+                                  Value="@_snapToGrid" ValueChanged="@ToggleSnap"
+                                  Label="@Localizer["Editor.SnapToGrid"]" />
+                </div>
+                <div data-controls="settings-group">
+                    <FluentSwitch Class="demo-webmcp"
+                                  role="switch" aria-checked="@(_webMcp ? "true" : "false")"
+                                  Value="@_webMcp" ValueChanged="@OnWebMcpChanged"
+                                  Label="@Localizer["Editor.WebMcp"]" />
+                    @if (_webMcp)
+                    {
+                        <FluentSwitch Class="demo-webmcp-edit"
+                                      role="switch" aria-checked="@(_webMcpEdit ? "true" : "false")"
+                                      Value="@_webMcpEdit" ValueChanged="@OnWebMcpEditChanged"
+                                      Label="@Localizer["Editor.WebMcpEdit"]" />
+                    }
+                    <span class="demo-webmcp-status" role="status">@_webMcpStatus</span>
+                </div>
+                <div data-controls="settings-group">
+                    <FluentSwitch Class="demo-execution"
+                                  role="switch" aria-checked="@(_showExecution ? "true" : "false")"
+                                  Value="@_showExecution" ValueChanged="@OnExecutionChangedAsync"
+                                  Label="@Localizer["Editor.ExecutionState"]" />
+                    <FluentSwitch Class="demo-execution-animation"
+                                  role="switch" aria-checked="@(_animateTokens ? "true" : "false")"
+                                  Value="@_animateTokens" ValueChanged="@OnAnimationChanged"
+                                  Label="@Localizer["Editor.AnimateTokens"]" />
+                </div>
+            </div>
+        </FluentPopover>
 
-        <label class="demo-open">
-            @Localizer["Editor.OpenFile"]
-            <InputFile accept="@BpmnFileFormats.Accept" OnChange="@OpenFileAsync" />
-        </label>
-
-        <label class="demo-snap">
-            <input type="checkbox"
-                   checked="@_snapToGrid"
-                   @onchange="@(args => ToggleSnap(args.Value is true))" />
-            @Localizer["Editor.SnapToGrid"]
-        </label>
-
-        @*
-            Off by default: the panel's column is a fixed 22rem, and on a small window that is the
-            difference between a wide Pool fitting the canvas and its right edge — with the resize
-            handle on it — falling outside the paper entirely.
-        *@
-        <label class="demo-toggle">
-            <input type="checkbox" class="demo-show-properties" checked="@_showProperties" @onchange="OnShowPropertiesChanged" />
-            @Localizer["Editor.Properties"]
-        </label>
-
-        <label class="demo-toggle">
-            <input type="checkbox" class="demo-high-contrast" checked="@_highContrast" @onchange="OnContrastChanged" />
-            @Localizer["Editor.HighContrast"]
-        </label>
-
-        @*
-            Read-only is a mode a host chooses, so the demo has to be able to choose it: the
-            gallery is the only other read-only surface and it draws notation sheets with nothing
-            nested to look inside.
-        *@
-        <label class="demo-toggle">
-            <input type="checkbox" class="demo-read-only" checked="@_readOnly" @onchange="OnReadOnlyChanged" />
-            @Localizer["Editor.ReadOnly"]
-        </label>
-
-        @*
-            Offers the open diagram to the browser's agents through WebMCP, read-only unless editing is allowed. Off by default; where the
-            browser has no WebMCP the status says so and nothing else happens.
-        *@
-        <label class="demo-toggle">
-            <input type="checkbox" class="demo-webmcp" checked="@_webMcp" @onchange="OnWebMcpChanged" />
-            @Localizer["Editor.WebMcp"]
-        </label>
-        <span class="demo-webmcp-status">@_webMcpStatus</span>
-        @if (_webMcp)
-        {
-            <label class="demo-toggle">
-                <input type="checkbox" class="demo-webmcp-edit" checked="@_webMcpEdit" @onchange="OnWebMcpEditChanged" />
-                @Localizer["Editor.WebMcpEdit"]
-            </label>
-        }
-
-        @*
-            Execution overlays are the host's to supply, so the demo plays the host: it invents a
-            plausible state from whatever sample is loaded and pushes it. The editor never derives
-            one, because it does not execute BPMN.
-        *@
-        <label class="demo-toggle">
-            <input type="checkbox" class="demo-execution" checked="@_showExecution" @onchange="OnExecutionChangedAsync" />
-            @Localizer["Editor.ExecutionState"]
-        </label>
-
-        <label class="demo-toggle">
-            <input type="checkbox" class="demo-execution-animation" checked="@_animateTokens" @onchange="OnAnimationChanged" />
-            @Localizer["Editor.AnimateTokens"]
-        </label>
-
-        @*
-            The navigator is the library's; the breadcrumb below is not. The plan asks for
-            `diagramNavigated` to carry a path a *host* renders, so the demo renders one — that is
-            the thing being demonstrated, and a breadcrumb baked into the editor would prove
-            nothing about the event.
-        *@
-        
-
-                <span class="demo-status">@_status</span>
-        <span class="demo-edit-status">@_editStatus</span>
-        <span class="demo-save-status">@SaveStatus</span>
+        <div data-controls="status">
+            <span class="demo-status" title="@_status">@_status</span>
+            <span class="demo-edit-status" title="@_editStatus">@_editStatus</span>
+            <span class="demo-save-status" title="@SaveStatus" role="status">@SaveStatus</span>
+        </div>
     </div>
 
     @if (_path.Count > 1)

@@ -157,7 +157,7 @@ public class ReferenceBrowserTests(DemoAppFixture app) : PageTest, IClassFixture
 
     private async Task ShowPanelAsync()
     {
-        await Page.Locator(".demo-show-properties").CheckAsync();
+        await Page.GetByRole(AriaRole.Switch, new() { Name = "Properties", Exact = true }).CheckAsync();
         await Expect(Page.Locator(".bpmn-properties")).ToBeVisibleAsync();
     }
 

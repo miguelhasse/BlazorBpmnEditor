@@ -73,9 +73,10 @@ starting a host per parallel class while preserving document isolation in the br
 
 ## Both kits
 
-The demo serves `/editor` (Fluent kit) and `/editor-plain` (standard kit). Shared test classes are
+The demo page `/editor` defaults to the Fluent kit; `/editor?plain=true` selects the standard kit.
+Shared test classes are
 non-sealed and navigate with `app.Url(this)` (`KitRoute`); `PlainKitTests.cs` holds `PlainXxxTests`
-subclasses that inherit every test and run it against `/editor-plain`. Locators that cross kits use
+subclasses that inherit every test and run it against `/editor?plain=true`. Locators that cross kits use
 roles and accessible names (`KitRoute.Textbox`, `PickAsync`, `ShortcutDialog`) rather than kit
 markup. `GalleryTests`, `TemplatePanelTests` and the geometry suites run on one kit (Fluent, or
 Plain for the template chooser). Viewport-sensitive tests set their own size: the canvas only

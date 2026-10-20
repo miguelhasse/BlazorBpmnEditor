@@ -77,6 +77,16 @@
         <target state="translated">BPMN {0} exportiert</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.Files">
+        <source>Files</source>
+        <target state="translated">Dateien</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Settings">
+        <source>Settings</source>
+        <target state="translated">Einstellungen</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.HighContrast">
         <source>High contrast</source>
         <target state="translated">Hoher Kontrast</target>

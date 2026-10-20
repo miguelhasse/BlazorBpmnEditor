@@ -27,6 +27,8 @@
   <data name="ExportSeverity.Normalized" xml:space="preserve"><value>Normalized</value></data>
   <data name="ExportSeverity.Dropped" xml:space="preserve"><value>Dropped</value></data>
   <data name="Editor.Title" xml:space="preserve"><value>BPMN editor</value></data>
+  <data name="Editor.Files" xml:space="preserve"><value>Files</value></data>
+  <data name="Editor.Settings" xml:space="preserve"><value>Settings</value></data>
   <data name="Editor.ExportXml" xml:space="preserve"><value>Export XML</value></data>
   <data name="Editor.ExportJson" xml:space="preserve"><value>Export JSON</value></data>
   <data name="Editor.OpenFile" xml:space="preserve"><value>Open file</value></data>

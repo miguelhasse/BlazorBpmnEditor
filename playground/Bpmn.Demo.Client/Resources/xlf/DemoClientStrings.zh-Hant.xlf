@@ -77,6 +77,16 @@
         <target state="translated">已匯出 BPMN {0}</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.Files">
+        <source>Files</source>
+        <target state="translated">檔案</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Settings">
+        <source>Settings</source>
+        <target state="translated">設定</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.HighContrast">
         <source>High contrast</source>
         <target state="translated">高對比</target>

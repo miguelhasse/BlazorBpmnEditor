@@ -15,7 +15,7 @@ public sealed class TemplatePanelTests(DemoAppFixture app) : PageTest, IClassFix
     {
         await Page.GotoAsync($"{app.BaseUrl}{KitRoute.Plain}");
         await Expect(Page.Locator(".bpmn-canvas__paper > svg")).ToBeVisibleAsync(new() { Timeout = 30_000 });
-        await Page.Locator(".demo-show-properties").CheckAsync();
+        await Page.GetByRole(AriaRole.Switch, new() { Name = "Properties", Exact = true }).CheckAsync();
         var before = await Page.Locator(".bpmn-canvas .joint-element").CountAsync();
         var tool = Page.Locator(".bpmn-stencil__template-tool", new() { HasTextString = "HTTP request" });
         if (drag)
@@ -40,6 +40,7 @@ public sealed class TemplatePanelTests(DemoAppFixture app) : PageTest, IClassFix
         await Expect(url).ToHaveValueAsync("https://changed.invalid");
         await Page.GetByRole(AriaRole.Button, new() { Name = "Undo", Exact = true }).ClickAsync();
         await Expect(url).ToHaveValueAsync("https://example.invalid");
+        await Page.OpenDemoFilesAsync();
         await Page.GetByRole(AriaRole.Button, new() { Name = "Export XML", Exact = true }).ClickAsync();
         var xml = await Page.Locator(".demo-export-xml").InnerTextAsync();
         Assert.Contains("zeebe:modelerTemplate=\"demo.http\"", xml, StringComparison.Ordinal);
@@ -58,7 +59,7 @@ public sealed class TemplatePanelTests(DemoAppFixture app) : PageTest, IClassFix
     {
         await Page.GotoAsync($"{app.BaseUrl}{KitRoute.Plain}");
         await Expect(Page.Locator(".bpmn-canvas__paper > svg")).ToBeVisibleAsync(new() { Timeout = 30_000 });
-        await Page.Locator(".demo-show-properties").CheckAsync();
+        await Page.GetByRole(AriaRole.Switch, new() { Name = "Properties", Exact = true }).CheckAsync();
         var taskId = await Page.EvaluateAsync<string>("""
             () => [...document.querySelectorAll('.bpmn-canvas .joint-element[model-id]')]
               .find(cell => (cell.getAttribute('model-id') ?? '').startsWith('Task_'))?.getAttribute('model-id') ?? ''

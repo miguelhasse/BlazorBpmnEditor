@@ -8,14 +8,14 @@ namespace Hasseware.AspNetCore.Components.Bpmn.E2E.Tests;
 /// Chooses the demo page a test drives, so one body of tests covers both component kits.
 /// </summary>
 /// <remarks>
-/// The Fluent kit is the demo's <c>/editor</c>; the standard kit is <c>/editor-plain</c>. A test
+/// The Fluent kit is the demo's <c>/editor</c>; the standard kit is <c>/editor?plain=true</c>. A test
 /// class runs against the standard kit through a subclass whose name starts with
 /// <c>Plain</c> (see <c>PlainKitTests.cs</c>); the inherited tests are discovered again there.
 /// </remarks>
 internal static class KitRoute
 {
     internal const string Fluent = "/editor";
-    internal const string Plain = "/editor-plain";
+    internal const string Plain = "/editor?plain=true";
 
     /// <summary>The editor route for the kit the given test class represents.</summary>
     internal static string For(object test) =>
@@ -95,4 +95,31 @@ internal static class KitRoute
     /// </summary>
     internal static ILocator Textbox(this IPage page, string name) =>
         page.GetByRole(AriaRole.Textbox, new() { Name = name, Exact = true });
+
+    /// <summary>Opens the demo's file actions without toggling an already open popover closed.</summary>
+    internal static async Task OpenDemoFilesAsync(this IPage page)
+    {
+        var button = page.GetByRole(AriaRole.Button, new() { Name = "Files", Exact = true });
+        if (await button.GetAttributeAsync("aria-expanded") != "true")
+        {
+            await button.ClickAsync();
+        }
+
+        await Assertions.Expect(page.GetByRole(AriaRole.Dialog, new() { Name = "Files", Exact = true })).ToBeVisibleAsync();
+    }
+
+    /// <summary>Changes an immediately applied demo setting, then returns to the canvas.</summary>
+    internal static async Task SetDemoSwitchAsync(this IPage page, string name, bool enabled = true)
+    {
+        var button = page.GetByRole(AriaRole.Button, new() { Name = "Settings", Exact = true });
+        if (await button.GetAttributeAsync("aria-expanded") != "true")
+        {
+            await button.ClickAsync();
+        }
+
+        var setting = page.GetByRole(AriaRole.Switch, new() { Name = name, Exact = true });
+        await setting.SetCheckedAsync(enabled);
+        await page.Keyboard.PressAsync("Escape");
+        await Assertions.Expect(button).ToHaveAttributeAsync("aria-expanded", "false");
+    }
 }

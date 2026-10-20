@@ -159,7 +159,7 @@ public sealed class ConnectorEditTests(DemoAppFixture app) : PageTest, IClassFix
         await GoToEditorAsync();
         if (snap)
         {
-            await Page.Locator(".demo-snap input").CheckAsync();
+            await Page.SetDemoSwitchAsync("Snap to grid");
             await Page.WaitForTimeoutAsync(800);
         }
 
@@ -195,7 +195,7 @@ public sealed class ConnectorEditTests(DemoAppFixture app) : PageTest, IClassFix
 
         // Snapping is off by default, so without this the grid-enabled half of section 4.6 has no
         // surface to be exercised on at all.
-        await Page.Locator(".demo-snap input").CheckAsync();
+        await Page.SetDemoSwitchAsync("Snap to grid");
         await Page.WaitForTimeoutAsync(800);
 
         var source = await Page.Locator(".joint-cell[model-id^='Event_'] [joint-selector='outerRing']")
@@ -383,6 +383,7 @@ public sealed class ConnectorEditTests(DemoAppFixture app) : PageTest, IClassFix
 
     private async Task SelectSampleAsync(string fileName)
     {
+        await Page.OpenDemoFilesAsync();
         await Page.GetByRole(AriaRole.Combobox, new() { Name = "Sample diagram" }).ClickAsync();
         await Page.Locator("fluent-option", new() { HasTextString = fileName }).ClickAsync();
         await Page.WaitForTimeoutAsync(1500);

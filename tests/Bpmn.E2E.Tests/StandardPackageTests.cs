@@ -6,6 +6,19 @@ namespace Hasseware.AspNetCore.Components.Bpmn.E2E.Tests;
 /// <summary>Both kits ship Core's stylesheet; each also ships its own, served and applied on its page.</summary>
 public sealed class StandardPackageTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFixture>
 {
+    [Theory]
+    [InlineData("/editor", false)]
+    [InlineData("/editor?plain=false", false)]
+    [InlineData("/editor?plain=true", true)]
+    public async Task QuerySelectsEditorKit(string route, bool plain)
+    {
+        await Page.GotoAsync($"{app.BaseUrl}{route}");
+        await Expect(Page.Locator(".bpmn-canvas .joint-cell").First).ToBeVisibleAsync(new() { Timeout = 30_000 });
+
+        await Expect(Page.Locator(".fluent-bpmn-editor")).ToHaveCountAsync(plain ? 0 : 1);
+        await Expect(Page.Locator(".bpmn-editor:not(.fluent-bpmn-editor)")).ToHaveCountAsync(plain ? 1 : 0);
+    }
+
     [Fact]
     public async Task CoreAndStandardStylesheetsAreServedAndApplied()
     {

@@ -579,6 +579,7 @@ public sealed class ClipboardAndResizeTests(DemoAppFixture app) : PageTest, ICla
 
     private async Task SelectSampleAsync(string fileName)
     {
+        await Page.OpenDemoFilesAsync();
         await Page.GetByRole(AriaRole.Combobox, new() { Name = "Sample diagram" }).ClickAsync();
         await Page.Locator("fluent-option", new() { HasTextString = fileName }).ClickAsync();
         await Page.WaitForTimeoutAsync(1500);

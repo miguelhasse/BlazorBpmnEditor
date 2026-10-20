@@ -117,6 +117,7 @@ public class CanvasSmokeTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
     /// </remarks>
     private async Task SelectSampleAsync(string fileName)
     {
+        await Page.OpenDemoFilesAsync();
         await Page.GetByRole(AriaRole.Combobox, new() { Name = "Sample diagram" }).ClickAsync();
         await Page.Locator("fluent-option", new() { HasTextString = fileName }).ClickAsync();
     }

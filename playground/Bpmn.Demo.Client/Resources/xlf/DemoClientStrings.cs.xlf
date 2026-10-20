@@ -77,6 +77,16 @@
         <target state="translated">Exportováno BPMN {0}</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.Files">
+        <source>Files</source>
+        <target state="translated">Soubory</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Settings">
+        <source>Settings</source>
+        <target state="translated">Nastavení</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.HighContrast">
         <source>High contrast</source>
         <target state="translated">Vysoký kontrast</target>

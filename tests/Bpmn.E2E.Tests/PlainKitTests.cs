@@ -3,13 +3,15 @@ using Hasseware.AspNetCore.Components.Bpmn.E2E.Tests.Fixtures;
 namespace Hasseware.AspNetCore.Components.Bpmn.E2E.Tests;
 
 /*
- * The standard kit's page, /editor-plain, runs the same tests as the Fluent kit's /editor. Each
+ * The standard kit's query, /editor?plain=true, runs the same tests as the Fluent kit's /editor. Each
  * subclass inherits every test of its base and KitRoute picks the route from the "Plain" prefix of
  * the class name, so a test written once is checked against both kits through role- and
  * name-based locators.
  */
 
 public sealed class PlainCanvasSmokeTests(DemoAppFixture app) : CanvasSmokeTests(app);
+
+public sealed class PlainDemoControlsTests(DemoAppFixture app) : DemoControlsTests(app);
 
 public sealed class PlainCanvasNavigationTests(DemoAppFixture app) : CanvasNavigationTests(app);
 

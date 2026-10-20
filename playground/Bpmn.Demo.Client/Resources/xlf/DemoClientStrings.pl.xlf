@@ -77,6 +77,16 @@
         <target state="translated">Wyeksportowano BPMN {0}</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.Files">
+        <source>Files</source>
+        <target state="translated">Pliki</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Editor.Settings">
+        <source>Settings</source>
+        <target state="translated">Ustawienia</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.HighContrast">
         <source>High contrast</source>
         <target state="translated">Wysoki kontrast</target>

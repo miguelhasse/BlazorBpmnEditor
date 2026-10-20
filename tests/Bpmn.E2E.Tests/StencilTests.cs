@@ -253,6 +253,7 @@ public class StencilTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppF
         await Page.GetByRole(AriaRole.Button, new() { Name = "Redo", Exact = true }).ClickAsync();
         await Expect(Page.Locator($".joint-cell[model-id='{createdId}']")).ToBeVisibleAsync();
 
+        await Page.OpenDemoFilesAsync();
         await Page.GetByRole(AriaRole.Button, new() { Name = "Export XML", Exact = true }).ClickAsync();
         var xml = XDocument.Parse(await Page.Locator(".demo-export-xml").InnerTextAsync());
         XNamespace model = "http://www.omg.org/spec/BPMN/20100524/MODEL";
@@ -598,6 +599,7 @@ public class StencilTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppF
 
     private async Task SelectSampleAsync(string fileName)
     {
+        await Page.OpenDemoFilesAsync();
         await Page.GetByRole(AriaRole.Combobox, new() { Name = "Sample diagram" }).ClickAsync();
         await Page.Locator("fluent-option", new() { HasTextString = fileName }).ClickAsync();
         await Page.WaitForTimeoutAsync(1500);

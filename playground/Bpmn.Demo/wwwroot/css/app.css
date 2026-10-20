@@ -364,6 +364,137 @@ table {
     text-overflow: ellipsis;
 }
 
+.demo-editor-controls {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0.5rem;
+    block-size: auto;
+    padding: 0.75rem;
+    overflow: visible;
+    border: 1px solid var(--colorNeutralStroke2, var(--demo-chrome-fill));
+    border-radius: var(--borderRadiusMedium, 4px);
+    background: var(--colorNeutralBackground1, var(--demo-surface));
+}
+
+.demo-editor-controls [data-controls="actions"] {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+}
+
+.demo-editor-controls [data-controls="actions"] > fluent-button {
+    flex-shrink: 0;
+}
+
+.demo-editor-controls .demo-external-change {
+    margin-inline-start: auto;
+}
+
+.demo-editor-controls fluent-field,
+.demo-editor-controls fluent-dropdown {
+    inline-size: auto;
+    max-inline-size: 100%;
+}
+
+.demo-editor-controls fluent-field {
+    margin: 0;
+}
+
+.demo-editor-controls [data-controls="status"] {
+    display: flex;
+    gap: 1rem;
+    min-inline-size: 0;
+    font-size: 0.8rem;
+    line-height: 1.25rem;
+    color: var(--colorNeutralForeground2, var(--demo-ink));
+}
+
+.demo-editor-controls [data-controls="status"] > span {
+    flex: 1 1 0;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
+    font-size: inherit;
+    opacity: 1;
+}
+
+/* Only the shadow dialog participates in layout; the host must not shift the canvas. */
+.demo-editor-controls .demo-control-popover[opened="true"] {
+    display: contents;
+}
+
+.demo-editor-controls .demo-control-popover::part(dialog) {
+    box-sizing: border-box;
+    max-block-size: calc(100dvh - 12rem);
+    overflow: auto;
+    white-space: normal;
+    color: var(--colorNeutralForeground1, var(--demo-ink));
+}
+
+.demo-editor-controls [data-controls="panel"] {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    min-inline-size: 0;
+}
+
+.demo-editor-controls [data-controls="panel"] h2 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.demo-editor-controls [data-controls="panel"] fluent-dropdown {
+    inline-size: 100%;
+}
+
+.demo-editor-controls [data-controls="file-actions"] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.demo-editor-controls [data-controls="file-actions"] > fluent-button {
+    flex: 1;
+}
+
+.demo-editor-controls [data-controls="settings-group"] {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.demo-editor-controls [data-controls="settings-group"] fluent-field {
+    min-block-size: 2rem;
+    align-items: center;
+}
+
+.demo-editor-controls [data-controls="settings-group"] + [data-controls="settings-group"] {
+    border-block-start: 1px solid var(--colorNeutralStroke2, var(--demo-chrome-fill));
+    padding-block-start: 0.875rem;
+}
+
+.demo-editor-controls .demo-webmcp-status {
+    font-size: 0.8rem;
+    color: var(--colorNeutralForeground2, var(--demo-ink));
+}
+
+.demo-editor-controls .demo-webmcp-status:empty {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .demo-editor-controls .demo-external-change {
+        margin-inline-start: 0;
+    }
+}
+
 /*
  * The canvas fills its parent, so the parent needs a real height. A zero-height flex child is
  * the usual reason a JointJS paper renders but shows nothing.
@@ -488,21 +619,6 @@ table {
     padding: 0.5rem;
     border-radius: 4px;
     white-space: pre;
-}
-
-/*
- * The toggles beside the sample picker: the grid, so section 4.6's snapping branch can be tried,
- * and the property panel, which is off by default because its column costs the canvas a fixed
- * 22rem. They share a rule but not a class — a test that reaches for `.demo-snap input` must get
- * one checkbox, not whichever two happen to look alike.
- */
-.demo-snap,
-.demo-toggle {
-  display: inline-flex;
-  gap: 0.35rem;
-  align-items: center;
-  white-space: nowrap;
-  font-size: 0.9rem;
 }
 
 /* The validation list sits under the diagram, and never grows past a few rows. */

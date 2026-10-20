@@ -41,7 +41,7 @@ standard editor stylesheet when using only this kit.
 
 Keep the whole editor inside one interactive render-mode boundary. Scope cascades do not cross
 boundaries. As with the standard composition, `ShowStencil` defaults to false and `ShowPanel`
-to true. The demo's `/editor`, `/gallery` use this kit; `/editor-plain` uses the standard kit in the same
+to true. The demo's `/editor`, `/gallery` use this kit; `/editor?plain=true` uses the standard kit in the same
 container (each composition supplies its own kit defaults).
 
 ## Components and verified v5 APIs

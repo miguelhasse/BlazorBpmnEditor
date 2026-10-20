@@ -230,6 +230,7 @@ public partial class RoutingTests
 
     private async Task<XDocument> ExportRoutingDocumentAsync()
     {
+        await Page.OpenDemoFilesAsync();
         await Page.GetByRole(AriaRole.Button, new() { Name = "Export XML", Exact = true }).ClickAsync();
         await Expect(Page.Locator(".demo-export-xml")).ToBeVisibleAsync();
         return XDocument.Parse(await Page.Locator(".demo-export-xml").InnerTextAsync());

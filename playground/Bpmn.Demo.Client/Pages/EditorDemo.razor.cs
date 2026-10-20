@@ -10,7 +10,9 @@ using Hasseware.AspNetCore.Components.Bpmn.WebMcp;
 using Hasseware.FluentUI.AspNetCore.Components.Bpmn;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Options;
+using Microsoft.FluentUI.AspNetCore.Components;
 
 namespace Bpmn.Demo.Client.Pages;
 
@@ -22,9 +24,59 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
 {
     private FluentBpmnEditor? _fluentEditor;
     private BpmnEditor? _plainEditor;
+    private readonly string _filesButtonId = $"demo-files-{Guid.NewGuid():N}";
+    private readonly string _settingsButtonId = $"demo-settings-{Guid.NewGuid():N}";
+    private bool _filesOpened;
+    private bool _settingsOpened;
+    private FluentButton? _filesButton;
+    private FluentButton? _settingsButton;
+    private FluentButton? _openFileButton;
+    private FluentSwitch? _contrastSwitch;
+    private ElementReference? _controlToFocus;
 
-    /// <summary>Renders the standard HTML kit (<c>BpmnEditor</c>) instead of the Fluent UI kit.</summary>
-    [Parameter]
+    private void ToggleFiles()
+    {
+        _settingsOpened = false;
+        _filesOpened = !_filesOpened;
+        _controlToFocus = _filesOpened ? _openFileButton?.Element : _filesButton?.Element;
+    }
+
+    private void ToggleSettings()
+    {
+        _filesOpened = false;
+        _settingsOpened = !_settingsOpened;
+        _controlToFocus = _settingsOpened ? _contrastSwitch?.Element : _settingsButton?.Element;
+    }
+
+    private void CloseFiles()
+    {
+        if (!_filesOpened) return;
+
+        _filesOpened = false;
+        _controlToFocus = _filesButton?.Element;
+    }
+
+    private void OnPopoverKeyDown(KeyboardEventArgs args, FluentButton? trigger)
+    {
+        if (args.Key != "Escape") return;
+
+        _controlToFocus = trigger?.Element;
+        _filesOpened = false;
+        _settingsOpened = false;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // The popover's shadow dialog does not autofocus its slotted Fluent controls.
+        if (_controlToFocus is { } control)
+        {
+            _controlToFocus = null;
+            await control.FocusAsync();
+        }
+    }
+
+    /// <summary>Selects the standard HTML kit with <c>?plain=true</c>; defaults to the Fluent UI kit.</summary>
+    [SupplyParameterFromQuery(Name = "plain")]
     public bool Plain { get; set; }
 
     private bool HasEditor => _fluentEditor is not null || _plainEditor is not null;
@@ -41,6 +93,7 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
         {
             _exportedXml = BpmnXmlWriter.Write(_document, BpmnWriteOptions.Fidelity).Xml;
             _exportedFormat = "XML";
+            CloseFiles();
         }
     }
 
@@ -50,6 +103,7 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
         {
             _exportedXml = BpmnJsonWriter.Write(_document);
             _exportedFormat = "JSON";
+            CloseFiles();
         }
     }
 
@@ -65,12 +119,14 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
         {
             using var reader = new StreamReader(args.File.OpenReadStream(MaxOpenBytes));
             var content = await reader.ReadToEndAsync().ConfigureAwait(true);
+            _filesOpened = false;
             if (Plain) _plainEditor!.PreviewImport(args.File.Name, content);
             else _fluentEditor!.PreviewImport(args.File.Name, content);
         }
         catch (IOException failure)
         {
             _status = Localizer["CouldNotOpen", args.File.Name, failure.Message];
+            CloseFiles();
         }
     }
     private IReadOnlyList<BpmnImportDiagnostic> _diagnostics = [];
@@ -160,6 +216,7 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
 
         // A conflict also raises the editor's own notice; this line only says why nothing was saved.
         _saveMessage = result.Succeeded ? null : Localizer["Editor.SaveConflict"].Value;
+        CloseFiles();
     }
 
     /// <summary>
@@ -187,11 +244,13 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
         if (string.IsNullOrEmpty(sample))
         {
             _selectedSample = sample;
+            CloseFiles();
             return;
         }
 
         _exportedXml = null;
         _selectedSample = sample;
+        CloseFiles();
         _status = Localizer["Editor.Reading", sample];
 
         try
@@ -289,13 +348,13 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
 
     private ThemeOptions _theme = ThemeOptions.Default;
 
-    private void OnContrastChanged(ChangeEventArgs args)
+    private void OnContrastChanged(bool enabled)
     {
-        _highContrast = args.Value is true;
+        _highContrast = enabled;
         _theme = _theme with { Contrast = _highContrast ? BpmnContrast.High : BpmnContrast.Normal };
     }
 
-    private void OnReadOnlyChanged(ChangeEventArgs args) => _readOnly = args.Value is true;
+    private void OnReadOnlyChanged(bool enabled) => _readOnly = enabled;
 
     private bool _webMcp;
 
@@ -305,17 +364,17 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
 
     private BpmnWebMcp? _webMcpPart;
 
-    private void OnWebMcpChanged(ChangeEventArgs args)
+    private void OnWebMcpChanged(bool enabled)
     {
-        _webMcp = args.Value is true;
+        _webMcp = enabled;
         _webMcpStatus = string.Empty;
         if (!_webMcp) _webMcpPart = null;
     }
 
     // The component reads the option once, at registration, so changing it makes a new component.
-    private void OnWebMcpEditChanged(ChangeEventArgs args)
+    private void OnWebMcpEditChanged(bool enabled)
     {
-        _webMcpEdit = args.Value is true;
+        _webMcpEdit = enabled;
         _webMcpStatus = string.Empty;
     }
 
@@ -343,9 +402,9 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
     /// editor draws what it is given, not that it can work out what a process is doing. It cannot,
     /// and the specification says so.
     /// </remarks>
-    private async Task OnExecutionChangedAsync(ChangeEventArgs args)
+    private async Task OnExecutionChangedAsync(bool enabled)
     {
-        _showExecution = args.Value is true;
+        _showExecution = enabled;
 
         if (!HasEditor) return;
 
@@ -360,7 +419,7 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
         }
     }
 
-    private void OnAnimationChanged(ChangeEventArgs args) => _animateTokens = args.Value is true;
+    private void OnAnimationChanged(bool enabled) => _animateTokens = enabled;
 
     /// <summary>A plausible run over the loaded sample.</summary>
     /// <remarks>
@@ -440,8 +499,8 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
 
     private bool _showProperties;
 
-    private void OnShowPropertiesChanged(ChangeEventArgs args) =>
-        _showProperties = args.Value is true;
+    private void OnShowPropertiesChanged(bool enabled) =>
+        _showProperties = enabled;
 
     private void OnEditRejected(EditRejected payload) =>
         _editStatus = Localizer["Editor.EditRejected", payload.Code, payload.Message];

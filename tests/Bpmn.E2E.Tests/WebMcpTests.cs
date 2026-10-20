@@ -153,7 +153,7 @@ public class WebMcpTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFi
         await GoToEditorAsync();
         await TurnOnAsync();
 
-        await Page.Locator(".demo-webmcp").UncheckAsync();
+        await Page.SetDemoSwitchAsync("Offer to browser agents (WebMCP)", false);
 
         await Expect(Page.Locator(".demo-webmcp-status")).ToBeEmptyAsync();
         await Page.WaitForFunctionAsync("() => window.__webmcp.names().length === 0");
@@ -240,7 +240,7 @@ public class WebMcpTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFi
 
     private async Task AllowEditingAsync()
     {
-        await Page.Locator(".demo-webmcp-edit").CheckAsync();
+        await Page.SetDemoSwitchAsync("Let agents edit (deleting and saving ask you first)");
         await Expect(Page.Locator(".demo-webmcp-status")).ToContainTextAsync("editing allowed");
     }
 
@@ -256,7 +256,7 @@ public class WebMcpTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFi
     // Registration happens after the next render, so a test that calls a tool waits for the status that follows it.
     private async Task TurnOnAsync(bool expectRegistered = true)
     {
-        await Page.Locator(".demo-webmcp").CheckAsync();
+        await Page.SetDemoSwitchAsync("Offer to browser agents (WebMCP)");
         if (expectRegistered) await Expect(Page.Locator(".demo-webmcp-status")).ToContainTextAsync("7 read-only tools");
     }
 

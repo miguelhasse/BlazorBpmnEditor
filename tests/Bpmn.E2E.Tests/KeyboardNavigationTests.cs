@@ -262,6 +262,7 @@ public class KeyboardNavigationTests(DemoAppFixture app) : PageTest, IClassFixtu
         await Expect(Page.Locator(".bpmn-canvas__paper > svg")).ToBeVisibleAsync(new() { Timeout = 30_000 });
         await Expect(Page.Locator(".bpmn-canvas .joint-cell").First).ToBeVisibleAsync();
 
+        await Page.OpenDemoFilesAsync();
         await Page.GetByRole(AriaRole.Combobox, new() { Name = "Sample diagram" }).ClickAsync();
         await Page.Locator("fluent-option", new() { HasTextString = sample }).ClickAsync();
         await Page.WaitForTimeoutAsync(2000);
