@@ -1,11 +1,11 @@
 @namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
 @inherits BpmnShortcutHelpBase
 
-@if (IsVisible)
-{
-    <FluentBpmnDialog Class="@CssClass("bpmn-shortcut-help")" OnDismiss="CloseAsync" role="dialog" aria-modal="true" aria-labelledby="@($"{Id}-title")" @attributes="AdditionalAttributes">
+<FluentBpmnDialog Visible="@IsVisible" Class="@CssClass("bpmn-shortcut-help")" OnDismiss="CloseAsync" role="dialog" aria-modal="true" aria-labelledby="@($"{Id}-title")" @attributes="AdditionalAttributes">
+    @if (IsVisible)
+    {
 
-        <div class="bpmn-shortcut-help__panel" @onkeydown="HandleKeyDownAsync" @onkeydown:stopPropagation="true">
+        <div class="bpmn-shortcut-help__panel" @onkeydown:stopPropagation="true">
             <h2 class="bpmn-shortcut-help__title" id="@($"{Id}-title")">@EffectiveTitle</h2>
 
             @if (Groups.Count == 0)
@@ -39,5 +39,5 @@
                           @ref="_close" IconStart="@(new Icons.Regular.Size20.Dismiss())"
                           OnClick="CloseAsync">@CloseText</FluentButton>
         </div>
-    </FluentBpmnDialog>
-}
+    }
+</FluentBpmnDialog>

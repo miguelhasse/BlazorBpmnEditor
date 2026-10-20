@@ -136,6 +136,74 @@ public partial class CanvasNavigationTests(DemoAppFixture app) : PageTest, IClas
 
         await Page.Keyboard.PressAsync("Escape");
         await Expect(dialog).ToBeHiddenAsync();
+        await Expect(Page.Locator(".bpmn-shortcut-help")).ToHaveCountAsync(0);
+
+        var task = Page.Locator(".joint-cell[model-id^='Task_']").First;
+        var id = await task.GetAttributeAsync("model-id");
+        Assert.NotNull(id);
+        await task.ClickAsync();
+        await Expect(Page.Locator(".demo-edit-status")).ToContainTextAsync(id);
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Show keyboard shortcuts" }).ClickAsync();
+        await Expect(dialog).ToBeVisibleAsync();
+        await Page.Locator(".bpmn-shortcut-help__close").ClickAsync();
+        await Expect(Page.Locator(".bpmn-shortcut-help")).ToHaveCountAsync(0);
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Fit" }).ClickAsync();
+    }
+
+    [Fact]
+    public async Task FluentShortcutHelpRestoresCanvasAndTriggerFocusAfterDismissal()
+    {
+        await Page.GotoAsync($"{app.BaseUrl}{KitRoute.Fluent}");
+        await Expect(Page.Locator(".bpmn-canvas .joint-cell").First).ToBeVisibleAsync(new() { Timeout = 30_000 });
+        await PressAsync("?", shift: true);
+        await Expect(Page.ShortcutDialog()).ToBeVisibleAsync();
+        await Page.Keyboard.PressAsync("Escape");
+        await Expect(Page.Locator(".bpmn-shortcut-help")).ToHaveCountAsync(0);
+        await Expect(Page.Locator(".bpmn-canvas")).ToBeFocusedAsync();
+
+        var trigger = Page.GetByRole(AriaRole.Button, new() { Name = "Show keyboard shortcuts" });
+        await trigger.ClickAsync();
+        await Expect(Page.ShortcutDialog()).ToBeVisibleAsync();
+        await Page.Locator(".bpmn-shortcut-help__close").ClickAsync();
+        await Expect(Page.Locator(".bpmn-shortcut-help")).ToHaveCountAsync(0);
+        await Expect(trigger).ToBeFocusedAsync();
+    }
+
+    [Theory]
+    [InlineData(1280, 1000)]
+    [InlineData(390, 640)]
+    [InlineData(320, 480)]
+    public async Task FluentShortcutHelpUsesOneSurfaceWithAlignedRowsWithinViewport(int width, int height)
+    {
+        await Page.SetViewportSizeAsync(width, height);
+        await Page.EmulateMediaAsync(new() { ReducedMotion = ReducedMotion.Reduce });
+        await Page.GotoAsync($"{app.BaseUrl}{KitRoute.Fluent}");
+        await Expect(Page.Locator(".demo-status")).ToContainTextAsync("Rendered", new() { Timeout = 30_000 });
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Show keyboard shortcuts" }).ClickAsync();
+        await Expect(Page.ShortcutDialog()).ToBeVisibleAsync();
+
+        var layout = await Page.Locator("fluent-dialog.bpmn-shortcut-help").EvaluateAsync<double[]>(
+            """
+            host => {
+                const dialog = host.shadowRoot.querySelector('dialog');
+                const surface = dialog.getBoundingClientRect();
+                const panel = host.querySelector('.bpmn-shortcut-help__panel').getBoundingClientRect();
+                const descriptions = [...host.querySelectorAll('dd')].map(row => row.getBoundingClientRect().left);
+                return [surface.width - panel.width, surface.left, surface.top,
+                    surface.right, surface.bottom, Math.max(...descriptions) - Math.min(...descriptions),
+                    dialog.scrollWidth - dialog.clientWidth];
+            }
+            """);
+
+        Assert.InRange(Math.Abs(layout[0]), 0, 1);
+        Assert.InRange(layout[1], 0, width);
+        Assert.InRange(layout[2], 0, height);
+        Assert.InRange(layout[3], 0, width);
+        Assert.InRange(layout[4], 0, height);
+        Assert.InRange(layout[5], 0, 1);
+        Assert.InRange(layout[6], 0, 1);
+        await Page.Locator(".bpmn-shortcut-help__close").ClickAsync();
+        await Expect(Page.Locator(".bpmn-shortcut-help")).ToHaveCountAsync(0);
     }
 
     [Fact]

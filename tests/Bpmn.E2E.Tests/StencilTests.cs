@@ -366,6 +366,19 @@ public class StencilTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppF
 
         var picker = Page.GetByRole(AriaRole.Dialog);
         await Expect(picker).ToBeVisibleAsync();
+        if (KitRoute.For(this) == KitRoute.Fluent)
+        {
+            await Page.Locator("fluent-dialog.bpmn-picker").ExpectSingleFluentSurfaceAsync();
+            await Page.Keyboard.PressAsync("Escape");
+            await Expect(picker).ToHaveCountAsync(0);
+            await Expect(Page.Locator(".bpmn-canvas .joint-cell[model-id^='callActivity_']")).ToHaveCountAsync(before);
+            await Page.Locator(".bpmn-canvas").ClickAsync(new() { Position = new() { X = 4, Y = 4 } });
+            await Expect(Page.Locator(".bpmn-canvas")).ToBeFocusedAsync();
+
+            (x, y) = await FreeSpotAsync();
+            await DropToolAsync("Call Activity", x, y);
+            await Expect(picker).ToBeVisibleAsync();
+        }
         await picker.GetByRole(AriaRole.Option, new() { Name = "Process_HandleShipment" }).ClickAsync();
 
         await Expect(picker).ToHaveCountAsync(0);

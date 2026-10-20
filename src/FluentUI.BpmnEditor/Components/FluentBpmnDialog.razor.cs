@@ -8,6 +8,10 @@ public partial class FluentBpmnDialog
 {
     private FluentDialog? _dialog;
     private bool _shown;
+    private bool _transitioning;
+
+    /// <summary>Whether the owning editor currently needs this dialog.</summary>
+    [Parameter] public bool Visible { get; set; } = true;
 
     /// <summary>Dialog content, kept within the owning editor's cascades.</summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
@@ -24,14 +28,36 @@ public partial class FluentBpmnDialog
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        // Inline v5 dialogs preserve the editor scope; service-backed dialogs would reparent content.
-        if (firstRender && _dialog is not null)
+        if (_transitioning || _dialog is null || Visible == _shown) return;
+
+        _transitioning = true;
+        _shown = Visible;
+        try
         {
-            _shown = true;
-            await _dialog.ShowAsync();
+            if (_shown)
+            {
+                await _dialog.ShowAsync();
+            }
+            else
+            {
+                // Close the native modal before removing its host so focus and top-layer state are released.
+                await _dialog.HideAsync();
+            }
         }
+        finally
+        {
+            _transitioning = false;
+        }
+
+        StateHasChanged();
     }
 
-    private Task StateChangedAsync(DialogEventArgs args) =>
-        _shown && args.State == DialogState.Closed ? OnDismiss.InvokeAsync() : Task.CompletedTask;
+    private async Task StateChangedAsync(DialogToggleEventArgs args)
+    {
+        // Fluent UI 5's OnStateChange filters out inline dialogs because they have no service instance.
+        if (!_shown || args.Id != _dialog?.Id || args.NewState != "closed") return;
+
+        _shown = false;
+        await OnDismiss.InvokeAsync();
+    }
 }

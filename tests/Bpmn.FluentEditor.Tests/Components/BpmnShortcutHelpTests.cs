@@ -2,6 +2,7 @@ using Bunit;
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.FluentUI.AspNetCore.Components.Bpmn;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.FluentUI.AspNetCore.Components;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Components;
 
@@ -104,14 +105,21 @@ public sealed class BpmnShortcutHelpTests : FluentTestContext
     }
 
     [Fact]
-    public void ClosesOnEscape()
+    public void ClosesWhenNativeEscapeDismissalCompletes()
     {
         BpmnEditorSession? session = null;
         var component = this.RenderSeeded<FluentBpmnShortcutHelp>(seed => seed.ShowHelp()
             .Bindings(KeyboardOptions.Default.Bindings)
             .Session(s => session = s));
 
-        component.Find(".bpmn-shortcut-help__panel").KeyDown(new KeyboardEventArgs { Key = "Escape" });
+        var dialog = component.Find("fluent-dialog");
+        dialog.TriggerEvent("ondialogtoggle", new DialogToggleEventArgs
+        {
+            Id = dialog.Id,
+            Type = "toggle",
+            OldState = "open",
+            NewState = "closed",
+        });
 
         Assert.False(session!.State.ShortcutHelpVisible);
     }
@@ -124,7 +132,7 @@ public sealed class BpmnShortcutHelpTests : FluentTestContext
             .Bindings(KeyboardOptions.Default.Bindings)
             .Session(s => session = s));
 
-        component.Find(".bpmn-shortcut-help__panel").KeyDown(new KeyboardEventArgs { Key = "a" });
+        component.Find("fluent-dialog").KeyDown(new KeyboardEventArgs { Key = "a" });
 
         Assert.True(session!.State.ShortcutHelpVisible);
     }

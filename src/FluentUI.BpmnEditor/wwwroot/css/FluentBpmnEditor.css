@@ -65,39 +65,33 @@
 }
 
 
-.fluent-bpmn-editor .bpmn-shortcut-help__panel {
-    position: relative;
-    max-inline-size: min(32rem, calc(100% - 2rem));
-    max-block-size: calc(100% - 2rem);
-    overflow: auto;
-    padding: 1.25rem 1.5rem;
-    border-radius: 6px;
-    background: var(--bpmn-surface-background);
-    color: var(--bpmn-surface-foreground);
-    border: 1px solid var(--bpmn-surface-border);
-    box-shadow: 0 8px 32px rgb(0 0 0 / 25%);
-}
 .fluent-bpmn-editor .bpmn-shortcut-help__title {
     margin-block: 0 0.75rem;
     font-size: 1.05rem;
 }
 .fluent-bpmn-editor .bpmn-shortcut-help__list {
     display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
     gap: 0.35rem 1rem;
     margin: 0;
 }
 .fluent-bpmn-editor .bpmn-shortcut-help__row {
     display: grid;
-    grid-template-columns: minmax(6rem, auto) 1fr;
-    gap: 1rem;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
     align-items: baseline;
 }
 .fluent-bpmn-editor .bpmn-shortcut-help__row dt {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem;
     margin: 0;
 }
 .fluent-bpmn-editor .bpmn-shortcut-help__row dd {
     margin: 0;
     font-size: 0.9rem;
+    overflow-wrap: anywhere;
 }
 .fluent-bpmn-editor .bpmn-shortcut-help kbd {
     display: inline-block;
@@ -215,19 +209,6 @@
 }
 
 
-.fluent-bpmn-editor .bpmn-picker__panel {
-  position: relative;
-  min-inline-size: 20rem;
-  max-inline-size: min(28rem, calc(100% - 2rem));
-  max-block-size: calc(100% - 2rem);
-  overflow: auto;
-  padding: 1.25rem 1.5rem;
-  border: 1px solid var(--bpmn-surface-border);
-  border-radius: 6px;
-  background: var(--bpmn-surface-background);
-  color: var(--bpmn-surface-foreground);
-  box-shadow: 0 8px 32px rgb(0 0 0 / 25%);
-}
 .fluent-bpmn-editor .bpmn-picker__title {
   margin-block: 0 0.75rem;
   font-size: 1.05rem;
@@ -817,17 +798,6 @@
 
 
 .fluent-bpmn-editor .bpmn-import__panel {
-  position: relative;
-  min-inline-size: 22rem;
-  max-inline-size: min(32rem, calc(100% - 2rem));
-  max-block-size: calc(100% - 2rem);
-  overflow: auto;
-  padding: 1.25rem 1.5rem;
-  border: 1px solid var(--bpmn-surface-border);
-  border-radius: 6px;
-  background: var(--bpmn-surface-background);
-  color: var(--bpmn-surface-foreground);
-  box-shadow: 0 8px 32px rgb(0 0 0 / 25%);
   font-size: 0.8125rem;
 }
 .fluent-bpmn-editor .bpmn-import__title {
@@ -900,10 +870,6 @@
 .fluent-bpmn-editor .bpmn-import__accept:disabled {
   cursor: not-allowed;
   opacity: 0.5;
-}
-.fluent-bpmn-editor .bpmn-confirm__panel {
-  min-inline-size: 20rem;
-  max-inline-size: 30rem;
 }
 .fluent-bpmn-editor .bpmn-confirm__origin {
   margin: 0 0 0.35rem;
@@ -1105,6 +1071,31 @@
 }
 .fluent-bpmn-editor .fluent-input-container { min-inline-size: 0; inline-size: 100%; }
 
-.fluent-bpmn-editor :is(.bpmn-import, .bpmn-picker, .bpmn-shortcut-help)::backdrop {
-  background: var(--bpmn-overlay-scrim);
+.fluent-bpmn-editor :is(.bpmn-import, .bpmn-picker, .bpmn-shortcut-help, .bpmn-confirm) {
+  --dialog-backdrop: var(--bpmn-overlay-scrim);
+}
+.fluent-bpmn-editor :is(.bpmn-import, .bpmn-picker, .bpmn-shortcut-help, .bpmn-confirm)::part(dialog) {
+  box-sizing: border-box;
+  inline-size: min(32rem, calc(100vw - 2rem));
+  max-inline-size: calc(100vw - 2rem);
+  max-block-size: calc(100dvh - 2rem);
+  overflow: auto;
+  background: var(--bpmn-surface-background);
+  color: var(--bpmn-surface-foreground);
+}
+.fluent-bpmn-editor .bpmn-picker::part(dialog) {
+  inline-size: min(28rem, calc(100vw - 2rem));
+}
+.fluent-bpmn-editor :is(.bpmn-shortcut-help__panel, .bpmn-picker__panel, .bpmn-import__panel, .bpmn-confirm__panel) {
+  position: relative;
+  box-sizing: border-box;
+  min-inline-size: 0;
+  max-inline-size: none;
+  max-block-size: none;
+  overflow: visible;
+  padding: 1.25rem 1.5rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }

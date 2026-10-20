@@ -230,6 +230,20 @@ public class WebMcpTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFi
         Assert.Equal("DENIED", denied.GetProperty("code").GetString());
         await Expect(cell).ToHaveCountAsync(1);
 
+        if (KitRoute.For(this) == KitRoute.Fluent)
+        {
+            await StartCallAsync("bpmn_delete", $$"""{"elementIds":["{{id}}"]}""");
+            await Expect(Page.Locator(".bpmn-confirm__title")).ToBeVisibleAsync();
+            await Page.Locator("fluent-dialog.bpmn-confirm").ExpectSingleFluentSurfaceAsync();
+            await Page.Keyboard.PressAsync("Escape");
+            var dismissed = (await FinishCallAsync()).GetProperty("result");
+            Assert.Equal("DENIED", dismissed.GetProperty("code").GetString());
+            await Expect(Page.Locator(".bpmn-confirm")).ToHaveCountAsync(0);
+            await Expect(cell).ToHaveCountAsync(1);
+            await cell.ClickAsync();
+            await Expect(Page.Locator(".demo-edit-status")).ToContainTextAsync(id);
+        }
+
         await StartCallAsync("bpmn_delete", $$"""{"elementIds":["{{id}}"]}""");
         await Expect(Page.Locator(".bpmn-confirm__details")).ToContainTextAsync(id);
         await Page.Locator(".bpmn-confirm__allow").ClickAsync();

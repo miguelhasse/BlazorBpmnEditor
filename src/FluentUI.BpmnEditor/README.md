@@ -19,8 +19,10 @@ builder.Services.AddFluentBpmnEditor();
 `AddFluentBpmnEditor()` never calls Fluent's registration extension or chooses host service lifetimes.
 Add providers such as `FluentDialogProvider`, `FluentTooltipProvider`, `FluentMessageBarProvider`
 and `FluentToastProvider` when using their services, including components supplied in editor slots.
-Kit dialogs use v5's verified inline `FluentDialog.ShowAsync()` API, preserving editor cascades
-rather than reparenting content through a dialog service. Fluent controls still require host services.
+Kit dialogs use inline `FluentDialog` through `FluentBpmnDialog`, preserving editor cascades
+rather than reparenting content through a dialog service. The wrapper synchronizes visibility with
+`ShowAsync()` / `HideAsync()` and handles native dismissal directly, including Escape, so session
+state, modal cleanup, and focus restoration stay in sync. Fluent controls still require host services.
 Fluent's own scripts and CSS auto-load; do not manually add Fluent library asset links.
 
 Link the **kit stylesheet** in host HTML (after Core's canvas styles):

@@ -68,6 +68,31 @@ public class ImportTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFi
     }
 
     [Fact]
+    public async Task FluentImportEscapeCancelsAndLeavesEditorInteractiveAcrossRepeatedOffers()
+    {
+        await Page.GotoAsync($"{app.BaseUrl}{KitRoute.Fluent}");
+        await Expect(Page.Locator(".bpmn-canvas .joint-cell").First).ToBeVisibleAsync(new() { Timeout = 30_000 });
+        var task = Page.Locator(".joint-cell[model-id^='Task_']").First;
+        var id = await task.GetAttributeAsync("model-id");
+        Assert.NotNull(id);
+
+        for (var attempt = 0; attempt < 2; attempt++)
+        {
+            await Page.Locator(".bpmn-canvas").ClickAsync(new() { Position = new() { X = 4, Y = 4 } });
+            await DropFileAsync("imported.bpmn", Imported);
+            await Expect(Page.Locator(".bpmn-import__title")).ToBeVisibleAsync();
+            await Page.Locator("fluent-dialog.bpmn-import").ExpectSingleFluentSurfaceAsync();
+            await Page.Keyboard.PressAsync("Escape");
+
+            await Expect(Page.Locator(".bpmn-import")).ToHaveCountAsync(0);
+            await Expect(Page.Locator(".bpmn-canvas")).ToBeFocusedAsync();
+            await Expect(Page.Locator(".joint-cell[model-id='Task_Imported']")).ToHaveCountAsync(0);
+            await task.ClickAsync();
+            await Expect(Page.Locator(".demo-edit-status")).ToContainTextAsync(id);
+        }
+    }
+
+    [Fact]
     public async Task AcceptingReplacesTheDocument()
     {
         await GoToEditorAsync();

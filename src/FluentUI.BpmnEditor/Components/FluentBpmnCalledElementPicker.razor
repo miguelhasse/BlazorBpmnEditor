@@ -2,11 +2,11 @@
 @namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
 @inherits BpmnCalledElementPickerBase
 
-@if (IsVisible)
-{
-    <FluentBpmnDialog Class="@CssClass("bpmn-picker")" OnDismiss="CancelAsync" role="dialog" aria-modal="true" aria-labelledby="@TitleId" @attributes="AdditionalAttributes">
+<FluentBpmnDialog Visible="@IsVisible" Class="@CssClass("bpmn-picker")" OnDismiss="CancelAsync" role="dialog" aria-modal="true" aria-labelledby="@TitleId" @attributes="AdditionalAttributes">
+    @if (IsVisible)
+    {
 
-        <div class="bpmn-picker__panel" @onkeydown="HandleKeyDownAsync">
+        <div class="bpmn-picker__panel" @onkeydown:stopPropagation="true">
             <h2 class="bpmn-picker__title" id="@TitleId">@EffectiveTitle</h2>
 
             @if (Definitions.Count == 0)
@@ -40,5 +40,5 @@
 
             <FluentButton Type="ButtonType.Button" Class="bpmn-picker__cancel" OnClick="CancelAsync">@EditorText("CalledElementPicker.Cancel")</FluentButton>
         </div>
-    </FluentBpmnDialog>
-}
+    }
+</FluentBpmnDialog>

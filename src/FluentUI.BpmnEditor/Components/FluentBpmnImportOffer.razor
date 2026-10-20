@@ -4,9 +4,9 @@
 
 @using Hasseware.AspNetCore.Components.Bpmn.Serialization
 
-@if (Preview is { } preview)
-{
-    <FluentBpmnDialog Class="@CssClass("bpmn-import")" OnDismiss="CancelAsync" role="dialog" aria-modal="true" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+<FluentBpmnDialog Visible="@(Preview is not null)" Class="@CssClass("bpmn-import")" OnDismiss="CancelAsync" role="dialog" aria-modal="true" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+    @if (Preview is { } preview)
+    {
 
         <div class="bpmn-import__panel">
             <h2 class="bpmn-import__title">@EditorText("ImportOffer.Title", preview.FileName)</h2>
@@ -118,5 +118,5 @@
                 </FluentButton>
             </div>
         </div>
-    </FluentBpmnDialog>
-}
+    }
+</FluentBpmnDialog>

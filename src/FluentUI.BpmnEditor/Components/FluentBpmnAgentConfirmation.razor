@@ -2,9 +2,9 @@
 @namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
 @inherits BpmnAgentConfirmationBase
 
-@if (Request is { } request)
-{
-    <FluentBpmnDialog Class="@CssClass("bpmn-confirm")" OnDismiss="DenyAsync" role="alertdialog" aria-modal="true" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+<FluentBpmnDialog Visible="@(Request is not null)" Class="@CssClass("bpmn-confirm")" OnDismiss="DenyAsync" role="alertdialog" aria-modal="true" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+    @if (Request is { } request)
+    {
         <div class="bpmn-confirm__panel @(request.IsDestructive ? "bpmn-confirm__panel--destructive" : null)">
             <p class="bpmn-confirm__origin">@EditorText("AgentConfirmation.RequestedBy", AgentName)</p>
             <h2 class="bpmn-confirm__title">@request.Title</h2>
@@ -29,5 +29,5 @@
                 </FluentButton>
             </div>
         </div>
-    </FluentBpmnDialog>
-}
+    }
+</FluentBpmnDialog>

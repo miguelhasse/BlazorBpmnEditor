@@ -1,5 +1,8 @@
 @namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
 
-<FluentDialog @ref="_dialog" Class="@Class" Modal="true" OnStateChange="StateChangedAsync" @attributes="AdditionalAttributes">
-    @ChildContent
-</FluentDialog>
+@if (Visible || _shown || _transitioning)
+{
+    <FluentDialog @ref="_dialog" Class="@Class" Modal="true" @ondialogtoggle="StateChangedAsync" @attributes="AdditionalAttributes">
+        @ChildContent
+    </FluentDialog>
+}

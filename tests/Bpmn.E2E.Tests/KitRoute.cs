@@ -89,6 +89,28 @@ internal static class KitRoute
     internal static ILocator ShortcutDialog(this IPage page) =>
         page.GetByRole(AriaRole.Dialog, new() { Name = "Keyboard shortcuts" });
 
+    /// <summary>Checks that one Fluent surface contains its panel without blank space or viewport overflow.</summary>
+    internal static async Task ExpectSingleFluentSurfaceAsync(this ILocator host)
+    {
+        var layout = await host.EvaluateAsync<double[]>(
+            """
+            async host => {
+                const dialog = host.shadowRoot.querySelector('dialog');
+                await Promise.all(dialog.getAnimations().map(animation => animation.finished));
+                const surface = dialog.getBoundingClientRect();
+                const panel = host.querySelector('[class*="__panel"]').getBoundingClientRect();
+                return [dialog.clientWidth - panel.width, surface.left, surface.top,
+                    surface.right, surface.bottom, window.innerWidth, window.innerHeight];
+            }
+            """);
+
+        Assert.InRange(Math.Abs(layout[0]), 0, 1);
+        Assert.InRange(layout[1], 0, layout[5]);
+        Assert.InRange(layout[2], 0, layout[6]);
+        Assert.InRange(layout[3], 0, layout[5]);
+        Assert.InRange(layout[4], 0, layout[6]);
+    }
+
     /// <summary>
     /// A text box addressed by role and accessible name, so a native input and a Fluent text
     /// input are found the same way.
