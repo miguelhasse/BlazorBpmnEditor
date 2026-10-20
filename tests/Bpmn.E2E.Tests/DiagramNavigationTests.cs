@@ -18,6 +18,57 @@ namespace Hasseware.AspNetCore.Components.Bpmn.E2E.Tests;
 public class DiagramNavigationTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFixture>
 {
     [Fact]
+    public async Task PickingADiagramSynthesizesTheRootToSelectedBreadcrumb()
+    {
+        await GoToLinkedProcessesAsync();
+
+        await Expect(Page.Locator(".demo-breadcrumb")).ToHaveCountAsync(0);
+
+        await Page.PickAsync(Page.DiagramSelect(), "Handle Shipment Diagram");
+
+        await Expect(Page.SelectedDiagram()).ToHaveAttributeAsync("value", "Diagram_HandleShipment");
+        await Expect(Page.Locator(".demo-breadcrumb__step")).ToHaveTextAsync(
+            ["Main Process Diagram", "Handle Shipment Diagram"]);
+        await Expect(Page.Locator(".demo-breadcrumb__step").First).ToBeEnabledAsync();
+        await Expect(Page.Locator(".demo-breadcrumb__step").Last).ToBeDisabledAsync();
+        await Expect(Page.Locator(".joint-cell[model-id='CallActivity_HandleShipment']")).ToHaveCountAsync(0);
+
+        await Page.PickAsync(Page.DiagramSelect(), "Main Process Diagram");
+
+        await Expect(Page.SelectedDiagram()).ToHaveAttributeAsync("value", "Diagram_Main");
+        await Expect(Page.Locator(".demo-breadcrumb")).ToHaveCountAsync(0);
+        await Expect(Page.Locator(".joint-cell[model-id='CallActivity_HandleShipment']")).ToHaveCountAsync(1);
+
+        await Page.PickAsync(Page.DiagramSelect(), "Handle Shipment Diagram");
+        await Expect(Page.Locator(".demo-breadcrumb__step")).ToHaveCountAsync(2);
+        await Page.Locator(".demo-breadcrumb__step").First.ClickAsync();
+
+        await Expect(Page.SelectedDiagram()).ToHaveAttributeAsync("value", "Diagram_Main");
+        await Expect(Page.Locator(".demo-breadcrumb")).ToHaveCountAsync(0);
+    }
+
+    [Fact]
+    public async Task PickingADiagramReplacesTheDrillDownBreadcrumb()
+    {
+        await GoToLinkedProcessesAsync();
+        await SelectAsync("CallActivity_HandleShipment");
+        await Page.Locator(".bpmn-diagrams__open").ClickAsync();
+        await Expect(Page.Locator(".demo-breadcrumb__step")).ToHaveTextAsync(
+            ["Main Process Diagram", "Handle Shipment Diagram"]);
+
+        await Page.PickAsync(Page.DiagramSelect(), "Main Process Diagram");
+
+        await Expect(Page.SelectedDiagram()).ToHaveAttributeAsync("value", "Diagram_Main");
+        await Expect(Page.Locator(".demo-breadcrumb")).ToHaveCountAsync(0);
+
+        await Page.PickAsync(Page.DiagramSelect(), "Handle Shipment Diagram");
+
+        await Expect(Page.Locator(".demo-breadcrumb__step")).ToHaveTextAsync(
+            ["Main Process Diagram", "Handle Shipment Diagram"]);
+        await Expect(Page.Locator(".demo-breadcrumb__step").Last).ToBeDisabledAsync();
+    }
+
+    [Fact]
     public async Task ACallActivityOpensTheProcessItCalls()
     {
         await GoToLinkedProcessesAsync();

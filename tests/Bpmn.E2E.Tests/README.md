@@ -64,6 +64,9 @@ Beyond smoke rendering, the suite includes:
 | `DiagramNavigationTests`, `ReferenceBrowserTests` | Cross-diagram and reference navigation |
 | `ValidationTests`, `ExecutionOverlayTests` | Findings and non-editing runtime overlays |
 
+Diagram navigation coverage includes picker changes synthesizing a root-to-selected host breadcrumb,
+retaining clickable ancestor steps, and hiding the breadcrumb when only the root remains.
+
 `DemoAppFixture` shares one demo host across test classes, protected by a gate and reference count;
 individual tests own their browser pages. The last fixture user disposes the process. This avoids
 starting a host per parallel class while preserving document isolation in the browser.

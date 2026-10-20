@@ -1,5 +1,6 @@
 using System.Reflection;
 using Bunit;
+using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.FluentUI.AspNetCore.Components.Bpmn;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FluentUI.AspNetCore.Components;
@@ -14,6 +15,10 @@ internal static class KitFixture
         await input.InvokeAsync(() => input.Instance.OnFocusOut.InvokeAsync(new Microsoft.AspNetCore.Components.Web.FocusEventArgs()));
     }
     public static Type Composition => typeof(FluentBpmnEditor);
+    public static Type DiagramNavigator => typeof(FluentBpmnDiagramNavigator);
+    public static Task PickDiagramAsync(IRenderedComponent<Microsoft.AspNetCore.Components.DynamicComponent> editor, string diagramId) =>
+        editor.InvokeAsync(() => editor.FindComponent<FluentSelect<BpmnDiagramTarget, string>>()
+            .Instance.ValueChanged.InvokeAsync(diagramId));
     public static Assembly Assembly => Composition.Assembly;
     public static void Register(IServiceCollection services)
     {

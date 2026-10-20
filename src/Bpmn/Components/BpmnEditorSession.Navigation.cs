@@ -106,9 +106,8 @@ public sealed partial class BpmnEditorSession
     /// Shows another of the document's diagrams.
     /// </summary>
     /// <remarks>
-    /// Chosen from a list rather than drilled into, so the path restarts at that diagram: the user
-    /// did not arrive through anything, and a breadcrumb claiming they did would offer a way back
-    /// to a plane they were never on.
+    /// The path follows the shortest drill-down route from the first declared diagram, with
+    /// document order breaking ties. A diagram unreachable from that root stands alone.
     /// </remarks>
     /// <param name="diagramId">The diagram to show.</param>
     /// <returns>A task that completes when the canvas has switched.</returns>
@@ -221,8 +220,11 @@ public sealed partial class BpmnEditorSession
 
         if (resetPath)
         {
+            var path = origin == BpmnNavigationOrigin.Picker
+                ? PickerPath(diagramId)
+                : [new BpmnDiagramStep(diagramId, LabelOfDiagram(diagramId))];
             _path.Clear();
-            _path.Add(new BpmnDiagramStep(diagramId, LabelOfDiagram(diagramId)));
+            _path.AddRange(path);
         }
         else if (!_path.Exists(step => step.DiagramId == diagramId))
         {
@@ -230,6 +232,52 @@ public sealed partial class BpmnEditorSession
         }
 
         await ShowAsync(diagramId, origin).ConfigureAwait(true);
+    }
+
+    private List<BpmnDiagramStep> PickerPath(string diagramId)
+    {
+        if (EditedDocument is not { Diagrams.Count: > 0 } document)
+        {
+            return [new BpmnDiagramStep(diagramId, LabelOfDiagram(diagramId))];
+        }
+
+        var diagrams = document.Diagrams.ToDictionary(diagram => diagram.Id, StringComparer.Ordinal);
+        var root = document.Diagrams[0].Id;
+        var predecessors = new Dictionary<string, (string? Parent, string? ElementId)>(StringComparer.Ordinal)
+        {
+            [root] = (null, null),
+        };
+        var pending = new Queue<string>();
+        pending.Enqueue(root);
+
+        while (pending.TryDequeue(out var current))
+        {
+            if (current == diagramId)
+            {
+                var path = new List<BpmnDiagramStep>();
+                for (string? id = current; id is not null; id = predecessors[id].Parent)
+                {
+                    path.Add(new BpmnDiagramStep(id, LabelOfDiagram(id), predecessors[id].ElementId));
+                }
+
+                path.Reverse();
+                return path;
+            }
+
+            foreach (var shape in diagrams[current].Plane.Shapes)
+            {
+                var target = BpmnDiagramNavigation.DrillTargetFor(document, shape.BpmnElement);
+                if (target.DiagramId is not { } next || !diagrams.ContainsKey(next)
+                    || !predecessors.TryAdd(next, (current, shape.BpmnElement)))
+                {
+                    continue;
+                }
+
+                pending.Enqueue(next);
+            }
+        }
+
+        return [new BpmnDiagramStep(diagramId, LabelOfDiagram(diagramId))];
     }
 
     /// <summary>

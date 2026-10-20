@@ -10,10 +10,10 @@
 
             <select class="bpmn-diagrams__select"
                     aria-label="@EditorText("DiagramNavigator.Diagram")"
-                    @onchange="@(args => SelectAsync(args.Value as string))">
+                    @bind:get="ActiveDiagramId" @bind:set="SelectAsync">
                 @foreach (var target in Diagrams)
                 {
-                    <option value="@target.DiagramId" selected="@(target.DiagramId == ActiveDiagramId)">
+                    <option value="@target.DiagramId">
                         @LabelOf(target)
                     </option>
                 }
