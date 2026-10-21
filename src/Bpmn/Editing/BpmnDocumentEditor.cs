@@ -50,6 +50,13 @@ public static partial class BpmnDocumentEditor
 
         if (!result.IsApplied || command is CompoundCommand or CreatePoolCommand) return result;
 
+        result = RemoveOrphanedAnnotations(document, result);
+
+        return FollowChangedShapes(document, command, result);
+    }
+
+    private static BpmnEditResult RemoveOrphanedAnnotations(BpmnDocument document, BpmnEditResult result)
+    {
         // Connector reconciliation (for example a cross-Pool transfer) may delete a target flow
         // without going through DeleteElementsCommand.
         var orphanedNotes = document.TextAnnotations
@@ -70,6 +77,14 @@ public static partial class BpmnDocumentEditor
             };
         }
 
+        return result;
+    }
+
+    private static BpmnEditResult FollowChangedShapes(
+        BpmnDocument document,
+        BpmnEditCommand command,
+        BpmnEditResult result)
+    {
         // First-Lane wrapping preserves content routes, but connections to an existing Pool must
         // follow its enlarged outline.
         var preserveRoutes = command is CreateLaneCommand lane

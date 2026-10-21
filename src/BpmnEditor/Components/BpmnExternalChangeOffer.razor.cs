@@ -4,5 +4,5 @@ public sealed partial class BpmnExternalChangeOffer
 {
     private string Message => EditorText(MessageKey, DocumentName);
 
-    private string EditorText(string key, params object[] arguments) => arguments.Length == 0 ? EditorL[key] : EditorL[key, arguments];
+    private string EditorText(string key, params object[] arguments) => EditorL.EditorText(key, arguments);
 }
