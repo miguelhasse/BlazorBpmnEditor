@@ -500,6 +500,7 @@ export class InteractionController {
     }
 
     this.#dragOrigin = origin;
+    this.#live?.prepareAnnotations(new Set(origin.keys()));
   }
 
   #rollback(origin: Map<string, { x: number; y: number }>): void {

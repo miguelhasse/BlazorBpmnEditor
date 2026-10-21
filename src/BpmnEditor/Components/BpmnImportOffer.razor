@@ -85,6 +85,17 @@
                     }
                 </dl>
 
+                @if (preview.AnnotationNormalization is { RequiresConfirmation: true } normalization)
+                {
+                    <div class="bpmn-import__changed" role="alert">
+                        <p>@Text("ImportOffer.AnnotationPolicy", normalization.AnnotationIds.Count, normalization.RemovedAssociationIds.Count, normalization.StraightenedEdgeIds.Count)</p>
+                        <p>@Text("ImportOffer.AnnotationIds", string.Join(", ", normalization.AnnotationIds))</p>
+                        <p>@Text("ImportOffer.RemovedAssociations", string.Join(", ", normalization.RemovedAssociationIds))</p>
+                        <p>@Text("ImportOffer.StraightenedEdges", string.Join(", ", normalization.StraightenedEdgeIds))</p>
+                        <label><input type="checkbox" class="bpmn-import__annotation-consent" @bind="AnnotationNormalizationConfirmed" /> @Text("ImportOffer.ConfirmAnnotationPolicy")</label>
+                    </div>
+                }
+
                 @if (Changed.Count > 0)
                 {
                     <ul class="bpmn-import__changed">
@@ -125,7 +136,7 @@
 
                 <button type="button"
                         class="bpmn-import__accept"
-                        disabled="@(!preview.CanAccept)"
+                        disabled="@(!CanAccept)"
                         @onclick="AcceptAsync">
                     @EditorText("ImportOffer.Open")
                 </button>

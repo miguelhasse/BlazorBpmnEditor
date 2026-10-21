@@ -92,6 +92,13 @@ along when the flow moves, reroutes or reconnects; both edges update in the same
 No private XML attachment metadata is required. Other connector-to-connector attachments are not
 enabled by this feature.
 
+The editor permits only one target per annotation. Its dotted Association has exactly two DI
+endpoint waypoints and no intermediate bend editing. Target translation carries the annotation;
+flow rerouting carries it by the path-relative anchor's delta. Shape resize changes only the
+Association endpoints. Independent annotation movement updates the offset. This is editor policy,
+not a BPMN cardinality or ownership requirement; BPMNDI still requires endpoint waypoints.
+Imported extra bindings and bends require explicit normalization consent before opening.
+
 Two rules meet when a connector is drawn, and they disagree.
 
 The Manhattan router computes its bends from the anchors JointJS picked. Section 4.6 says a

@@ -7,6 +7,16 @@
         <target state="new">A flow-line endpoint requires a Text Annotation and a Sequence Flow or Message Flow.</target>
         <note />
       </trans-unit>
+      <trans-unit id="AN-001">
+        <source>Editor policy allows one target per Text Annotation. Multiple bindings have no lifecycle owner.</source>
+        <target state="new">Editor policy allows one target per Text Annotation. Multiple bindings have no lifecycle owner.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AN-002">
+        <source>Editor policy requires a straight annotation Association with two endpoints.</source>
+        <target state="new">Editor policy requires a straight annotation Association with two endpoints.</target>
+        <note />
+      </trans-unit>
       <trans-unit id="CT-001">
         <source>An element cannot both own local flow elements and reference a called element.</source>
         <target state="translated">Prvek nemůže zároveň vlastnit lokální prvky toku a odkazovat na volaný prvek.</target>

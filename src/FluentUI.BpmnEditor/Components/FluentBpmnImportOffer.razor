@@ -72,6 +72,17 @@
                     }
                 </dl>
 
+                @if (preview.AnnotationNormalization is { RequiresConfirmation: true } normalization)
+                {
+                    <div class="bpmn-import__changed" role="alert">
+                        <p>@Text("ImportOffer.AnnotationPolicy", normalization.AnnotationIds.Count, normalization.RemovedAssociationIds.Count, normalization.StraightenedEdgeIds.Count)</p>
+                        <p>@Text("ImportOffer.AnnotationIds", string.Join(", ", normalization.AnnotationIds))</p>
+                        <p>@Text("ImportOffer.RemovedAssociations", string.Join(", ", normalization.RemovedAssociationIds))</p>
+                        <p>@Text("ImportOffer.StraightenedEdges", string.Join(", ", normalization.StraightenedEdgeIds))</p>
+                        <FluentCheckbox Class="bpmn-import__annotation-consent" @bind-Value="AnnotationNormalizationConfirmed" Label="@Text("ImportOffer.ConfirmAnnotationPolicy")" AriaLabel="@Text("ImportOffer.ConfirmAnnotationPolicy")" />
+                    </div>
+                }
+
                 @if (Changed.Count > 0)
                 {
                     <ul class="bpmn-import__changed">
@@ -112,7 +123,7 @@
 
                 <FluentButton Type="ButtonType.Button"
                               Class="bpmn-import__accept"
-                              Disabled="@(!preview.CanAccept)"
+                              Disabled="@(!CanAccept)"
                               OnClick="AcceptAsync">
                     @EditorText("ImportOffer.Open")
                 </FluentButton>

@@ -50,6 +50,26 @@ public static partial class BpmnDocumentEditor
 
         if (!result.IsApplied || command is CompoundCommand or CreatePoolCommand) return result;
 
+        // Connector reconciliation (for example a cross-Pool transfer) may delete a target flow
+        // without going through DeleteElementsCommand.
+        var orphanedNotes = document.TextAnnotations
+            .Where(annotation => BpmnAnnotationAttachments.UniqueConnection(document, annotation.Id) is { } connection
+                && result.Document.Find(BpmnAnnotationAttachments.OtherEnd(connection, annotation.Id)) is null
+                && result.Document.Find(annotation.Id) is not null)
+            .Select(annotation => annotation.Id)
+            .ToHashSet(StringComparer.Ordinal);
+        if (orphanedNotes.Count > 0)
+        {
+            var diagnostics = result.Diagnostics.ToList();
+            var removed = ExpandDeletion(result.Document, orphanedNotes, diagnostics);
+            result = result with
+            {
+                Document = RemoveElements(result.Document, removed, []),
+                Diagnostics = diagnostics,
+                DeletedElementIds = removed.Concat(result.DeletedElementIds ?? FrozenSet<string>.Empty).ToFrozenSet(StringComparer.Ordinal),
+            };
+        }
+
         // First-Lane wrapping preserves content routes, but connections to an existing Pool must
         // follow its enlarged outline.
         var preserveRoutes = command is CreateLaneCommand lane
@@ -62,12 +82,15 @@ public static partial class BpmnDocumentEditor
             ? routes.Select(route => route.ElementId).ToHashSet(StringComparer.Ordinal)
             : null;
 
-        var followed = ConnectorEndpoints.FollowResizedShapes(document, result.Document, routed);
+        var positioned = command is MoveShapesCommand moveCommand
+            ? moveCommand.Moves.Select(move => move.ShapeId).ToHashSet(StringComparer.Ordinal) : null;
+        var attached = ConnectorEndpoints.FollowAnnotationShapes(document, result.Document, positioned);
+        var followed = ConnectorEndpoints.FollowResizedShapes(document, attached, routed);
 
         return result with
         {
             Document = ConnectorEndpoints.FollowFlowAttachments(
-                preserveRoutes ? followed : ConnectorEndpoints.Normalize(followed), document),
+                preserveRoutes ? followed : ConnectorEndpoints.Normalize(followed), document, positionedAnnotations: positioned),
         };
     }
 
@@ -224,13 +247,33 @@ public static partial class BpmnDocumentEditor
             return BpmnEditResult.Reject(document, stranded);
         }
 
+        // Include shape-owned notes before transfer and enclosure calculations. Explicit note
+        // geometry always wins, including a deliberately unchanged position.
+        var carriedAnnotations = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var annotation in document.TextAnnotations)
+        {
+            if (BpmnAnnotationAttachments.UniqueConnection(document, annotation.Id) is not { } connection) continue;
+            var note = shapes.Values.FirstOrDefault(shape => shape.BpmnElement == annotation.Id);
+            var targetId = BpmnAnnotationAttachments.OtherEnd(connection, annotation.Id);
+            var target = shapes.Values.FirstOrDefault(shape => shape.BpmnElement == targetId);
+            if (note is null || target is null || requested.ContainsKey(note.Id)
+                || !requested.TryGetValue(target.Id, out var bounds)
+                || bounds.Width != target.Bounds.Width || bounds.Height != target.Bounds.Height) continue;
+            requested[note.Id] = note.Bounds with
+            {
+                X = note.Bounds.X + bounds.X - target.Bounds.X,
+                Y = note.Bounds.Y + bounds.Y - target.Bounds.Y,
+            };
+            carriedAnnotations.Add(annotation.Id);
+        }
+
         var original = document;
         var asked = new Dictionary<string, Bounds>(requested, StringComparer.Ordinal);
         var diagnostics = new List<BpmnEditDiagnostic>();
 
         // Before expansion: content dropped in another Pool belongs to it, and must not grow the
         // Pool it left to reach the drop point.
-        document = TransferAcrossPools(document, shapes, asked, diagnostics, out var refused);
+        document = TransferAcrossPools(document, shapes, asked, carriedAnnotations, diagnostics, out var refused);
         if (refused is not null) return BpmnEditResult.Reject(original, refused);
 
         var grown = options.AutoExpandContainers
@@ -1292,7 +1335,9 @@ public static partial class BpmnDocumentEditor
 
         return BpmnEditResult.Applied(withConnector with
         {
-            Diagrams = WithEdge(withConnector, new BpmnEdge(edgeId, command.Id, command.Waypoints), command.DiagramId),
+            Diagrams = WithEdge(withConnector, new BpmnEdge(edgeId, command.Id,
+                BpmnAnnotationAttachments.IsAnnotationAssociation(withConnector, command.Id)
+                    ? [command.Waypoints[0], command.Waypoints[^1]] : command.Waypoints), command.DiagramId),
         });
     }
 
@@ -1989,6 +2034,12 @@ public static partial class BpmnDocumentEditor
             return BpmnEditResult.Reject(document, badRoute with { ElementId = command.Id });
         }
 
+        if (BpmnAnnotationAttachments.IsAnnotationAssociation(document, command.Id) && command.Waypoints.Count != 2)
+        {
+            return BpmnEditResult.Reject(document, new BpmnEditDiagnostic(
+                BpmnEditSeverity.Rejected, "AN-002", "Editor policy requires a straight annotation Association with two endpoints.", command.Id));
+        }
+
         return BpmnEditResult.Applied(WithWaypoints(document, command.Id, command.Waypoints, command.DiagramId));
     }
 
@@ -2037,7 +2088,11 @@ public static partial class BpmnDocumentEditor
                         Edges =
                         [
                             .. diagram.Plane.Edges.Select(edge =>
-                                edge.BpmnElement == connectorId ? edge with { Waypoints = waypoints } : edge),
+                                edge.BpmnElement == connectorId ? edge with
+                                {
+                                    Waypoints = waypoints.Count > 2 && BpmnAnnotationAttachments.IsAnnotationAssociation(document, connectorId)
+                                        ? [waypoints[0], waypoints[^1]] : waypoints,
+                                } : edge),
                         ],
                     },
                 }),
@@ -2309,6 +2364,7 @@ public static partial class BpmnDocumentEditor
             }
         }
 
+        roots.UnionWith(lanes);
         var removed = ExpandDeletion(document, roots, diagnostics);
         var pools = lanes
             .Select(id => BpmnLaneLayout.PoolOfLane(document, id))
@@ -2430,6 +2486,15 @@ public static partial class BpmnDocumentEditor
             if (!removed.Contains(reference.Id) && removed.Contains(reference.ContainerId)) removed.Add(reference.Id);
         }
 
+        foreach (var annotation in document.TextAnnotations)
+        {
+            if (BpmnAnnotationAttachments.UniqueConnection(document, annotation.Id) is { } connection
+                && removed.Contains(BpmnAnnotationAttachments.OtherEnd(connection, annotation.Id)))
+            {
+                removed.Add(annotation.Id);
+            }
+        }
+
         foreach (var association in document.Associations)
         {
             if (removed.Contains(association.SourceRef) || removed.Contains(association.TargetRef)
@@ -2471,8 +2536,22 @@ public static partial class BpmnDocumentEditor
 
         var violation = BpmnConnectionRules.Check(kind, from, to).Violations
             .FirstOrDefault(item => item.Severity == BpmnSeverity.Error);
-        return violation is null ? null : new BpmnEditDiagnostic(
+        if (violation is not null) return new BpmnEditDiagnostic(
             BpmnEditSeverity.Rejected, violation.RuleId, violation.Message, connectorId);
+
+        if (kind == BpmnConnectorKind.Association)
+        {
+            foreach (var id in (string[])[source, target])
+            {
+                if (document.Find(id) is BpmnTextAnnotation
+                    && BpmnAnnotationAttachments.Connections(document, id).Any(association => association.Id != connectorId))
+                {
+                    return new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "AN-001",
+                        "Editor policy allows one target per Text Annotation; reconnect its existing Association instead.", id);
+                }
+            }
+        }
+        return null;
     }
 
     /// <summary>

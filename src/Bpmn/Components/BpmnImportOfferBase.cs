@@ -16,6 +16,19 @@ namespace Hasseware.AspNetCore.Components.Bpmn;
 /// </remarks>
 public abstract class BpmnImportOfferBase : BpmnEditorComponentBase
 {
+    private BpmnImportPreview? _confirmedPreview;
+
+    /// <summary>Consent belongs to the current preview, never a previous file.</summary>
+    protected bool AnnotationNormalizationConfirmed
+    {
+        get => Preview is not null && ReferenceEquals(Preview, _confirmedPreview);
+        set => _confirmedPreview = value ? Preview : null;
+    }
+
+    /// <summary>Whether parsing and required loss confirmation allow opening the file.</summary>
+    protected bool CanAccept => Preview is { CanAccept: true } preview
+        && (!preview.AnnotationNormalization.RequiresConfirmation || AnnotationNormalizationConfirmed);
+
     /// <inheritdoc />
     protected override bool ShouldRenderOnStateChange(BpmnEditorState previous, BpmnEditorState current) =>
         !ReferenceEquals(previous.PendingImport, current.PendingImport);
@@ -55,7 +68,7 @@ public abstract class BpmnImportOfferBase : BpmnEditorComponentBase
 
     /// <summary>Opens the file, replacing what is on screen.</summary>
     /// <returns>A task that completes once the file is open.</returns>
-    protected Task AcceptAsync() => Session.AcceptImportAsync();
+    protected Task AcceptAsync() => Session.AcceptImportAsync(AnnotationNormalizationConfirmed);
 
     /// <summary>Declines the file.</summary>
     /// <returns>A completed task.</returns>

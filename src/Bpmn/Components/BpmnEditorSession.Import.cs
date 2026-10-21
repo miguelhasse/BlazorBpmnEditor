@@ -1,5 +1,6 @@
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.AspNetCore.Components.Bpmn.Interop;
+using Hasseware.AspNetCore.Components.Bpmn.Validation;
 
 using Microsoft.AspNetCore.Components;
 
@@ -69,9 +70,26 @@ public sealed partial class BpmnEditorSession
     /// Takes the offered import, replacing the document and everything that described the old one.
     /// </summary>
     /// <returns>A task that completes once the new document is on screen.</returns>
-    public async Task AcceptImportAsync()
+    /// <exception cref="InvalidOperationException">Annotation normalization needs explicit confirmation.</exception>
+    public Task AcceptImportAsync() => AcceptImportAsync(false);
+
+    /// <summary>Accepts the import with explicit consent for its reported annotation changes.</summary>
+    /// <param name="confirmAnnotationNormalization">Explicit consent to the annotation changes listed in the preview.</param>
+    /// <returns>A task that completes once the new document is on screen.</returns>
+    /// <exception cref="InvalidOperationException">Annotation normalization needs explicit confirmation.</exception>
+    public async Task AcceptImportAsync(bool confirmAnnotationNormalization)
     {
         if (PendingImport is not { Document: { } document } accepted) return;
+
+        if (accepted.AnnotationNormalization.RequiresConfirmation)
+        {
+            if (!confirmAnnotationNormalization)
+            {
+                throw new InvalidOperationException("Confirm the annotation-policy changes listed in the import preview before accepting.");
+            }
+            document = accepted.AnnotationNormalization.Apply(document);
+            accepted = accepted with { Document = document, Validation = BpmnValidator.Validate(document) };
+        }
 
         PendingImport = null;
 

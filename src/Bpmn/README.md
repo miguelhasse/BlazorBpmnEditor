@@ -404,6 +404,14 @@ model and diagnostics without changing the open document. `CancelImport()` disca
 `AcceptImportAsync()` replaces the document, clears history/selection/navigation and raises
 `OnImported`. Import is not an undoable edit of the previous file.
 
+An import containing multiple annotation bindings or bent annotation Associations requires
+separate consent. Inspect `preview.AnnotationNormalization` for affected annotation IDs, removed
+Association IDs and straightened DI edge IDs, then call
+`AcceptImportAsync(confirmAnnotationNormalization: true)` only after confirmation.
+Without consent, accepting such an import throws `InvalidOperationException` and leaves the
+pending preview and open document unchanged. Both kits provide the confirmation checkbox.
+Raw XML/JSON parsing and writing do not enforce this editor policy.
+
 To load and save documents kept in a store (a file share, blob container or database), bind the editor
 to a `BpmnDocumentBinding` instead of passing `Document`; it tracks unsaved edits, saves with a revision
 check and reports changes made by others. See [Document storage](../../docs/document-storage.md).

@@ -25,8 +25,9 @@ describe('live connection display', () => {
   });
 
   it.each(['sequenceFlow', 'messageFlow', 'association', 'dataAssociation'])('checks annotation-to-%s with shared rules', (type) => {
-    const source = new dia.Element({ bpmn: { elementType: 'textAnnotation' } });
-    const target = new dia.Link({ bpmn: { elementType: type } });
+    const source = new dia.Element({ type: 'test.Element', bpmn: { elementType: 'textAnnotation' } });
+    const target = new dia.Link({ type: 'test.Link', bpmn: { elementType: type } });
+    new dia.Graph().addCells([source, target]);
     const sourceView = { model: source } as unknown as dia.CellView;
     const targetView = { model: target } as unknown as dia.CellView;
     const controller = new ConnectController(

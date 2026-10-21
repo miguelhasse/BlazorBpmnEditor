@@ -67,6 +67,16 @@
         <target state="new">A flow-line endpoint requires a Text Annotation and a Sequence Flow or Message Flow.</target>
         <note />
       </trans-unit>
+      <trans-unit id="Rule.AN-001">
+        <source>Editor policy allows one target per Text Annotation. Reconnect its existing Association instead.</source>
+        <target state="new">Editor policy allows one target per Text Annotation. Reconnect its existing Association instead.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Rule.AN-002">
+        <source>Editor policy requires a straight annotation Association with two endpoints.</source>
+        <target state="new">Editor policy requires a straight annotation Association with two endpoints.</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Rule.DA-002">
         <source>Group cannot be a connector endpoint (visual grouping only).</source>
         <target state="translated">Un grupo no puede ser extremo de un conector (solo agrupación visual).</target>

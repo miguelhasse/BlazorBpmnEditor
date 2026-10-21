@@ -1,6 +1,7 @@
 import type { dia } from '@joint/core';
 
-import { findElement } from '../graph/cells.js';
+import { findCell, findElement } from '../graph/cells.js';
+import { annotationConnections, isAnnotation } from './annotation-policy.js';
 import type {
   ConnectorRouteContract,
   GeometryBounds,
@@ -59,6 +60,41 @@ export class LiveRouting {
 
   /** Where the elements a gesture moves started, which is what "moved together" is measured from. */
   readonly #origins = new Map<string, PointContract>();
+  readonly #annotations = new Map<string, {
+    element: dia.Element; origin: PointContract; target: dia.Cell; targetOrigin: PointContract;
+    ratio: number | null;
+  }>();
+
+  /** Capture before the first frame, so preview and rollback share the model's attachment offset. */
+  public prepareAnnotations(movingIds: ReadonlySet<string>): void {
+    this.#paper.updateViews();
+    for (const element of this.#paper.model.getElements()) {
+      const id = String(element.id);
+      if (!isAnnotation(element) || movingIds.has(id) || this.#annotations.has(id)) continue;
+      const connections = annotationConnections(this.#paper.model, id);
+      const connection = connections[0];
+      if (connections.length !== 1 || connection === undefined) continue;
+      const source = String(connection.source().id) === id;
+      const target = findCell(this.#paper.model, String(source ? connection.target().id : connection.source().id));
+      if (target === undefined || isAnnotation(target)) continue;
+      if (target.isElement()) {
+        if (!movingIds.has(String(target.id))) continue;
+        this.#annotations.set(id, {
+          element, origin: element.position(), target, targetOrigin: target.position(), ratio: null,
+        });
+      } else if (target.isLink()) {
+        if (!movingIds.has(String(target.id)) && !movingIds.has(String(target.source().id))
+          && !movingIds.has(String(target.target().id))) continue;
+        const associationView = this.#paper.findViewByModel<dia.LinkView>(connection);
+        const targetView = this.#paper.findViewByModel<dia.LinkView>(target);
+        const point = source ? associationView.targetPoint : associationView.sourcePoint;
+        this.#annotations.set(id, {
+          element, origin: element.position(), target, targetOrigin: { x: point.x, y: point.y },
+          ratio: targetView.getClosestPointRatio(point),
+        });
+      }
+    }
+  }
 
   public constructor(paper: dia.Paper, options: RoutingOptionsContract) {
     this.#paper = paper;
@@ -122,6 +158,7 @@ export class LiveRouting {
    * @param keepVertices True for a bend drag, where the bends are the gesture's own and become via-points.
    */
   public beginForLink(link: dia.Link, keepVertices: boolean): void {
+    this.prepareAnnotations(new Set([String(link.id)]));
     this.#take(link, { keepVertices, rigid: false });
   }
 
@@ -146,6 +183,18 @@ export class LiveRouting {
       }
 
       entry.link.vertices(entry.vertices.map((vertex) => ({ x: vertex.x + source.x, y: vertex.y + source.y })));
+    }
+    this.#carryAnnotations();
+  }
+
+  #carryAnnotations(): void {
+    if (this.#annotations.size === 0) return;
+    this.#paper.updateViews();
+    for (const { element, origin, target, targetOrigin, ratio } of this.#annotations.values()) {
+      const now = target.isElement() ? target.position()
+        : ratio === null ? null : this.#paper.findViewByModel<dia.LinkView>(target).getPointAtRatio(ratio);
+      if (now === null) continue;
+      element.position(origin.x + now.x - targetOrigin.x, origin.y + now.y - targetOrigin.y);
     }
   }
 
@@ -183,6 +232,7 @@ export class LiveRouting {
   /** The routes of every flow the gesture owns, ready to send with the edit. */
   public routes(): readonly ConnectorRouteContract[] {
     const routes: ConnectorRouteContract[] = [];
+    this.#carryAnnotations();
     this.#paper.updateViews();
 
     for (const { link } of this.#active.values()) {
@@ -200,6 +250,11 @@ export class LiveRouting {
    * was routed, so the canvas shows the new route until the document comes back.
    */
   public end(restore: boolean): void {
+    if (!restore) this.#carryAnnotations();
+    if (restore) {
+      for (const { element, origin } of this.#annotations.values()) element.position(origin.x, origin.y);
+    }
+    this.#annotations.clear();
     const finished = [...this.#active.values()];
     this.#active.clear();
     this.#origins.clear();

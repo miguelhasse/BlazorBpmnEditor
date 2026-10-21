@@ -69,6 +69,22 @@ public static partial class BpmnValidator
         CheckSemantics(index, found);
         CheckRenderability(index, found);
         CheckExpansion(index, found);
+        foreach (var annotation in document.TextAnnotations)
+        {
+            if (BpmnAnnotationAttachments.Connections(document, annotation.Id).Skip(1).Any())
+            {
+                found.Add(new BpmnDiagnostic("AN-001", BpmnSeverity.Warning,
+                    "Editor policy allows one target per Text Annotation. Multiple bindings have no lifecycle owner.", annotation.Id));
+            }
+        }
+        foreach (var edge in document.Diagrams.SelectMany(diagram => diagram.Plane.Edges))
+        {
+            if (edge.Waypoints.Count > 2 && BpmnAnnotationAttachments.IsAnnotationAssociation(document, edge.BpmnElement))
+            {
+                found.Add(new BpmnDiagnostic("AN-002", BpmnSeverity.Warning,
+                    "Editor policy requires a straight annotation Association with two endpoints.", edge.BpmnElement));
+            }
+        }
 
         // Layer 7, and last for a reason: the core list is complete before a profile sees the
         // document, and nothing a profile returns can reach back into it.

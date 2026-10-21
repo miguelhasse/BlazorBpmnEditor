@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="AN-001" xml:space="preserve"><value>Editor policy allows one target per Text Annotation. Multiple bindings have no lifecycle owner.</value></data>
+  <data name="AN-002" xml:space="preserve"><value>Editor policy requires a straight annotation Association with two endpoints.</value></data>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>

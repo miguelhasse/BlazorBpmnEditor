@@ -7,6 +7,7 @@ import { isOrthogonal, type ConnectorKind } from '../routing/router.js';
 import { attachmentPoint, routeWith } from './endpoint-anchor.js';
 import type { LiveRouting } from './live-routing.js';
 import { isProvisional } from './provisional.js';
+import { isAnnotationLink } from './annotation-policy.js';
 
 /*
  * Destructured for the reason the other tool modules destructure it: `dia.ToolsView` is declared
@@ -154,6 +155,7 @@ export class LinkEditController {
      */
     paper.on('link:pointerdown', this.#handleDown);
     paper.on('link:pointerup', this.#handleUp);
+    paper.on('link:pointermove', this.#handleMove);
     paper.model.on('batch:start', this.#handleBatch);
 
     return this;
@@ -162,6 +164,7 @@ export class LinkEditController {
   public destroy(): void {
     this.#paper?.off('link:pointerdown', this.#handleDown);
     this.#paper?.off('link:pointerup', this.#handleUp);
+    this.#paper?.off('link:pointermove', this.#handleMove);
     this.#paper?.model.off('batch:start', this.#handleBatch);
     this.#paper = null;
   }
@@ -234,6 +237,10 @@ export class LinkEditController {
     };
   };
 
+  readonly #handleMove = (): void => {
+    if (this.#dragged) this.#live?.carry();
+  };
+
   /**
    * The end of any gesture on a connector.
    *
@@ -280,7 +287,9 @@ export class LinkEditController {
       return;
     }
 
-    const waypoints = this.#anchoredRoute(view, after.source, after.target);
+    const route = this.#anchoredRoute(view, after.source, after.target);
+    const waypoints = isAnnotationLink(link) ? route.slice(0, 1).concat(route.slice(-1)) : route;
+    if (isAnnotationLink(link)) link.vertices([]);
 
     if (after.source !== before.source || after.target !== before.target) {
       // Kept on screen until the document comes back with the same route.

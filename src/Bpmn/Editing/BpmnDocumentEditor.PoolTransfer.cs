@@ -33,6 +33,7 @@ public static partial class BpmnDocumentEditor
     /// <param name="document">The document before the move.</param>
     /// <param name="shapes">The current shapes, by id.</param>
     /// <param name="asked">The bounds the caller asked for.</param>
+    /// <param name="carriedAnnotations">Notes moved implicitly with their targets.</param>
     /// <param name="diagnostics">Receives the EDIT-056 report.</param>
     /// <param name="rejection">The reason the move cannot be applied, when it cannot.</param>
     /// <returns>The document with the content transferred and its connectors reconciled.</returns>
@@ -40,6 +41,7 @@ public static partial class BpmnDocumentEditor
         BpmnDocument document,
         FrozenDictionary<string, BpmnShape> shapes,
         Dictionary<string, Bounds> asked,
+        HashSet<string> carriedAnnotations,
         List<BpmnEditDiagnostic> diagnostics,
         out BpmnEditDiagnostic? rejection)
     {
@@ -63,6 +65,7 @@ public static partial class BpmnDocumentEditor
         foreach (var (shapeId, bounds) in asked)
         {
             var shape = shapes[shapeId];
+            if (carriedAnnotations.Contains(shape.BpmnElement)) continue;
             var element = document.Find(shape.BpmnElement);
 
             var containerId = element switch
@@ -113,6 +116,15 @@ public static partial class BpmnDocumentEditor
         }
 
         if (transfers.Count == 0) return document;
+
+        // A carried note keeps its target's owner even when its offset puts it outside the Pool.
+        foreach (var annotationId in carriedAnnotations)
+        {
+            if (BpmnAnnotationAttachments.UniqueConnection(document, annotationId) is not { } connection) continue;
+            var targetId = BpmnAnnotationAttachments.OtherEnd(connection, annotationId);
+            var targetTransfer = transfers.FindIndex(transfer => transfer.ElementId == targetId);
+            if (targetTransfer >= 0) transfers.Add(transfers[targetTransfer] with { ElementId = annotationId });
+        }
 
         var next = document;
         var transferred = new HashSet<string>(StringComparer.Ordinal);

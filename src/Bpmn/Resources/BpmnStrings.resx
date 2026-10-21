@@ -1,5 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <root>
+  <data name="ImportOffer.AnnotationPolicy" xml:space="preserve"><value>Editor annotation policy will change {0} annotation(s): remove {1} Association(s) and straighten {2} route(s). The first eligible Association in source order is kept. This is editor policy, not a BPMN requirement.</value></data>
+  <data name="ImportOffer.AnnotationIds" xml:space="preserve"><value>Affected annotations: {0}</value></data>
+  <data name="ImportOffer.RemovedAssociations" xml:space="preserve"><value>Associations to remove: {0}</value></data>
+  <data name="ImportOffer.StraightenedEdges" xml:space="preserve"><value>Routes to straighten: {0}</value></data>
+  <data name="ImportOffer.ConfirmAnnotationPolicy" xml:space="preserve"><value>I confirm these annotation changes.</value></data>
   <data name="PropertyEntry.ToggleFeel" xml:space="preserve"><value>Toggle FEEL expression</value></data>
   <data name="Expression.Warnings" xml:space="preserve"><value>FEEL warnings ({0}): {1}</value></data>
   <resheader name="resmimetype">

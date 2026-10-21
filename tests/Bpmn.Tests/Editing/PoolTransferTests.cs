@@ -96,6 +96,60 @@ public sealed class PoolTransferTests
     }
 
     [Fact]
+    public void FlowRemovedDuringPoolTransferTakesItsAttachedAnnotation()
+    {
+        var document = TwoPools();
+        document = document with
+        {
+            Associations = [.. document.Associations.Select(association => association with { TargetRef = "Flow_G" })],
+        };
+
+        var result = Move(document, "A_Next", new Bounds(400, 360, 100, 80), from: "A_Gateway");
+
+        Assert.True(result.IsApplied);
+        Assert.Empty(result.Document.TextAnnotations);
+        Assert.Empty(result.Document.Associations);
+        Assert.DoesNotContain(result.Document.Diagrams[0].Plane.Shapes, shape => shape.BpmnElement == "A_Note");
+        Assert.DoesNotContain(Edges(result.Document), edge => edge.BpmnElement == "Assoc_1");
+    }
+
+    [Fact]
+    public void ShapeTransferCarriesAndReownsItsAttachedAnnotation()
+    {
+        var result = Move(TwoPools(), "A_Next", new Bounds(400, 360, 100, 80));
+
+        Assert.True(result.IsApplied);
+        Assert.Equal("Process_B", Assert.Single(result.Document.TextAnnotations).ContainerId);
+        Assert.Equal(new Bounds(450, 470, 100, 40), ShapeOf(result.Document, "A_Note").Bounds);
+        Assert.Equal("Process_B", Assert.Single(result.Document.Associations).ContainerId);
+    }
+
+    [Fact]
+    public void CarriedAnnotationOutsideDestinationPoolKeepsItsTargetAndOwner()
+    {
+        var document = TwoPools();
+        document = document with
+        {
+            Diagrams = [.. document.Diagrams.Select(diagram => diagram with
+            {
+                Plane = diagram.Plane with
+                {
+                    Shapes = [.. diagram.Plane.Shapes.Select(shape => shape.BpmnElement == "A_Note"
+                        ? shape with { Bounds = shape.Bounds with { X = 750 } } : shape)],
+                },
+            })],
+        };
+
+        var result = Move(document, "A_Next", new Bounds(400, 360, 100, 80));
+
+        Assert.True(result.IsApplied);
+        Assert.Equal("Process_B", Assert.Single(result.Document.TextAnnotations).ContainerId);
+        Assert.Equal("A_Next", Assert.Single(result.Document.Associations).TargetRef);
+        Assert.Equal("Process_B", result.Document.Associations[0].ContainerId);
+        Assert.Equal(750, ShapeOf(result.Document, "A_Note").Bounds.X);
+    }
+
+    [Fact]
     public void AMessageFlowWhoseEndsNowShareAPoolBecomesASequenceFlow()
     {
         var document = TwoPools();

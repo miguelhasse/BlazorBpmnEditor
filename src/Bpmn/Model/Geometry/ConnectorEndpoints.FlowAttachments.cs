@@ -8,7 +8,8 @@ internal static partial class ConnectorEndpoints
     /// Reconstructs flow attachments from DI, preserving their path-length ratio when a flow changes.
     /// </summary>
     internal static BpmnDocument FollowFlowAttachments(
-        BpmnDocument document, BpmnDocument? before = null, ICollection<MovedConnector>? moved = null)
+        BpmnDocument document, BpmnDocument? before = null, ICollection<MovedConnector>? moved = null,
+        ISet<string>? positionedAnnotations = null)
     {
         if (document.Associations.Count == 0) return document;
 
@@ -21,6 +22,7 @@ internal static partial class ConnectorEndpoints
                 .GroupBy(edge => edge.BpmnElement, StringComparer.Ordinal)
                 .ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
             var planeChanged = false;
+            var movedAnnotations = new Dictionary<string, BpmnShape>(StringComparer.Ordinal);
             var edges = diagram.Plane.Edges.Select(edge =>
             {
                 if (document.Find(edge.BpmnElement) is not BpmnAssociation association || edge.Waypoints.Count < 2) return edge;
@@ -48,6 +50,21 @@ internal static partial class ConnectorEndpoints
                     ? ClosestRatio(RoundedFlowPath.Flatten(oldFlow!.Waypoints), sourceIsFlow ? oldEdge!.Waypoints[0] : oldEdge!.Waypoints[^1])
                     : ClosestRatio(path, route[flowEnd]);
                 var point = PointAtRatio(path, ratio);
+                var oldAnnotation = oldPlane?.Shapes.FirstOrDefault(shape => shape.Id == annotationShape.Id);
+                if (follows && oldAnnotation?.Bounds == annotationShape.Bounds
+                    && positionedAnnotations?.Contains(annotationShape.Id) != true
+                    && BpmnAnnotationAttachments.UniqueConnection(document, annotationId)?.Id == association.Id)
+                {
+                    var oldPoint = PointAtRatio(RoundedFlowPath.Flatten(oldFlow!.Waypoints), ratio);
+                    var delta = new DiPoint(point.X - oldPoint.X, point.Y - oldPoint.Y);
+                    if (Math.Abs(delta.X) > 0.01 || Math.Abs(delta.Y) > 0.01)
+                    {
+                        annotationShape = TranslateAnnotation(annotationShape, delta);
+                        movedAnnotations[annotationId] = annotationShape;
+                        route[annotationEnd] = TranslatePoint(route[annotationEnd], delta);
+                        planeChanged = true;
+                    }
+                }
                 if (Distance(point, route[flowEnd]) > 0.01) route[flowEnd] = point;
                 route[annotationEnd] = BpmnOutline.Normalize(
                     route[annotationEnd], BpmnOutline.Rectangle(annotationShape.Bounds), route[flowEnd]);
@@ -56,10 +73,18 @@ internal static partial class ConnectorEndpoints
                 moved?.Add(new MovedConnector(edge.BpmnElement,
                     Math.Max(Distance(route[0], edge.Waypoints[0]), Distance(route[^1], edge.Waypoints[^1]))));
                 planeChanged = true;
-                return edge with { Waypoints = route };
+                return edge with { Waypoints = follows ? [route[0], route[^1]] : route };
             }).ToArray();
             changed |= planeChanged;
-            return planeChanged ? diagram with { Plane = diagram.Plane with { Edges = edges } } : diagram;
+            return planeChanged ? diagram with
+            {
+                Plane = diagram.Plane with
+                {
+                    Edges = edges,
+                    Shapes = [.. diagram.Plane.Shapes.Select(shape =>
+                        movedAnnotations.TryGetValue(shape.BpmnElement, out var movedShape) ? movedShape : shape)],
+                },
+            } : diagram;
         }).ToArray();
         return changed ? document with { Diagrams = diagrams } : document;
     }

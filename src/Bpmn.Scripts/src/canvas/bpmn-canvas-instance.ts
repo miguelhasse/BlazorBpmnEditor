@@ -188,7 +188,7 @@ export class BpmnCanvasInstance {
       rerouted: (elementId, waypoints) => {
         void bridge.editRequested({ kind: 'reroute', diagramId: this.#activeDiagramId, elementId, waypoints });
       },
-    }).attach(this.#paperHost.paper);
+    }, this.#live).attach(this.#paperHost.paper);
 
     /*
      * A file dropped on the canvas is offered, never opened. What it contains and whether it is

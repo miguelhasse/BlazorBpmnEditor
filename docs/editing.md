@@ -385,8 +385,23 @@ are not annotation targets. A flow-line release attaches at the nearest point on
 bounding box. The semantic reference remains the flow's id, while BPMNDI stores the attachment
 coordinate. A path-length ratio reconstructed from those coordinates follows the line when it
 moves or is rerouted. Creation, reconnection and dependent waypoint changes are atomic, so
-undo/redo and XML save/reload retain the attachment. Deleting a flow also deletes its annotation
-Associations, but not the annotations.
+undo/redo and XML save/reload retain the attachment. **Editor policy:** an annotation has at most
+one target and a straight dotted Association (two BPMNDI endpoint waypoints, no editable bends).
+A second connection is rejected; reconnect the existing Association to change target.
+Shape translation carries the note by the same delta; shape resize only adjusts its connector.
+When that translation transfers the target to another Pool, the implicitly carried note takes
+the same owner even if its preserved offset places it outside the destination Pool.
+Flow rerouting carries the note by its attachment-point delta, preserving its offset.
+Notes remain independently movable; selecting both target and note moves the note only once.
+Deleting a target, including an indirectly deleted flow, removes its note and Association.
+Deleting only the Association detaches the note. Copy/duplicate selection behavior is unchanged.
+
+These lifecycle and cardinality rules are editor policy, not BPMN 2.0.2 requirements.
+Import previews list affected annotation IDs, surplus Association IDs and bent DI edge IDs.
+Explicit confirmation keeps the first eligible Association in source order, removes the rest and
+straightens retained annotation routes; cancellation leaves document and history unchanged.
+Raw XML/JSON readers and writers remain lossless. Host-supplied nonconforming documents receive
+policy warnings without silent normalization; ambiguous notes have no lifecycle owner.
 
 **Validation is live**, against the shared rule table in `rules/bpmn-rules.json` — the same table the
 C# side reads, so the canvas and the document cannot drift. Every shape the rules reject is greyed

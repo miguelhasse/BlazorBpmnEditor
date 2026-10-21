@@ -103,6 +103,7 @@ public class AnnotationConnectionTests(DemoAppFixture app) : PageTest, IClassFix
         var saved = BpmnXmlReader.Read(xml).Document;
         Assert.Equal("Flow", Assert.Single(saved.Associations).TargetRef);
         Assert.Equal(BpmnAssociationDirection.None, saved.Associations[0].Direction);
+        Assert.Equal(2, saved.Diagrams[0].Plane.Edges.Single(edge => edge.BpmnElement == id).Waypoints.Count);
         await ImportAsync(xml);
         await Expect(Page.Locator($".joint-link[model-id='{id}']")).ToHaveCountAsync(1);
         await AssertAttachedAsync();
@@ -112,8 +113,10 @@ public class AnnotationConnectionTests(DemoAppFixture app) : PageTest, IClassFix
         await Page.Keyboard.PressAsync("Delete");
         await Expect(Page.Locator(".joint-link[model-id='Flow']")).ToHaveCountAsync(0);
         await Expect(association).ToHaveCountAsync(0);
+        await Expect(Page.Locator(".joint-element[model-id='Note']")).ToHaveCountAsync(0);
         await Page.GetByRole(AriaRole.Button, new() { Name = "Undo", Exact = true }).ClickAsync();
         await Expect(association).ToHaveCountAsync(1);
+        await Expect(Page.Locator(".joint-element[model-id='Note']")).ToBeVisibleAsync();
         await AssertAttachedAsync();
     }
 
@@ -162,6 +165,105 @@ public class AnnotationConnectionTests(DemoAppFixture app) : PageTest, IClassFix
         Assert.Equal(targetId, association.TargetRef);
         Assert.Equal(BpmnAssociationDirection.None, association.Direction);
         Assert.Empty(document.DataAssociations);
+    }
+
+    [Fact]
+    public async Task AnnotationRejectsSecondTargetAndFollowsShapeDuringDragWithoutDoubleMovement()
+    {
+        await OpenAsync();
+        await SelectAnnotationAsync();
+        var target = await Page.Locator("[model-id='A'] [joint-selector='body']").BoundingBoxAsync();
+        await DragHandleAsync(target!.X + (target.Width / 2), target.Y + (target.Height / 2));
+        await Expect(Page.Locator(".joint-link[model-id^='Association_']")).ToHaveCountAsync(1);
+        await SelectAnnotationAsync();
+        var other = await Page.Locator("[model-id='B'] [joint-selector='body']").BoundingBoxAsync();
+        await DragHandleAsync(other!.X + (other.Width / 2), other.Y + (other.Height / 2));
+        var initial = BpmnXmlReader.Read(await ExportAsync()).Document;
+        Assert.Equal("A", Assert.Single(initial.Associations).TargetRef);
+
+        var noteBefore = await Page.Locator("[model-id='Note'] [joint-selector='bracket']").BoundingBoxAsync();
+        await Page.Mouse.MoveAsync(target.X + (target.Width / 2), target.Y + (target.Height / 2));
+        await Page.Mouse.DownAsync();
+        await Page.Mouse.MoveAsync(target.X + (target.Width / 2), target.Y + (target.Height / 2) + 50, new() { Steps = 15 });
+        var taskDuring = await Page.Locator("[model-id='A'] [joint-selector='body']").BoundingBoxAsync();
+        var noteDuring = await Page.Locator("[model-id='Note'] [joint-selector='bracket']").BoundingBoxAsync();
+        Assert.InRange(Math.Abs(taskDuring!.Y - target.Y - (noteDuring!.Y - noteBefore!.Y)), 0, 1);
+        await Page.Mouse.UpAsync();
+        var updated = BpmnXmlReader.Read(await ExportAsync()).Document;
+        var oldTarget = initial.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "A").Bounds;
+        var newTarget = updated.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "A").Bounds;
+        var oldNote = initial.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "Note").Bounds;
+        var newNote = updated.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "Note").Bounds;
+        Assert.True(newTarget.Y > oldTarget.Y);
+        Assert.Equal(newTarget.Y - oldTarget.Y, newNote.Y - oldNote.Y, 6);
+        Assert.Equal(2, updated.Diagrams[0].Plane.Edges.Single(edge => edge.BpmnElement == updated.Associations[0].Id).Waypoints.Count);
+    }
+
+    [Fact]
+    public async Task AnnotationFollowsFlowSlidePreviewAndEscapeRestoresBoth()
+    {
+        await OpenAsync();
+        await SelectAnnotationAsync();
+        var anchor = await FlowPointAsync();
+        await DragHandleAsync(anchor[0], anchor[1]);
+        await Expect(Page.Locator(".joint-link[model-id^='Association_']")).ToHaveCountAsync(1);
+        var flow = Page.Locator("[model-id='Flow'] [joint-selector='line']");
+        var beforeRoute = await flow.GetAttributeAsync("d");
+        var before = await Page.Locator("[model-id='Note'] [joint-selector='bracket']").BoundingBoxAsync();
+        var press = await FlowPointAsync(0.25);
+
+        await Page.Mouse.MoveAsync(press[0], press[1]);
+        await Page.Mouse.DownAsync();
+        await Page.Mouse.MoveAsync(press[0], press[1] + 40, new() { Steps = 15 });
+        var during = await Page.Locator("[model-id='Note'] [joint-selector='bracket']").BoundingBoxAsync();
+        Assert.True(during!.Y > before!.Y + 5);
+        Assert.NotEqual(beforeRoute, await flow.GetAttributeAsync("d"));
+        await Page.Keyboard.PressAsync("Escape");
+        await Page.Mouse.UpAsync();
+
+        await Expect(flow).ToHaveAttributeAsync("d", beforeRoute!);
+        var restored = await Page.Locator("[model-id='Note'] [joint-selector='bracket']").BoundingBoxAsync();
+        Assert.InRange(Math.Abs(restored!.Y - before.Y), 0, 0.1);
+        Assert.Equal(new Bounds(280, 300, 100, 50), BpmnXmlReader.Read(await ExportAsync()).Document.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "Note").Bounds);
+    }
+
+    [Fact]
+    public async Task ImportListsAnnotationLossesAndRequiresConsentBeforeNormalizing()
+    {
+        await OpenAsync();
+        await SelectAnnotationAsync();
+        var anchor = await FlowPointAsync();
+        await DragHandleAsync(anchor[0], anchor[1]);
+        await Expect(Page.Locator(".joint-link[model-id^='Association_']")).ToHaveCountAsync(1);
+        var document = BpmnXmlReader.Read(await ExportAsync()).Document;
+        var original = Assert.Single(document.Associations);
+        document = document with
+        {
+            Associations = [.. document.Associations, original with { Id = "Extra", TargetRef = "B" }],
+        };
+        var xml = BpmnXmlWriter.Write(document).Xml;
+        var transfer = await Page.EvaluateHandleAsync(
+            """
+            xml => {
+              const transfer = new DataTransfer();
+              transfer.items.add(new File([xml], 'annotations.bpmn', { type: 'application/xml' }));
+              return transfer;
+            }
+            """, xml);
+        await Page.Locator(".bpmn-canvas").DispatchEventAsync("drop", new Dictionary<string, object> { ["dataTransfer"] = transfer });
+        await Expect(Page.Locator(".bpmn-import [role='alert']")).ToContainTextAsync("Extra");
+        await Page.ImportAccept().ExpectDisabledAsync();
+        // Fluent exposes its checkbox role through ElementInternals, which Playwright's role
+        // selector does not inspect. Resolve the label and still verify the accessible name.
+        var consent = Page.GetByLabel("I confirm these annotation changes.", new() { Exact = true });
+        await Expect(consent).ToHaveAccessibleNameAsync("I confirm these annotation changes.");
+        await consent.ClickAsync();
+        await Page.ImportAccept().ClickAsync();
+        await Expect(Page.Locator(".bpmn-import")).ToHaveCountAsync(0);
+
+        var normalized = BpmnXmlReader.Read(await ExportAsync()).Document;
+        Assert.Equal(original.Id, Assert.Single(normalized.Associations).Id);
+        Assert.Equal("Flow", normalized.Associations[0].TargetRef);
     }
 
     private async Task OpenAsync(bool message = false, bool bent = false)

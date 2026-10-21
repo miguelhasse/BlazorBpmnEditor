@@ -36,6 +36,9 @@ public sealed record BpmnImportPreview(
     /// <summary>Whether there is anything to accept.</summary>
     public bool CanAccept => Document is not null;
 
+    /// <summary>Annotation-policy changes that need explicit consent before this import is accepted.</summary>
+    public BpmnAnnotationNormalization AnnotationNormalization { get; init; } = new([], [], []);
+
     /// <summary>How many flow nodes the file draws.</summary>
     public int FlowNodeCount => Document?.FlowNodes.Count ?? 0;
 
@@ -112,6 +115,7 @@ public sealed record BpmnImportPreview(
                 BpmnValidator.Validate(result.Document))
             {
                 SchemaValidationStatus = result.SchemaValidationStatus,
+                AnnotationNormalization = BpmnAnnotationNormalization.Inspect(result.Document),
             };
         }
         catch (BpmnImportException failure)

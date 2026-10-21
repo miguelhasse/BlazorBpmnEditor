@@ -1037,6 +1037,16 @@
         <target state="translated">ユーザー</target>
         <note />
       </trans-unit>
+      <trans-unit id="ImportOffer.AnnotationIds">
+        <source>Affected annotations: {0}</source>
+        <target state="new">Affected annotations: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.AnnotationPolicy">
+        <source>Editor annotation policy will change {0} annotation(s): remove {1} Association(s) and straighten {2} route(s). The first eligible Association in source order is kept. This is editor policy, not a BPMN requirement.</source>
+        <target state="new">Editor annotation policy will change {0} annotation(s): remove {1} Association(s) and straighten {2} route(s). The first eligible Association in source order is kept. This is editor policy, not a BPMN requirement.</target>
+        <note />
+      </trans-unit>
       <trans-unit id="ImportOffer.AriaLabel">
         <source>Import</source>
         <target state="translated">インポート</target>
@@ -1047,9 +1057,24 @@
         <target state="translated">キャンセル</target>
         <note />
       </trans-unit>
+      <trans-unit id="ImportOffer.ConfirmAnnotationPolicy">
+        <source>I confirm these annotation changes.</source>
+        <target state="new">I confirm these annotation changes.</target>
+        <note />
+      </trans-unit>
       <trans-unit id="ImportOffer.Open">
         <source>Open</source>
         <target state="translated">開く</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.RemovedAssociations">
+        <source>Associations to remove: {0}</source>
+        <target state="new">Associations to remove: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportOffer.StraightenedEdges">
+        <source>Routes to straighten: {0}</source>
+        <target state="new">Routes to straighten: {0}</target>
         <note />
       </trans-unit>
       <trans-unit id="LabelEditor.AriaLabel">

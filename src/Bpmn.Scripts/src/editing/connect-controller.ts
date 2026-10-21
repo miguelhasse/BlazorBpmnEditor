@@ -23,6 +23,7 @@ import { alignToEndpoints } from '../routing/align.js';
 import type { FlowAxis } from '../routing/router.js';
 import { peersBetween, separate } from '../routing/parallel.js';
 import { routeFor } from '../routing/router.js';
+import { annotationConnectionProblem } from './annotation-policy.js';
 
 /** What the controller asks the host to do once a connector gesture finishes. */
 export interface ConnectCallbacks {
@@ -139,6 +140,8 @@ export class ConnectController {
     _sourceMagnet: SVGElement | null,
     targetView: dia.CellView,
     _targetMagnet: SVGElement | null,
+    _end?: string,
+    linkView?: dia.LinkView,
   ): boolean => {
     /*
      * The shape the gesture started on is offered as a snap target, because the whole body is a
@@ -159,6 +162,17 @@ export class ConnectController {
 
     const kind = inferConnectorKind(source, target);
     const result = validateConnection(kind, source, target);
+    const policyProblem = kind === 'association'
+      ? annotationConnectionProblem(sourceView.model.graph, source.id, target.id,
+        linkView === undefined || isProvisional(linkView.model) ? undefined : String(linkView.model.id))
+      : null;
+    if (policyProblem !== null) {
+      this.#lastRejection = policyProblem;
+      const message = this.#strings.values['Rule.AN-001'] ?? policyProblem.message;
+      this.#targetMessages.set(targetView, message);
+      this.#targetMessages.set(sourceView, message);
+      return false;
+    }
 
     this.#lastRejection = result.isValid
       ? null
@@ -333,9 +347,11 @@ export class ConnectController {
 
     const kind = inferConnectorKind(source, target);
     const result = validateConnection(kind, source, target);
+    const policyProblem = kind === 'association'
+      ? annotationConnectionProblem(graph, String(sourceId), String(targetId)) : null;
 
-    if (!result.isValid) {
-      const violation = result.violations.find((candidate) => candidate.severity === 'error');
+    if (!result.isValid || policyProblem !== null) {
+      const violation = policyProblem ?? result.violations.find((candidate) => candidate.severity === 'error');
       this.#callbacks?.connectorRejected(
         violation?.id ?? 'SF-000',
         violation?.message ?? 'This connection is not allowed.',
@@ -344,11 +360,13 @@ export class ConnectController {
       return;
     }
 
+    const route = this.#routeTo(graph, String(sourceId), String(targetId), event, routed, drawnEnd);
     this.#callbacks?.connectorRequested(
       kind,
       String(sourceId),
       String(targetId),
-      this.#routeTo(graph, String(sourceId), String(targetId), event, routed, drawnEnd),
+      kind === 'association' && (source.elementType === 'textAnnotation' || target.elementType === 'textAnnotation')
+        ? route.slice(0, 1).concat(route.slice(-1)) : route,
     );
   };
 

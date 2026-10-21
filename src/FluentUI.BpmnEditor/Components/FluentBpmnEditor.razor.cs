@@ -477,6 +477,11 @@ public sealed partial class FluentBpmnEditor : ComponentBase
     /// <returns>A task that completes once the new document is on screen.</returns>
     public Task AcceptImportAsync() => Session.AcceptImportAsync();
 
+    /// <summary>Accepts the import with explicit consent for the annotation changes listed in its preview.</summary>
+    /// <param name="confirmAnnotationNormalization">Whether the preview's annotation-policy changes were confirmed.</param>
+    /// <returns>A task that completes once the file is open.</returns>
+    public Task AcceptImportAsync(bool confirmAnnotationNormalization) => Session.AcceptImportAsync(confirmAnnotationNormalization);
+
     /// <summary>
     /// Declines the offered import.
     /// </summary>

@@ -193,6 +193,14 @@ SVG implementation notes for bottom-center Activity markers:
 3. A **Message Flow** connects two elements that **must reside in different Pools** (or one endpoint is the Pool/Participant shape itself, for "black-box" collaborations). A Message Flow between two elements of the *same* Pool is invalid.
 4. Valid Message Flow endpoints: Pool/Participant, Activity (Task/Sub-Process), or a **Message** event (Start, End, Intermediate throw/catch, Boundary). **Gateways can never be Message Flow endpoints.**
 5. **Association** connects information and artifacts without control-flow semantics. Text Annotations may describe shapes (except Groups under this editor's contract), including data references, Pools and Lanes, and Sequence Flow or Message Flow lines. Associations have `BaseElement` references (OMG BPMN 2.0.2, §8.4.1); flow-line attachments retain the flow id and their BPMNDI coordinates, not a synthetic shape id. **Data Association** remains the directional data-input/output relationship between data references and Activities/Events. Neither creates control flow.
+
+   **Editor annotation policy (not a BPMN mandate):** one target per Text Annotation, one straight
+   dotted Association with two BPMNDI endpoint waypoints and no editable intermediate bends.
+   Translation carries the attached note; resizing its target shape changes only the connector.
+   Flow reroutes translate the note by attachment-point delta. Notes remain independently movable.
+   Target deletion removes its note and Association; Association-only deletion detaches the note.
+   Import must list affected IDs and require explicit consent before retaining the first eligible
+   source-order binding, removing extras and straightening routes. Raw interchange remains lossless.
 6. **Non-boundary FlowNode collision rule:** rendered non-boundary Events, Activities, and Gateways must not collide with one another in the same active plane when neither node is an ancestor of the other, including across sibling Pools or Lanes. Collision means that their effective rendered geometry, including the configured interaction clearance, has a positive-area intersection; edge or outline touching is allowed only when the configured clearance is zero. This rule does not treat an ancestor container (Pool, Lane, or expanded Sub-Process) as a peer FlowNode, and it does not prohibit the intentional overlap between a Boundary Event and its host Activity's outline. Boundary Events remain subject to the host-outline rules in §2.5 and may not be used to justify overlap between ordinary FlowNodes.
 
 ### 2.2 Start Events

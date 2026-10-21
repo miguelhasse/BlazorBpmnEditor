@@ -13,6 +13,7 @@ import {
   type SlideEnvironment,
 } from '../routing/slide.js';
 import { isProvisional } from './provisional.js';
+import type { LiveRouting } from './live-routing.js';
 
 /** What the controller tells the host. */
 export interface SegmentDragCallbacks {
@@ -70,13 +71,15 @@ interface Gesture {
 export class SegmentDragController {
   readonly #grid: GridOptionsContract;
   readonly #callbacks: SegmentDragCallbacks;
+  readonly #live: LiveRouting | null;
 
   #paper: dia.Paper | null = null;
   #gesture: Gesture | null = null;
 
-  public constructor(grid: GridOptionsContract, callbacks: SegmentDragCallbacks) {
+  public constructor(grid: GridOptionsContract, callbacks: SegmentDragCallbacks, live: LiveRouting | null = null) {
     this.#grid = grid;
     this.#callbacks = callbacks;
+    this.#live = live;
   }
 
   public attach(paper: dia.Paper): this {
@@ -111,6 +114,7 @@ export class SegmentDragController {
     const index = nearestSegment(route, { x, y });
     if (index === null) return;
 
+    this.#live?.prepareAnnotations(new Set([String(link.id)]));
     this.#gesture = {
       link,
       view,
@@ -127,7 +131,7 @@ export class SegmentDragController {
     const document = paper.el.ownerDocument;
     document.addEventListener('pointermove', this.#handleMove);
     document.addEventListener('pointerup', this.#handleUp);
-    document.addEventListener('keydown', this.#handleKey);
+    document.addEventListener('keydown', this.#handleKey, true);
   };
 
   readonly #handleMove = (event: PointerEvent): void => {
@@ -158,6 +162,7 @@ export class SegmentDragController {
 
     gesture.current = slideWithin(gesture.route, gesture.index, offset, gesture.environment);
     gesture.link.vertices(gesture.current.slice(1, -1).map((point) => ({ x: point.x, y: point.y })));
+    this.#live?.carry();
 
     event.preventDefault();
   };
@@ -165,18 +170,26 @@ export class SegmentDragController {
   readonly #handleUp = (): void => {
     const gesture = this.#gesture;
     this.#release();
-    if (!gesture?.started) return;
-
-    if (!changed(gesture.route, gesture.current)) {
-      gesture.link.vertices([...gesture.vertices]);
+    if (!gesture?.started) {
+      this.#live?.end(true);
       return;
     }
 
+    if (!changed(gesture.route, gesture.current)) {
+      gesture.link.vertices([...gesture.vertices]);
+      this.#live?.end(true);
+      return;
+    }
+
+    this.#live?.end(false);
     this.#callbacks.rerouted(String(gesture.link.id), gesture.current);
   };
 
   readonly #handleKey = (event: KeyboardEvent): void => {
-    if (event.key === 'Escape') this.#cancel();
+    if (event.key !== 'Escape' || this.#gesture === null) return;
+    this.#cancel();
+    event.preventDefault();
+    event.stopPropagation();
   };
 
   /** Puts the line back and ends the gesture. */
@@ -185,13 +198,14 @@ export class SegmentDragController {
     this.#release();
 
     if (gesture?.started === true) gesture.link.vertices([...gesture.vertices]);
+    this.#live?.end(true);
   }
 
   #release(): void {
     const document = this.#paper?.el.ownerDocument;
     document?.removeEventListener('pointermove', this.#handleMove);
     document?.removeEventListener('pointerup', this.#handleUp);
-    document?.removeEventListener('keydown', this.#handleKey);
+    document?.removeEventListener('keydown', this.#handleKey, true);
 
     this.#gesture = null;
   }

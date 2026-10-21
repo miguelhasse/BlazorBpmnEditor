@@ -5,6 +5,12 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Components;
 
 internal static class KitFixture
 {
+    public static Task ConfirmAnnotationNormalizationAsync(IRenderedComponent<BpmnPart> offer)
+    {
+        offer.Find(".bpmn-import__annotation-consent").Change(true);
+        return Task.CompletedTask;
+    }
+
     public static Task ChangeNameAsync(Bunit.IRenderedComponent<Microsoft.AspNetCore.Components.DynamicComponent> editor, string value)
     {
         editor.FindAll(".bpmn-properties input[type=text]").Single(input => input.GetAttribute("value") is "Work" or "Changed").Change(value);

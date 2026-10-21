@@ -34,6 +34,8 @@ public sealed class AnnotationConnectorTests
 
         Assert.True(result.IsApplied);
         AssertPoint(new DiPoint(300, 240), Edge(result.Document, "Association_1").Waypoints[^1]);
+        var bounds = result.Document.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "Note").Bounds;
+        AssertPoint(new DiPoint(280, 400), new DiPoint(bounds.X, bounds.Y));
         Assert.Equal(Detour(), Edge(result.Document, "Flow").Waypoints);
         Assert.Same(initial, history.Undo());
         Assert.Same(result.Document, history.Redo());
@@ -87,7 +89,7 @@ public sealed class AnnotationConnectorTests
         Assert.True(history.Apply(new DeleteElementsCommand(["Flow"])).IsApplied);
         Assert.Empty(history.Document.Associations);
         Assert.DoesNotContain(history.Document.Diagrams[0].Plane.Edges, edge => edge.BpmnElement is "Flow" or "Association_1");
-        Assert.Single(history.Document.TextAnnotations);
+        Assert.Empty(history.Document.TextAnnotations);
         Assert.Same(initial, history.Undo());
         Assert.Empty(history.Redo().Associations);
     }
@@ -190,6 +192,187 @@ public sealed class AnnotationConnectorTests
         Assert.False(result.IsApplied);
         Assert.Equal("EDIT-031", Assert.Single(result.Rejections).Code);
     }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void SecondAnnotationBindingIsRejectedInEitherOrientation(bool reversed)
+    {
+        var document = Connect(Document()).Document;
+        var result = BpmnDocumentEditor.Apply(document, new CreateConnectorCommand(
+            "Extra", BpmnConnectorKind.Association, reversed ? "A" : "Note", reversed ? "Note" : "A",
+            [new DiPoint(200, 140), new DiPoint(280, 300)]));
+
+        Assert.False(result.IsApplied);
+        Assert.Same(document, result.Document);
+        Assert.Equal("AN-001", Assert.Single(result.Rejections).Code);
+    }
+
+    [Fact]
+    public void AttachedNoteFollowsShapeOnceAndResizeLeavesNoteInPlace()
+    {
+        var document = ShapeConnection();
+        var result = BpmnDocumentEditor.Apply(document, new MoveShapesCommand(
+            [new ShapeGeometry("A_di", new Bounds(120, 120, 100, 80))]));
+        Assert.True(result.IsApplied);
+        var note = result.Document.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "Note");
+        Assert.Equal(new Bounds(300, 320, 100, 50), note.Bounds);
+        Assert.Equal(2, Edge(result.Document, "Association_1").Waypoints.Count);
+
+        var resized = BpmnDocumentEditor.Apply(result.Document, new ResizeShapeCommand("A_di", new Bounds(120, 120, 140, 80)));
+        Assert.True(resized.IsApplied);
+        Assert.Equal(note.Bounds, resized.Document.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "Note").Bounds);
+    }
+
+    [Fact]
+    public void ExplicitAnnotationPositionWinsOverTargetMotion()
+    {
+        var result = BpmnDocumentEditor.Apply(ShapeConnection(), new MoveShapesCommand(
+        [
+            new ShapeGeometry("A_di", new Bounds(120, 120, 100, 80)),
+            new ShapeGeometry("Note_di", new Bounds(300, 330, 100, 50)),
+        ]));
+        Assert.True(result.IsApplied);
+        Assert.Equal(new Bounds(300, 330, 100, 50), result.Document.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "Note").Bounds);
+    }
+
+    [Fact]
+    public void DeletingAssociationDetachesNoteWithoutDeletingIt()
+    {
+        var result = BpmnDocumentEditor.Apply(ShapeConnection(), new DeleteElementsCommand(["Association_1"]));
+        Assert.True(result.IsApplied);
+        Assert.Single(result.Document.TextAnnotations);
+        Assert.Empty(result.Document.Associations);
+    }
+
+    [Theory]
+    [InlineData("A")]
+    [InlineData("B")]
+    public void IndirectFlowDeletionRemovesDependentNote(string id)
+    {
+        var result = BpmnDocumentEditor.Apply(Connect(Document()).Document, new DeleteElementsCommand([id]));
+        Assert.True(result.IsApplied);
+        Assert.Empty(result.Document.TextAnnotations);
+        Assert.Empty(result.Document.Associations);
+        Assert.Empty(result.Document.SequenceFlows);
+        Assert.NotNull(result.DeletedElementIds);
+        Assert.Contains("Note", result.DeletedElementIds);
+    }
+
+    [Fact]
+    public void AnnotationBendUpdatesAreExplicitlyRejected()
+    {
+        var document = ShapeConnection();
+        var result = BpmnDocumentEditor.Apply(document, new UpdateWaypointsCommand("Association_1", Detour()));
+        Assert.False(result.IsApplied);
+        Assert.Same(document, result.Document);
+        Assert.Equal("AN-002", Assert.Single(result.Rejections).Code);
+    }
+
+    [Fact]
+    public void CreatedAnnotationRouteContainsOnlyEndpoints()
+    {
+        var result = BpmnDocumentEditor.Apply(Document(), new CreateConnectorCommand(
+            "Association_1", BpmnConnectorKind.Association, "Note", "A", Detour()));
+        Assert.True(result.IsApplied);
+        Assert.Equal(2, Edge(result.Document, "Association_1").Waypoints.Count);
+    }
+
+    [Fact]
+    public void AmbiguousHostAnnotationHasWarningsAndNoLifecycleOwner()
+    {
+        var document = ShapeConnection();
+        document = document with
+        {
+            Associations = [.. document.Associations, new BpmnAssociation("Extra", "B", "Note", "Process_1")],
+        };
+        Assert.Contains(BpmnValidator.Validate(document).Diagnostics, diagnostic => diagnostic.RuleId == "AN-001");
+        var moved = BpmnDocumentEditor.Apply(document, new MoveShapesCommand(
+            [new ShapeGeometry("A_di", new Bounds(120, 120, 100, 80))]));
+        Assert.True(moved.IsApplied);
+        Assert.Equal(new Bounds(280, 300, 100, 50), moved.Document.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "Note").Bounds);
+        var deleted = BpmnDocumentEditor.Apply(document, new DeleteElementsCommand(["A"]));
+        Assert.True(deleted.IsApplied);
+        Assert.Single(deleted.Document.TextAnnotations);
+    }
+
+    [Fact]
+    public void IndependentNoteMoveChangesOffsetAndLaterTargetMovePreservesIt()
+    {
+        var document = ShapeConnection();
+        var noteMove = BpmnDocumentEditor.Apply(document, new MoveShapesCommand(
+            [new ShapeGeometry("Note_di", new Bounds(300, 380, 100, 50))]));
+        Assert.True(noteMove.IsApplied);
+        var targetMove = BpmnDocumentEditor.Apply(noteMove.Document, new MoveShapesCommand(
+            [new ShapeGeometry("A_di", new Bounds(120, 120, 100, 80))]));
+        Assert.True(targetMove.IsApplied);
+        Assert.Equal(new Bounds(320, 400, 100, 50), targetMove.Document.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "Note").Bounds);
+    }
+
+    [Fact]
+    public void ExplicitUnchangedNotePositionWinsWhenShapeMoves()
+    {
+        var result = BpmnDocumentEditor.Apply(ShapeConnection(), new MoveShapesCommand(
+        [
+            new ShapeGeometry("A_di", new Bounds(120, 120, 100, 80)),
+            new ShapeGeometry("Note_di", new Bounds(280, 300, 100, 50)),
+        ]));
+        Assert.True(result.IsApplied);
+        Assert.Equal(new Bounds(280, 300, 100, 50), result.Document.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "Note").Bounds);
+    }
+
+    [Fact]
+    public void ExplicitUnchangedNotePositionWinsWhenFlowMoves()
+    {
+        var result = BpmnDocumentEditor.Apply(Connect(Document()).Document, new MoveShapesCommand(
+        [
+            new ShapeGeometry("A_di", new Bounds(100, 160, 100, 80)),
+            new ShapeGeometry("B_di", new Bounds(400, 160, 100, 80)),
+            new ShapeGeometry("Note_di", new Bounds(280, 300, 100, 50)),
+        ],
+        [new ConnectorRoute("Flow", [new DiPoint(200, 200), new DiPoint(400, 200)])]));
+        Assert.True(result.IsApplied);
+        Assert.Equal(new Bounds(280, 300, 100, 50), result.Document.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "Note").Bounds);
+    }
+
+    [Fact]
+    public void FlowRerouteMovesOnlyAnnotationOnEditedDiagram()
+    {
+        var document = Connect(Document()).Document;
+        var other = document.Diagrams[0] with { Id = "Other" };
+        document = document with { Diagrams = [document.Diagrams[0], other] };
+        var result = BpmnDocumentEditor.Apply(document,
+            new UpdateWaypointsCommand("Flow", Detour()) { DiagramId = "Diagram_1" });
+        Assert.True(result.IsApplied);
+        Assert.Equal(new Bounds(280, 300, 100, 50), result.Document.Diagrams[1].Plane.Shapes.Single(shape => shape.BpmnElement == "Note").Bounds);
+        Assert.Equal(other.Plane.Edges, result.Document.Diagrams[1].Plane.Edges);
+    }
+
+    [Fact]
+    public void ShapeTranslationCarriesExternalAnnotationLabel()
+    {
+        var document = ShapeConnection();
+        var diagram = document.Diagrams[0];
+        document = document with
+        {
+            Diagrams = [diagram with
+            {
+                Plane = diagram.Plane with
+                {
+                    Shapes = [.. diagram.Plane.Shapes.Select(shape => shape.BpmnElement == "Note"
+                        ? shape with { Label = new BpmnLabel(Bounds: new Bounds(280, 360, 100, 20)) } : shape)],
+                },
+            }],
+        };
+        var result = BpmnDocumentEditor.Apply(document, new MoveShapesCommand(
+            [new ShapeGeometry("A_di", new Bounds(120, 120, 100, 80))]));
+        Assert.True(result.IsApplied);
+        Assert.Equal(new Bounds(300, 380, 100, 20), result.Document.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "Note").Label!.Bounds);
+    }
+
+    private static BpmnDocument ShapeConnection() => BpmnDocumentEditor.Apply(Document(),
+        new CreateConnectorCommand("Association_1", BpmnConnectorKind.Association, "Note", "A",
+            [new DiPoint(280, 300), new DiPoint(200, 140)])).Document;
 
     private static BpmnDocument Document(bool message = false)
     {

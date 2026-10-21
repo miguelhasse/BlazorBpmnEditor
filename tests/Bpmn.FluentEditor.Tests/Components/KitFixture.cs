@@ -8,6 +8,9 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Components;
 
 internal static class KitFixture
 {
+    public static Task ConfirmAnnotationNormalizationAsync(IRenderedComponent<BpmnPart> offer) =>
+        offer.InvokeAsync(() => offer.FindComponent<FluentCheckbox>().Instance.ValueChanged.InvokeAsync(true));
+
     public static async Task ChangeNameAsync(Bunit.IRenderedComponent<Microsoft.AspNetCore.Components.DynamicComponent> editor, string value)
     {
         var input = editor.FindComponents<FluentTextInput>().Single(component => component.Instance.Value is "Work" or "Changed");
