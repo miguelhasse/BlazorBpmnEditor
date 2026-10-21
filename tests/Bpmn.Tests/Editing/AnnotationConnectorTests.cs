@@ -1,6 +1,7 @@
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
 using Hasseware.AspNetCore.Components.Bpmn.Model.Di;
+using Hasseware.AspNetCore.Components.Bpmn.Model.Geometry;
 using Hasseware.AspNetCore.Components.Bpmn.Serialization;
 using Hasseware.AspNetCore.Components.Bpmn.Validation;
 
@@ -368,6 +369,125 @@ public sealed class AnnotationConnectorTests
             [new ShapeGeometry("A_di", new Bounds(120, 120, 100, 80))]));
         Assert.True(result.IsApplied);
         Assert.Equal(new Bounds(300, 380, 100, 20), result.Document.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "Note").Label!.Bounds);
+    }
+
+    [Fact]
+    public void AnnotationFreeFollowingReturnsAfterDocumentWithoutAllocating()
+    {
+        var document = Document() with { TextAnnotations = [] };
+        for (var index = 0; index < 100; index++) ConnectorEndpoints.FollowAnnotationShapes(document, document);
+
+        var allocatedBefore = GC.GetAllocatedBytesForCurrentThread();
+        var followed = document;
+        for (var index = 0; index < 100; index++) followed = ConnectorEndpoints.FollowAnnotationShapes(document, document);
+        var allocated = GC.GetAllocatedBytesForCurrentThread() - allocatedBefore;
+
+        Assert.Same(document, followed);
+        Assert.Equal(0, allocated);
+    }
+
+    [Fact]
+    public void UnchangedAnnotationFollowingPreservesDocumentIdentity()
+    {
+        var document = ShapeConnection();
+
+        Assert.Same(document, ConnectorEndpoints.FollowAnnotationShapes(document, document));
+    }
+
+    [Fact]
+    public void EdgeOnlyFollowingPreservesShapesAndUntouchedDiagram()
+    {
+        var document = ShapeConnection();
+        var diagram = document.Diagrams[0];
+        var other = diagram with { Id = "Other" };
+        document = document with { Diagrams = [diagram, other] };
+        var after = document with
+        {
+            Diagrams = [diagram with
+            {
+                Plane = diagram.Plane with
+                {
+                    Shapes = [.. diagram.Plane.Shapes.Select(shape => shape.BpmnElement == "A"
+                        ? shape with { Bounds = shape.Bounds with { X = 120 } } : shape)],
+                },
+            }, other],
+        };
+
+        var followed = ConnectorEndpoints.FollowAnnotationShapes(document, after, new HashSet<string>(StringComparer.Ordinal) { "Note_di" });
+
+        Assert.NotSame(after, followed);
+        Assert.Same(after.Diagrams[0].Plane.Shapes, followed.Diagrams[0].Plane.Shapes);
+        Assert.NotSame(after.Diagrams[0].Plane.Edges, followed.Diagrams[0].Plane.Edges);
+        Assert.Same(other, followed.Diagrams[1]);
+        Assert.Equal(new DiPoint(220, 140), Edge(followed, "Association_1").Waypoints[^1]);
+    }
+
+    [Fact]
+    public void LabelOnlyFollowingPreservesEdgesAndUnchangedShapes()
+    {
+        var document = ShapeConnection();
+        var diagram = document.Diagrams[0];
+        document = document with
+        {
+            Diagrams = [diagram with
+            {
+                Plane = diagram.Plane with
+                {
+                    Shapes = [.. diagram.Plane.Shapes.Select(shape => shape.BpmnElement == "Note"
+                        ? shape with { Label = new BpmnLabel(Bounds: new Bounds(280, 360, 100, 20)) } : shape)],
+                },
+            }],
+        };
+        diagram = document.Diagrams[0];
+        var after = document with
+        {
+            Diagrams = [diagram with
+            {
+                Plane = diagram.Plane with
+                {
+                    Shapes = [.. diagram.Plane.Shapes.Select(shape => shape.BpmnElement == "Note"
+                        ? shape with { Bounds = shape.Bounds with { X = 300 } } : shape)],
+                    Edges = [.. diagram.Plane.Edges.Select(edge => edge.BpmnElement == "Association_1"
+                        ? edge with { Waypoints = [edge.Waypoints[0] with { X = edge.Waypoints[0].X + 20 }, edge.Waypoints[^1]] }
+                        : edge)],
+                },
+            }],
+        };
+
+        var followed = ConnectorEndpoints.FollowAnnotationShapes(document, after);
+
+        Assert.NotSame(after.Diagrams[0].Plane.Shapes, followed.Diagrams[0].Plane.Shapes);
+        Assert.Same(after.Diagrams[0].Plane.Edges, followed.Diagrams[0].Plane.Edges);
+        Assert.Same(after.Diagrams[0].Plane.Shapes[0], followed.Diagrams[0].Plane.Shapes[0]);
+        Assert.Equal(new Bounds(300, 360, 100, 20),
+            followed.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "Note").Label!.Bounds);
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public void BentFlowReroutePreservesAnnotationOffsetInEitherOrientation(bool message, bool reversed)
+    {
+        var bent = BpmnDocumentEditor.Apply(Document(message), new UpdateWaypointsCommand("Flow", Detour())).Document;
+        var created = BpmnDocumentEditor.Apply(bent, new CreateConnectorCommand(
+            "Association_1", BpmnConnectorKind.Association, reversed ? "Flow" : "Note", reversed ? "Note" : "Flow",
+            reversed ? [new DiPoint(300, 240), new DiPoint(300, 300)] : [new DiPoint(300, 300), new DiPoint(300, 240)]));
+        Assert.True(created.IsApplied);
+        var history = new BpmnEditHistory(created.Document);
+        var route = Detour().Select(point => point.Y == 240 ? point with { Y = 340 } : point).ToArray();
+
+        var result = history.Apply(new UpdateWaypointsCommand("Flow", route));
+
+        Assert.True(result.IsApplied);
+        var associationRoute = Edge(result.Document, "Association_1").Waypoints;
+        Assert.Equal(2, associationRoute.Count);
+        AssertPoint(new DiPoint(300, 340), associationRoute[reversed ? 0 : 1]);
+        var note = result.Document.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "Note");
+        AssertPoint(new DiPoint(280, 400), new DiPoint(note.Bounds.X, note.Bounds.Y));
+        Assert.Same(created.Document, history.Undo());
+        Assert.Same(result.Document, history.Redo());
     }
 
     private static BpmnDocument ShapeConnection() => BpmnDocumentEditor.Apply(Document(),

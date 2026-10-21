@@ -46,8 +46,9 @@ internal static partial class ConnectorEndpoints
                     && oldAssociation?.SourceRef == association.SourceRef && oldAssociation.TargetRef == association.TargetRef
                     && !oldFlow.Waypoints.SequenceEqual(flow.Waypoints);
                 var path = RoundedFlowPath.Flatten(flow.Waypoints);
+                var oldPath = follows ? RoundedFlowPath.Flatten(oldFlow!.Waypoints) : null;
                 var ratio = follows
-                    ? ClosestRatio(RoundedFlowPath.Flatten(oldFlow!.Waypoints), sourceIsFlow ? oldEdge!.Waypoints[0] : oldEdge!.Waypoints[^1])
+                    ? ClosestRatio(oldPath!, sourceIsFlow ? oldEdge!.Waypoints[0] : oldEdge!.Waypoints[^1])
                     : ClosestRatio(path, route[flowEnd]);
                 var point = PointAtRatio(path, ratio);
                 var oldAnnotation = oldPlane?.Shapes.FirstOrDefault(shape => shape.Id == annotationShape.Id);
@@ -55,7 +56,7 @@ internal static partial class ConnectorEndpoints
                     && positionedAnnotations?.Contains(annotationShape.Id) != true
                     && BpmnAnnotationAttachments.UniqueConnection(document, annotationId)?.Id == association.Id)
                 {
-                    var oldPoint = PointAtRatio(RoundedFlowPath.Flatten(oldFlow!.Waypoints), ratio);
+                    var oldPoint = PointAtRatio(oldPath!, ratio);
                     var delta = new DiPoint(point.X - oldPoint.X, point.Y - oldPoint.Y);
                     if (Math.Abs(delta.X) > 0.01 || Math.Abs(delta.Y) > 0.01)
                     {
