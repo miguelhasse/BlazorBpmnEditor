@@ -179,9 +179,9 @@ SVG implementation notes for bottom-center Activity markers:
 
 ### 1.6 Artifacts
 
-- **Data Object** / **Data Object Reference** / **Data Store Reference**: rectangle (Data Object has folded top-right corner) linked to Activities/Events via Data Association only.
+- **Data Object** / **Data Object Reference** / **Data Store Reference**: rectangle (Data Object has folded top-right corner) linked to Activities/Events via Data Association; Text Annotations may describe them through undirected Associations.
 - **Group**: rounded-corner **dashed** rectangle, purely visual grouping — is **never** a connector endpoint.
-- **Text Annotation**: open bracket "⌐" shape + line, linked via an (undirected) Association.
+- **Text Annotation**: open bracket "⌐" shape + line, linked via an (undirected) Association. Its connector handle sits 12 diagram units left of the bracket, vertically centered, with the ordinary 7-unit radius.
 
 ---
 
@@ -192,7 +192,7 @@ SVG implementation notes for bottom-center Activity markers:
 2. Source and target of a Sequence Flow **MUST belong to the same containing flow-element graph** (the same Process, or the same embedded Sub-Process). It can never cross: a Pool boundary, a Sub-Process boundary (except via a Boundary Event, which is the flow's *virtual* exit point of the activity), or connect into/out of an Event Sub-Process.
 3. A **Message Flow** connects two elements that **must reside in different Pools** (or one endpoint is the Pool/Participant shape itself, for "black-box" collaborations). A Message Flow between two elements of the *same* Pool is invalid.
 4. Valid Message Flow endpoints: Pool/Participant, Activity (Task/Sub-Process), or a **Message** event (Start, End, Intermediate throw/catch, Boundary). **Gateways can never be Message Flow endpoints.**
-5. **Association / Data Association** connect an Artifact (Data Object, Data Store, Text Annotation) to a Flow Object (Activity or Event) — never Flow-Object-to-Flow-Object, and never crossing a Pool boundary is required (associations are typically drawn within one Pool, though the spec permits cross-pool text annotation association since it carries no execution semantics).
+5. **Association** connects information and artifacts without control-flow semantics. Text Annotations may describe shapes (except Groups under this editor's contract), including data references, Pools and Lanes, and Sequence Flow or Message Flow lines. Associations have `BaseElement` references (OMG BPMN 2.0.2, §8.4.1); flow-line attachments retain the flow id and their BPMNDI coordinates, not a synthetic shape id. **Data Association** remains the directional data-input/output relationship between data references and Activities/Events. Neither creates control flow.
 6. **Non-boundary FlowNode collision rule:** rendered non-boundary Events, Activities, and Gateways must not collide with one another in the same active plane when neither node is an ancestor of the other, including across sibling Pools or Lanes. Collision means that their effective rendered geometry, including the configured interaction clearance, has a positive-area intersection; edge or outline touching is allowed only when the configured clearance is zero. This rule does not treat an ancestor container (Pool, Lane, or expanded Sub-Process) as a peer FlowNode, and it does not prohibit the intentional overlap between a Boundary Event and its host Activity's outline. Boundary Events remain subject to the host-outline rules in §2.5 and may not be used to justify overlap between ordinary FlowNodes.
 
 ### 2.2 Start Events
@@ -335,11 +335,17 @@ Association is a dotted artifact/information link, not control flow. It may be u
 |---|---:|---:|---:|---:|---:|
 | Activity / Event / Gateway | Profile-dependent / no ordinary A between two Flow Objects | Yes (information/artifact association only) | Yes | No | Yes* |
 | Data Object / Data Store | Yes | No | Yes | No | Yes* |
-| Text Annotation | Yes | Yes | No | No | No |
+| Text Annotation | Yes | Yes | Yes | No | Yes |
 | Group | No | No | No | No | No |
-| Sequence/Message Flow edge | Yes* | Yes* | No | No | No |
+| Sequence/Message Flow edge | Yes* | Yes* | Yes | No | No |
 
 `Yes*` is a DI/notation case and must not be confused with a new semantic endpoint type. A Data Association shortcut visually attached to a Sequence Flow is normalized to semantic Data Associations; a Compensation Association must originate at a Compensation Boundary Event and target a valid compensation Activity.
+
+The annotation connector gesture supports only Sequence Flow and Message Flow as line endpoints;
+it does not enable ordinary shape-to-line Associations, Association chains or Data Association
+targets. A release projects to the nearest point on the flow path. Its relative path length follows
+flow movement, resizing and rerouting, and is reconstructed from standard BPMNDI waypoints after
+reload. Both the flow and its dependent Association geometry participate in the same undo entry.
 
 ### 3.4 Data Association (`DA`)
 
@@ -864,7 +870,8 @@ Stable IDs for UI tooltips, automated tests, and documentation cross-references.
 | DA-001 | Association must never be treated as token/control flow. | Error |
 | DA-002 | Group cannot be a connector endpoint (visual grouping only). | Error |
 | DA-003 | Text Annotation connects only via (undirected) Association, never Sequence/Message Flow. | Error |
-| DA-004 | Data Object/Data Store connect only via Data Association, never Sequence/Message Flow. | Error |
+| DA-004 | Data Object/Data Store require Data Association except when linked to a Text Annotation. | Error |
+| A-002 | A flow-line Association endpoint requires a Text Annotation and a Sequence Flow or Message Flow. | Error |
 | DA-005 | Data Input Association direction is Data Object/Store/Property → Activity or Throwing Event input. | Error |
 | DA-006 | Data Output Association direction is Activity or Catching Event output → Data Object/Store/Property. | Error |
 | DA-007 | DataAssociation without a transformation expression must have exactly one source. | Error |

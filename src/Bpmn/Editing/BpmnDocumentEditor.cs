@@ -5,6 +5,7 @@ using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
 using Hasseware.AspNetCore.Components.Bpmn.Model.Di;
 using Hasseware.AspNetCore.Components.Bpmn.Model.Geometry;
+using Hasseware.AspNetCore.Components.Bpmn.Validation;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Editing;
 
@@ -50,7 +51,7 @@ public static partial class BpmnDocumentEditor
         // Whatever the command did, a connector end is on the outline of its shape afterwards: a
         // move, resize, collapse or reconnect can each leave one off it, and this is the one place
         // that puts it back.
-        if (!result.IsApplied) return result;
+        if (!result.IsApplied || command is CompoundCommand) return result;
 
         // Ends attached to a shape that changed size keep their place relative to its box first,
         // and only then are put on the outline: normalising alone would re-project an end onto the
@@ -61,7 +62,7 @@ public static partial class BpmnDocumentEditor
 
         var followed = ConnectorEndpoints.FollowResizedShapes(document, result.Document, routed);
 
-        return result with { Document = ConnectorEndpoints.Normalize(followed) };
+        return result with { Document = ConnectorEndpoints.FollowFlowAttachments(ConnectorEndpoints.Normalize(followed), document) };
     }
 
     private static BpmnEditResult ApplyCommand(BpmnDocument document, BpmnEditCommand command, EditingOptions options)
@@ -1212,8 +1213,22 @@ public static partial class BpmnDocumentEditor
                 new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "DI-003", "Waypoints must be finite.", command.Id));
         }
 
+        if (AnnotationConnectionProblem(document, command.Kind, command.SourceRef, command.TargetRef, command.Id) is { } connectionProblem)
+        {
+            return BpmnEditResult.Reject(document, connectionProblem);
+        }
+
         var edgeId = command.EdgeId ?? BpmnId.ForDiagramElement(command.Id);
-        var container = command.ContainerId ?? document.FindFlowNode(command.SourceRef)?.ContainerId;
+        var container = command.ContainerId ?? (document.Find(command.SourceRef) switch
+        {
+            BpmnFlowNode node => node.ContainerId,
+            BpmnTextAnnotation annotation => annotation.ContainerId,
+            BpmnSequenceFlow flow => flow.ContainerId,
+            BpmnDataObjectReference reference => reference.ContainerId,
+            BpmnDataStoreReference reference => reference.ContainerId,
+            _ => command.Kind == BpmnConnectorKind.Association
+                && document.Find(command.TargetRef) is BpmnTextAnnotation targetAnnotation ? targetAnnotation.ContainerId : null,
+        });
 
         if (command.DiagramId is { } diagramId)
         {
@@ -1226,11 +1241,11 @@ public static partial class BpmnDocumentEditor
             var geometry = CreationGeometry(document, diagramId);
             foreach (var endpoint in (string[])[command.SourceRef, command.TargetRef])
             {
-                if (ShapeFor(geometry, endpoint) is not null) continue;
+                if (DrawsEndpoint(geometry, endpoint, command.Kind)) continue;
 
                 return BpmnEditResult.Reject(document, new BpmnEditDiagnostic(
                     BpmnEditSeverity.Rejected, "EDIT-031",
-                    $"No shape draws endpoint '{endpoint}' on diagram '{diagramId}'.", command.Id));
+                    $"No shape or permitted flow draws endpoint '{endpoint}' on diagram '{diagramId}'.", command.Id));
             }
         }
 
@@ -1857,7 +1872,8 @@ public static partial class BpmnDocumentEditor
         {
             if (document.Find(endpoint) is null
                 || command.DiagramId is not null
-                    && ShapeFor(CreationGeometry(document, command.DiagramId), endpoint) is null)
+                    && !DrawsEndpoint(CreationGeometry(document, command.DiagramId), endpoint,
+                        connector is BpmnAssociation ? BpmnConnectorKind.Association : BpmnConnectorKind.SequenceFlow))
             {
                 return BpmnEditResult.Reject(
                     document,
@@ -1878,6 +1894,18 @@ public static partial class BpmnDocumentEditor
                     "EDIT-063",
                     "A connector may not start and end on the same element.",
                     command.Id));
+        }
+
+        var kind = connector switch
+        {
+            BpmnAssociation => BpmnConnectorKind.Association,
+            BpmnMessageFlow => BpmnConnectorKind.MessageFlow,
+            BpmnDataAssociation => BpmnConnectorKind.DataAssociation,
+            _ => BpmnConnectorKind.SequenceFlow,
+        };
+        if (AnnotationConnectionProblem(document, kind, source, target, command.Id) is { } connectionProblem)
+        {
+            return BpmnEditResult.Reject(document, connectionProblem);
         }
 
         if (command.DiagramId is not null
@@ -2376,22 +2404,6 @@ public static partial class BpmnDocumentEditor
             removed.Add(flow.Id);
         }
 
-        foreach (var association in document.Associations)
-        {
-            if (removed.Contains(association.Id)) continue;
-            if (!removed.Contains(association.SourceRef) && !removed.Contains(association.TargetRef)) continue;
-
-            removed.Add(association.Id);
-        }
-
-        foreach (var association in document.DataAssociations)
-        {
-            if (removed.Contains(association.Id)) continue;
-            if (!removed.Contains(association.TargetRef) && !association.SourceRefs.Any(removed.Contains)) continue;
-
-            removed.Add(association.Id);
-        }
-
         foreach (var annotation in document.TextAnnotations)
         {
             if (!removed.Contains(annotation.Id) && removed.Contains(annotation.ContainerId)) removed.Add(annotation.Id);
@@ -2412,6 +2424,18 @@ public static partial class BpmnDocumentEditor
             if (!removed.Contains(reference.Id) && removed.Contains(reference.ContainerId)) removed.Add(reference.Id);
         }
 
+        foreach (var association in document.Associations)
+        {
+            if (removed.Contains(association.SourceRef) || removed.Contains(association.TargetRef)
+                || removed.Contains(association.ContainerId)) removed.Add(association.Id);
+        }
+
+        foreach (var association in document.DataAssociations)
+        {
+            if (removed.Contains(association.TargetRef) || association.SourceRefs.Any(removed.Contains)
+                || removed.Contains(association.ContainerId)) removed.Add(association.Id);
+        }
+
         var cascaded = removed.Count - roots.Count;
         if (cascaded > 0)
         {
@@ -2422,6 +2446,27 @@ public static partial class BpmnDocumentEditor
         }
 
         return removed;
+    }
+
+    private static bool DrawsEndpoint(BpmnDocument geometry, string endpoint, BpmnConnectorKind kind) =>
+        ShapeFor(geometry, endpoint) is not null
+        || kind == BpmnConnectorKind.Association
+            && geometry.Find(endpoint) is BpmnSequenceFlow or BpmnMessageFlow
+            && geometry.Diagrams.Any(diagram => diagram.Plane.Edges.Any(edge => edge.BpmnElement == endpoint));
+
+    private static BpmnEditDiagnostic? AnnotationConnectionProblem(
+        BpmnDocument document, BpmnConnectorKind kind, string source, string target, string connectorId)
+    {
+        var from = BpmnConnectionRules.EndpointOf(document, source);
+        var to = BpmnConnectionRules.EndpointOf(document, target);
+        if (from is null || to is null) return null;
+        if (document.Find(source) is not (BpmnTextAnnotation or BpmnSequenceFlow or BpmnMessageFlow or BpmnAssociation or BpmnDataAssociation)
+            && document.Find(target) is not (BpmnTextAnnotation or BpmnSequenceFlow or BpmnMessageFlow or BpmnAssociation or BpmnDataAssociation)) return null;
+
+        var violation = BpmnConnectionRules.Check(kind, from, to).Violations
+            .FirstOrDefault(item => item.Severity == BpmnSeverity.Error);
+        return violation is null ? null : new BpmnEditDiagnostic(
+            BpmnEditSeverity.Rejected, violation.RuleId, violation.Message, connectorId);
     }
 
     /// <summary>

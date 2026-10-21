@@ -2,6 +2,7 @@ import { shapes } from '@joint/core';
 import type { dia } from '@joint/core';
 
 import { centerOf, outlineIntersection, projectToOutline } from '../geometry/outline.js';
+import { DASH_ASSOCIATION } from '../geometry/constants.js';
 import { findCell, findElement } from '../graph/cells.js';
 import { attachmentPoint, outlineFor } from './endpoint-anchor.js';
 import type {
@@ -139,10 +140,6 @@ export class ConnectController {
     targetView: dia.CellView,
     _targetMagnet: SVGElement | null,
   ): boolean => {
-    // A link may only end on an element: a loose end would be an edge with one endpoint, which
-    // BPMN has no representation for.
-    if (!sourceView.model.isElement() || !targetView.model.isElement()) return false;
-
     /*
      * The shape the gesture started on is offered as a snap target, because the whole body is a
      * magnet and the pointer begins right next to it. A release that lands back on the source is
@@ -155,6 +152,10 @@ export class ConnectController {
     const source = endpointFor(sourceView.model);
     const target = endpointFor(targetView.model);
     if (source === null || target === null) return false;
+
+    // Only annotations offer flow-line targets; other snap candidates must not replace a shape's refusal.
+    if ((sourceView.model.isLink() || targetView.model.isLink())
+      && source.elementType !== 'textAnnotation' && target.elementType !== 'textAnnotation') return false;
 
     const kind = inferConnectorKind(source, target);
     const result = validateConnection(kind, source, target);
@@ -233,13 +234,14 @@ export class ConnectController {
     this.#committed = false;
 
     const link = new shapes.standard.Link();
+    const annotation = inferredKindFor(cellView) === 'association';
 
     link.attr({
       line: {
         stroke: 'var(--bpmn-selection-color)',
         strokeWidth: 2,
-        strokeDasharray: '5 4',
-        targetMarker: { type: 'path', d: 'M 10 -5 0 0 10 5 z', fill: 'var(--bpmn-selection-color)' },
+        strokeDasharray: annotation ? DASH_ASSOCIATION : '5 4',
+        targetMarker: annotation ? null : { type: 'path', d: 'M 10 -5 0 0 10 5 z', fill: 'var(--bpmn-selection-color)' },
       },
     });
 
@@ -371,6 +373,23 @@ export class ConnectController {
       ? null
       : paper.clientToLocalPoint({ x: event.clientX, y: event.clientY });
 
+    if (paper !== null) {
+      const source = findCell(graph, sourceId);
+      const target = findCell(graph, targetId);
+      if (source?.isElement() === true && target?.isLink() === true) {
+        const view = paper.findViewByModel(target) as dia.LinkView | undefined;
+        if (view === undefined) throw new Error('Association flow endpoint is not rendered.');
+        const to = view.getClosestPoint(release ?? drawnEnd ?? centerOf(outlineFor(source).bounds));
+        return [attachmentPoint(to, source, this.#grid), to];
+      }
+      if (source?.isLink() === true && target?.isElement() === true) {
+        const view = paper.findViewByModel(source) as dia.LinkView | undefined;
+        if (view === undefined) throw new Error('Association flow endpoint is not rendered.');
+        const to = attachmentPoint(release ?? drawnEnd ?? view.getPointAtRatio(0.5), target, this.#grid);
+        return [view.getClosestPoint(to), to];
+      }
+    }
+
     return routeBetween(graph, sourceId, targetId, release, this.#grid, this.#routing, bends, drawnEnd);
   }
 
@@ -475,12 +494,12 @@ function bendsOf(view: dia.LinkView): readonly { x: number; y: number }[] {
  * The connector kind a gesture from this shape will produce, guessed for the preview's router.
  *
  * A guess is all the preview can have — the kind is decided by the *pair*, and the target is not
- * known until release. Sequence Flow is the right guess: it is the overwhelmingly common case, and
- * the two kinds that route differently from it (the Associations) are drawn straight, so guessing
- * wrong costs a preview that shows right angles for a line that will be committed straight.
+ * known until release. An annotation always produces an Association; otherwise Sequence Flow is
+ * the overwhelmingly common case. Guessing wrong then costs a preview with right angles for a
+ * line that will be committed straight.
  */
-function inferredKindFor(_source: dia.CellView): ConnectorKind {
-  return 'sequenceFlow';
+function inferredKindFor(source: dia.CellView): ConnectorKind {
+  return endpointFor(source.model)?.elementType === 'textAnnotation' ? 'association' : 'sequenceFlow';
 }
 
 /**

@@ -1,6 +1,6 @@
 import { dia, linkTools } from '@joint/core';
 
-import { findElement } from '../graph/cells.js';
+import { findCell, findElement } from '../graph/cells.js';
 import type { GridOptionsContract, PointContract } from '../interop/contracts.js';
 import { alignToEndpoints } from '../routing/align.js';
 import { isOrthogonal, type ConnectorKind } from '../routing/router.js';
@@ -360,6 +360,17 @@ export class LinkEditController {
     const rendered = view.getConnection();
 
     if (source === undefined || target === undefined) {
+      const sourceCell = findCell(link.graph, sourceId);
+      const targetCell = findCell(link.graph, targetId);
+      if (sourceCell?.isLink() === true || targetCell?.isLink() === true) {
+        const first = rendered.start ?? link.getSourcePoint();
+        const last = rendered.end ?? link.getTargetPoint();
+        return [
+          source === undefined ? first : attachmentPoint(first, source, this.#grid),
+          ...existing,
+          target === undefined ? last : attachmentPoint(last, target, this.#grid),
+        ];
+      }
       return existing.length >= 2 ? existing : [{ x: 0, y: 0 }, { x: 0, y: 0 }];
     }
 

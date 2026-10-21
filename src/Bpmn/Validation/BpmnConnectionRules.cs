@@ -10,7 +10,7 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Validation;
 /// <param name="ElementType">
 /// The BPMN element type in wire form (<c>userTask</c>, <c>exclusiveGateway</c>), or one of the pseudo
 /// types <c>pool</c>, <c>lane</c>, <c>dataObjectReference</c>, <c>dataStoreReference</c>,
-/// <c>textAnnotation</c> and <c>group</c>.
+/// <c>textAnnotation</c>, <c>group</c> and connector types for annotation flow-line attachments.
 /// </param>
 /// <param name="ContainerId">The Process or Sub-Process that owns it, which decides Sequence Flow legality.</param>
 /// <param name="PoolId">The Pool that draws it, which decides Message Flow legality.</param>
@@ -37,7 +37,7 @@ public sealed record BpmnConnectionCheck(bool IsValid, IReadOnlyList<BpmnDiagnos
 /// <remarks>
 /// <para>
 /// The canvas refuses an illegal connection before it is ever drawn, so <see cref="BpmnDocumentEditor"/>
-/// does not repeat the check. A caller that builds connectors without the canvas — an agent tool, an
+/// only repeats annotation and flow-line endpoint checks. A caller that builds other connectors without the canvas — an agent tool, an
 /// import step — checks here first, and gets the same verdict and the same rule ids a user would.
 /// </para>
 /// <para>
@@ -203,6 +203,10 @@ public static class BpmnConnectionRules
             BpmnDataStoreReference store => new BpmnConnectionEndpoint(store.Id, "dataStoreReference", store.ContainerId),
             BpmnTextAnnotation annotation => new BpmnConnectionEndpoint(annotation.Id, "textAnnotation", annotation.ContainerId),
             BpmnGroup group => new BpmnConnectionEndpoint(group.Id, "group", group.ContainerId),
+            BpmnSequenceFlow flow => new BpmnConnectionEndpoint(flow.Id, "sequenceFlow", flow.ContainerId),
+            BpmnMessageFlow flow => new BpmnConnectionEndpoint(flow.Id, "messageFlow"),
+            BpmnAssociation association => new BpmnConnectionEndpoint(association.Id, "association", association.ContainerId),
+            BpmnDataAssociation association => new BpmnConnectionEndpoint(association.Id, "dataAssociation", association.ContainerId),
             _ => null,
         };
     }

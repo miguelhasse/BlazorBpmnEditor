@@ -22,6 +22,42 @@ beforeEach(() => {
 });
 
 describe('renderDocument', () => {
+  it.each([false, true])('reconstructs a persistent flow attachment (reversed: %s)', (reversed) => {
+    const document = linearProcess();
+    const diagram = document.diagrams[0]!;
+    const flow = diagram.plane.edges[0]!;
+    const middle = { x: 168, y: 118 };
+    const annotationEnd = { x: 168, y: 40 };
+    const association = {
+      id: 'Association_1', sourceRef: reversed ? 'Flow_1' : 'Note_1',
+      targetRef: reversed ? 'Note_1' : 'Flow_1', containerId: 'Process_1', direction: 'none' as const,
+    };
+    const annotated = {
+      ...document,
+      textAnnotations: [{ id: 'Note_1', text: 'Note', textFormat: 'text/plain', containerId: 'Process_1' }],
+      associations: [association],
+      diagrams: [{ ...diagram, plane: { ...diagram.plane,
+        shapes: [...diagram.plane.shapes, shape('Note_1', 140, 0, 100, 40)],
+        edges: [{ id: 'Association_1_di', bpmnElement: 'Association_1',
+          waypoints: reversed ? [middle, annotationEnd] : [annotationEnd, middle], label: null }, ...diagram.plane.edges],
+      } }],
+    };
+
+    const result = renderDocument(graph, annotated, null, metrics);
+    const link = graph.getCell('Association_1') as dia.Link;
+    expect(result).toMatchObject({ shapeCount: 4, edgeCount: 3 });
+    expect(reversed ? link.source() : link.target()).toMatchObject({
+      id: flow.bpmnElement, anchor: { name: 'connectionRatio', args: { ratio: 0.5 } },
+      connectionPoint: { name: 'anchor' },
+    });
+    expect(link.attr('line/targetMarker')).toBeNull();
+    renderDocument(graph, annotated, null, metrics);
+    expect(graph.getCell('Association_1')).toBe(link);
+    expect(reversed ? link.source() : link.target()).toMatchObject({
+      id: 'Flow_1', anchor: { name: 'connectionRatio', args: { ratio: 0.5 } },
+    });
+  });
+
   it('creates one cell per BPMNShape and per drawable connector', () => {
     const result = renderDocument(graph, linearProcess(), null, metrics);
 

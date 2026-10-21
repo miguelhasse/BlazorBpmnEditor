@@ -449,12 +449,60 @@
       "scope": "live",
       "connectorKind": "association",
       "severity": "error",
-      "message": "Data Object/Data Store connect only via Data Association, never a plain Association.",
+      "message": "Data Object/Data Store require Data Association except when linked to a Text Annotation.",
       "predicate": {
-        "op": "or",
+        "op": "and",
         "args": [
-          { "op": "in", "field": "source.artifactType", "values": ["dataObjectReference", "dataStoreReference"] },
-          { "op": "in", "field": "target.artifactType", "values": ["dataObjectReference", "dataStoreReference"] }
+          { "op": "not", "arg": { "op": "eq", "field": "source.artifactType", "value": "textAnnotation" } },
+          { "op": "not", "arg": { "op": "eq", "field": "target.artifactType", "value": "textAnnotation" } },
+          {
+            "op": "or",
+            "args": [
+              { "op": "in", "field": "source.artifactType", "values": ["dataObjectReference", "dataStoreReference"] },
+              { "op": "in", "field": "target.artifactType", "values": ["dataObjectReference", "dataStoreReference"] }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "A-002",
+      "scope": "live",
+      "connectorKind": "association",
+      "severity": "error",
+      "message": "A flow-line endpoint requires a Text Annotation and a Sequence Flow or Message Flow.",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "or",
+            "args": [
+              { "op": "in", "field": "source.elementType", "values": ["sequenceFlow", "messageFlow", "association", "dataAssociation"] },
+              { "op": "in", "field": "target.elementType", "values": ["sequenceFlow", "messageFlow", "association", "dataAssociation"] }
+            ]
+          },
+          {
+            "op": "not",
+            "arg": {
+              "op": "or",
+              "args": [
+                {
+                  "op": "and",
+                  "args": [
+                    { "op": "eq", "field": "source.elementType", "value": "textAnnotation" },
+                    { "op": "in", "field": "target.elementType", "values": ["sequenceFlow", "messageFlow"] }
+                  ]
+                },
+                {
+                  "op": "and",
+                  "args": [
+                    { "op": "eq", "field": "target.elementType", "value": "textAnnotation" },
+                    { "op": "in", "field": "source.elementType", "values": ["sequenceFlow", "messageFlow"] }
+                  ]
+                }
+              ]
+            }
+          }
         ]
       }
     },

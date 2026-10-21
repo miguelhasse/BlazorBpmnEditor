@@ -62,6 +62,11 @@
         <target state="translated">，</target>
         <note />
       </trans-unit>
+      <trans-unit id="Rule.A-002">
+        <source>A flow-line endpoint requires a Text Annotation and a Sequence Flow or Message Flow.</source>
+        <target state="new">A flow-line endpoint requires a Text Annotation and a Sequence Flow or Message Flow.</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Rule.DA-002">
         <source>Group cannot be a connector endpoint (visual grouping only).</source>
         <target state="translated">组不能作为连接线端点（仅用于视觉分组）。</target>
@@ -78,8 +83,8 @@
         <note />
       </trans-unit>
       <trans-unit id="Rule.DA-004">
-        <source>Data Object/Data Store connect only via Data Association, never a plain Association.</source>
-        <target state="translated">数据对象/数据存储只能通过数据关联连接，绝不能通过普通关联。</target>
+        <source>Data Object/Data Store require Data Association except when linked to a Text Annotation.</source>
+        <target state="needs-review-translation">数据对象/数据存储只能通过数据关联连接，绝不能通过普通关联。</target>
         <note />
       </trans-unit>
       <trans-unit id="Rule.DA-005">

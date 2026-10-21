@@ -277,8 +277,11 @@
   <data name="DA-003" xml:space="preserve">
     <value>Text Annotation connects only via (undirected) Association, never Data Association.</value>
   </data>
+  <data name="A-002" xml:space="preserve">
+    <value>A flow-line endpoint requires a Text Annotation and a Sequence Flow or Message Flow.</value>
+  </data>
   <data name="DA-004" xml:space="preserve">
-    <value>Data Object/Data Store connect only via Data Association, never a plain Association.</value>
+    <value>Data Object/Data Store require Data Association except when linked to a Text Annotation.</value>
   </data>
   <data name="DA-005" xml:space="preserve">
     <value>Data Input Association direction is Data Object/Store/Property to an Activity or Throwing Event input.</value>

@@ -1,4 +1,4 @@
-import { util, type dia } from '@joint/core';
+import { g, util, type dia } from '@joint/core';
 
 import { centerOf, normalizedEndpoint, outlineOf, type Outline } from '../geometry/outline.js';
 import type { FontMetricsProvider } from '../labels/font-metrics.js';
@@ -10,6 +10,8 @@ import type {
 } from '../model/contracts.js';
 import { BpmnDocumentIndex, BpmnPlaneIndex, resolveDiagram } from '../model/document.js';
 import { isCollapsedContainer } from '../model/element-kind.js';
+import { CONNECTOR_CORNER_RADIUS } from '../geometry/constants.js';
+import { roundedPath } from '../routing/rounded-path.js';
 import * as factory from '../shapes/registry.js';
 
 import { buildEmbeddingTree } from './hierarchy.js';
@@ -196,13 +198,27 @@ export function renderDocument(
     ));
   }
 
+  const drawn = new Set(cells.map((cell) => String(cell.id)));
   for (const association of document.associations) {
-    if (!renderedIds.has(association.sourceRef) || !renderedIds.has(association.targetRef)) continue;
+    if (!drawn.has(association.sourceRef) || !drawn.has(association.targetRef)) continue;
     const edge = plane.edgeFor(association.id);
+    const endpoints = endpointsOf(outlines, edge, association.sourceRef, association.targetRef);
+    const lineRatio = (id: string, point: PointContract | undefined): number | undefined => {
+      const flow = cells.find((cell) => String(cell.id) === id);
+      const waypoints = plane.edgeFor(id)?.waypoints;
+      if (flow?.isLink() !== true || waypoints === undefined || waypoints.length < 2 || point === undefined) return undefined;
+      return new g.Path(roundedPath(waypoints, CONNECTOR_CORNER_RADIUS)).closestPointNormalizedLength(point);
+    };
+    const sourceLinkRatio = lineRatio(association.sourceRef, edge?.waypoints[0]);
+    const targetLinkRatio = lineRatio(association.targetRef, edge?.waypoints.at(-1));
     cells.push(factory.createAssociationLink(
       association,
       edge?.waypoints ?? [],
-      endpointsOf(outlines, edge, association.sourceRef, association.targetRef),
+      {
+        ...endpoints,
+        ...(sourceLinkRatio === undefined ? {} : { sourceLinkRatio }),
+        ...(targetLinkRatio === undefined ? {} : { targetLinkRatio }),
+      },
       association.direction !== 'none',
     ));
   }
@@ -556,9 +572,9 @@ function offsetOnOutline(
   other: Outline | undefined,
   waypoint: PointContract | undefined,
 ): PointContract | null {
-  if (outline === undefined || other === undefined || waypoint === undefined) return null;
+  if (outline === undefined || waypoint === undefined) return null;
 
-  const point = normalizedEndpoint(waypoint, outline, centerOf(other.bounds));
+  const point = normalizedEndpoint(waypoint, outline, other === undefined ? waypoint : centerOf(other.bounds));
 
   return { x: point.x - outline.bounds.x, y: point.y - outline.bounds.y };
 }

@@ -19,16 +19,17 @@ const { ToolsView } = dia;
  * *attaches* is still arbitrary along the outline — section 4.6's requirement is about the
  * attachment point, not about where the drag starts, and no fixed ports are introduced either way.
  */
-export function connectTool(): dia.ToolsView {
+export function connectTool(elementType?: string): dia.ToolsView {
+  const annotation = elementType === 'textAnnotation';
   return new ToolsView({
     name: 'bpmn-connect',
     tools: [
       new elementTools.Connect({
-        // Outside the right edge, where it cannot be mistaken for notation. BPMN has no symbol
-        // in that position, so nothing is obscured.
-        x: '100%',
+        // An annotation's notation is its left bracket, not its otherwise empty right edge.
+        x: annotation ? 0 : '100%',
         y: '50%',
-        offset: { x: 12, y: 0 },
+        offset: { x: annotation ? -12 : 12, y: 0 },
+        ...(annotation ? { useModelGeometry: true } : {}),
         magnet: 'root',
         markup: [
           {

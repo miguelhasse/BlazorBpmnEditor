@@ -51,6 +51,10 @@ export function endpointStrategy(
   grid: GridOptionsContract,
 ): (end: dia.Link.EndJSON, view: dia.CellView, magnet: SVGElement, coords: PointContract) => dia.Link.EndJSON {
   return (end, view, _magnet, coords) => {
+    if (view.model.isLink()) {
+      const ratio = (view as dia.LinkView).getClosestPointRatio(coords);
+      return { ...end, anchor: { name: 'connectionRatio', args: { ratio } }, connectionPoint: { name: 'anchor' } };
+    }
     if (!view.model.isElement()) return end;
 
     const element = view.model;

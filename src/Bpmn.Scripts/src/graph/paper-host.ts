@@ -153,6 +153,25 @@ export class PaperHost {
     this.paper.findClosestMagnetToPoint = (point, options) => {
       const radius = options?.radius ?? 0;
       const here = new g.Point(point.x, point.y);
+      const inherited = options?.filter;
+
+      // Pools and lanes contain the pointer too; a permitted nearby flow must win over them.
+      if (inherited !== undefined) {
+        let closest: { view: dia.LinkView; magnet: SVGElement } | undefined;
+        let distance = radius;
+        for (const link of this.graph.getLinks()) {
+          const type = (link.get('bpmn') as { elementType?: string } | undefined)?.elementType;
+          if (type !== 'sequenceFlow' && type !== 'messageFlow') continue;
+          const view = this.paper.findViewByModel(link) as dia.LinkView | undefined;
+          if (view === undefined || !inherited(view, view.el)) continue;
+          const near = view.getClosestPoint(here).distance(here);
+          if (near <= distance) {
+            distance = near;
+            closest = { view, magnet: view.el };
+          }
+        }
+        if (closest !== undefined) return closest;
+      }
 
       let inner: dia.Element | undefined;
       let bestDepth = -1;
@@ -174,7 +193,6 @@ export class PaperHost {
       if (inner === undefined) return lookup(point, options);
 
       const containers = new Set(inner.getAncestors().map((ancestor) => String(ancestor.id)));
-      const inherited = options?.filter;
 
       return lookup(point, {
         ...options,

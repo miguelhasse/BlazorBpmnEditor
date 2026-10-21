@@ -87,7 +87,8 @@
   <data name="Rule.DA-002" xml:space="preserve"><value>Group cannot be a connector endpoint (visual grouping only).</value></data>
   <data name="Rule.DA-002b" xml:space="preserve"><value>Group cannot be a connector endpoint (visual grouping only).</value></data>
   <data name="Rule.DA-003" xml:space="preserve"><value>Text Annotation connects only via (undirected) Association, never Data Association.</value></data>
-  <data name="Rule.DA-004" xml:space="preserve"><value>Data Object/Data Store connect only via Data Association, never a plain Association.</value></data>
+  <data name="Rule.DA-004" xml:space="preserve"><value>Data Object/Data Store require Data Association except when linked to a Text Annotation.</value></data>
+  <data name="Rule.A-002" xml:space="preserve"><value>A flow-line endpoint requires a Text Annotation and a Sequence Flow or Message Flow.</value></data>
   <data name="Rule.DA-005" xml:space="preserve"><value>Data Input Association direction is Data Object/Store/Property to an Activity or Throwing Event input.</value></data>
   <data name="Rule.DA-006" xml:space="preserve"><value>Data Output Association direction is an Activity or Catching Event output to a Data Object/Store/Property.</value></data>
 </root>

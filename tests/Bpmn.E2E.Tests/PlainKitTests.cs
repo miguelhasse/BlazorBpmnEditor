@@ -38,3 +38,5 @@ public sealed class PlainExecutionOverlayTests(DemoAppFixture app) : ExecutionOv
 public sealed class PlainRoutingTests(DemoAppFixture app) : RoutingTests(app);
 
 public sealed class PlainWebMcpTests(DemoAppFixture app) : WebMcpTests(app);
+
+public sealed class PlainAnnotationConnectionTests(DemoAppFixture app) : AnnotationConnectionTests(app);

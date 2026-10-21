@@ -33,6 +33,7 @@
     and configuration dependency, not a code one.
   -->
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Bpmn\Hasseware.AspNetCore.Components.Bpmn.csproj" />
     <ProjectReference Include="..\..\playground\Bpmn.Demo\Bpmn.Demo.csproj"
                       ReferenceOutputAssembly="false"
                       SkipGetTargetFrameworkProperties="true"

@@ -20,7 +20,7 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Model.Geometry;
 /// own output must change nothing.
 /// </para>
 /// </remarks>
-internal static class ConnectorEndpoints
+internal static partial class ConnectorEndpoints
 {
     /// <summary>Points this close together are the same point, in diagram units.</summary>
     private const double Epsilon = 0.5;
@@ -77,7 +77,7 @@ internal static class ConnectorEndpoints
             diagrams.Add(diagram with { Plane = diagram.Plane with { Edges = edges } });
         }
 
-        return changed ? document with { Diagrams = diagrams } : document;
+        return FollowFlowAttachments(changed ? document with { Diagrams = diagrams } : document, moved: moved);
     }
 
     /// <summary>

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from 'vitest';
-import type { dia } from '@joint/core';
+import { dia } from '@joint/core';
 
 import { ConnectController } from '../../src/editing/connect-controller.js';
 import { TableFontMetrics } from '../../src/labels/font-metrics.js';
@@ -9,6 +9,40 @@ import { flowNode, shape } from '../fixtures/documents.js';
 import { canvasStrings } from '../fixtures/canvas-strings.js';
 
 describe('live connection display', () => {
+  it.each(['sequenceFlow', 'messageFlow', 'association', 'dataAssociation'])('ignores %s snap candidates for ordinary shapes without replacing their refusal', (type) => {
+    const source = { model: new dia.Element({ bpmn: { elementType: 'task' } }) } as unknown as dia.CellView;
+    const target = { model: new dia.Element({ bpmn: { elementType: 'startEvent' } }) } as unknown as dia.CellView;
+    const line = { model: new dia.Link({ bpmn: { elementType: type } }) } as unknown as dia.CellView;
+    const controller = new ConnectController(
+      { size: 10, isVisible: true, snapEnabled: false },
+      { mode: 'manhattan', step: 10, padding: 20, parallelSeparation: 12, followPoolOrientation: true },
+      canvasStrings,
+    );
+
+    expect(controller.validate(source, null, target, null)).toBe(false);
+    expect(controller.validate(source, null, line, null)).toBe(false);
+    expect(controller.takeLastRejection()?.id).toBe('SF-003');
+  });
+
+  it.each(['sequenceFlow', 'messageFlow', 'association', 'dataAssociation'])('checks annotation-to-%s with shared rules', (type) => {
+    const source = new dia.Element({ bpmn: { elementType: 'textAnnotation' } });
+    const target = new dia.Link({ bpmn: { elementType: type } });
+    const sourceView = { model: source } as unknown as dia.CellView;
+    const targetView = { model: target } as unknown as dia.CellView;
+    const controller = new ConnectController(
+      { size: 10, isVisible: true, snapEnabled: false },
+      { mode: 'manhattan', step: 10, padding: 20, parallelSeparation: 12, followPoolOrientation: true },
+      canvasStrings,
+    );
+    const allowed = type === 'sequenceFlow' || type === 'messageFlow';
+    expect(controller.validate(sourceView, null, targetView, null)).toBe(allowed);
+    expect(controller.takeLastRejection()?.id ?? null).toBe(allowed ? null : 'A-002');
+    if (allowed) expect(controller.validate(targetView, null, sourceView, null)).toBe(true);
+    const preview = controller.defaultLink(sourceView);
+    expect(preview.attr('line/targetMarker')).toBeNull();
+    expect(preview.get('router')).toMatchObject({ name: 'normal' });
+  });
+
   it('localizes tooltip text but keeps rejection data invariant, and clears after the gesture', () => {
     const host = document.createElement('div');
     document.body.append(host);

@@ -634,6 +634,8 @@ export function createGroupCell(
 export interface EdgeEndpoints {
   readonly source: PointContract | null;
   readonly target: PointContract | null;
+  readonly sourceLinkRatio?: number;
+  readonly targetLinkRatio?: number;
 }
 
 export const noEndpoints: EdgeEndpoints = { source: null, target: null };
@@ -644,7 +646,10 @@ export const noEndpoints: EdgeEndpoints = { source: null, target: null };
  * connectionPoint 'anchor' is what stops JointJS shortening the line back to the shape outline
  * once the anchor has been placed.
  */
-function linkEnd(elementId: string, offset: PointContract | null): dia.Link.EndJSON {
+function linkEnd(elementId: string, offset: PointContract | null, linkRatio?: number): dia.Link.EndJSON {
+  if (linkRatio !== undefined) {
+    return { id: elementId, anchor: { name: 'connectionRatio', args: { ratio: linkRatio } }, connectionPoint: { name: 'anchor' } };
+  }
   if (offset === null) return { id: elementId };
 
   return {
@@ -733,8 +738,8 @@ export function createAssociationLink(
 
   return new BpmnConnectorLink({
     id: association.id,
-    source: linkEnd(sourceRef, endpoints.source),
-    target: linkEnd(association.targetRef, endpoints.target),
+    source: linkEnd(sourceRef, endpoints.source, endpoints.sourceLinkRatio),
+    target: linkEnd(association.targetRef, endpoints.target, endpoints.targetLinkRatio),
     vertices: interiorVertices(waypoints),
     ...metadata(
       association.id,

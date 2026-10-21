@@ -2,6 +2,11 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
   <file datatype="xml" source-language="en" target-language="ru" original="../BpmnRuleMessages.resx">
     <body>
+      <trans-unit id="A-002">
+        <source>A flow-line endpoint requires a Text Annotation and a Sequence Flow or Message Flow.</source>
+        <target state="new">A flow-line endpoint requires a Text Annotation and a Sequence Flow or Message Flow.</target>
+        <note />
+      </trans-unit>
       <trans-unit id="CT-001">
         <source>An element cannot both own local flow elements and reference a called element.</source>
         <target state="translated">Элемент не может одновременно владеть локальными элементами потока и ссылаться на вызываемый элемент.</target>
@@ -458,8 +463,8 @@
         <note />
       </trans-unit>
       <trans-unit id="DA-004">
-        <source>Data Object/Data Store connect only via Data Association, never a plain Association.</source>
-        <target state="translated">Объект данных/хранилище данных соединяются только через ассоциацию данных, но не через обычную ассоциацию.</target>
+        <source>Data Object/Data Store require Data Association except when linked to a Text Annotation.</source>
+        <target state="needs-review-translation">Объект данных/хранилище данных соединяются только через ассоциацию данных, но не через обычную ассоциацию.</target>
         <note />
       </trans-unit>
       <trans-unit id="DA-005">

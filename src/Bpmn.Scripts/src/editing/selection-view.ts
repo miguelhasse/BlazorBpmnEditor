@@ -122,7 +122,7 @@ export class SelectionView {
    *
    * `elementTools.Connect` is JointJS's own: it starts a link drag through the paper's
    * `defaultLink` and `validateConnection`, so the BPMN rules judge it without this knowing how a
-   * drag works. Placed outside the shape's right edge, where it cannot be mistaken for notation.
+   * drag works. Outside the right edge, except annotations whose bracket is on the left.
    */
   /**
    * Adds the tools a selected element offers.
@@ -142,7 +142,7 @@ export class SelectionView {
       return;
     }
 
-    const tools = connectTool();
+    const tools = connectTool(bpmn?.elementType);
 
     if (anchors.length > 0 && this.#resize !== null) {
       tools.options.tools = [

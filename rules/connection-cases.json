@@ -2,6 +2,48 @@
   "$comment": "Shared connection-rule cases: both src/Bpmn.Scripts (vitest) and tests/Bpmn.Tests (xUnit) evaluate every case against rules/bpmn-rules.json and must produce exactly these rule ids and kinds.",
   "cases": [
     {
+      "name": "annotation to a data object", "kind": "association",
+      "source": { "id": "note", "elementType": "textAnnotation", "containerId": "Process_1", "poolId": null, "eventDefinitionType": null, "isForCompensation": false },
+      "target": { "id": "data", "elementType": "dataObjectReference", "containerId": "Process_1", "poolId": null, "eventDefinitionType": null, "isForCompensation": false },
+      "isConditional": false, "isDefault": false, "violations": [], "inferredKind": "association"
+    },
+    {
+      "name": "data store to an annotation", "kind": "association",
+      "source": { "id": "data", "elementType": "dataStoreReference", "containerId": "Process_1", "poolId": null, "eventDefinitionType": null, "isForCompensation": false },
+      "target": { "id": "note", "elementType": "textAnnotation", "containerId": "Process_1", "poolId": null, "eventDefinitionType": null, "isForCompensation": false },
+      "isConditional": false, "isDefault": false, "violations": [], "inferredKind": "association"
+    },
+    {
+      "name": "annotation to a sequence flow", "kind": "association",
+      "source": { "id": "note", "elementType": "textAnnotation", "containerId": "Process_1", "poolId": null, "eventDefinitionType": null, "isForCompensation": false },
+      "target": { "id": "flow", "elementType": "sequenceFlow", "containerId": "Process_1", "poolId": null, "eventDefinitionType": null, "isForCompensation": false },
+      "isConditional": false, "isDefault": false, "violations": [], "inferredKind": "association"
+    },
+    {
+      "name": "message flow to an annotation", "kind": "association",
+      "source": { "id": "flow", "elementType": "messageFlow", "containerId": null, "poolId": null, "eventDefinitionType": null, "isForCompensation": false },
+      "target": { "id": "note", "elementType": "textAnnotation", "containerId": "Process_1", "poolId": null, "eventDefinitionType": null, "isForCompensation": false },
+      "isConditional": false, "isDefault": false, "violations": [], "inferredKind": "association"
+    },
+    {
+      "name": "annotation cannot connect to an association", "kind": "association",
+      "source": { "id": "note", "elementType": "textAnnotation", "containerId": "Process_1", "poolId": null, "eventDefinitionType": null, "isForCompensation": false },
+      "target": { "id": "flow", "elementType": "association", "containerId": "Process_1", "poolId": null, "eventDefinitionType": null, "isForCompensation": false },
+      "isConditional": false, "isDefault": false, "violations": ["A-002"], "inferredKind": "association"
+    },
+    {
+      "name": "annotation cannot connect to a data association", "kind": "association",
+      "source": { "id": "note", "elementType": "textAnnotation", "containerId": "Process_1", "poolId": null, "eventDefinitionType": null, "isForCompensation": false },
+      "target": { "id": "flow", "elementType": "dataAssociation", "containerId": "Process_1", "poolId": null, "eventDefinitionType": null, "isForCompensation": false },
+      "isConditional": false, "isDefault": false, "violations": ["A-002"], "inferredKind": "association"
+    },
+    {
+      "name": "task cannot associate with a flow line", "kind": "association",
+      "source": { "id": "task", "elementType": "task", "containerId": "Process_1", "poolId": null, "eventDefinitionType": null, "isForCompensation": false },
+      "target": { "id": "flow", "elementType": "sequenceFlow", "containerId": "Process_1", "poolId": null, "eventDefinitionType": null, "isForCompensation": false },
+      "isConditional": false, "isDefault": false, "violations": ["A-002"], "inferredKind": "sequenceFlow"
+    },
+    {
       "name": "start event to task",
       "kind": "sequenceFlow",
       "source": {

@@ -349,7 +349,9 @@ changes take effect on the next edit without replacing the document's history.
 ## Drag-to-connect
 
 A selected element carries a connector-initiation handle (`elementTools.Connect`) just outside its
-right edge, where BPMN draws nothing and it cannot be mistaken for notation.
+right edge, where BPMN draws nothing and it cannot be mistaken for notation. For a Text Annotation,
+the same 7-unit-radius handle sits 12 diagram units left of its bracket, vertically centered on the
+annotation. It follows movement, resizing, pan and zoom; its location is not a fixed connection port.
 
 **A handle, not ports.** §4.6 forbids quantising an outline into fixed anchors, so the whole shape
 body is one magnet and a connector attaches at an arbitrary point on the boundary. The body is a
@@ -361,12 +363,22 @@ Which connector a pair implies is inferred, not chosen: a Text Annotation endpoi
 Association, a data endpoint a Data Association, a Pool endpoint or a cross-Pool pair a Message Flow,
 and anything else a Sequence Flow.
 
+Text Annotations create undirected, dotted Associations to shapes (including data references,
+Pools and Lanes) or to a Sequence Flow or Message Flow. Groups, Associations and Data Associations
+are not annotation targets. A flow-line release attaches at the nearest point on the line, not its
+bounding box. The semantic reference remains the flow's id, while BPMNDI stores the attachment
+coordinate. A path-length ratio reconstructed from those coordinates follows the line when it
+moves or is rerouted. Creation, reconnection and dependent waypoint changes are atomic, so
+undo/redo and XML save/reload retain the attachment. Deleting a flow also deletes its annotation
+Associations, but not the annotations.
+
 **Validation is live**, against the shared rule table in `rules/bpmn-rules.json` — the same table the
 C# side reads, so the canvas and the document cannot drift. Every shape the rules reject is greyed
 out *while the pointer is still down*, so an illegal target never looks droppable (§7), and a release
 on one is refused by rule code rather than silently vanishing.
 
-The route is two points, projected onto each shape's outline. Two is the minimum DI-001 accepts, and
+An Association's route is two points, projected onto each shape's outline or its attached flow line.
+Two is the minimum DI-001 accepts, and
 the endpoints must not be the shape centres: a connector ends on its shapes' outlines (§4.6), and
 centre waypoints would draw it straight through both shapes.
 

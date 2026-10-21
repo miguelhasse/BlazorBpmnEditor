@@ -85,6 +85,13 @@ default section 10.4 gives a Pool that omits the attribute.
 
 ## Endpoints versus bends
 
+Text Annotations can attach to Sequence Flow and Message Flow paths using undirected Associations.
+The canvas uses JointJS link anchors, reconstructed from the Association's BPMNDI endpoint, to
+follow the target path continuously. The document carries the endpoint's relative path length
+along when the flow moves, reroutes or reconnects; both edges update in the same history entry.
+No private XML attachment metadata is required. Other connector-to-connector attachments are not
+enabled by this feature.
+
 Two rules meet when a connector is drawn, and they disagree.
 
 The Manhattan router computes its bends from the anchors JointJS picked. Section 4.6 says a
