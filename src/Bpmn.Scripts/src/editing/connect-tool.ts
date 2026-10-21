@@ -21,6 +21,7 @@ const { ToolsView } = dia;
  */
 export function connectTool(elementType?: string): dia.ToolsView {
   const annotation = elementType === 'textAnnotation';
+  const modelGeometry = annotation || elementType === 'dataObjectReference' || elementType === 'dataStoreReference';
   return new ToolsView({
     name: 'bpmn-connect',
     tools: [
@@ -29,7 +30,7 @@ export function connectTool(elementType?: string): dia.ToolsView {
         x: annotation ? 0 : '100%',
         y: '50%',
         offset: { x: annotation ? -12 : 12, y: 0 },
-        ...(annotation ? { useModelGeometry: true } : {}),
+        ...(modelGeometry ? { useModelGeometry: true } : {}),
         magnet: 'root',
         markup: [
           {

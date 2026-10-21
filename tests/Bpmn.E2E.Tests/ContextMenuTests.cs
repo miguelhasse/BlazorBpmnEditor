@@ -204,6 +204,25 @@ public class ContextMenuTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
         await RightClickAsync(id);
 
         var select = Page.Locator(".bpmn-menu__type-select");
+        if (await Page.Locator(".fluent-bpmn-editor").CountAsync() > 0)
+        {
+            var label = select.Locator("label[slot='label']");
+            await Expect(label).ToHaveTextAsync("Switch type");
+            var typographyMatches = await label.EvaluateAsync<bool>(
+                """
+                label => {
+                  const heading = getComputedStyle(document.querySelector('.bpmn-menu__heading'));
+                  const style = getComputedStyle(label);
+                  return ['fontSize', 'fontWeight', 'letterSpacing', 'textTransform', 'opacity']
+                    .every(property => style[property] === heading[property]);
+                }
+                """);
+            Assert.True(typographyMatches, "Switch Type label must match menu heading typography.");
+            await Expect(select.GetByRole(AriaRole.Combobox)).ToHaveAccessibleNameAsync("Switch type");
+            var valueStyle = await select.GetByRole(AriaRole.Combobox).EvaluateAsync<string>(
+                "control => getComputedStyle(control).textTransform");
+            Assert.Equal("none", valueStyle);
+        }
         await Expect(select.Locator("option, fluent-option")).ToHaveCountAsync(8);
         await Expect(select.Locator("option:checked, fluent-option[selected]")).ToHaveTextAsync("User Task");
 

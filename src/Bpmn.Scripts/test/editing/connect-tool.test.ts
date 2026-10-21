@@ -11,7 +11,7 @@ vi.mock('@joint/core', () => {
 });
 
 describe('connector affordance', () => {
-  it.each(['textAnnotation', 'task', 'pool', 'lane'])('positions the %s handle without changing its size', (type) => {
+  it.each(['textAnnotation', 'dataObjectReference', 'dataStoreReference', 'task', 'pool', 'lane'])('positions the %s handle without changing its size', (type) => {
     const tools = connectTool(type);
     const connect = tools.options.tools?.[0];
     expect(connect?.options).toMatchObject({
@@ -23,5 +23,8 @@ describe('connector affordance', () => {
     expect(connect?.options.markup).toMatchObject([
       { tagName: 'circle', attributes: { r: 7 } }, { tagName: 'path' },
     ]);
+    expect(connect?.options.useModelGeometry).toBe(
+      ['textAnnotation', 'dataObjectReference', 'dataStoreReference'].includes(type) ? true : undefined,
+    );
   });
 });

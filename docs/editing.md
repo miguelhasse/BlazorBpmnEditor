@@ -351,7 +351,9 @@ changes take effect on the next edit without replacing the document's history.
 A selected element carries a connector-initiation handle (`elementTools.Connect`) just outside its
 right edge, where BPMN draws nothing and it cannot be mistaken for notation. For a Text Annotation,
 the same 7-unit-radius handle sits 12 diagram units left of its bracket, vertically centered on the
-annotation. It follows movement, resizing, pan and zoom; its location is not a fixed connection port.
+annotation. Data Object and Data Store Reference handles use the shape bounds, excluding external
+labels, so they retain the same right-edge spacing and vertical center as other shapes.
+The handle follows movement, resizing, pan and zoom; its location is not a fixed connection port.
 
 **A handle, not ports.** §4.6 forbids quantising an outline into fixed anchors, so the whole shape
 body is one magnet and a connector attaches at an arbitrary point on the boundary. The body is a
