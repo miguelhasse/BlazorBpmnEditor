@@ -178,9 +178,10 @@ public sealed partial class BpmnEditorSession
     /// </remarks>
     internal async Task HandleDocumentLoadedAsync(DocumentLoaded payload)
     {
-        var moved = _activeDiagramId != payload.DiagramId;
+        var diagramId = string.IsNullOrEmpty(payload.DiagramId) ? null : payload.DiagramId;
+        var moved = _activeDiagramId != diagramId;
 
-        _activeDiagramId = payload.DiagramId;
+        _activeDiagramId = diagramId;
 
         /*
          * Only when this diagram is not already somewhere on the path. A load that arrives because
@@ -188,20 +189,24 @@ public sealed partial class BpmnEditorSession
          * away the breadcrumb at the moment it became useful. A load of a different file has a
          * diagram the path has never heard of, and starts a new one.
          */
-        if (!_path.Exists(step => step.DiagramId == payload.DiagramId))
+        if (diagramId is null)
         {
             _path.Clear();
-            _path.Add(new BpmnDiagramStep(payload.DiagramId, LabelOfDiagram(payload.DiagramId)));
+        }
+        else if (!_path.Exists(step => step.DiagramId == diagramId))
+        {
+            _path.Clear();
+            _path.Add(new BpmnDiagramStep(diagramId, LabelOfDiagram(diagramId)));
         }
 
         NotifyStateChanged();
 
         await OnDocumentLoaded.InvokeAsync(payload).ConfigureAwait(true);
 
-        if (moved)
+        if (moved && diagramId is not null)
         {
             await OnDiagramNavigated
-                .InvokeAsync(new BpmnDiagramNavigated(payload.DiagramId, [.. _path], BpmnNavigationOrigin.Load))
+                .InvokeAsync(new BpmnDiagramNavigated(diagramId, [.. _path], BpmnNavigationOrigin.Load))
                 .ConfigureAwait(true);
         }
     }

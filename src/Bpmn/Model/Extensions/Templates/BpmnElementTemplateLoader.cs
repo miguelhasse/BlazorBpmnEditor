@@ -312,7 +312,7 @@ public static class BpmnElementTemplateLoader
     }
     private static Dictionary<string, string> ReadStringDictionary(JsonElement e, string name)
     {
-        if (!e.TryGetProperty(name, out var obj) || obj.ValueKind != JsonValueKind.Object) return new Dictionary<string, string>();
+        if (!e.TryGetProperty(name, out var obj) || obj.ValueKind != JsonValueKind.Object) return [];
         return obj.EnumerateObject().ToDictionary(p => p.Name, p => ScalarValue(p.Value) ?? string.Empty, StringComparer.Ordinal);
     }
     private static string[] StringArray(JsonElement e, string name) =>

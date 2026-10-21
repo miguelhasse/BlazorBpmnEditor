@@ -13,11 +13,11 @@ public sealed class ComponentContractTests : BunitContext
         .SelectMany(assembly => assembly.GetExportedTypes())
         .Where(type => !type.IsAbstract && typeof(IComponent).IsAssignableFrom(type));
 
-    public static TheoryData<Type> EditorComponents => new(Components.Where(type => typeof(BpmnEditorComponentBase).IsAssignableFrom(type)));
-    public static TheoryData<Type> CanvasWidgets => new(Components.Where(IsCanvasWidget));
-    public static TheoryData<Type> PropertyEntries => new(Components.Where(type => typeof(BpmnPropertyEntryComponent).IsAssignableFrom(type)));
-    public static TheoryData<BpmnEditorPart> Parts => new(Enum.GetValues<BpmnEditorPart>());
-    public static TheoryData<BpmnPropertyEntryKind> EntryKinds => new(Enum.GetValues<BpmnPropertyEntryKind>());
+    public static TheoryData<Type> EditorComponents => [.. Components.Where(type => typeof(BpmnEditorComponentBase).IsAssignableFrom(type))];
+    public static TheoryData<Type> CanvasWidgets => [.. Components.Where(IsCanvasWidget)];
+    public static TheoryData<Type> PropertyEntries => [.. Components.Where(type => typeof(BpmnPropertyEntryComponent).IsAssignableFrom(type))];
+    public static TheoryData<BpmnEditorPart> Parts => [.. Enum.GetValues<BpmnEditorPart>()];
+    public static TheoryData<BpmnPropertyEntryKind> EntryKinds => [.. Enum.GetValues<BpmnPropertyEntryKind>()];
 
     public ComponentContractTests()
     {

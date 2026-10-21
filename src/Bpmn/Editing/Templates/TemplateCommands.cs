@@ -135,16 +135,16 @@ public static partial class BpmnDocumentEditor
         {
             var next = TemplateActive(template, values);
             if (next.SetEquals(active)) return document;
-            foreach (var item in indexed.Where(item => active.Contains(item.Key) && !next.Contains(item.Key)))
+            foreach (var (Property, Key) in indexed.Where(item => active.Contains(item.Key) && !next.Contains(item.Key)))
             {
-                values[item.Key] = null;
-                if (item.Property.Binding is { } removed && !indexed.Any(other => next.Contains(other.Key) && SameBinding(other.Property.Binding, removed)))
+                values[Key] = null;
+                if (Property.Binding is { } removed && !indexed.Any(other => next.Contains(other.Key) && SameBinding(other.Property.Binding, removed)))
                     document = command.Handlers.Resolve(removed).Remove(document, command.ElementId, removed, options);
             }
-            foreach (var item in indexed.Where(item => !active.Contains(item.Key) && next.Contains(item.Key)))
+            foreach (var (Property, Key) in indexed.Where(item => !active.Contains(item.Key) && next.Contains(item.Key)))
             {
-                values[item.Key] = BpmnTemplateValues.DefaultValue(item.Property);
-                if (item.Property.Binding is { } added) document = command.Handlers.Resolve(added).Write(document, command.ElementId, added, values[item.Key], item.Property, options);
+                values[Key] = BpmnTemplateValues.DefaultValue(Property);
+                if (Property.Binding is { } added) document = command.Handlers.Resolve(added).Write(document, command.ElementId, added, values[Key], Property, options);
             }
             active = next;
         }

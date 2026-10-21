@@ -504,6 +504,7 @@ export interface DropTargetContract {
   readonly bounds: GeometryBounds;
   readonly containerId: string | null;
   readonly poolId: string | null;
+  readonly processBounds?: Readonly<Record<string, GeometryBounds>>;
 }
 
 /** Raised when the canvas refused a gesture before reporting it. */

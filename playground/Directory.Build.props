@@ -5,7 +5,6 @@
   <PropertyGroup>
     <!-- TODO: flip to true once the FluentUI 4.x template warnings in the demo are triaged. -->
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>

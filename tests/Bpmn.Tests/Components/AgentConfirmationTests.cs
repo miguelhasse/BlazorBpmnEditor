@@ -90,7 +90,6 @@ public sealed class AgentConfirmationTests : BunitContext
     public async Task OnlyAnAgentAsks()
     {
         var scope = Render<BpmnEditorScope>();
-        var session = scope.Instance.Session;
 
         await Assert.ThrowsAsync<ArgumentException>(() => AskAsync(scope, Delete with { Origin = BpmnEditOrigin.User }, Token));
     }
@@ -99,7 +98,6 @@ public sealed class AgentConfirmationTests : BunitContext
     public async Task ClosingTheEditorAnswersNo()
     {
         var scope = Render<BpmnEditorScope>();
-        var session = scope.Instance.Session;
         var answer = await AskAsync(scope, Delete, Token);
 
         await DisposeComponentsAsync();

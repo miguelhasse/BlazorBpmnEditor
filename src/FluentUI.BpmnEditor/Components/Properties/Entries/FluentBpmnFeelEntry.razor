@@ -23,7 +23,7 @@
                                 ValueChanged="DraftChanged" OnFocusOut="CommitExpressionAsync" />
                 @if (Warning is { } warning)
                 {
-                    <span id="@_warningId" class="@(Block + "__feel-warning")" role="status">@warning</span>
+                    <span id="@WarningId" class="@(Block + "__feel-warning")" role="status">@warning</span>
                 }
             </span>
         </FluentBpmnPropertyEntryFrame>

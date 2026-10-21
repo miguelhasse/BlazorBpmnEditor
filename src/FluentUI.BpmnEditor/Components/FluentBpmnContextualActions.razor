@@ -21,9 +21,10 @@
                           aria-label="@LabelFor(action)"
                           @key="action.Key"
                           OnClick="@(() => ChooseAsync(action))">
-                @if (action.Kind == BpmnActionKind.Append)
+                @if (action.Kind is BpmnActionKind.Append or BpmnActionKind.AddTextAnnotation)
                 {
-                    var entry = new BpmnStencilEntry(action.Type, action.Label, action.EventDefinition);
+                    var entry = new BpmnStencilEntry(action.Type, action.Label, action.EventDefinition,
+                        Kind: action.Kind == BpmnActionKind.AddTextAnnotation ? BpmnStencilKind.Artifact : BpmnStencilKind.FlowNode);
                     <svg class="bpmn-stencil__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path class="bpmn-stencil__silhouette" d="@Silhouette(entry).Outline" />
                         @if (Silhouette(entry).Detail is { Length: > 0 } detail)

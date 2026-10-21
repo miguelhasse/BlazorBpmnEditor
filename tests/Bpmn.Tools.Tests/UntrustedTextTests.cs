@@ -34,7 +34,7 @@ public sealed class UntrustedTextTests
             _ => "{}",
         };
 
-        var result = await BpmnToolCatalog.InvokeAsync(host, tool, JsonDocument.Parse(arguments).RootElement, Token);
+        var result = await BpmnToolCatalog.InvokeAsync(host, tool, JsonElement.Parse(arguments), Token);
         using var json = JsonDocument.Parse(BpmnToolJson.Serialize(result));
 
         Assert.All(StringsOutsideUntrustedText(json.RootElement), text => Assert.DoesNotContain("IGNORE PREVIOUS", text, StringComparison.Ordinal));

@@ -133,7 +133,7 @@ public sealed class RenderCountTests : BunitContext
     private sealed class RenderLog : ILoggerProvider, ILogger
     {
         private readonly Dictionary<(int Id, Type Type), int> _counts = [];
-        private readonly object _gate = new();
+        private readonly Lock _gate = new();
         private int _total;
 
         public int Total { get { lock (_gate) return _total; } }

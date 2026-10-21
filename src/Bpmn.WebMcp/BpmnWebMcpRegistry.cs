@@ -43,7 +43,7 @@ public sealed class BpmnWebMcpRegistry
         var wanted = Wanted(instanceName);
         while (true)
         {
-            Task? leaving = null;
+            Task? leaving;
             lock (_lock)
             {
                 if (!_claimed.TryGetValue(wanted, out var release) || release is null)

@@ -135,7 +135,7 @@ public sealed class EditingTests : EditorContext
         var call = bridge.ExecuteAsync("call-1", "bpmn_delete", """{"elementIds":["review"]}""");
         scope.WaitForState(() => SessionOf(scope).PendingConfirmation is not null);
         bridge.Cancel("call-1");
-        var result = JsonDocument.Parse(await call).RootElement;
+        var result = JsonElement.Parse(await call);
 
         Assert.Null(SessionOf(scope).PendingConfirmation);
         Assert.Equal(BpmnWebMcpBridge.Cancelled, result.GetProperty("code").GetString());
@@ -299,7 +299,7 @@ public sealed class EditingTests : EditorContext
         var host = new BpmnSessionToolHost(SessionOf(scope));
         var bridge = new BpmnWebMcpBridge(host, BpmnWebMcpToolSet.Create("bpmn_", string.Empty, allowMutations: true), work => work());
 
-        var result = JsonDocument.Parse(await bridge.ExecuteAsync("1", "bpmn_delete", """{"elementIds":["review"]}""")).RootElement;
+        var result = JsonElement.Parse(await bridge.ExecuteAsync("1", "bpmn_delete", """{"elementIds":["review"]}"""));
 
         Assert.Equal(BpmnToolCodes.Denied, result.GetProperty("code").GetString());
         Assert.Equal("Review", Name(scope));

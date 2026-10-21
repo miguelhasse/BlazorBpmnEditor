@@ -332,6 +332,11 @@
         <target state="translated">Changer de type</target>
         <note />
       </trans-unit>
+      <trans-unit id="ContextualActions.AddTextAnnotation">
+        <source>Add Text Annotation</source>
+        <target state="new">Add Text Annotation</target>
+        <note />
+      </trans-unit>
       <trans-unit id="ContextualActions.Append.EndEvent">
         <source>Append End Event</source>
         <target state="translated">Ajouter un événement de fin</target>

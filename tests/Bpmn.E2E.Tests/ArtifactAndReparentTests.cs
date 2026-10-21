@@ -188,10 +188,10 @@ public sealed class ArtifactAndReparentTests(DemoAppFixture app) : PageTest, ICl
             ?? throw new InvalidOperationException("the annotation has no bracket");
 
         // A few pixels right of the 1px bracket: the tolerance band, not the stroke, takes the press.
-        var near = (X: bracket.X + 4, Y: bracket.Y + (bracket.Height / 2));
+        var (X, Y) = (bracket.X + 4, bracket.Y + (bracket.Height / 2));
         var hit = await Page.EvaluateAsync<string?>(
             "p => document.elementFromPoint(p.x, p.y)?.getAttribute('joint-selector') ?? null",
-            new { x = (double)near.X, y = (double)near.Y });
+            new { x = (double)X, y = (double)Y });
         Assert.Equal("hitArea", hit);
 
         // The text block is hit as a whole; the empty box right of it, past the band, stays click-through.
@@ -212,9 +212,9 @@ public sealed class ArtifactAndReparentTests(DemoAppFixture app) : PageTest, ICl
         Assert.NotEqual(id, interior);
 
         var before = await PositionAsync(id);
-        await Page.Mouse.MoveAsync(near.X, near.Y);
+        await Page.Mouse.MoveAsync(X, Y);
         await Page.Mouse.DownAsync();
-        await Page.Mouse.MoveAsync(near.X - 60, near.Y - 30, new() { Steps = 10 });
+        await Page.Mouse.MoveAsync(X - 60, Y - 30, new() { Steps = 10 });
         await Page.Mouse.UpAsync();
         await Page.WaitForTimeoutAsync(900);
 

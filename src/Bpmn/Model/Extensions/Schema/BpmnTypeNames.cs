@@ -4,7 +4,7 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Model.Extensions.Schema;
 public static class BpmnTypeNames
 {
     // BPMN 2.0 hierarchy from bpmn-io/bpmn-moddle resources/bpmn/json/bpmn.json (MIT).
-    private static readonly Dictionary<string, string[]> Parents = new Dictionary<string, string[]>(StringComparer.Ordinal)
+    private static readonly Dictionary<string, string[]> Parents = new(StringComparer.Ordinal)
     {
         ["bpmn:Interface"] = ["bpmn:RootElement"],
         ["bpmn:Operation"] = ["bpmn:BaseElement"],

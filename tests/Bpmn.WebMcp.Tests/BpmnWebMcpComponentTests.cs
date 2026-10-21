@@ -164,7 +164,7 @@ public sealed class BpmnWebMcpComponentTests : EditorContext
 
         await DisposeComponentsAsync();
 
-        var result = System.Text.Json.JsonDocument.Parse(await reference.ExecuteAsync("late", "bpmn_validate", "{}")).RootElement;
+        var result = System.Text.Json.JsonElement.Parse(await reference.ExecuteAsync("late", "bpmn_validate", "{}"));
         Assert.False(result.GetProperty("ok").GetBoolean());
         Assert.Equal(BpmnWebMcpBridge.Cancelled, result.GetProperty("code").GetString());
     }

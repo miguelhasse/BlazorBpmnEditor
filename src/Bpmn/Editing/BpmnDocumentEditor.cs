@@ -48,10 +48,12 @@ public static partial class BpmnDocumentEditor
 
         var result = ApplyCommand(document, command, options);
 
-        // Whatever the command did, a connector end is on the outline of its shape afterwards: a
-        // move, resize, collapse or reconnect can each leave one off it, and this is the one place
-        // that puts it back.
-        if (!result.IsApplied || command is CompoundCommand) return result;
+        if (!result.IsApplied || command is CompoundCommand or CreatePoolCommand) return result;
+
+        // First-Lane wrapping preserves content routes, but connections to an existing Pool must
+        // follow its enlarged outline.
+        var preserveRoutes = command is CreateLaneCommand lane
+            && !document.LaneSets.Any(set => set.ContainerId == lane.ContainerId && set.LaneIds.Count > 0);
 
         // Ends attached to a shape that changed size keep their place relative to its box first,
         // and only then are put on the outline: normalising alone would re-project an end onto the
@@ -62,7 +64,11 @@ public static partial class BpmnDocumentEditor
 
         var followed = ConnectorEndpoints.FollowResizedShapes(document, result.Document, routed);
 
-        return result with { Document = ConnectorEndpoints.FollowFlowAttachments(ConnectorEndpoints.Normalize(followed), document) };
+        return result with
+        {
+            Document = ConnectorEndpoints.FollowFlowAttachments(
+                preserveRoutes ? followed : ConnectorEndpoints.Normalize(followed), document),
+        };
     }
 
     private static BpmnEditResult ApplyCommand(BpmnDocument document, BpmnEditCommand command, EditingOptions options)
@@ -83,18 +89,18 @@ public static partial class BpmnDocumentEditor
                 BpmnEditSeverity.Rejected, "CT-001", $"No diagram '{requestedDiagramId}' exists to edit."));
         }
 
-        (string? DiagramId, string? ContainerId, string? ElementId) destination = command switch
+        (string? DiagramId, string? ContainerId, string? ElementId) = command switch
         {
             CreateElementCommand create => (create.DiagramId, create.ContainerId, create.Id),
             CreateArtifactCommand create => (create.DiagramId, create.ContainerId, create.Id),
             CreateDataReferenceCommand create => (create.DiagramId, create.ContainerId, create.Id),
             CreateParticipantCommand create => (create.DiagramId, document.Collaboration?.Id, create.Id),
-            CreateLaneCommand create => (create.DiagramId, create.ContainerId, create.Id),
+            // Pool/Lane bootstrap validates its destination after establishing the structural roots.
             _ => ((string?)null, (string?)null, (string?)null),
         };
 
-        if (destination.DiagramId is { } diagramId && destination.ElementId is { } elementId
-            && CreationDestinationProblem(document, diagramId, destination.ContainerId, elementId) is { } problem)
+        if (DiagramId is { } diagramId && ElementId is { } elementId
+            && CreationDestinationProblem(document, diagramId, ContainerId, elementId) is { } problem)
         {
             return BpmnEditResult.Reject(document, problem);
         }
@@ -114,7 +120,8 @@ public static partial class BpmnDocumentEditor
             UpdateWaypointsCommand waypoints => ApplyWaypoints(document, waypoints),
             CreateProcessCommand process => ApplyCreateProcess(document, process),
             CreateParticipantCommand participant => ApplyCreateParticipant(document, participant, options),
-            CreateLaneCommand lane => ApplyCreateLane(document, lane),
+            CreatePoolCommand pool => ApplyCreatePool(document, pool, options),
+            CreateLaneCommand lane => ApplyCreateLane(document, lane, options),
             ExpandSubProcessCommand expand => ApplyExpand(document, expand, options),
             CollapseSubProcessCommand collapse => ApplyCollapse(document, collapse, options),
             UpdatePropertiesCommand properties => ApplyProperties(document, properties, options),
@@ -380,7 +387,7 @@ public static partial class BpmnDocumentEditor
         if (horizontal)
         {
             var start = before.Y - after.Y;
-            var end = (after.Y + after.Height) - (before.Y + before.Height);
+            var end = after.Y + after.Height - (before.Y + before.Height);
 
             for (var index = 0; index < result.Length; index++)
             {
@@ -397,7 +404,7 @@ public static partial class BpmnDocumentEditor
         else
         {
             var start = before.X - after.X;
-            var end = (after.X + after.Width) - (before.X + before.Width);
+            var end = after.X + after.Width - (before.X + before.Width);
 
             for (var index = 0; index < result.Length; index++)
             {
@@ -462,15 +469,15 @@ public static partial class BpmnDocumentEditor
                 && asked.TryGetValue(poolShape.Id, out var poolMove)
                 && poolMove != poolShape.Bounds) continue;
 
-            var centre = (X: bounds.X + (bounds.Width / 2), Y: bounds.Y + (bounds.Height / 2));
+            var (X, Y) = (bounds.X + (bounds.Width / 2), bounds.Y + (bounds.Height / 2));
 
             var target = next.Lanes
                 .Where(lane => processLaneSets.Contains(lane.LaneSetId))
                 .Select(lane => (Lane: lane, Shape: shapeByElement.GetValueOrDefault(lane.Id)))
                 .Where(entry => entry.Shape is not null)
                 .Select(entry => (entry.Lane, Box: requested.GetValueOrDefault(entry.Shape!.Id, entry.Shape.Bounds)))
-                .Where(entry => centre.X >= entry.Box.X && centre.X <= entry.Box.X + entry.Box.Width
-                    && centre.Y >= entry.Box.Y && centre.Y <= entry.Box.Y + entry.Box.Height)
+                .Where(entry => X >= entry.Box.X && X <= entry.Box.X + entry.Box.Width
+                    && Y >= entry.Box.Y && Y <= entry.Box.Y + entry.Box.Height)
                 .OrderBy(entry => entry.Box.Width * entry.Box.Height)
                 .Select(entry => entry.Lane)
                 .FirstOrDefault();
@@ -558,7 +565,7 @@ public static partial class BpmnDocumentEditor
             [shape.Id] = command.Bounds,
         };
 
-        if (SpreadResize(geometry, shapes, shape, command.Bounds, requested) is { } refusal)
+        if (SpreadResize(geometry, shape, command.Bounds, requested) is { } refusal)
         {
             return BpmnEditResult.Reject(document, refusal);
         }
@@ -635,7 +642,6 @@ public static partial class BpmnDocumentEditor
     /// </remarks>
     private static BpmnEditDiagnostic? SpreadResize(
         BpmnDocument document,
-        FrozenDictionary<string, BpmnShape> shapes,
         BpmnShape shape,
         Bounds bounds,
         Dictionary<string, Bounds> requested)

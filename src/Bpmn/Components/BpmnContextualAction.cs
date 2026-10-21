@@ -16,6 +16,9 @@ public enum BpmnActionKind
 
     /// <summary>Open the full context menu for the selected element.</summary>
     OpenMenu,
+
+    /// <summary>Create a Text Annotation associated with the selected shape.</summary>
+    AddTextAnnotation,
 }
 
 /// <summary>One button on the contextual strip.</summary>

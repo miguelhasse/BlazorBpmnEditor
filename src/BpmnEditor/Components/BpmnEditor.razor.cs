@@ -643,5 +643,4 @@ public sealed partial class BpmnEditor : ComponentBase
     private ThemeOptions Theme => Theming ?? ThemeOptions.Default;
     private string? RootStyle => string.Concat(Style, Theme.Style) is { Length: > 0 } combined ? combined : null;
     private string? AnimationAttribute => Session.AnimationAttribute;
-    private BpmnDocument? DrawnDocument => Session.DrawnDocument;
 }

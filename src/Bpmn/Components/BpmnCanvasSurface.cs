@@ -21,21 +21,19 @@ namespace Hasseware.AspNetCore.Components.Bpmn;
 /// </remarks>
 public sealed class BpmnCanvasSurface
 {
-    private readonly BpmnCanvas _canvas;
-
     internal BpmnCanvasSurface(BpmnCanvas canvas)
     {
         ArgumentNullException.ThrowIfNull(canvas);
-        _canvas = canvas;
+        Canvas = canvas;
     }
 
     /// <summary>The canvas host element overlays are positioned against.</summary>
     /// <remarks>Captured on the canvas's first render; a default reference before that.</remarks>
-    public ElementReference Host => _canvas.HostElement;
+    public ElementReference Host => Canvas.HostElement;
 
     /// <summary>The diagram the canvas was asked to show; the first declared one when null.</summary>
-    public string? DiagramId => _canvas.DiagramId;
+    public string? DiagramId => Canvas.DiagramId;
 
     /// <summary>The canvas that owns this surface.</summary>
-    internal BpmnCanvas Canvas => _canvas;
+    internal BpmnCanvas Canvas { get; }
 }

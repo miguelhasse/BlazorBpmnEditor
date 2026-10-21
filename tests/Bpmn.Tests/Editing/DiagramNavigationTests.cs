@@ -124,13 +124,13 @@ public sealed class DiagramNavigationTests
         var document = Sample("nested-subprocesses.bpmn");
 
         // Whichever Sub-Process this file draws a plane for.
-        var drillable = document.FlowNodes
+        var (Id, Target) = document.FlowNodes
             .Where(node => node.Type == BpmnFlowNodeType.SubProcess)
             .Select(node => (node.Id, Target: BpmnDiagramNavigation.DrillTargetFor(document, node.Id)))
             .FirstOrDefault(pair => pair.Target.IsAvailable);
 
-        Assert.NotNull(drillable.Id);
-        Assert.True(drillable.Target.IsAvailable, "no Sub-Process in the fixture has a plane of its own");
+        Assert.NotNull(Id);
+        Assert.True(Target.IsAvailable, "no Sub-Process in the fixture has a plane of its own");
     }
 
     [Fact]

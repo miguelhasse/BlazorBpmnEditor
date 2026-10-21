@@ -65,11 +65,11 @@ public static class BpmnXmlWriter
     /// <returns>The XML and the export diagnostics manifest.</returns>
     public static BpmnExportResult Write(BpmnDocument document, BpmnWriteOptions options)
     {
-        var prepared = Prepare(document, options);
+        var (Output, Indent, Declaration, Mode, Diagnostics) = Prepare(document, options);
         return new BpmnExportResult(
-            Serialize(prepared.Output, prepared.Indent, prepared.Declaration),
-            prepared.Mode,
-            prepared.Diagnostics);
+            Serialize(Output, Indent, Declaration),
+            Mode,
+            Diagnostics);
     }
 
     /// <summary>Writes a document to a stream.</summary>
@@ -84,9 +84,9 @@ public static class BpmnXmlWriter
     {
         ArgumentNullException.ThrowIfNull(stream);
 
-        var prepared = Prepare(document, options ?? BpmnWriteOptions.Canonical);
-        Serialize(prepared.Output, stream, prepared.Indent, prepared.Declaration);
-        return prepared.Diagnostics;
+        var (Output, Indent, Declaration, _, Diagnostics) = Prepare(document, options ?? BpmnWriteOptions.Canonical);
+        Serialize(Output, stream, Indent, Declaration);
+        return Diagnostics;
     }
 
     private static (

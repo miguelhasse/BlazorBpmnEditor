@@ -153,8 +153,8 @@ SVG implementation notes for bottom-center Activity markers:
 ### 1.5 Swimlanes
 
 - **Pool** = graphical container representing one `Participant` (one Process, or empty = "black box"). Rendered as a large rectangle with a name band on one side.
-- **Lane** = subdivision of a Pool for categorization only — **has no effect on sequencing/connection legality**.
-- **A Lane requires a Pool.** Every rule below is written in terms of the Pool a Lane divides: Lanes are stacked inside the Pool, a Lane's extent subdivides the Pool's `Bounds`, and a Lane's `isHorizontal` must match its Pool's. A Lane on a Process no `Participant` references has none of those — no rectangle it is a share of, no orientation to inherit, nowhere for a header band — so the editor refuses to create one (`CT-012`) and gives one found on import a `Participant` drawn around the lanes already there, reporting that it did. This is the converse of the rule immediately below: a Pool needs no Lane, but a Lane needs a Pool.
+- **Lane** = Process partition for categorization only — **has no effect on sequencing/connection legality** (BPMN 2.0.2 §10.8).
+- **Pool-backed Lanes are editor policy, not a BPMN requirement.** BPMN permits LaneSets on standalone Processes. This editor tiles Lanes inside a Pool, with matching orientation and reserved header space. Creating the first Lane on an unpooled Process establishes its Pool atomically; imported standalone LaneSets receive a Participant drawn around existing Lanes, with an import diagnostic. Existing content keeps its ownership and absolute coordinates.
 - **A Pool does not require a Lane.** BPMN 2.0.2 defines `Participant.processRef` as optional and `Process.laneSet` with `minOccurs="0"`; therefore both black-box Pools and process-backed Pools with zero LaneSets/Lanes are valid. Lanes are optional partitions introduced only when the modeler needs categorization. The editor must not create a Lane automatically with a Pool or reject/delete the last Lane merely because the Pool would become lane-less. [OMG BPMN 2.0.2 `Semantic.xsd`](https://www.omg.org/spec/BPMN/20100501/Semantic.xsd), `tParticipant` and `tProcess`.
 - Both Pool and Lane shapes carry a BPMNDI `isHorizontal` boolean (`BPMNShape.isHorizontal`, `BPMNDI.xsd`). This is purely a **layout/orientation** flag — it never changes containment or connection legality.
 
@@ -886,7 +886,7 @@ Stable IDs for UI tooltips, automated tests, and documentation cross-references.
 | CT-007 | A collapsed Sub-Process or Call Activity has visible embedded process-content cells in the active plane. | Error |
 | CT-008 | A containment/reparent command left semantic ownership, membership, BPMNDI, link hierarchy, z-order, or JointJS embedding partially updated. | Error |
 | CT-009 | A Sub-Process expansion state disagrees with `BPMNShape.isExpanded`, or a collapsed Sub-Process exposes active nested visual cells/tools. | Error |
-| CT-012 | A Lane's `LaneSet` is on a Process that no `Participant` references, so the Lane subdivides nothing. | Error |
+| CT-012 | The editor's Pool-backed Lane layout lacks a referenced/drawn Participant. This is editor policy, not a universal BPMN constraint. | Error |
 
 ### 5.4 Rule-code range table (namespacing for future rules)
 
@@ -1183,7 +1183,7 @@ Use stable codes for extension diagnostics:
 |---|---|
 | Empty canvas (no root Process/Collaboration yet) | Create a `Collaboration` document root with a new Pool/Participant, or create a standalone `Process`; Text Annotation and Group may be created only after a BPMNDiagram/BPMNPlane exists. Do not create FlowNodes directly on the Definitions/canvas root. |
 | Collaboration plane (root `Collaboration` already exists) | Pool/Participant, Text Annotation, Group, and Message Flow between compatible Participants/Pool boundaries or InteractionNodes in different Pools. Do not create Sequence Flow, FlowNodes, Lanes, or Data Objects directly as Collaboration children; create them inside a Participant's referenced Process. |
-| Standalone Process plane (root `Process` with no Participant) | Start/Intermediate/End Events, Activities, Gateways, Data Object/Data Store References, Text Annotation, Group, and Sequence Flow. **Not Lanes** — a Lane subdivides a Pool (§1.5) and there is none here; the tool is shown disabled with `CT-012` rather than hidden. The Process remains a root element in `Definitions`; do not create a Pool implicitly. |
+| Standalone Process plane (root `Process` with no Participant) | Start/Intermediate/End Events, Activities, Gateways, Data Object/Data Store References, Text Annotation, Group, Sequence Flow, and the enabled Pool / Lane tool. First Pool creation references the existing Process; direct Lane creation establishes Pool and Lane atomically. The Process remains a root element in `Definitions`. |
 | Pool with referenced Process | Start/Intermediate/End Events, Activities, Gateways, Data Object/Data Store References, Text Annotation, Group, optional Lanes, Sequence Flow, and Boundary Events attached to Activities. |
 | Lane | Same FlowNodes and artifacts as the parent Process/Pool, assigned through Lane membership and a containing `LaneSet`; a Lane is organizational metadata, not a separate FlowElementsContainer or Sequence Flow scope. |
 | Expanded embedded Sub-Process | Start/Intermediate/End Events, Activities, Gateways, Data Object/Data Store References, Text Annotation, Group, Sequence Flow, and Boundary Events on nested Activities (all scoped to that Sub-Process's own `containerId`). |
@@ -1194,7 +1194,8 @@ Use stable codes for extension diagnostics:
 | Black-box Pool (no Process assigned) | Message Flow endpoint only; no internal FlowNodes creatable until a Process is assigned/expanded. |
 
 Creation invariants for the empty canvas and Collaboration plane:
-- The first Pool creation must create a `Participant` semantic object and its `BPMNShape`; it must not create a Lane or a Process implicitly unless the user selects an “add Process”/“expand Pool” action.
+- The combined Pool / Lane tool creates a horizontal, process-backed Pool outside a Pool and a Lane inside one. The first Pool creates a `Participant` and `BPMNShape`, reuses the active unpooled Process or establishes a missing Process/Collaboration/diagram, and never adds a Lane implicitly. The lower-level Participant command continues to support black-box Pools.
+- Wrapping a populated Process sizes and positions the Pool around its active-diagram shapes, rendered labels and connector routes with padding/header space, ignoring the drop position. Existing absolute geometry and nested ownership remain unchanged; unrelated Processes and diagrams are untouched. First Lane creation claims directly owned FlowNodes through `flowNodeRefs`, never by changing their semantic owner.
 - A process-backed Pool is also valid with zero Lanes because `Process.laneSet` has schema cardinality `0..*`. Adding a Process must not implicitly add a Lane, and deleting the final Lane must leave a valid lane-less Process/Pool.
 - A Participant may remain black-box (`processRef=null`). A black-box Pool is still a valid Message Flow endpoint, but it has no FlowNode, Lane, Sequence Flow, Data Association, or internal DI content.
 - Assigning a Process to a Participant (`processRef`) changes the available stencil to the Pool-with-Process row; it does not move the Process's FlowNodes into the Collaboration scope. The Process remains the Participant's referenced semantic root.

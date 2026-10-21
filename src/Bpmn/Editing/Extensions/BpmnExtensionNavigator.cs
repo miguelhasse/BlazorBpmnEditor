@@ -189,7 +189,7 @@ public static class BpmnExtensionNavigator
             }
 
             if (oldItems.Length == rows.Count
-                && oldItems.Where((item, index) => !SameElement(item, replacements[index])).Any() == false)
+                && !oldItems.Where((item, index) => !SameElement(item, replacements[index])).Any())
             {
                 return container;
             }

@@ -210,27 +210,6 @@ public partial class RoutingTests(DemoAppFixture app) : PageTest, IClassFixture<
             $"the Association was routed orthogonally: {Describe(route)}");
     }
 
-    /// <summary>The index of the route's longest segment, as its end point.</summary>
-    private static int LongestSegment(IReadOnlyList<(double X, double Y)> route)
-    {
-        var index = 1;
-        var longest = 0d;
-
-        for (var candidate = 1; candidate < route.Count; candidate++)
-        {
-            var length = Math.Abs(route[candidate].X - route[candidate - 1].X)
-                + Math.Abs(route[candidate].Y - route[candidate - 1].Y);
-
-            if (length > longest)
-            {
-                longest = length;
-                index = candidate;
-            }
-        }
-
-        return index;
-    }
-
     /// <summary>Paper coordinates to client coordinates, through the paper's own transform.</summary>
     private const string CTM_EXPRESSION = "p => { const m = document.querySelector('.bpmn-canvas__paper > svg > g').getScreenCTM(); return [m.a * p[0] + m.c * p[1] + m.e, m.b * p[0] + m.d * p[1] + m.f]; }";
 
@@ -850,9 +829,9 @@ public partial class RoutingTests(DemoAppFixture app) : PageTest, IClassFixture<
     {
         for (var index = 1; index < route.Count; index++)
         {
-            var previous = route[index - 1];
+            var (X, Y) = route[index - 1];
             var current = route[index];
-            var axial = Math.Abs(current.X - previous.X) < 1.5 || Math.Abs(current.Y - previous.Y) < 1.5;
+            var axial = Math.Abs(current.X - X) < 1.5 || Math.Abs(current.Y - Y) < 1.5;
 
             Assert.True(axial, $"segment {index} of {Describe(route)} runs diagonally");
         }

@@ -576,7 +576,7 @@ public class ContextMenuTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
 
     // --- helpers ------------------------------------------------------------------------
 
-    private Task WheelCanvasAsync(double deltaY, bool zoom) => Page.EvaluateAsync(
+    private Task<System.Text.Json.JsonElement?> WheelCanvasAsync(double deltaY, bool zoom) => Page.EvaluateAsync(
         """
         async ([deltaY, zoom]) => {
           const svg = document.querySelector('.bpmn-canvas__paper > svg');
@@ -589,7 +589,7 @@ public class ContextMenuTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
         }
         """, new object[] { deltaY, zoom });
 
-    private Task ExpectTargetAlignmentAsync(string id) => Page.WaitForFunctionAsync(
+    private Task<IJSHandle> ExpectTargetAlignmentAsync(string id) => Page.WaitForFunctionAsync(
         """
         id => {
           const target = document.querySelector(`.joint-cell[model-id="${id}"]`).getBoundingClientRect();

@@ -27,6 +27,16 @@ public sealed class BpmnEditorSessionTests
     }
 
     [Fact]
+    public async Task RootlessLoadHasNoActiveDiagramOrEmptyNavigationEntry()
+    {
+        var session = Session(new BpmnDocument
+        { Definitions = new BpmnDefinitions("Definitions", "http://example.org/bpmn") });
+        await session.HandleDocumentLoadedAsync(new DocumentLoaded("", 0, 0, []));
+        Assert.Null(session.ActiveDiagramId);
+        Assert.Empty(session.State.NavigationPath);
+    }
+
+    [Fact]
     public async Task MutableDescriptionOptionsInvalidateCachedSnapshots()
     {
         var options = new BpmnOptions();

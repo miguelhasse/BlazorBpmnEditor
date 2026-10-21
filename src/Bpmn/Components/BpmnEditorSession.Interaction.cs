@@ -15,7 +15,6 @@ namespace Hasseware.AspNetCore.Components.Bpmn;
 public sealed partial class BpmnEditorSession
 {
     private ContextMenuRequested? _menu;
-    private BpmnElementSnapshot? _menuSnapshot;
     private LabelEditRequested? _labelEdit;
     private Interop.Anchor? _selectionAnchor;
     private BpmnElementSnapshot? _selectionSnapshot;
@@ -24,7 +23,7 @@ public sealed partial class BpmnEditorSession
     public bool IsContextMenuOpen => _menu is not null;
 
     /// <summary>The snapshot the menu is showing, or <see langword="null"/> for a canvas-level menu.</summary>
-    public BpmnElementSnapshot? ContextMenuSnapshot => _menuSnapshot;
+    public BpmnElementSnapshot? ContextMenuSnapshot { get; private set; }
 
     /// <summary>Whether a label is being edited in place.</summary>
     public bool IsEditingLabel => _labelEdit is not null;
@@ -56,7 +55,7 @@ public sealed partial class BpmnEditorSession
         }
 
         _menu = payload;
-        _menuSnapshot = payload.ElementId is { Length: > 0 } id ? Describe(id) : null;
+        ContextMenuSnapshot = payload.ElementId is { Length: > 0 } id ? Describe(id) : null;
 
         NotifyStateChanged();
     }
@@ -67,7 +66,7 @@ public sealed partial class BpmnEditorSession
         if (_menu is null) return;
 
         _menu = null;
-        _menuSnapshot = null;
+        ContextMenuSnapshot = null;
         NotifyStateChanged();
     }
 
@@ -85,8 +84,8 @@ public sealed partial class BpmnEditorSession
             if (_menu is null) return [];
 
             var entries = new List<BpmnMenuEntry>();
-            var hasTarget = _menuSnapshot is not null;
-            var capabilities = _menuSnapshot?.Capabilities ?? BpmnElementCapabilities.None;
+            var hasTarget = ContextMenuSnapshot is not null;
+            var capabilities = ContextMenuSnapshot?.Capabilities ?? BpmnElementCapabilities.None;
 
             if (hasTarget && capabilities.CanEditLabel)
             {
@@ -119,7 +118,7 @@ public sealed partial class BpmnEditorSession
     /// <returns>A task that completes once the command has run.</returns>
     public async Task InvokeMenuCommandAsync(BpmnMenuCommand command)
     {
-        var target = _menuSnapshot?.ElementId;
+        var target = ContextMenuSnapshot?.ElementId;
         var acting = target is null ? _selection : (IReadOnlyList<string>)[target];
 
         CloseContextMenu();
@@ -200,7 +199,7 @@ public sealed partial class BpmnEditorSession
         var result = await ApplyAsync(command).ConfigureAwait(true);
         await ReportRejectionsAsync(result).ConfigureAwait(true);
 
-        _menuSnapshot = Describe(command.ElementId);
+        ContextMenuSnapshot = Describe(command.ElementId);
         _selectionSnapshot = _selectionSnapshot is null ? null : Describe(_selectionSnapshot.ElementId);
         NotifyStateChanged();
     }
@@ -268,7 +267,7 @@ public sealed partial class BpmnEditorSession
 
     /// <summary>The diagnostics raised against the current selection.</summary>
     public IReadOnlyList<Validation.BpmnDiagnostic> SelectionDiagnostics => DiagnosticsOverride ??
-        [.. _selection.SelectMany(id => Validation.For(id))];
+        [.. _selection.SelectMany(Validation.For)];
 
     /// <summary>
     /// Applies a property command from a surface that may be editing more than one element.
@@ -312,7 +311,7 @@ public sealed partial class BpmnEditorSession
             _selection = [renamed];
         }
 
-        _menuSnapshot = _menuSnapshot is null ? null : Describe(_menuSnapshot.ElementId);
+        ContextMenuSnapshot = ContextMenuSnapshot is null ? null : Describe(ContextMenuSnapshot.ElementId);
         _selectionSnapshot = _selectionSnapshot is null ? null : Describe(_selectionSnapshot.ElementId);
         NotifyStateChanged();
 
@@ -332,7 +331,7 @@ public sealed partial class BpmnEditorSession
 
         // Kept open on success as well as on refusal: a switch is a small correction, and closing
         // the menu on every one would make correcting two properties in a row a four-gesture job.
-        _menuSnapshot = Describe(command.ElementId);
+        ContextMenuSnapshot = Describe(command.ElementId);
         _selectionSnapshot = _selectionSnapshot is null ? null : Describe(_selectionSnapshot.ElementId);
         NotifyStateChanged();
     }
@@ -356,7 +355,7 @@ public sealed partial class BpmnEditorSession
         // The menu and the editor never share the screen: both are anchored on the same element,
         // and the menu is how the editor was most likely opened.
         _menu = null;
-        _menuSnapshot = null;
+        ContextMenuSnapshot = null;
         _labelEdit = payload;
 
         NotifyStateChanged();
@@ -445,7 +444,7 @@ public sealed partial class BpmnEditorSession
         if (!stillTheTarget)
         {
             _menu = null;
-            _menuSnapshot = null;
+            ContextMenuSnapshot = null;
         }
 
         if (_labelEdit is { } editing && !payload.ElementIds.Contains(editing.ElementId)) _labelEdit = null;
@@ -476,6 +475,10 @@ public sealed partial class BpmnEditorSession
                 await AppendAsync(snapshot, action).ConfigureAwait(true);
                 break;
 
+            case BpmnActionKind.AddTextAnnotation:
+                await AddTextAnnotationAsync(snapshot).ConfigureAwait(true);
+                break;
+
             case BpmnActionKind.EditLabel:
                 await _canvas.EditLabelAsync(snapshot.ElementId).ConfigureAwait(true);
                 break;
@@ -492,6 +495,33 @@ public sealed partial class BpmnEditorSession
             default:
                 break;
         }
+    }
+
+    private async Task AddTextAnnotationAsync(BpmnElementSnapshot source)
+    {
+        if (_canvas is null || IsReadOnly
+            || !(source.Capabilities.CanConnect || source.ElementType == "lane" && source.Capabilities.CanEditLabel)
+            || source.Bounds is null
+            || EnsureHistory() is null) return;
+
+        var diagramId = ActiveDiagramId;
+        var target = await _canvas.ResolveAppendPointAsync(source.ElementId, "textAnnotation").ConfigureAwait(true);
+        var containerId = source.ContainerId ?? ProcessForPool(source.PoolId) ?? EditedDocument?.Collaboration?.Id;
+        if (target is null || containerId is null) return;
+
+        var id = BpmnId.New("TextAnnotation");
+        var result = await ApplyAsync(new CompoundCommand(
+            [
+                new CreateArtifactCommand(id, BpmnArtifactKind.TextAnnotation, containerId, target.Bounds, Text: string.Empty)
+                { DiagramId = diagramId },
+                new CreateConnectorCommand(BpmnId.New("Association"), BpmnConnectorKind.Association,
+                    source.ElementId, id, WaypointsBetween(source, target.Bounds), containerId)
+                { DiagramId = diagramId },
+            ], "Add Text Annotation")).ConfigureAwait(true);
+        await AfterEditAsync(result).ConfigureAwait(true);
+        if (!result.IsApplied || diagramId != ActiveDiagramId) return;
+        await _canvas.SetSelectionAsync([id]).ConfigureAwait(true);
+        await _canvas.EditLabelAsync(id).ConfigureAwait(true);
     }
 
     /// <summary>

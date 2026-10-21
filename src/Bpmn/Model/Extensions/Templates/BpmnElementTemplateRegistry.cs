@@ -148,7 +148,7 @@ public sealed record BpmnTemplateRegistryAddResult(bool Added, BpmnTemplateLoadE
 public sealed class BpmnElementTemplateRegistry
 {
     private readonly Dictionary<string, List<BpmnElementTemplate>> _templates = new(StringComparer.Ordinal);
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
 
     /// <summary>Adds a template, rejecting an existing id/version pair.</summary>
     public BpmnTemplateRegistryAddResult Add(BpmnElementTemplate template)
@@ -268,6 +268,5 @@ public sealed class BpmnElementTemplateRegistry
         return parents.Contains(expected, StringComparer.Ordinal) || parents.Any(parent => parent != candidate && IsA(parent, expected));
     }
 }
-
 
 

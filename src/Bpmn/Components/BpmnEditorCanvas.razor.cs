@@ -43,7 +43,6 @@ public sealed partial class BpmnEditorCanvas : ComponentBase, IDisposable
     private BpmnEditorSession? _attachedSession;
     private BpmnCanvas Canvas
     {
-        get => _canvas!;
         set
         {
             Session.AttachCanvas(value);

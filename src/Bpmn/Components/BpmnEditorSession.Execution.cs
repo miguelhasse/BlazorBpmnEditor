@@ -20,19 +20,8 @@ namespace Hasseware.AspNetCore.Components.Bpmn;
 /// </remarks>
 public sealed partial class BpmnEditorSession
 {
-    /// <summary>
-    /// The last state pushed, kept so a rebuilt canvas can be told again.
-    /// </summary>
-    /// <remarks>
-    /// The canvas redraws its own overlay after every render, so this is not about diagram
-    /// switches. It is about the canvas being replaced entirely — a disposed and re-created
-    /// component starts with no state, and an overlay that vanished on a re-render the host did
-    /// not cause would look like a dropped update from the engine.
-    /// </remarks>
-    private BpmnExecutionState? _execution;
-
     /// <summary>The execution state currently drawn, or <see langword="null"/> when none is.</summary>
-    public BpmnExecutionState? ExecutionState => _execution;
+    public BpmnExecutionState? ExecutionState { get; private set; }
 
     /// <summary>
     /// Draws an engine's view of a running instance over the diagram.
@@ -47,7 +36,7 @@ public sealed partial class BpmnEditorSession
     {
         ArgumentNullException.ThrowIfNull(state);
 
-        _execution = state;
+        ExecutionState = state;
         NotifyStateChanged();
 
         if (_canvas is not null)
@@ -59,7 +48,7 @@ public sealed partial class BpmnEditorSession
     /// <summary>Removes every execution overlay.</summary>
     public async Task ClearExecutionStateAsync()
     {
-        _execution = null;
+        ExecutionState = null;
         NotifyStateChanged();
 
         if (_canvas is not null)
@@ -78,7 +67,7 @@ public sealed partial class BpmnEditorSession
     /// </remarks>
     internal async Task HandleCanvasInitializedAsync(CanvasInitialized payload)
     {
-        if (_execution is { } state && _canvas is not null)
+        if (ExecutionState is { } state && _canvas is not null)
         {
             await _canvas.SetExecutionStateAsync(state).ConfigureAwait(true);
         }

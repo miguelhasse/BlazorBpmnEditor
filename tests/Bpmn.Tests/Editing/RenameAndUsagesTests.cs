@@ -40,7 +40,7 @@ public sealed class RenameAndUsagesTests
                 ("Lane_1", "flowNodeRef"),
                 ("Task_1_di", "bpmnElement"),
             ],
-            usages.Select(site => (site.OwnerId, site.Attribute)).OrderBy(pair => pair.Item1, StringComparer.Ordinal));
+            usages.Select(site => (site.OwnerId, site.Attribute)).OrderBy(pair => pair.OwnerId, StringComparer.Ordinal));
     }
 
     [Fact]

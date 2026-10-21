@@ -9,11 +9,9 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Serialization;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Section 1.5 writes every rule about a Lane in terms of the Pool it divides: it is stacked inside
-/// the Pool, its extent subdivides the Pool's, its orientation must match the Pool's. A Lane on a
-/// Process no Participant references has none of those — no rectangle it is a share of, no
-/// orientation to inherit, nowhere for a header band. The editor refuses to create one, so a
-/// document that already contains one would otherwise be permanently invalid and uneditable.
+/// BPMN 2.0.2 section 10.8 permits LaneSets on standalone Processes. The editor's section 1.5
+/// uses Pool-backed Lane geometry instead: Lanes tile a Pool and inherit its orientation.
+/// Creation establishes a missing Pool atomically; import applies the same layout policy here.
 /// </para>
 /// <para>
 /// This is one of two places the reader changes what a file said (the other moves connector ends onto
@@ -112,7 +110,7 @@ internal static class BpmnLaneOwnership
         var right = boxes.Max(box => box.X + box.Width);
         var bottom = boxes.Max(box => box.Y + box.Height);
 
-        return new Bounds(left - HeaderSize, top, (right - left) + HeaderSize, bottom - top);
+        return new Bounds(left - HeaderSize, top, right - left + HeaderSize, bottom - top);
     }
 
     /// <summary>Adds each Pool shape to the plane that draws the lanes it wraps.</summary>

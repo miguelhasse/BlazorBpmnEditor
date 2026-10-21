@@ -40,7 +40,7 @@ public sealed record BpmnDocument
     /// </remarks>
     private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<
         BpmnDocument,
-        FrozenDictionary<string, object>> Indexes = new();
+        FrozenDictionary<string, object>> Indexes = [];
 
     /// <summary>Document-level metadata.</summary>
     public required BpmnDefinitions Definitions { get; init; }

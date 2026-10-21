@@ -63,8 +63,8 @@
         <note />
       </trans-unit>
       <trans-unit id="CT-012">
-        <source>A Lane subdivides a Pool, so its LaneSet's Process must be referenced by a Participant.</source>
-        <target state="translated">Bir Kulvar bir Havuzu alt bölümlere ayırır; bu nedenle Kulvar Kümesinin Süreci bir Katılımcı tarafından başvurulmalıdır.</target>
+        <source>The editor's Lane layout requires a Pool referencing the LaneSet's Process.</source>
+        <target state="needs-review-translation">Bir Kulvar bir Havuzu alt bölümlere ayırır; bu nedenle Kulvar Kümesinin Süreci bir Katılımcı tarafından başvurulmalıdır.</target>
         <note />
       </trans-unit>
       <trans-unit id="CT-012.Detail">

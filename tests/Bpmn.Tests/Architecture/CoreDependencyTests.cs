@@ -9,7 +9,7 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Architecture;
 /// clean").
 /// </summary>
 /// <remarks>
-/// <see cref="Storage.IBpmnDocumentStore"/> lives in Core so the editor, agent tools and hosts share one
+/// <c>IBpmnDocumentStore</c> lives in Core so the editor, agent tools and hosts share one
 /// persistence seam. That only stays affordable while Core references none of the things a store, bus or
 /// transport is built on: those belong in optional packages. Asserted mechanically, because "just one
 /// helper from the Azure SDK" is exactly the change that slips through review.

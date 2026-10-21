@@ -14,7 +14,6 @@ namespace Hasseware.AspNetCore.Components.Bpmn;
 /// </remarks>
 public sealed partial class BpmnEditorSession
 {
-    private string? _accessibleCurrent;
 
     /// <summary>
     /// Whether the parallel accessible tree is rendered.
@@ -47,7 +46,7 @@ public sealed partial class BpmnEditorSession
     /// reader who arrows are looking at the same place. A multi-selection says nothing about where
     /// a cursor should be, so it leaves the cursor alone.
     /// </remarks>
-    public string? AccessibleCurrent => _selection.Count == 1 ? _selection[0] : _accessibleCurrent;
+    public string? AccessibleCurrent { get => _selection.Count == 1 ? _selection[0] : field; private set; }
 
     /// <summary>
     /// Moves the reader to an element: selects it and brings it into view.
@@ -62,7 +61,7 @@ public sealed partial class BpmnEditorSession
     {
         if (string.IsNullOrEmpty(elementId)) return;
 
-        _accessibleCurrent = elementId;
+        AccessibleCurrent = elementId;
 
         await SetSelectionAsync([elementId]).ConfigureAwait(true);
         await SetViewportAsync(ViewportCommand.RevealElement(elementId)).ConfigureAwait(true);

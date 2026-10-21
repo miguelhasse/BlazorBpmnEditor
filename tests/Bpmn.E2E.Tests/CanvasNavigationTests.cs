@@ -30,11 +30,11 @@ public partial class CanvasNavigationTests(DemoAppFixture app) : PageTest, IClas
         await PressAsync("0");
 
         await PressAsync("ArrowRight");
-        var right = await ReadTransformAsync();
+        var (_, TranslateX, TranslateY) = await ReadTransformAsync();
 
         // Panning the view right translates the content left, by the configured 50-unit step.
-        Assert.Equal(-50d, right.TranslateX);
-        Assert.Equal(0d, right.TranslateY);
+        Assert.Equal(-50d, TranslateX);
+        Assert.Equal(0d, TranslateY);
 
         await PressAsync("ArrowDown");
         Assert.Equal(-50d, (await ReadTransformAsync()).TranslateY);
@@ -54,9 +54,9 @@ public partial class CanvasNavigationTests(DemoAppFixture app) : PageTest, IClas
         Assert.True((await ReadTransformAsync()).Scale < 1d);
 
         await PressAsync("0");
-        var reset = await ReadTransformAsync();
-        Assert.Equal(1d, reset.Scale);
-        Assert.Equal(0d, reset.TranslateX);
+        var (Scale, TranslateX, _) = await ReadTransformAsync();
+        Assert.Equal(1d, Scale);
+        Assert.Equal(0d, TranslateX);
     }
 
     [Fact]
@@ -95,9 +95,9 @@ public partial class CanvasNavigationTests(DemoAppFixture app) : PageTest, IClas
         await HoverCanvasAsync();
         await Page.Mouse.WheelAsync(0, 120);
 
-        var after = await ReadTransformAsync();
-        Assert.Equal(1d, after.Scale);
-        Assert.True(after.TranslateY < 0d, $"expected a vertical pan, got {after.TranslateY}");
+        var (Scale, _, TranslateY) = await ReadTransformAsync();
+        Assert.Equal(1d, Scale);
+        Assert.True(TranslateY < 0d, $"expected a vertical pan, got {TranslateY}");
     }
 
     [Fact]
@@ -260,9 +260,9 @@ public partial class CanvasNavigationTests(DemoAppFixture app) : PageTest, IClas
             """);
 
         // Input is applied on the next animation frame, so a pan dispatched as events has not landed when the dispatch returns.
-        var panned = await ReadTransformWhenAsync(transform => transform.TranslateX == 60d);
-        Assert.Equal(60d, panned.TranslateX);
-        Assert.Equal(40d, panned.TranslateY);
+        var (Scale, TranslateX, TranslateY) = await ReadTransformWhenAsync(transform => transform.TranslateX == 60d);
+        Assert.Equal(60d, TranslateX);
+        Assert.Equal(40d, TranslateY);
 
         await PressAsync("0");
         await Page.EvaluateAsync(

@@ -136,7 +136,7 @@ public sealed class BpmnExtensionNavigatorTests
             [Element(Ns, "secondChild")], "second text");
         var extras = new BpmnElementExtras { Extensions = [new(Zeebe, "ioMapping", Attrs(), [first, second])] };
         var path = BpmnExtensionPath.Parse($"{{{Zeebe}}}ioMapping");
-        IReadOnlyDictionary<string, string?> Row(string name, string? index) => index is null
+        static IReadOnlyDictionary<string, string?> Row(string name, string? index) => index is null
             ? new Dictionary<string, string?> { ["target"] = name }
             : new Dictionary<string, string?> { ["target"] = name, ["$index"] = index };
         IReadOnlyList<IReadOnlyDictionary<string, string?>> rows = operation switch

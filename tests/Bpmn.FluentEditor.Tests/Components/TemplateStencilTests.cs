@@ -33,7 +33,7 @@ public sealed class TemplateStencilTests : FluentTestContext
         Description = "Call an HTTP endpoint"
     };
 
-    private IRenderedComponent<FluentBpmnStencilPanel> Panel(BpmnTemplateOptions options, Action<SeedBuilder>? configure = null) =>
+    private IRenderedComponent<FluentBpmnStencilPanel> Panel(BpmnTemplateOptions _, Action<SeedBuilder>? configure = null) =>
         this.RenderSeeded<FluentBpmnStencilPanel>(seed => { seed.Document(Document); configure?.Invoke(seed); });
 
     [Fact]

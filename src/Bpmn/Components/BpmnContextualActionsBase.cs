@@ -106,6 +106,12 @@ public abstract class BpmnContextualActionsBase : BpmnCanvasWidgetBase<BpmnConte
             actions.Add(Action(display, BpmnActionKind.Append, "○", BpmnFlowNodeType.EndEvent));
         }
 
+        if ((snapshot.Capabilities.CanConnect || snapshot.ElementType == "lane" && snapshot.Capabilities.CanEditLabel)
+            && snapshot.Bounds is not null)
+        {
+            actions.Add(Action(display, BpmnActionKind.AddTextAnnotation, "["));
+        }
+
         if (snapshot.Capabilities.CanEditLabel)
         {
             actions.Add(Action(display, BpmnActionKind.EditLabel, "✎"));

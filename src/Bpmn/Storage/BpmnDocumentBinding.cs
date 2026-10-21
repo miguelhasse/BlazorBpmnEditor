@@ -47,7 +47,6 @@ public sealed class BpmnDocumentBinding : IAsyncDisposable
     private bool _wasDirty;
     private bool _disposed;
     private bool _missedWhileDetached;
-    private Func<Func<Task>, Task>? _dispatcher;
 
     /// <summary>Creates a binding.</summary>
     /// <param name="store">Where the document is kept.</param>
@@ -120,10 +119,10 @@ public sealed class BpmnDocumentBinding : IAsyncDisposable
     /// </remarks>
     internal Func<Func<Task>, Task>? Dispatcher
     {
-        get => _dispatcher;
+        get;
         set
         {
-            _dispatcher = value;
+            field = value;
             if (value is null || !_missedWhileDetached) return;
 
             _missedWhileDetached = false;

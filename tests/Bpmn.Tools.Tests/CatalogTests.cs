@@ -63,7 +63,7 @@ public sealed class CatalogTests
     [Fact]
     public async Task RefusesMalformedArguments()
     {
-        var result = await BpmnToolCatalog.InvokeAsync(Host(Simple()), "bpmn_delete", JsonDocument.Parse("""{"elementIds":"review"}""").RootElement, Token);
+        var result = await BpmnToolCatalog.InvokeAsync(Host(Simple()), "bpmn_delete", JsonElement.Parse("""{"elementIds":"review"}"""), Token);
 
         Assert.Equal(BpmnToolCodes.InvalidArgument, result.Code);
     }
@@ -71,7 +71,7 @@ public sealed class CatalogTests
     [Fact]
     public async Task WritesResultsInCamelCaseWithTheirData()
     {
-        var result = await BpmnToolCatalog.InvokeAsync(Host(Simple()), "bpmn_describe_element", JsonDocument.Parse("""{"elementId":"review"}""").RootElement, Token);
+        var result = await BpmnToolCatalog.InvokeAsync(Host(Simple()), "bpmn_describe_element", JsonElement.Parse("""{"elementId":"review"}"""), Token);
         using var json = JsonDocument.Parse(BpmnToolJson.Serialize(result));
 
         Assert.True(json.RootElement.GetProperty("ok").GetBoolean());
@@ -81,5 +81,5 @@ public sealed class CatalogTests
 
     private static readonly string[] Editing = ["bpmn_create_element", "bpmn_connect", "bpmn_set_property", "bpmn_delete", "bpmn_select", "bpmn_undo", "bpmn_redo", "bpmn_save"];
 
-    private static JsonElement Empty() => JsonDocument.Parse("{}").RootElement;
+    private static JsonElement Empty() => JsonElement.Parse("{}");
 }

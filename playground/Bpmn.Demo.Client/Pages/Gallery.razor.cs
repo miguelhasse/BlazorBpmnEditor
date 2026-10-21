@@ -2,7 +2,6 @@ using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.AspNetCore.Components.Bpmn.Interop;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
 using Hasseware.AspNetCore.Components.Bpmn.Model.Di;
-using Hasseware.FluentUI.AspNetCore.Components.Bpmn;
 using Microsoft.AspNetCore.Components;
 
 namespace Bpmn.Demo.Client.Pages;
@@ -27,7 +26,6 @@ public sealed partial class Gallery : ComponentBase
     private const double Column = 130d;
     private const double Row = 120d;
 
-    private FluentBpmnEditor? _editor;
     private BpmnDocument? _document;
     private GallerySheet _sheet = null!;
     private string _status = string.Empty;

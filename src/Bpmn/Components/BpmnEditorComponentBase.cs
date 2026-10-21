@@ -28,7 +28,6 @@ public abstract class BpmnEditorComponentBase : ComponentBase
     private readonly BpmnStateRenderGate _renderGate = new();
     private BpmnEditorState? _previousState;
     private bool _stateOnlyRender;
-    private BpmnDisplayLocalizer? _display;
 
     [CascadingParameter]
     private BpmnEditorSession? CascadedSession { get; set; }
@@ -49,7 +48,7 @@ public abstract class BpmnEditorComponentBase : ComponentBase
     protected IStringLocalizer<BpmnStrings> L { get; set; } = default!;
 
     /// <summary>Semantic display labels, kept separate from invariant snapshot values.</summary>
-    protected BpmnDisplayLocalizer Display => _display ??= new(L);
+    protected BpmnDisplayLocalizer Display => field ??= new(L);
 
     /// <summary>Localizes validation messages; falls back to the diagnostic's own text.</summary>
     [Inject]

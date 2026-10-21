@@ -5,7 +5,7 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Validation;
 
 public sealed class BpmnExpressionValidatorTests
 {
-    private readonly BpmnExpressionValidator _validator = new BpmnExpressionValidator();
+    private readonly BpmnExpressionValidator _validator = new();
 
     [Theory]
     [InlineData("1")]

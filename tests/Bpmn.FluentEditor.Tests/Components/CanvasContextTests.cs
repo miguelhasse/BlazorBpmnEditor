@@ -39,7 +39,7 @@ public sealed class CanvasContextTests : FluentTestContext
             new ContextMenuRequested("element", "Task_1", Anchor(), "pointer", ["Task_1"])));
 
         var buttons = menu.FindComponents<FluentButton>();
-        Assert.Equal(new[] { "Edit label", "Copy", "Cut", "Duplicate", "Delete" },
+        Assert.Equal(["Edit label", "Copy", "Cut", "Duplicate", "Delete"],
             buttons.Select(button => button.Instance.Title));
         Assert.All(buttons, button =>
         {

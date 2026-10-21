@@ -549,4 +549,5 @@ export interface DropTarget {
   readonly bounds: GeometryBounds;
   readonly containerId: string | null;
   readonly poolId: string | null;
+  readonly processBounds?: Readonly<Record<string, GeometryBounds>>;
 }

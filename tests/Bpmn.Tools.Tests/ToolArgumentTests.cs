@@ -7,7 +7,7 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tools.Tests;
 /// </summary>
 public sealed class ToolArgumentTests
 {
-    private static JsonElement Json(string text) => JsonDocument.Parse(text).RootElement.Clone();
+    private static JsonElement Json(string text) => JsonElement.Parse(text);
 
     [Fact]
     public void ReadsArgumentsThatAreComplete()

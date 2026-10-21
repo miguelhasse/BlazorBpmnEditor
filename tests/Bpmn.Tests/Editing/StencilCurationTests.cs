@@ -167,7 +167,7 @@ public sealed class StencilCurationTests
     private static BpmnDocument WithEventSubProcess()
     {
         var document = new BpmnDocumentBuilder("Process_1")
-            .Node("EventSub_1", BpmnFlowNodeType.EventSubProcess, new Bounds(100, 100, 400, 300))
+            .Node("EventSub_1", BpmnFlowNodeType.EventSubProcess, new Bounds(100, 100, 400, 300), isExpanded: true)
             .Build();
 
         return document with

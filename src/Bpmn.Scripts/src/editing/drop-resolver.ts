@@ -1,7 +1,7 @@
 import type { dia } from '@joint/core';
 
 import * as constants from '../geometry/constants.js';
-import { findElement } from '../graph/cells.js';
+import { findCell, findElement } from '../graph/cells.js';
 import type { GridOptionsContract } from '../interop/contracts.js';
 import type { DropTarget } from './connect-controller.js';
 
@@ -92,7 +92,7 @@ export function resolveDrop(
   elementType: string,
   grid: GridOptionsContract,
 ): DropTarget {
-  return targetAt(paper.model, paper.clientToLocalPoint({ x: clientX, y: clientY }), elementType, grid);
+  return withProcessBounds(paper, targetAt(paper.model, paper.clientToLocalPoint({ x: clientX, y: clientY }), elementType, grid), elementType);
 }
 
 /**
@@ -111,21 +111,45 @@ export function resolveCreationPoint(
     const centre = { x: area.x + (area.width / 2), y: area.y + (area.height / 2) };
 
     if (poolAt(paper.model, centre)) {
-      return targetAt(paper.model, centre, 'lane', grid);
+      return withProcessBounds(paper, targetAt(paper.model, centre, 'lane', grid), elementType);
     }
 
     const size = defaultSizeOf('participant');
-    return creationPointIn(paper.model, belowTheLowestPool(paper.model, size), 'participant', grid);
+    return withProcessBounds(paper, creationPointIn(paper.model, belowTheLowestPool(paper.model, size), 'participant', grid), elementType);
   }
 
-  return creationPointIn(
+  return withProcessBounds(paper, creationPointIn(
     paper.model,
     elementType === 'participant'
       ? belowTheLowestPool(paper.model, defaultSizeOf(elementType))
       : { x: area.x + (area.width / 2), y: area.y + (area.height / 2) },
     elementType,
     grid,
-  );
+  ), elementType);
+}
+
+/** Includes rendered external labels, even when no BPMNLabel bounds were persisted. */
+function withProcessBounds(paper: dia.Paper, target: DropTarget, elementType: string): DropTarget {
+  if (elementType !== 'participant' && elementType !== 'poolOrLane' && elementType !== 'lane') return target;
+  const bounds = new Map<string, ReturnType<dia.CellView['getNodeBBox']>>();
+  paper.updateViews();
+  for (const cell of paper.model.getCells()) {
+    const metadata = cell.get('bpmn') as { containerId?: string; elementType?: string } | undefined;
+    if (metadata?.elementType === 'pool' || metadata?.elementType === 'lane') continue;
+    let container = metadata?.containerId;
+    const visited = new Set<string>();
+    while (container !== undefined && !visited.has(container)) {
+      visited.add(container);
+      const parent = findCell(paper.model, container);
+      if (parent === undefined) break;
+      container = (parent.get('bpmn') as { containerId?: string } | undefined)?.containerId;
+    }
+    const view = paper.findViewByModel(cell) as dia.CellView | undefined;
+    if (container === undefined || view === undefined) continue;
+    const box = view.getNodeBBox(view.el);
+    bounds.set(container, bounds.get(container)?.union(box) ?? box);
+  }
+  return { ...target, processBounds: Object.fromEntries(bounds) };
 }
 
 /**

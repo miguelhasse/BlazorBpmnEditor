@@ -116,8 +116,8 @@ public sealed partial class ScriptTaskLocalizationTests
         {
             FlowNodes = [.. built.FlowNodes.Select(node =>
             {
-                var task = tasks.Single(t => t.Id == node.Id);
-                return node with { ScriptFormat = task.Format, Script = task.Script };
+                var (Id, Format, Script) = tasks.Single(t => t.Id == node.Id);
+                return node with { ScriptFormat = Format, Script = Script };
             })],
         };
 

@@ -82,11 +82,11 @@ public sealed class ToolTests : IDisposable
     {
         var file = Write("warn.bpmn", Diagram().Replace("</process>", "<task id=\"orphan\" name=\"Orphan\" /></process>", StringComparison.Ordinal));
 
-        var lenient = await RunAsync("validate", file);
+        var (Code, Output, _) = await RunAsync("validate", file);
         var strict = await RunAsync("validate", file, "--warnings-as-errors");
 
-        Assert.Contains("warning", lenient.Output, StringComparison.Ordinal);
-        Assert.Equal(BpmnMcpCli.Success, lenient.Code);
+        Assert.Contains("warning", Output, StringComparison.Ordinal);
+        Assert.Equal(BpmnMcpCli.Success, Code);
         Assert.Equal(BpmnMcpCli.Findings, strict.Code);
     }
 
@@ -109,11 +109,11 @@ public sealed class ToolTests : IDisposable
         Write("a/b/two.bpmn", Diagram());
         Write("a/ignored.txt", "not a diagram");
 
-        var folder = await RunAsync("validate", Path.Combine(_folder, "a"));
+        var (_, Output, _) = await RunAsync("validate", Path.Combine(_folder, "a"));
         var pattern = await RunAsync("validate", Path.Combine(_folder, "a", "*.bpmn"));
         var recursivePattern = await RunAsync("validate", Path.Combine(_folder, "**", "*.bpmn"));
 
-        Assert.Contains("2 file(s)", folder.Output, StringComparison.Ordinal);
+        Assert.Contains("2 file(s)", Output, StringComparison.Ordinal);
         Assert.Contains("1 file(s)", pattern.Output, StringComparison.Ordinal);
         Assert.Contains("2 file(s)", recursivePattern.Output, StringComparison.Ordinal);
     }

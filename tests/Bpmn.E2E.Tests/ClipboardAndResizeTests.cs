@@ -277,14 +277,14 @@ public sealed class ClipboardAndResizeTests(DemoAppFixture app) : PageTest, ICla
         await Expect(Page.Locator(".joint-highlight-mask")).ToHaveCountAsync(0);
 
         // Off the outline by a few pixels, inside the Group: the tolerance band, not a dash, takes the click.
-        var nearOutline = (X: bounds.X + 4, Y: bounds.Y + (bounds.Height / 2));
+        var (X, Y) = (bounds.X + 4, bounds.Y + (bounds.Height / 2));
         var hitSelector = await Page.EvaluateAsync<string?>(
             "point => document.elementFromPoint(point.x, point.y)?.getAttribute('joint-selector') ?? null",
-            new { x = (double)nearOutline.X, y = (double)nearOutline.Y });
+            new { x = (double)X, y = (double)Y });
         Assert.Equal("hitArea", hitSelector);
 
         // The transparent interior remains click-through; a band around its border is the selection target.
-        await Page.Mouse.ClickAsync(nearOutline.X, nearOutline.Y);
+        await Page.Mouse.ClickAsync(X, Y);
 
         await Expect(Page.Locator(".joint-highlight-mask")).ToHaveCountAsync(1);
         await Expect(Page.Locator(".bpmn-resize-handle")).ToHaveCountAsync(8);

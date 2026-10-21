@@ -265,8 +265,8 @@ public static partial class BpmnTools
     {
         BpmnElementSummary Summary(string id, string type, string? name, string? containerId, string? poolId)
         {
-            var drawn = shapes.TryGetValue(id, out var found) ? found : default;
-            return new BpmnElementSummary(id, type, Text(name, limits), containerId, poolId, ToolBounds(drawn.Shape?.Bounds), drawn.DiagramId);
+            var (shape, diagramId) = shapes.TryGetValue(id, out var found) ? found : default;
+            return new BpmnElementSummary(id, type, Text(name, limits), containerId, poolId, ToolBounds(shape?.Bounds), diagramId);
         }
 
         foreach (var pool in document.Collaboration?.Participants ?? []) yield return Summary(pool.Id, "participant", pool.Name, pool.ProcessRef, pool.Id);

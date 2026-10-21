@@ -114,8 +114,8 @@ public sealed class AnnotationConnectorTests
     {
         var initial = Document(message);
         var created = BpmnDocumentEditor.Apply(initial,
-            new CreateConnectorCommand("Association_1", BpmnConnectorKind.Association, "Flow", "Note",
-                [new DiPoint(300, 140), new DiPoint(300, 300)]) { DiagramId = "Diagram_1" });
+            new CreateConnectorCommand("Association_1", BpmnConnectorKind.Association, "Flow", "Note", [new DiPoint(300, 140), new DiPoint(300, 300)])
+            { DiagramId = "Diagram_1" });
         Assert.True(created.IsApplied);
         var rerouted = BpmnDocumentEditor.Apply(created.Document, new UpdateWaypointsCommand("Flow", Detour()));
         AssertPoint(new DiPoint(300, 240), Edge(rerouted.Document, "Association_1").Waypoints[0]);
@@ -211,7 +211,8 @@ public sealed class AnnotationConnectorTests
     private static BpmnEditResult Connect(BpmnDocument document, string diagramId = "Diagram_1") =>
         BpmnDocumentEditor.Apply(document, new CreateConnectorCommand(
             "Association_1", BpmnConnectorKind.Association, "Note", "Flow",
-            [new DiPoint(300, 300), new DiPoint(300, 147)]) { DiagramId = diagramId });
+            [new DiPoint(300, 300), new DiPoint(300, 147)])
+        { DiagramId = diagramId });
 
     private static BpmnEdge Edge(BpmnDocument document, string id) =>
         document.Diagrams[0].Plane.Edges.Single(edge => edge.BpmnElement == id);

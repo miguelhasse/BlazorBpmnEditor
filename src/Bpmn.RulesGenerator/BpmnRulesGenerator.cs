@@ -20,6 +20,7 @@ namespace Hasseware.AspNetCore.Components.Bpmn.RulesGenerator;
 [Generator]
 public sealed class BpmnRulesGenerator : IIncrementalGenerator
 {
+    /// <inheritdoc />
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var rulesFiles = context.AdditionalTextsProvider
@@ -36,7 +37,7 @@ public sealed class BpmnRulesGenerator : IIncrementalGenerator
             if (text is null) return;
 
             if (MiniJson.Parse(text) is not Dictionary<string, object?> root ||
-                root.TryGetValue("rules", out var rulesValue) is false ||
+                !root.TryGetValue("rules", out var rulesValue) ||
                 rulesValue is not List<object?> rules)
             {
                 spc.ReportDiagnostic(Diagnostic.Create(MalformedRuleTable, Location.None, files[0].Path));

@@ -236,11 +236,11 @@ public sealed class SubProcessExpansionTests
         var collapsed = Apply(expanded, new CollapseSubProcessCommand("Sub_1")).Document;
 
         var host = ShapeOf(collapsed, "Sub_1").Bounds;
-        var boundary = Centre(ShapeOf(collapsed, "Boundary_1").Bounds);
+        var (X, Y) = Centre(ShapeOf(collapsed, "Boundary_1").Bounds);
 
         var off = Math.Min(
-            Math.Min(Math.Abs(boundary.X - host.X), Math.Abs(boundary.X - (host.X + host.Width))),
-            Math.Min(Math.Abs(boundary.Y - host.Y), Math.Abs(boundary.Y - (host.Y + host.Height))));
+            Math.Min(Math.Abs(X - host.X), Math.Abs(X - (host.X + host.Width))),
+            Math.Min(Math.Abs(Y - host.Y), Math.Abs(Y - (host.Y + host.Height))));
 
         Assert.True(off < 0.001, $"the Boundary Event sat {off:0.000} off its host's outline");
     }

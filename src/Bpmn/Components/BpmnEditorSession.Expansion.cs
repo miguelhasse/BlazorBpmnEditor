@@ -29,24 +29,6 @@ public sealed partial class BpmnEditorSession
     private readonly Dictionary<string, (Bounds Expanded, Bounds Collapsed)> _expansions = new(StringComparer.Ordinal);
 
     /// <summary>
-    /// The document as a read-only reader has opened it up, or <see langword="null"/> for none.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Section 1.2.1: in read-only the same gestures "perform a transient local inspection toggle
-    /// and must not dirty, serialize, or enter document history". So the command is applied — the
-    /// arithmetic for moving child DI between planes, sizing the container and making room lives
-    /// in one place and this is not going to be a second copy of it — and the result is kept here
-    /// as something to draw rather than becoming the document of record.
-    /// </para>
-    /// <para>
-    /// Nothing reaches the host: no OnDocumentChanged, no history entry, no dirty flag. Export
-    /// writes <see cref="Document"/>, which never saw any of it.
-    /// </para>
-    /// </remarks>
-    private BpmnDocument? _inspection;
-
-    /// <summary>
     /// Records what a Sub-Process looked like expanded, just before it is collapsed.
     /// </summary>
     /// <param name="elementId">The Sub-Process about to close.</param>
@@ -55,7 +37,7 @@ public sealed partial class BpmnEditorSession
         if (DrawnDocument is not { } document) return;
         if (ShapeOnActivePlane(document, elementId) is not { } shape) return;
 
-        var collapsed = BpmnSubProcessLayout.CollapsedBounds(shape.Bounds, _snapshot.Editing);
+        var collapsed = BpmnSubProcessLayout.CollapsedBounds(shape.Bounds, ConfigurationSnapshot.Editing);
 
         if (_expansions.TryGetValue(elementId, out var previous) && previous == (shape.Bounds, collapsed)) return;
         _expansions[elementId] = (shape.Bounds, collapsed);
@@ -143,10 +125,10 @@ public sealed partial class BpmnEditorSession
 
         if (!expand) RememberSizeOf(elementId);
 
-        var result = BpmnDocumentEditor.Apply(current, command, _snapshot.Editing);
+        var result = BpmnDocumentEditor.Apply(current, command, ConfigurationSnapshot.Editing);
         if (!result.IsApplied) return;
 
-        _inspection = result.Document;
+        DrawnDocument = result.Document;
 
         /*
          * The canvas draws EditedDocument, so changing what that resolves to and re-rendering is
@@ -164,7 +146,7 @@ public sealed partial class BpmnEditorSession
     {
         if (_expansions.Count > 0) _expansionsDirty = true;
         _expansions.Clear();
-        _inspection = null;
+        DrawnDocument = null;
     }
 
     private BpmnShape? ShapeOnActivePlane(BpmnDocument document, string elementId) => document.Diagrams

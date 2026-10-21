@@ -240,14 +240,29 @@ when dropped anywhere inside a Pool, including on a Pool's contents; elsewhere i
 Ordinary embedded Sub-Processes offer only an untyped Start Event, and an Event Sub-Process shows
 that tool disabled with `EV-004`.
 
-## Pool/Lane needs a Collaboration or Pool
+## Starting with a Pool or Lane
 
-§1.5 defines a Lane as a subdivision of a Pool, and every geometric rule for one is written that way.
-The combined Pool/Lane tool resolves to a Lane inside an existing Pool and a Pool elsewhere. It is
-disabled with `CT-001` when the document has no Collaboration to hold a Pool and no Pool to subdivide.
+BPMN 2.0.2 §9.3 permits empty Pools and optional `Participant.processRef`; §10.8 defines Lanes as
+Process partitions, including LaneSets on standalone Processes and empty `flowNodeRefs`.
+Pool-backed Lane geometry is this editor's layout policy, not a universal BPMN requirement.
 
-The command still refuses an invalid Lane with `CT-012`; the disabled state is guidance, while command
-validation enforces the model rule.
+The combined Pool / Lane tool is enabled on empty canvases and standalone Process diagrams.
+Outside a Pool it creates a horizontal, process-backed Pool without a Lane; inside a Pool it
+creates a Lane. Explicit `CreateLaneCommand` on an unpooled Process creates Pool and Lane atomically.
+Missing Process, Collaboration and diagram roots are established in the same undoable transaction.
+
+The first Pool references the active existing Process rather than replacing it. Existing nodes,
+artifacts, data references, labels and connector routes keep their absolute coordinates and semantic
+owners, including nested Sub-Process ownership. The Pool encloses active-diagram content and rendered
+external labels with header space and padding; populated content, not drop location, determines its
+placement. Unrelated Processes and diagrams remain unchanged.
+
+The first Lane claims directly owned FlowNodes through `flowNodeRefs` and cached Lane membership;
+it does not re-parent them or claim nested nodes, artifacts or data references. Additional Lanes
+retain the existing tiling behavior. Invalid ownership, destination or Pool collisions reject the
+whole creation without leaving structural roots behind.
+If first-Lane insertion enlarges an existing Pool, its attached connector ends follow the resized
+outline; routes between unchanged content shapes remain untouched.
 
 A file that already contains one is repaired rather than rejected. The reader gives an orphan lane set
 a Participant, drawn around the lanes already there, and says so as an import diagnostic. It is the one
@@ -262,16 +277,15 @@ appeared in a diagnostic nobody renders would be the silent rewrite §10.6 ("rep
 item") and §6.1 exist to prevent. Connector ends moved onto their shapes' outlines on import are
 reported the same way, one diagnostic per connector.
 
-Note this is the converse of the existing rule, not a softening of it — a Pool still needs no Lane, and
-deleting the last Lane still leaves a valid lane-less Pool (§2.8).
+A Pool still needs no Lane, and deleting the last Lane still leaves a valid lane-less Pool (§2.8).
 
 A **collapsed** Sub-Process is not somewhere to create into, even though it owns content: it renders
 as an opaque leaf with no children drawn, so a new element inside it would have nowhere to appear.
 Selecting one offers the palette of whatever contains it. `BpmnStencil.IsOpenContainer` is the single
 answer to that question, used by both the palette and the container the selection resolves to. With nothing
-selected on a Collaboration plane the palette is artifacts-only and all of them disabled, which is
-what §9.1 says and also the instruction — choose a Pool to create into it. A multi-selection says
-nothing unambiguous, so it says nothing.
+selected on a Collaboration plane the palette offers Pool / Lane and artifacts; FlowNodes require
+selection of, or a drop inside, a process-backed Pool. A multi-selection says nothing unambiguous,
+so it says nothing.
 
 Where a drop *lands* still beats the selection. The Pool under the pointer is a fact about the new
 shape's geometry, and owning the element to a different Process would leave the DI and the semantics
@@ -287,8 +301,8 @@ The non-Flow-Node tools use their own commands:
   option — referencing an existing definition — is in the command as an explicit either/or, so
   supplying both or neither is refused rather than guessed at: guessing is how definitions get
   duplicated, which the specification warns about by name.
-A tool that cannot be used is shown **disabled with its rule code**, not hidden. The generic Pool/Lane
-tool says `CT-001` when neither of its two target-dependent creations can be made.
+A tool that cannot be used is shown **disabled with its rule code**, not hidden. For example, an
+Event Sub-Process disables its untyped Start Event with `EV-004`.
 
 Two gestures reach the same command:
 
@@ -454,6 +468,11 @@ text itself as one block rather than glyph by glyph. The rest of the box stays c
 The quick-action strip follows the selected element. While a gesture moves it, or the view under
 it (drag, pan, zoom), the strip is hidden. It reappears beside the element's new position once the
 pointer is released and the view has settled, including after a redraw the host made.
+
+Both UI kits offer **Add Text Annotation** beside editable, connectable shapes, including End Events,
+data references, Pools and Lanes. The action creates a Text Annotation and undirected Association in
+one undoable step, selects the annotation and opens its inline editor. Readonly mode offers no
+editing actions; Group shapes remain excluded. Hosts can filter or replace the default action list.
 
 **The canvas never resizes optimistically.** A drag draws a preview outline and reports the final
 bounds; the host applies the command and sends back a document, which re-renders. Whether a Lane's

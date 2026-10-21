@@ -109,7 +109,7 @@ public sealed class BpmnSourceLocalizationTests
             Assert.Equal("Loop", snapshot.Properties.Single(property => property.Name == "loopCharacteristics")
                 .Choices.Single(choice => choice.Value == "standard").Label);
             Assert.Equal("User Task", snapshot.SwitchableTypes.Single(option => option.Type == BpmnFlowNodeType.UserTask).Label);
-            Assert.Equal(["Append Task", "Append Exclusive Gateway", "Append End Event", "Rename", "Delete", "More actions"],
+            Assert.Equal(["Append Task", "Append Exclusive Gateway", "Append End Event", "Add Text Annotation", "Rename", "Delete", "More actions"],
                 actions.Select(action => action.Label));
         }
         finally

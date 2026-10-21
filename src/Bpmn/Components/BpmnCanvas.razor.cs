@@ -64,15 +64,10 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
 
     private bool _disposed;
 
-    private ElementReference _hostElement;
-
-    /// <summary>What overlays rendered as this canvas's child content are told about it.</summary>
-    private BpmnCanvasSurface? _surface;
-
     /// <summary>The host element the overlays are positioned against.</summary>
-    internal ElementReference HostElement => _hostElement;
+    internal ElementReference HostElement { get; private set; }
 
-    private BpmnCanvasSurface Surface => _surface ??= new BpmnCanvasSurface(this);
+    private BpmnCanvasSurface Surface => field ??= new BpmnCanvasSurface(this);
 
     /// <summary>
     /// The element JointJS mounts its paper into.
@@ -406,7 +401,7 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
             .InvokeAsync<IJSObjectReference>(
                 "initialize",
                 _disposalCts.Token,
-                _hostElement,
+                HostElement,
                 _paperElement,
                 CanvasDocumentPayload.For(sentDocument),
                 localizedConfig,

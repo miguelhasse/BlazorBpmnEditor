@@ -54,7 +54,7 @@ internal static class KitRoute
     /// <summary>
     /// Picks an option by its text from a native <c>select</c> or a Fluent select, as a user would.
     /// </summary>
-    internal static async Task PickAsync(this IPage page, ILocator select, string optionText)
+    internal static async Task PickAsync(this IPage _, ILocator select, string optionText)
     {
         if (await IsNativeAsync(select))
         {
@@ -67,7 +67,7 @@ internal static class KitRoute
     }
 
     /// <summary>Picks an option by its position from a native <c>select</c> or a Fluent select.</summary>
-    internal static async Task PickAsync(this IPage page, ILocator select, int index)
+    internal static async Task PickAsync(this IPage _, ILocator select, int index)
     {
         if (await IsNativeAsync(select))
         {

@@ -268,12 +268,9 @@ public static partial class BpmnDocumentEditor
     private static bool TryGetCarrier(BpmnDocument document, string elementId, out object? element, out BpmnElementExtras extras)
     {
         element = document.Find(elementId);
-        if (element is null)
-        {
-            element = document.FlowNodes
+        element ??= document.FlowNodes
                 .SelectMany(node => node.EventDefinitions)
                 .FirstOrDefault(definition => definition.Id == elementId);
-        }
         extras = element switch
         {
             BpmnFlowNode node => node.Extras,

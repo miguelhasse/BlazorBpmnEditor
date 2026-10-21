@@ -81,17 +81,17 @@ public static partial class BpmnDocumentEditor
 
             if (ProcessOfContainer(document, containerId) is not { } process) continue;
 
-            var source = pools.FirstOrDefault(pool => pool.Participant.ProcessRef == process);
-            if (source.Shape is null) continue;
+            var (Participant, Shape) = pools.FirstOrDefault(pool => pool.Participant.ProcessRef == process);
+            if (Shape is null) continue;
 
             // A Pool dragged as a whole carries its content with it.
-            if (asked.ContainsKey(source.Shape.Id)) continue;
+            if (asked.ContainsKey(Shape.Id)) continue;
 
             var centre = (X: bounds.X + (bounds.Width / 2), Y: bounds.Y + (bounds.Height / 2));
-            if (Contains(asked.GetValueOrDefault(source.Shape.Id, source.Shape.Bounds), centre)) continue;
+            if (Contains(asked.GetValueOrDefault(Shape.Id, Shape.Bounds), centre)) continue;
 
             var target = pools
-                .Where(pool => pool.Participant.Id != source.Participant.Id && Contains(pool.Shape.Bounds, centre))
+                .Where(pool => pool.Participant.Id != Participant.Id && Contains(pool.Shape.Bounds, centre))
                 .OrderBy(pool => pool.Shape.Bounds.Width * pool.Shape.Bounds.Height)
                 .FirstOrDefault();
             if (target.Shape is null) continue;

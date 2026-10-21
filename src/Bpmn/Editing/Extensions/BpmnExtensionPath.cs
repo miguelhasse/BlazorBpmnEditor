@@ -84,7 +84,7 @@ public sealed record BpmnExtensionPath(
     /// <inheritdoc />
     public override string ToString()
     {
-        var path = string.Join('/', Steps.Select(step => FormatStep(step)));
+        var path = string.Join('/', Steps.Select(FormatStep));
         if (AttributeName is not null) return path + "@" + AttributeName;
         if (IsText) return path + "#text";
         return path;

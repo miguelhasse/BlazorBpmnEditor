@@ -153,12 +153,12 @@ public sealed class GroupedPropertyPanelTests : BunitContext
     {
         BpmnPropertyEntryContext? captured = null;
         BpmnEditCommand? command = null;
-        RenderFragment<BpmnPropertyEntryContext> entryTemplate = context => builder =>
+        RenderFragment entryTemplate(BpmnPropertyEntryContext context) => builder =>
         {
             captured = context;
             builder.AddContent(0, $"custom:{context.Entry.Label}");
         };
-        RenderFragment<BpmnPropertyGroupContext> groupTemplate = group => builder =>
+        RenderFragment groupTemplate(BpmnPropertyGroupContext group) => builder =>
         {
             builder.OpenElement(0, "article");
             builder.AddAttribute(1, "class", "custom-group");
@@ -228,7 +228,7 @@ public sealed class GroupedPropertyPanelTests : BunitContext
     public void HiddenEntriesNeverReachCustomTemplatesOrEditors()
     {
         var rendered = new List<string>();
-        RenderFragment<BpmnPropertyEntryContext> template = context => builder => rendered.Add(context.Entry.Id);
+        RenderFragment template(BpmnPropertyEntryContext context) => builder => rendered.Add(context.Entry.Id);
         var provider = new Provider(500, (_, _) => [new("group", "Group", [Bound() with { Kind = BpmnPropertyEntryKind.Hidden }, new("shown", "Shown", BpmnPropertyEntryKind.Text)])]);
         var panel = Panel([Snapshot()], p => p.Add(c => c.Providers, [provider]).Add(c => c.EntryTemplate, template));
         Assert.Equal(["shown"], rendered);

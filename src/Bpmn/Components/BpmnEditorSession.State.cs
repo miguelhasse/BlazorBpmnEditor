@@ -18,7 +18,7 @@ public sealed partial class BpmnEditorSession
     /// <summary>Raised when the observable session state changes; unchanged notifications are suppressed.</summary>
     public event EventHandler? StateChanged;
 
-    internal EditorConfig ConfigurationSnapshot => _snapshot;
+    internal EditorConfig ConfigurationSnapshot { get; private set; } = EditorConfig.CreateDefault();
     /// <summary>The element-template options in force.</summary>
     public BpmnTemplateOptions Templates => _options.Value.Templates;
 
@@ -63,7 +63,7 @@ public sealed partial class BpmnEditorSession
     private void RefreshState()
     {
         _selectionSnapshot = _selection.Count == 1 ? Describe(_selection[0]) : null;
-        _menuSnapshot = _menu?.ElementId is { Length: > 0 } id ? Describe(id) : null;
+        ContextMenuSnapshot = _menu?.ElementId is { Length: > 0 } id ? Describe(id) : null;
         var previous = State;
         _ = CallableDefinitions;
         _ = Diagrams;
@@ -73,8 +73,8 @@ public sealed partial class BpmnEditorSession
         var overlays = previous.Overlays;
         var contextMenu = overlays.ContextMenu.IsOpen == IsContextMenuOpen
             && overlays.ContextMenu.Anchor == _menu?.Anchor && overlays.ContextMenu.Target == (_menu?.Target ?? "canvas")
-            && ReferenceEquals(overlays.ContextMenu.Snapshot, _menuSnapshot) && overlays.ContextMenu.Commands == _menuCache.Items
-            ? overlays.ContextMenu : new BpmnContextMenuState(IsContextMenuOpen, _menu?.Anchor, _menu?.Target ?? "canvas", _menuSnapshot, _menuCache.Items);
+            && ReferenceEquals(overlays.ContextMenu.Snapshot, ContextMenuSnapshot) && overlays.ContextMenu.Commands == _menuCache.Items
+            ? overlays.ContextMenu : new BpmnContextMenuState(IsContextMenuOpen, _menu?.Anchor, _menu?.Target ?? "canvas", ContextMenuSnapshot, _menuCache.Items);
         var labelEdit = overlays.LabelEdit.IsOpen == IsEditingLabel && overlays.LabelEdit.Anchor == _labelEdit?.Anchor
             && overlays.LabelEdit.Request == _labelEdit
             ? overlays.LabelEdit : new BpmnLabelEditState(IsEditingLabel, _labelEdit?.Anchor, _labelEdit);
@@ -89,7 +89,7 @@ public sealed partial class BpmnEditorSession
         {
             Document = EditedDocument,
             DrawnDocument = DrawnDocument,
-            Configuration = PreserveRecord(previous.Configuration, _snapshot),
+            Configuration = PreserveRecord(previous.Configuration, ConfigurationSnapshot),
             IsReadOnly = IsReadOnly,
             CanUndo = CanUndo,
             CanRedo = CanRedo,

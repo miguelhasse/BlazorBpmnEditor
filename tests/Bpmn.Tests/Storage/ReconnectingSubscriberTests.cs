@@ -372,7 +372,7 @@ public sealed class ReconnectingSubscriberTests
     {
         var time = new FakeTimeProvider();
         await using var subscriber = new Subscriber(time, Options());
-        subscriber.AuthorizationRequired += async () => await subscriber.RetryAsync();
+        subscriber.AuthorizationRequired += subscriber.RetryAsync;
         subscriber.Refusals.Enqueue(new BpmnChangeFeedUnauthorizedException());
         await using var _ = await subscriber.SubscribeAsync(Intake, _ => ValueTask.CompletedTask, Token);
 

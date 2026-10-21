@@ -26,12 +26,12 @@ public sealed class FluentKitTests : FluentTestContext
     public void EveryEntryRendersInsidePropertyScope(Type type)
     {
         var entry = new BpmnPropertyEntry("value", "Value", BpmnPropertyEntryKind.Text, "42") { Feel = BpmnFeelMode.Required, Description = "Value help" };
-        RenderFragment content = builder =>
+        void content(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder builder)
         {
             builder.OpenComponent(0, type);
             builder.AddComponentParameter(1, "Context", Context(entry));
             builder.CloseComponent();
-        };
+        }
         var scope = Render<BpmnPropertyScopeProvider>(p => p.Add(c => c.Editors, FluentPropertyScope.Default.Editors).AddChildContent(content));
         Assert.Contains("Value", scope.Markup, StringComparison.Ordinal);
     }

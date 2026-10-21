@@ -52,7 +52,6 @@ public abstract class BpmnPropertyEntryComponent : ComponentBase
     private IBpmnExpressionValidator? _validatedBy;
     private string? _expressionError;
     private System.Globalization.CultureInfo? _validatedCulture;
-    private readonly string _errorId = "bpmn-expression-" + Guid.NewGuid().ToString("N");
 
     /// <summary>Resolves the host's syntax validator, or the managed fallback for standalone controls.</summary>
     [Inject] protected IServiceProvider Services { get; set; } = default!;
@@ -65,7 +64,7 @@ public abstract class BpmnPropertyEntryComponent : ComponentBase
         Services.GetService<IStringLocalizer<TResource>>() ?? new StringLocalizer<TResource>(FallbackLocalizerFactory);
 
     /// <summary>Accessible error text id shared with the entry frame.</summary>
-    protected string ErrorId => Context.ErrorId ?? _errorId;
+    protected string ErrorId { get => Context.ErrorId ?? field; } = "bpmn-expression-" + Guid.NewGuid().ToString("N");
 
     /// <summary>Returns an advisory syntax warning without preventing writes.</summary>
     protected string? ExpressionError(string? value)

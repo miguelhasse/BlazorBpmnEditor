@@ -27,8 +27,6 @@ public sealed class BpmnPropertyScopeProvider : ComponentBase
     [Inject]
     private Microsoft.Extensions.Options.IOptions<Configuration.BpmnOptions> Options { get; set; } = default!;
 
-    private BpmnPropertyScope _scope = BpmnPropertyScope.Default;
-
     [CascadingParameter]
     private BpmnEditorSession? Session { get; set; }
 
@@ -64,7 +62,7 @@ public sealed class BpmnPropertyScopeProvider : ComponentBase
     public RenderFragment? ChildContent { get; set; }
 
     /// <summary>The scope currently cascaded.</summary>
-    internal BpmnPropertyScope Scope => _scope;
+    internal BpmnPropertyScope Scope { get; private set; } = BpmnPropertyScope.Default;
 
     /// <inheritdoc />
     protected override void OnParametersSet()
@@ -77,21 +75,21 @@ public sealed class BpmnPropertyScopeProvider : ComponentBase
         var document = Document ?? parent.Document;
         var revision = Revision ?? parent.Revision;
 
-        if (_scope.Block == block && _scope.MultilineRows == rows && ReferenceEquals(_scope.Editors, editors)
-            && _scope.IsReadOnly == readOnly && ReferenceEquals(_scope.Document, document) && _scope.Revision == revision)
+        if (Scope.Block == block && Scope.MultilineRows == rows && ReferenceEquals(Scope.Editors, editors)
+            && Scope.IsReadOnly == readOnly && ReferenceEquals(Scope.Document, document) && Scope.Revision == revision)
         {
             return;
         }
 
-        _scope = new BpmnPropertyScope(block, rows, editors, readOnly, document, revision);
+        Scope = new BpmnPropertyScope(block, rows, editors, readOnly, document, revision);
     }
 
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenComponent<CascadingValue<BpmnPropertyScope>>(0);
-        builder.AddComponentParameter(1, nameof(CascadingValue<BpmnPropertyScope>.Value), _scope);
-        builder.AddComponentParameter(2, nameof(CascadingValue<BpmnPropertyScope>.ChildContent), ChildContent);
+        builder.AddComponentParameter(1, nameof(CascadingValue<>.Value), Scope);
+        builder.AddComponentParameter(2, nameof(CascadingValue<>.ChildContent), ChildContent);
         builder.CloseComponent();
     }
 }

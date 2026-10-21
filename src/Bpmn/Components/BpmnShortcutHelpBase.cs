@@ -24,7 +24,6 @@ public abstract class BpmnShortcutHelpBase : BpmnEditorComponentBase
         previous.ShortcutHelpVisible != current.ShortcutHelpVisible
             || !ReferenceEquals(previous.Configuration, current.Configuration);
 
-    private ElementReference _closeButton;
     private bool _wasVisible;
     private bool _focusPending;
 
@@ -51,11 +50,7 @@ public abstract class BpmnShortcutHelpBase : BpmnEditorComponentBase
     protected bool IsVisible => State.ShortcutHelpVisible;
 
     /// <summary>The element the close button's reference is captured on.</summary>
-    protected ElementReference CloseButton
-    {
-        get => _closeButton;
-        set => _closeButton = value;
-    }
+    protected ElementReference CloseButton { get; set; }
 
     /// <summary>
     /// One row per action, with every key combination bound to it.
@@ -103,7 +98,7 @@ public abstract class BpmnShortcutHelpBase : BpmnEditorComponentBase
         if (!_focusPending || !IsVisible) return;
 
         _focusPending = false;
-        await _closeButton.FocusAsync().ConfigureAwait(true);
+        await CloseButton.FocusAsync().ConfigureAwait(true);
     }
 
     /// <summary>Closes the overlay.</summary>

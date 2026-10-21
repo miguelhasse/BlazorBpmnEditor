@@ -173,7 +173,11 @@ colored arrows consistent across views; keep relationships aligned with the comp
 
 ## Build and check
 
-Source builds require .NET 10 and Node.js/npm. Both JavaScript SDK projects need npm
+Source builds require .NET 10 and Node.js/npm. C# stays at version 14 even when a newer SDK
+is installed, so analyzer fixes cannot introduce syntax unsupported by the .NET 10 SDK.
+XML documentation output is enabled for C# projects because build-time unused-import
+analysis requires it; tests and playground projects remain exempt from missing-comment warnings.
+Both JavaScript SDK projects need npm
 packages: `Bpmn.Scripts` for the canvas, `Bpmn.Feel.Scripts` for the optional rich editor.
 Their `.esproj` builds pass the .NET configuration to npm; Debug includes source maps,
 Release minifies. Package consumers do not need Node.js/npm.

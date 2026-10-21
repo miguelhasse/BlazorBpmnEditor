@@ -311,10 +311,10 @@ public sealed class ConnectorEditTests(DemoAppFixture app) : PageTest, IClassFix
             (float)(target.Y + 3),
             new() { Steps = 8 });
 
-        var end = await EndPointAsync(flow);
+        var (X, Y) = await EndPointAsync(flow);
 
-        Assert.True(Math.Abs(end.X - (target.X + (target.Width / 2))) < 1.5, $"the end is at x={end.X}, not on the side's midpoint");
-        Assert.True(Math.Abs(end.Y - target.Y) < 1.5, $"the end is at y={end.Y}, not on the top side");
+        Assert.True(Math.Abs(X - (target.X + (target.Width / 2))) < 1.5, $"the end is at x={X}, not on the side's midpoint");
+        Assert.True(Math.Abs(Y - target.Y) < 1.5, $"the end is at y={Y}, not on the top side");
 
         await Page.Mouse.UpAsync();
     }
@@ -322,14 +322,14 @@ public sealed class ConnectorEditTests(DemoAppFixture app) : PageTest, IClassFix
     /// <summary>How far a connector's last point is from the nearest side of a screen box.</summary>
     private async Task<double> EndOffTheBoxEdgeAsync(string connectorId, Microsoft.Playwright.LocatorBoundingBoxResult box)
     {
-        var end = await EndPointAsync(connectorId);
+        var (X, Y) = await EndPointAsync(connectorId);
 
         return new[]
         {
-            Math.Abs(end.X - box.X),
-            Math.Abs(end.X - (box.X + box.Width)),
-            Math.Abs(end.Y - box.Y),
-            Math.Abs(end.Y - (box.Y + box.Height)),
+            Math.Abs(X - box.X),
+            Math.Abs(X - (box.X + box.Width)),
+            Math.Abs(Y - box.Y),
+            Math.Abs(Y - (box.Y + box.Height)),
         }.Min();
     }
 
@@ -360,17 +360,6 @@ public sealed class ConnectorEditTests(DemoAppFixture app) : PageTest, IClassFix
     private async Task<string> FirstLinkAsync() =>
         await Page.Locator(".bpmn-canvas .joint-link[model-id]").First.GetAttributeAsync("model-id")
         ?? throw new InvalidOperationException("no connector on the canvas");
-
-    /// <summary>How many points the connector is actually drawn with.</summary>
-    private Task<int> RoutePointsAsync(string connectorId) => Page.EvaluateAsync<int>(
-        """
-        id => {
-          const line = document.querySelector(`.joint-link[model-id="${id}"] [joint-selector="line"]`);
-          const d = line?.getAttribute('d') ?? '';
-          return [...d.matchAll(/[ML]\s*(-?[\d.]+)[ ,]+(-?[\d.]+)/g)].length;
-        }
-        """,
-        connectorId);
 
     private async Task SelectLinkAsync(string connectorId)
     {

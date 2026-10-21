@@ -184,10 +184,10 @@ public sealed class PickerNavigationPathTests
             .Process("Process_Middle")
             .Process("Process_Leaf")
             .Process("Process_Detached");
-        foreach (var link in links)
+        foreach (var (Source, Target, ElementId) in links)
         {
-            builder.Node(link.ElementId, BpmnFlowNodeType.CallActivity, new Bounds(100, 100, 100, 80),
-                containerId: $"Process_{link.Source}");
+            builder.Node(ElementId, BpmnFlowNodeType.CallActivity, new Bounds(100, 100, 100, 80),
+                containerId: $"Process_{Source}");
         }
 
         var document = builder.Build();

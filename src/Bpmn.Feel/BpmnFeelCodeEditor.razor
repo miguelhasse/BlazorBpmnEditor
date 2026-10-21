@@ -30,7 +30,7 @@
                 }
                 @if (Warning is { } warning)
                 {
-                    <span id="@_warningId" class="@(Block + "__feel-warning")" role="status">@warning</span>
+                    <span id="@WarningId" class="@(Block + "__feel-warning")" role="status">@warning</span>
                 }
             </span>
             @if (Entry.Description is { Length: > 0 })

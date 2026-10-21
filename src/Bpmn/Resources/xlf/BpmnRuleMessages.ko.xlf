@@ -63,8 +63,8 @@
         <note />
       </trans-unit>
       <trans-unit id="CT-012">
-        <source>A Lane subdivides a Pool, so its LaneSet's Process must be referenced by a Participant.</source>
-        <target state="translated">레인은 풀을 세분화하므로 해당 LaneSet의 프로세스를 참가자가 참조해야 합니다.</target>
+        <source>The editor's Lane layout requires a Pool referencing the LaneSet's Process.</source>
+        <target state="needs-review-translation">레인은 풀을 세분화하므로 해당 LaneSet의 프로세스를 참가자가 참조해야 합니다.</target>
         <note />
       </trans-unit>
       <trans-unit id="CT-012.Detail">

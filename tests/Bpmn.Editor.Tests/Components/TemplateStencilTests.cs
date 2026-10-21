@@ -31,7 +31,7 @@ public sealed class TemplateStencilTests : BunitContext
         Description = "Call an HTTP endpoint"
     };
 
-    private IRenderedComponent<BpmnStencilPanel> Panel(BpmnTemplateOptions options, Action<SeedBuilder>? configure = null) =>
+    private IRenderedComponent<BpmnStencilPanel> Panel(BpmnTemplateOptions _, Action<SeedBuilder>? configure = null) =>
         this.RenderSeeded<BpmnStencilPanel>(seed => { seed.Document(Document); configure?.Invoke(seed); });
 
     [Fact]

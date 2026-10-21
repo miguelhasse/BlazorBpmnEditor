@@ -23,6 +23,35 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Serialization;
 /// </remarks>
 public sealed class RoundTripTests
 {
+    [Theory]
+    [InlineData(BpmnWriteMode.Canonical)]
+    [InlineData(BpmnWriteMode.Fidelity)]
+    public void CollaborationArtifactsSurviveRepeatedRoundTrips(BpmnWriteMode mode)
+    {
+        var document = new BpmnDocumentBuilder()
+            .Pool("Pool", "Pool", new Bounds(0, 0, 600, 250))
+            .TextAnnotation("Note", "", new Bounds(700, 100, 100, 30))
+            .Group("Group", "Group", new Bounds(650, 50, 200, 200))
+            .Association("Association", "Pool", "Note", [new DiPoint(600, 115), new DiPoint(700, 115)])
+            .Build();
+        var collaborationId = document.Collaboration!.Id;
+        document = document with
+        {
+            TextAnnotations = [.. document.TextAnnotations.Select(item => item with { ContainerId = collaborationId })],
+            Associations = [.. document.Associations.Select(item => item with { ContainerId = collaborationId })],
+            Groups = [.. document.Groups.Select(item => item with { ContainerId = collaborationId })],
+        };
+        var options = mode == BpmnWriteMode.Canonical ? BpmnWriteOptions.Canonical : BpmnWriteOptions.Fidelity;
+        var first = BpmnXmlReader.Read(BpmnXmlWriter.Write(document, options).Xml).Document;
+        var second = BpmnXmlReader.Read(BpmnXmlWriter.Write(first, options).Xml).Document;
+        Assert.Equal(document.TextAnnotations, first.TextAnnotations);
+        Assert.Equal(document.Associations, first.Associations);
+        Assert.Equal(document.Groups, first.Groups);
+        Assert.Equal(first.TextAnnotations, second.TextAnnotations);
+        Assert.Equal(first.Associations, second.Associations);
+        Assert.Equal(first.Groups, second.Groups);
+    }
+
     public static TheoryData<string, BpmnWriteMode> Documents
     {
         get

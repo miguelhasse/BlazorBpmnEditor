@@ -9,7 +9,6 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Feel;
 public partial class BpmnFeelCodeEditor : IAsyncDisposable
 {
     private readonly CancellationTokenSource _disposalCts = new();
-    private readonly string _warningId = "bpmn-feel-code-" + Guid.NewGuid().ToString("N");
     private ElementReference _container;
     private IJSObjectReference? _module;
     private IJSObjectReference? _editor;
@@ -36,9 +35,10 @@ public partial class BpmnFeelCodeEditor : IAsyncDisposable
     private string Expression => _value?.StartsWith('=') == true ? _value[1..] : _value ?? "";
     private string? Warning => !FeelActive ? null : ExpressionError(_value) ?? (_diagnostics.Length > 0
         ? Localizer<Resources.BpmnStrings>()["Expression.Warnings", _diagnostics.Length, string.Join("; ", _diagnostics)].Value : null);
+    private string WarningId { get; } = "bpmn-feel-code-" + Guid.NewGuid().ToString("N");
     private string? DescribedBy => Entry.Error is not null
-        ? Warning is not null ? ErrorId + " " + _warningId : ErrorId
-        : Warning is not null ? _warningId : null;
+        ? Warning is not null ? ErrorId + " " + WarningId : ErrorId
+        : Warning is not null ? WarningId : null;
     private Type DefaultEditor => Editors.Resolve(Entry with { Feel = BpmnFeelMode.None });
     private IDictionary<string, object> EditorParameters => new Dictionary<string, object>
     {

@@ -149,13 +149,13 @@ internal sealed class Camunda7TemplateBindingHandler : IBpmnTemplateBindingHandl
             case "camunda:field": Keyed("field", "name", Required(binding, "name")); attribute = Flag(binding, "expression") ? "expression" : "stringValue"; break;
             case "camunda:in":
                 if (binding.Get("target") is { } target) Keyed("in", "target", target);
-                else Find("in", e => e.Attributes.GetValueOrDefault("variables") == "all" && (e.Attributes.GetValueOrDefault("local") == "true") == (binding.Get("variables") == "local"));
+                else Find("in", e => e.Attributes.GetValueOrDefault("variables") == "all" && e.Attributes.GetValueOrDefault("local") == "true" == (binding.Get("variables") == "local"));
                 attribute = binding.Get("target") is null ? "variables" : Flag(binding, "expression") ? "sourceExpression" : "source"; break;
             case "camunda:in:businessKey": Find("in", e => e.Attributes.ContainsKey("businessKey")); attribute = "businessKey"; break;
             case "camunda:out":
                 if (binding.Get("source") is { } source) Keyed("out", "source", source);
                 else if (binding.Get("sourceExpression") is { } expression) Keyed("out", "sourceExpression", expression);
-                else Find("out", e => e.Attributes.GetValueOrDefault("variables") == "all" && (e.Attributes.GetValueOrDefault("local") == "true") == (binding.Get("variables") == "local"));
+                else Find("out", e => e.Attributes.GetValueOrDefault("variables") == "all" && e.Attributes.GetValueOrDefault("local") == "true" == (binding.Get("variables") == "local"));
                 attribute = binding.Get("source") is null && binding.Get("sourceExpression") is null ? "variables" : "target"; break;
             case "camunda:executionListener":
                 var implementation = binding.Get("scriptFormat") is not null ? "script" : Implementation(binding);

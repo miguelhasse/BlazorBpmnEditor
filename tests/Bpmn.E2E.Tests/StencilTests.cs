@@ -60,14 +60,10 @@ public class StencilTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppF
             "Group",
         ]);
 
-        /*
-         * Pool/Lane is disabled on a bare Process: neither a Pool nor a Lane has a valid parent.
-         */
         var disabled = Page.Locator(".bpmn-stencil > .bpmn-stencil__group .bpmn-stencil__tool--disabled");
-        await Expect(disabled).ToHaveCountAsync(1);
-        await Expect(disabled).ToContainTextAsync("Pool / Lane");
+        await Expect(disabled).ToHaveCountAsync(0);
 
-        await Expect(Page.Locator(".bpmn-stencil > .bpmn-stencil__group .bpmn-stencil__tool[draggable='false']")).ToHaveCountAsync(1);
+        await Expect(Page.Locator(".bpmn-stencil > .bpmn-stencil__group .bpmn-stencil__tool[draggable='false']")).ToHaveCountAsync(0);
         await Expect(Page.Locator(".bpmn-stencil > .bpmn-stencil__group .bpmn-stencil__tool", new() { HasTextString = "User Task" })).ToHaveCountAsync(0);
     }
 
@@ -276,8 +272,8 @@ public class StencilTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppF
         await Expect(Page.Locator(".bpmn-stencil > .bpmn-stencil__group .bpmn-stencil__tool", new() { HasTextString = "Intermediate / Boundary Event" })).ToHaveCountAsync(1);
         var poolLane = Page.Locator(".bpmn-stencil > .bpmn-stencil__group .bpmn-stencil__tool", new() { HasTextString = "Pool / Lane" });
         await Expect(poolLane).ToHaveCountAsync(1);
-        await Expect(poolLane).ToHaveAttributeAsync("aria-disabled", "true");
-        await Expect(poolLane).ToHaveAttributeAsync("title", new System.Text.RegularExpressions.Regex("CT-001"));
+        await Expect(poolLane).ToBeEnabledAsync();
+        await Expect(poolLane).ToHaveAttributeAsync("draggable", "true");
 
         await SelectSampleAsync("collaboration.bpmn");
 

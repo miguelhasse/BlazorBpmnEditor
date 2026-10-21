@@ -53,7 +53,7 @@ public sealed partial class BpmnSchemaPropertiesProvider : IBpmnPropertiesProvid
 
         if (zeebe is not null)
         {
-            var zeebeType = (string name) => zeebe.Types.FirstOrDefault(type => type.Name == name);
+            BpmnExtensionType? zeebeType(string name) => zeebe.Types.FirstOrDefault(type => type.Name == name);
             bool Allows(string typeName) => registry.ExtensionElementTypesFor(wireType)
                 .Any(type => type.NamespaceUri == ZeebeUri && type.Name == typeName);
             string XmlName(string typeName) => zeebeType(typeName)?.ElementName ?? char.ToLowerInvariant(typeName[0]) + typeName[1..];

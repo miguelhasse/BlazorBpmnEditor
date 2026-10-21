@@ -21,11 +21,11 @@ public sealed class StencilTests
     }
 
     [Fact]
-    public void OffersNothingOnAnEmptyCanvas()
+    public void OffersOnlySwimlaneBootstrapOnAnEmptyCanvas()
     {
-        // Creating the root Process or Collaboration is its own action, not a Flow Node dropped
-        // on the Definitions element.
-        Assert.Empty(BpmnStencil.GroupsFor(Empty(), null));
+        var tool = Assert.Single(Assert.Single(BpmnStencil.GroupsFor(Empty(), null)).Entries);
+        Assert.Equal(BpmnStencilKind.PoolOrLane, tool.Kind);
+        Assert.True(tool.IsEnabled);
     }
 
     [Fact]
@@ -83,8 +83,8 @@ public sealed class StencilTests
 
         var unavailable = Assert.Single(BpmnStencil.GroupsFor(Process(), null)
             .SelectMany(group => group.Entries), entry => entry.Kind == BpmnStencilKind.PoolOrLane);
-        Assert.False(unavailable.IsEnabled);
-        Assert.Equal("CT-001", unavailable.DisabledReason);
+        Assert.True(unavailable.IsEnabled);
+        Assert.Null(unavailable.DisabledReason);
     }
 
     [Fact]
@@ -143,7 +143,6 @@ public sealed class StencilTests
     [Fact]
     public void OffersNoSwimlanesWhereNeitherBelongs()
     {
-        Assert.Empty(BpmnStencil.GroupsFor(BpmnStencilContext.EmptyCanvas));
         Assert.Empty(BpmnStencil.GroupsFor(BpmnStencilContext.BlackBoxPool));
     }
 

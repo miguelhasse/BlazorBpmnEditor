@@ -8,7 +8,6 @@ public partial class BpmnFeelEntry
 {
     private Microsoft.Extensions.Localization.IStringLocalizer<Hasseware.AspNetCore.Components.Bpmn.Resources.BpmnEditorStrings> EditorL => Localizer<Hasseware.AspNetCore.Components.Bpmn.Resources.BpmnEditorStrings>();
 
-    private readonly string _warningId = "bpmn-feel-" + Guid.NewGuid().ToString("N");
     private string? _value;
     private string? _source;
     private string? _entryId;
@@ -20,9 +19,10 @@ public partial class BpmnFeelEntry
         Entry.Feel == BpmnFeelMode.Optional && _value?.StartsWith('=') == true;
     private string Expression => _value?.StartsWith('=') == true ? _value[1..] : _value ?? "";
     private string? Warning => FeelActive ? ExpressionError(_value) : null;
+    private string WarningId { get; } = "bpmn-feel-" + Guid.NewGuid().ToString("N");
     private string? DescribedBy => Entry.Error is not null
-        ? Warning is not null ? ErrorId + " " + _warningId : ErrorId
-        : Warning is not null ? _warningId : null;
+        ? Warning is not null ? ErrorId + " " + WarningId : ErrorId
+        : Warning is not null ? WarningId : null;
 
     private Type DefaultEditor => Editors.Resolve(Entry with { Feel = BpmnFeelMode.None });
     private IDictionary<string, object> EditorParameters => new Dictionary<string, object>

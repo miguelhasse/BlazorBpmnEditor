@@ -149,18 +149,18 @@ public static class BpmnXmlReader
         }
 
         // Before anything walks the tree: reading, copying and writing all recurse once per level, so what they are given has to be bounded first.
-        var shape = Measure(document);
-        if (shape.Depth > MaxElementDepth)
+        var (Depth, NonFiniteNumbers) = Measure(document);
+        if (Depth > MaxElementDepth)
         {
             throw new BpmnXmlException($"The document nests elements more than {MaxElementDepth.ToString(CultureInfo.InvariantCulture)} levels deep, which no BPMN document does.");
         }
 
         List<BpmnImportDiagnostic> preliminary = [];
-        if (shape.NonFiniteNumbers > 0)
+        if (NonFiniteNumbers > 0)
         {
             preliminary.Add(new BpmnImportDiagnostic(
                 BpmnImportSeverity.Degraded,
-                $"{shape.NonFiniteNumbers.ToString(CultureInfo.InvariantCulture)} number(s) in the diagram layout were not a finite number and were ignored."));
+                $"{NonFiniteNumbers.ToString(CultureInfo.InvariantCulture)} number(s) in the diagram layout were not a finite number and were ignored."));
         }
 
         var schemaDiagnostics = ValidateSchema(document, schemas);
@@ -294,8 +294,8 @@ public static class BpmnXmlReader
             };
 
             /*
-             * A Lane subdivides a Pool, so one whose Process no Participant references is given
-             * one. The only structural rewrite the reader performs, and it reports itself: what it
+             * Pool-backed Lane layout is editor policy, so a standalone LaneSet receives a Pool.
+             * This structural rewrite reports itself: what it
              * adds is derived entirely from the lanes already drawn, and every element the file
              * stated is left exactly as it was.
              */
@@ -726,7 +726,7 @@ public static class BpmnXmlReader
                 ?? BoolAttribute(element, "isInterrupting")
                 ?? true;
 
-            var calledElement = ReadCalledElement(element);
+            var (LocalReference, QName) = ReadCalledElement(element);
 
             // Pool and Lane membership are resolved after the whole document is read, because
             // the Participant and the Lane that claim this node may appear after it.
@@ -743,12 +743,12 @@ public static class BpmnXmlReader
                 BoolAttribute(element, "isForCompensation") ?? false,
                 ReadLoopCharacteristics(element),
                 BoolAttribute(element, "instantiate") ?? false,
-                calledElement.LocalReference,
+                LocalReference,
                 ownsContent,
                 Attribute(element, "default"))
             {
                 EventDefinitions = ReadEventDefinitions(element),
-                CalledElementQName = calledElement.QName,
+                CalledElementQName = QName,
                 MessageRef = type is BpmnFlowNodeType.SendTask or BpmnFlowNodeType.ReceiveTask
                     ? Attribute(element, "messageRef")
                     : null,
@@ -1132,8 +1132,10 @@ public static class BpmnXmlReader
                 });
             }
 
+            var collaborationId = Attribute(collaboration, "id") ?? "collaboration";
+            ReadArtifacts(collaboration, collaborationId);
             return new BpmnCollaboration(
-                Attribute(collaboration, "id") ?? "collaboration",
+                collaborationId,
                 Attribute(collaboration, "name"),
                 participants)
             {

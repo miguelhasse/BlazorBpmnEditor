@@ -76,7 +76,7 @@ public sealed class ExecutionOverlayTests : FluentTestContext
         var editor = RenderEditor();
 
         await editor.InvokeAsync(() => editor.Instance.SetExecutionStateAsync(Running()));
-        await editor.InvokeAsync(() => editor.Instance.ClearExecutionStateAsync());
+        await editor.InvokeAsync(editor.Instance.ClearExecutionStateAsync);
 
         Assert.Single(clear.Invocations);
         Assert.Null(editor.Instance.ExecutionState);

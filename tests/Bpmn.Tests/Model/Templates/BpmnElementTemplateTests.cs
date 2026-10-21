@@ -6,9 +6,6 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.TemplateModel;
 
 public sealed class BpmnElementTemplateTests
 {
-    private const string ZeebeSchema = "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json";
-    private const string CamundaSchema = "https://unpkg.com/@camunda/element-templates-json-schema/resources/schema.json";
-
     private const string RestTemplate = """
         {
           "$schema":"https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
@@ -200,5 +197,4 @@ public sealed class BpmnElementTemplateTests
         Assert.NotNull(options.Registry.GetLatest("example.rest"));
     }
 }
-
 

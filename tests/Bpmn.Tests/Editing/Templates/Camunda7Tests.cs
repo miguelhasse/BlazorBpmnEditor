@@ -108,7 +108,7 @@ public sealed class Camunda7Tests
         document = BpmnXmlReader.Read(BpmnXmlWriter.Write(document).Xml).Document;
         Assert.Equal("target", Values(document, template)["output"]);
         var removed = Apply(document, new RemoveElementTemplateCommand("Task", template));
-        Assert.All(Values(removed, template).Values, value => Assert.Null(value));
+        Assert.All(Values(removed, template).Values, Assert.Null);
     }
 
     [Theory]

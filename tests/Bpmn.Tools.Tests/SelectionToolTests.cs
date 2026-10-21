@@ -84,7 +84,7 @@ public sealed class SelectionToolTests
         Assert.True(result.Ok);
     }
 
-    private static System.Text.Json.JsonElement Empty() => System.Text.Json.JsonDocument.Parse("{}").RootElement;
+    private static System.Text.Json.JsonElement Empty() => System.Text.Json.JsonElement.Parse("{}");
 
     private sealed class SelectingHost(Model.BpmnDocument document, params string[] selected) : IBpmnToolHost, IBpmnSelectionHost
     {

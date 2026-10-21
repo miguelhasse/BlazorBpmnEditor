@@ -226,7 +226,7 @@ public sealed class FeelEntryTests : BunitContext
         var provider = new CountingProvider();
         Services.AddSingleton<IBpmnFeelVariableProvider>(provider);
         BpmnPropertyEntryContext? captured = null;
-        RenderFragment<BpmnPropertyEntryContext> template = context => builder => captured = context;
+        RenderFragment template(BpmnPropertyEntryContext context) => builder => captured = context;
         var document = BpmnXmlReader.Read(Xml).Document;
         var snapshot = new BpmnElementSnapshot
         {

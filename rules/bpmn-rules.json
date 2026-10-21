@@ -773,7 +773,7 @@
       "id": "CT-012",
       "scope": "document",
       "severity": "error",
-      "message": "A Lane subdivides a Pool, so its LaneSet's Process must be referenced by a Participant.",
+      "message": "The editor's Lane layout requires a Pool referencing the LaneSet's Process.",
       "native": true
     },
     {

@@ -80,6 +80,9 @@
   <data name="ContextualActions.AriaLabel" xml:space="preserve">
     <value>Quick actions</value>
   </data>
+  <data name="ContextualActions.AddTextAnnotation" xml:space="preserve">
+    <value>Add Text Annotation</value>
+  </data>
   <data name="ContextualActions.Append.Task" xml:space="preserve">
     <value>Append Task</value>
   </data>

@@ -62,7 +62,7 @@ public sealed class BpmnPanelCacheTests : BunitContext
         var session = scope.Instance.Session;
         session.DescribeOverride = _ => Snapshot("Work");
         await scope.InvokeAsync(() => session.SetSelectionAsync(["Task_1"]));
-        RenderFragment<BpmnPropertyGroupContext> template = _ => builder => builder.AddContent(0, session.State.Zoom);
+        RenderFragment template(BpmnPropertyGroupContext _) => builder => builder.AddContent(0, session.State.Zoom);
         probe.Render(p => p.Add(c => c.GroupTemplate, template));
         await scope.InvokeAsync(() => session.HandleViewportChangedAsync(new(1.5, 0, 0)));
         Assert.Contains("1.5", probe.Markup, StringComparison.Ordinal);

@@ -42,3 +42,5 @@ public sealed class PlainWebMcpTests(DemoAppFixture app) : WebMcpTests(app);
 public sealed class PlainAnnotationConnectionTests(DemoAppFixture app) : AnnotationConnectionTests(app);
 
 public sealed class PlainDataReferenceConnectionTests(DemoAppFixture app) : DataReferenceConnectionTests(app);
+
+public sealed class PlainContextualSwimlaneTests(DemoAppFixture app) : ContextualSwimlaneTests(app);

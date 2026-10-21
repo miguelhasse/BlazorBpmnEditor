@@ -43,17 +43,6 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
             || !ReferenceEquals(previous.Configuration, current.Configuration)
             || !ReferenceEquals(previous.Overlays.ContextualActions.Snapshot, current.Overlays.ContextualActions.Snapshot);
 
-    /// <summary>
-    /// How many edits the panel has submitted, which keys every control.
-    /// </summary>
-    /// <remarks>
-    /// A refused edit is what needs it: the rendered value is unchanged, so Blazor's diff sends
-    /// nothing, and the control would go on showing a value the document rejected.
-    /// </remarks>
-    private int _revision;
-
-    private IReadOnlyList<BpmnPropertyGroup> _groups = [];
-    private IReadOnlyList<BpmnElementSnapshot> _snapshots = [];
     private BpmnDocument? _groupDocument;
     private bool _groupReadOnly;
     private bool _groupsInitialized;
@@ -67,7 +56,6 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
         new BpmnElementTemplatePropertiesProvider(), new BpmnSchemaPropertiesProvider(), new BpmnRawExtensionPropertiesProvider()];
     private readonly Dictionary<BpmnPropertyEntry, (BpmnPropertyEntryContext Context, Dictionary<string, object> Parameters)> _entryContexts = new(ReferenceEqualityComparer.Instance);
     private readonly Dictionary<BpmnPropertyGroup, BpmnPropertyGroupContext> _groupContexts = new(ReferenceEqualityComparer.Instance);
-    private readonly BpmnPropertyPanelOptions _defaults = new();
     private IReadOnlyList<BpmnFeelVariable> _variables = [];
     private string? _variableElementId;
     private BpmnDocument? _variableDocument;
@@ -100,7 +88,7 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
     protected string EffectiveAriaLabel => string.IsNullOrWhiteSpace(AriaLabel) ? Text("PropertyPanel.AriaLabel") : AriaLabel;
 
     /// <summary>The selected elements, described.</summary>
-    protected IReadOnlyList<BpmnElementSnapshot> Snapshots => _snapshots;
+    protected IReadOnlyList<BpmnElementSnapshot> Snapshots { get; private set; } = [];
 
     /// <summary>The diagnostics raised against the selection.</summary>
     protected IReadOnlyList<BpmnDiagnostic> Diagnostics => Session.SelectionDiagnostics;
@@ -109,7 +97,7 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
     protected IReadOnlyList<BpmnReferenceSite> Usages => Session.SelectionUsages;
 
     /// <summary>The panel's options.</summary>
-    protected BpmnPropertyPanelOptions PanelOptions => Services.GetService<IOptions<BpmnOptions>>()?.Value.Properties ?? _defaults;
+    protected BpmnPropertyPanelOptions PanelOptions { get => Services.GetService<IOptions<BpmnOptions>>()?.Value.Properties ?? field; } = new();
 
     /// <summary>Whether the panel is inspecting rather than editing.</summary>
     /// <remarks>
@@ -122,10 +110,10 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
     protected BpmnDocument? Document => State.DrawnDocument;
 
     /// <summary>The edit revision, which keys every control.</summary>
-    protected int Revision => _revision;
+    protected int Revision { get; private set; }
 
     /// <summary>The groups of the current selection.</summary>
-    protected IReadOnlyList<BpmnPropertyGroup> Groups => _groups;
+    protected IReadOnlyList<BpmnPropertyGroup> Groups { get; private set; } = [];
 
     /// <summary>The one selected element, or <see langword="null"/> when several are.</summary>
     protected BpmnElementSnapshot? Only => Snapshots.Count == 1 ? Snapshots[0] : null;
@@ -195,13 +183,13 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
         var culture = System.Globalization.CultureInfo.CurrentUICulture;
 
         if (_groupsInitialized && ReferenceEquals(_groupDocument, Document) && _groupReadOnly == Inspecting
-            && ReferenceEquals(_groupCulture, culture) && _snapshots.SequenceEqual(snapshots)
+            && ReferenceEquals(_groupCulture, culture) && Snapshots.SequenceEqual(snapshots)
             && _groupProviders.SequenceEqual(providers))
             return;
 
         _groupsChangedOnParameters = true;
         _groupsInitialized = true;
-        _snapshots = snapshots;
+        Snapshots = snapshots;
         _groupDocument = Document;
         _groupReadOnly = Inspecting;
         _groupCulture = culture;
@@ -211,7 +199,7 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
 
         if (snapshots.Count == 0)
         {
-            _groups = [];
+            Groups = [];
             return;
         }
 
@@ -232,7 +220,7 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
             groups = provider.GetGroups(element, groups);
         }
 
-        _groups = groups.Select(DisplayableGroup).Where(group => group is not null)
+        Groups = groups.Select(DisplayableGroup).Where(group => group is not null)
             .Select(group => Display.Group(group!)).ToList();
 
         BpmnPropertyGroup? DisplayableGroup(BpmnPropertyGroup group)
@@ -261,7 +249,7 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
     {
         var readOnly = Inspecting || entry.IsReadOnly || entry.Kind == BpmnPropertyEntryKind.ReadOnly;
         var elementId = Only?.ElementId;
-        if (_entryContexts.TryGetValue(entry, out var cached) && cached.Context.Revision == _revision
+        if (_entryContexts.TryGetValue(entry, out var cached) && cached.Context.Revision == Revision
             && cached.Context.IsReadOnly == readOnly && cached.Context.ElementId == elementId
             && ReferenceEquals(cached.Context.Variables, _variables))
             return cached.Context;
@@ -269,12 +257,12 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
         var context = new BpmnPropertyEntryContext(entry,
             cached.Context?.OnValueChanged ?? EventCallback.Factory.Create<string?>(this, value => ApplyEntryAsync(entry, value, null)),
             cached.Context?.OnRowsChanged ?? EventCallback.Factory.Create<IReadOnlyList<IReadOnlyDictionary<string, string?>>>(this,
-                rows => ApplyEntryAsync(entry, null, rows)), readOnly, _revision)
+                rows => ApplyEntryAsync(entry, null, rows)), readOnly, Revision)
         {
             ElementId = elementId,
             Variables = _variables,
         };
-        var parameters = cached.Parameters ?? new Dictionary<string, object>();
+        var parameters = cached.Parameters ?? [];
         parameters["Context"] = context;
         _entryContexts[entry] = (context, parameters);
         return context;
@@ -327,7 +315,7 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
             if (Only is not { } element)
                 return;
 
-            _revision++;
+            Revision++;
             var command = BpmnPropertyEntryCommands.ToCommand(
                 element.ElementId, entry, value, rows, PanelOptions.BindingCommandFactories);
 
@@ -417,7 +405,7 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
         // Bumped whatever happens, so the box is rebuilt from the document on the re-render that
         // follows. A blank or unchanged entry submits nothing, and without this it would sit there
         // showing an id the element does not have.
-        _revision++;
+        Revision++;
 
         if (Inspecting || string.IsNullOrWhiteSpace(proposed) || proposed == elementId)
         {
@@ -431,7 +419,7 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
     {
         if (Inspecting || Snapshots.Count == 0) return;
 
-        _revision++;
+        Revision++;
 
         var commands = Snapshots
             .Select(snapshot => new UpdatePropertiesCommand(snapshot.ElementId, edit.Name, edit.Value))

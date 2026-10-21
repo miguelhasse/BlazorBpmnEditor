@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.AspNetCore.Components.Bpmn.Execution;
@@ -27,7 +28,6 @@ namespace Hasseware.AspNetCore.Components.Bpmn;
 public sealed partial class BpmnEditorSession
 {
     private BpmnCanvas? _canvas;
-    private EditorConfig _snapshot = EditorConfig.CreateDefault();
     private bool _shortcutHelpVisible;
     private BpmnEditHistory? _history;
     private BpmnDocument? _historySource;
@@ -44,29 +44,29 @@ public sealed partial class BpmnEditorSession
     private BpmnDocument? _lastPublished;
     private BpmnStencilEntry? _armedTool;
     private IReadOnlyList<string> _selection = [];
-    private BpmnClipboardPayload _clipboard = BpmnClipboardPayload.Empty;
-
     private readonly IOptions<BpmnOptions> _options;
-    private BpmnKitDefaults? _kitDefaults;
-    private BpmnPropertyEditorRegistry? _editors;
 
     /// <summary>The composition's own part and editor defaults, outranked by the host's choices.</summary>
     public BpmnKitDefaults? KitDefaults
     {
-        get => _kitDefaults;
+        get;
         internal set
         {
-            if (ReferenceEquals(_kitDefaults, value)) return;
-            _kitDefaults = value;
-            _editors = null;
+            if (ReferenceEquals(field, value)) return;
+            field = value;
+            Editors = null;
         }
     }
 
     /// <summary>The property editor registry this editor resolves entries through.</summary>
-    public BpmnPropertyEditorRegistry Editors =>
-        _editors ??= _kitDefaults is null
+    [AllowNull]
+    public BpmnPropertyEditorRegistry Editors
+    {
+        get => field ??= KitDefaults is null
             ? _options.Value.Properties.Editors
-            : _options.Value.Properties.Editors.WithKitDefaults(_kitDefaults.Editors);
+            : _options.Value.Properties.Editors.WithKitDefaults(KitDefaults.Editors);
+        private set;
+    }
 
     /// <summary>Explicit configuration, overriding the DI-registered options.</summary>
     internal EditorConfig? Configuration { get; set; }
@@ -134,7 +134,7 @@ public sealed partial class BpmnEditorSession
     /// document history"). This one is what is on screen, which is the canvas's question and the
     /// accessible tree's.
     /// </remarks>
-    public BpmnDocument? DrawnDocument => _inspection ?? EditedDocument;
+    public BpmnDocument? DrawnDocument { get => field ?? EditedDocument; private set; }
 
     /// <summary>Whether there is an edit to undo.</summary>
     public bool CanUndo => _history?.CanUndo ?? false;
@@ -267,7 +267,7 @@ public sealed partial class BpmnEditorSession
     internal void UpdateParameters(EditorConfig snapshot)
     {
         if (ParametersUnchanged(snapshot)) return;
-        _snapshot = snapshot;
+        ConfigurationSnapshot = snapshot;
         /*
          * A new document from the host starts a new session, and that has to be noticed here rather
          * than on the next edit. The canvas renders EditedDocument, which is the history's document
@@ -284,7 +284,7 @@ public sealed partial class BpmnEditorSession
         editing.PasteTransforms.Any(transform => transform is BpmnTemplatePasteTransform) ? editing.PasteTransforms :
         [.. editing.PasteTransforms, new BpmnTemplatePasteTransform(_options.Value.Templates.Registry)];
 
-    private EditingOptions HistoryOptions() => _snapshot.Editing with { PasteTransforms = TemplatePasteTransforms(_snapshot.Editing) };
+    private EditingOptions HistoryOptions() => ConfigurationSnapshot.Editing with { PasteTransforms = TemplatePasteTransforms(ConfigurationSnapshot.Editing) };
 
     /// <summary>
     /// Handles an edit the canvas asked for.
@@ -492,7 +492,7 @@ public sealed partial class BpmnEditorSession
                 break;
 
             case "paste":
-                await PasteAsync(history, _clipboard).ConfigureAwait(true);
+                await PasteAsync(history, Clipboard).ConfigureAwait(true);
                 break;
 
             case "duplicate" when request.ElementIds is { Count: > 0 } duplicateIds:
@@ -531,10 +531,10 @@ public sealed partial class BpmnEditorSession
     /// Per editor, not per application. Two editors on one page are two documents, and a fragment
     /// copied from one carries container ids that mean nothing in the other.
     /// </remarks>
-    public BpmnClipboardPayload Clipboard => _clipboard;
+    public BpmnClipboardPayload Clipboard { get; private set; } = BpmnClipboardPayload.Empty;
 
     /// <summary>Whether a paste would have anything to add.</summary>
-    public bool CanPaste => !_clipboard.IsEmpty && !IsReadOnly;
+    public bool CanPaste => !Clipboard.IsEmpty && !IsReadOnly;
 
     /// <summary>Puts a selection on the clipboard, replacing whatever was there.</summary>
     public void CopyToClipboard(IReadOnlyList<string> elementIds)
@@ -547,7 +547,7 @@ public sealed partial class BpmnEditorSession
         // connector. Keeping the previous clipboard is friendlier than silently emptying it.
         if (!copied.IsEmpty)
         {
-            _clipboard = copied;
+            Clipboard = copied;
             NotifyStateChanged();
         }
     }
@@ -713,19 +713,19 @@ public sealed partial class BpmnEditorSession
         ForgetExpansions();
         _path.Clear();
         _activeDiagramId = null;
-        _accessibleCurrent = null;
+        AccessibleCurrent = null;
         _selectionAnchor = null;
         _labelEdit = null;
         _pendingCall = null;
         _armedTool = null;
-        _import = null;
+        PendingImport = null;
 
         // The selection belonged to the file that is no longer open. Carrying ids across would
         // leave the panel describing elements of a document nobody is looking at.
         _selection = [];
         _selectionSnapshot = null;
         _menu = null;
-        _menuSnapshot = null;
+        ContextMenuSnapshot = null;
     }
 
     private BpmnEditHistory NewHistory()
@@ -907,6 +907,8 @@ public sealed partial class BpmnEditorSession
             ?? PlaneOwnerId(diagramId)
             ?? FirstProcessId();
 
+        if (entry.Kind is BpmnStencilKind.Participant or BpmnStencilKind.PoolOrLane or BpmnStencilKind.Lane)
+            containerId ??= BpmnId.New("Process");
         if (containerId is null) return null;
 
         /*
@@ -960,20 +962,16 @@ public sealed partial class BpmnEditorSession
         string? diagramId) => entry.Kind
         switch
         {
-            /*
-             * A Pool is two commands. Section 9.3 keeps Process assignment separate from Pool
-             * creation, and composing them here rather than hiding a Process inside the Participant
-             * command leaves both visible — and makes one undo take back the pair, since a Process
-             * nobody draws is not something to leave behind.
-             */
-            BpmnStencilKind.Participant => PoolCommand(target, diagramId),
+            BpmnStencilKind.Participant => PoolCommand(target, diagramId, containerId),
             BpmnStencilKind.PoolOrLane => target.PoolId is { } poolId
-                ? new CreateLaneCommand(BpmnId.New("Lane"), ProcessForPool(poolId) ?? containerId, "Lane") { DiagramId = diagramId }
-                : PoolCommand(target, diagramId),
+                ? new CreateLaneCommand(BpmnId.New("Lane"), ProcessForPool(poolId) ?? containerId, "Lane")
+                { DiagramId = diagramId, ContentBounds = MeasuredProcessBounds(target, ProcessForPool(poolId) ?? containerId) }
+                : PoolCommand(target, diagramId, containerId),
 
             // A Lane takes no bounds: it is a subdivision, and where it lands is whatever is left once
             // the stack it joins has been re-tiled (section 1.5.3).
-            BpmnStencilKind.Lane => new CreateLaneCommand(BpmnId.New("Lane"), containerId, entry.Label) { DiagramId = diagramId },
+            BpmnStencilKind.Lane => new CreateLaneCommand(BpmnId.New("Lane"), containerId, entry.Label)
+            { DiagramId = diagramId, ContentBounds = MeasuredProcessBounds(target, containerId) },
 
             BpmnStencilKind.BoundaryEvent => BoundaryCommand(entry, containerId, target, diagramId),
             BpmnStencilKind.IntermediateBoundaryEvent => IntermediateBoundaryCommand(entry, containerId, target, isDrop, diagramId),
@@ -1038,25 +1036,27 @@ public sealed partial class BpmnEditorSession
     }
 
     /// <summary>
-    /// A Pool, and the Process it draws.
+    /// A Pool around the active unpooled Process, or a fresh Process for a subsequent Pool.
     /// </summary>
     /// <remarks>
-    /// Section 9.3 makes Process assignment a command of its own, so this is a compound rather
-    /// than one command that quietly does both. A black-box Pool would also be legal, but it is
-    /// not what someone dragging a Pool onto a Collaboration wants: nothing could be put inside it
-    /// until a Process was assigned, and there is no surface for that yet.
+    /// The higher-level command establishes missing structural roots and preserves existing geometry.
     /// </remarks>
-    private static CompoundCommand PoolCommand(DropTarget target, string? diagramId)
+    private CreatePoolCommand PoolCommand(DropTarget target, string? diagramId, string containerId)
     {
-        var processId = BpmnId.New("Process");
-
-        return new CompoundCommand(
-            [
-                new CreateProcessCommand(processId),
-                new CreateParticipantCommand(BpmnId.New("Participant"), target.Bounds, "Pool", processId) { DiagramId = diagramId },
-            ],
-            "Create Pool");
+        var document = EditedDocument;
+        var processId = containerId;
+        var visited = new HashSet<string>(StringComparer.Ordinal);
+        while (document?.FindFlowNode(processId) is { } node && visited.Add(processId))
+            processId = node.ContainerId;
+        if (document?.Find(processId) is not BpmnProcess
+            || document.Collaboration?.Participants.Any(pool => pool.ProcessRef == processId) == true)
+            processId = BpmnId.New("Process");
+        return new CreatePoolCommand(BpmnId.New("Participant"), processId, target.Bounds)
+        { DiagramId = diagramId, ContentBounds = MeasuredProcessBounds(target, processId) };
     }
+
+    private static Model.Di.Bounds? MeasuredProcessBounds(DropTarget target, string processId) =>
+        target.ProcessBounds?.TryGetValue(processId, out var bounds) == true ? bounds : null;
 
     /// <summary>
     /// A Boundary Event on whatever Activity it was dropped on.

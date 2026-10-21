@@ -94,14 +94,13 @@ internal sealed class HandlerSource(Func<HttpMessageHandler> create)
 internal sealed class SignalRHarness : IBpmnChangeFeedHarness
 {
     private readonly WebApplication _app;
-    private readonly HandlerSource _handlers;
     private readonly AuthState _auth;
     private readonly SignalRBpmnDocumentChangeSubscriber _subscriber;
 
     private SignalRHarness(WebApplication app, HandlerSource handlers, AuthState auth, SignalRBpmnDocumentChangeSubscriber subscriber)
     {
         _app = app;
-        _handlers = handlers;
+        Handlers = handlers;
         _auth = auth;
         _subscriber = subscriber;
     }
@@ -157,20 +156,20 @@ internal sealed class SignalRHarness : IBpmnChangeFeedHarness
         if (user is not null) http.Headers["X-User"] = user;
     }
 
-    public HandlerSource Handlers => _handlers;
+    public HandlerSource Handlers { get; }
 
     public ValueTask PublishAsync(BpmnDocumentChange change) => Bus.PublishAsync(change);
 
     public ValueTask DropConnectionsAsync()
     {
-        _handlers.KillAll();
+        Handlers.KillAll();
         return ValueTask.CompletedTask;
     }
 
     public ValueTask RevokeAuthorizationAsync()
     {
         _auth.Revoked = true;
-        _handlers.KillAll();
+        Handlers.KillAll();
         return ValueTask.CompletedTask;
     }
 

@@ -339,7 +339,7 @@ public sealed class ConnectorEndpointsTests
         while (directory is not null)
         {
             var candidate = Path.Combine(directory.FullName, "src", "Bpmn.Scripts", "test", "fixtures", "outline-cases.json");
-            if (File.Exists(candidate)) return JsonDocument.Parse(File.ReadAllText(candidate)).RootElement;
+            if (File.Exists(candidate)) return JsonElement.Parse(File.ReadAllText(candidate));
 
             directory = directory.Parent;
         }

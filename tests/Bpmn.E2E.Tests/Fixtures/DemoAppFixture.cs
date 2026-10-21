@@ -22,6 +22,7 @@ namespace Hasseware.AspNetCore.Components.Bpmn.E2E.Tests.Fixtures;
 /// because the isolation that matters comes from the browser: every test drives its own page, and
 /// the demo re-reads its sample on each load, so no document state crosses between them.
 /// </para>
+/// </remarks>
 public sealed class DemoAppFixture : IAsyncLifetime
 {
     private static readonly SemaphoreSlim Gate = new(1, 1);

@@ -125,16 +125,40 @@ public static partial class BpmnDocumentEditor
 
     // --- Lane ---------------------------------------------------------------------
 
-    private static BpmnEditResult ApplyCreateLane(BpmnDocument document, CreateLaneCommand command)
+    private static BpmnEditResult ApplyCreateLane(BpmnDocument document, CreateLaneCommand command, EditingOptions options)
     {
-        if (Taken(document, command.Id) is { } taken) return BpmnEditResult.Reject(document, taken);
+        if (Taken(document, command.Id) is { } taken)
+            return BpmnEditResult.Reject(document, taken);
+
+        if (command.ContentBounds is { } measured && Invalid(measured) is { } invalid)
+            return BpmnEditResult.Reject(document, invalid);
+
+        var original = document;
+        var pool = BpmnStencil.PoolOwning(document, command.ContainerId);
+        var root = RootProcessOf(document, command.ContainerId);
+
+        if (pool is null && (root is not null || document.Processes.Count == 0 && document.Find(command.ContainerId) is null))
+        {
+            var wrapped = ApplyCreatePool(document, new CreatePoolCommand($"{command.Id}_Pool", root ?? command.ContainerId,
+                new Bounds(0, 0, 600, 250))
+            {
+                DiagramId = command.DiagramId,
+                ContentBounds = command.ContentBounds
+            }, options);
+
+            if (!wrapped.IsApplied)
+                return wrapped;
+
+            document = wrapped.Document;
+            pool = BpmnStencil.PoolOwning(document, command.ContainerId);
+        }
 
         var isContainer = document.Processes.Any(process => process.Id == command.ContainerId)
             || document.FlowNodes.Any(node => node.Id == command.ContainerId && node.FlowElementsOwned);
 
         if (!isContainer)
         {
-            return BpmnEditResult.Reject(document, new BpmnEditDiagnostic(
+            return BpmnEditResult.Reject(original, new BpmnEditDiagnostic(
                 BpmnEditSeverity.Rejected,
                 "CT-001",
                 $"'{command.ContainerId}' is not a Process or an embedded Sub-Process in this document.",
@@ -143,47 +167,67 @@ public static partial class BpmnDocumentEditor
 
         // CT-004: membership and embedding must agree, so a Lane may only claim nodes that the
         // container it subdivides actually owns.
-        var members = command.FlowNodeRefs ?? [];
+        var firstLane = !document.LaneSets.Any(set => set.ContainerId == command.ContainerId && set.LaneIds.Count > 0);
+        var members = command.FlowNodeRefs ?? (firstLane
+            ? document.FlowNodes.Where(node => node.ContainerId == command.ContainerId).Select(node => node.Id).ToArray()
+            : []);
         var stranger = members.FirstOrDefault(id => document.FindFlowNode(id)?.ContainerId != command.ContainerId);
 
         if (stranger is not null)
         {
-            return BpmnEditResult.Reject(document, new BpmnEditDiagnostic(
+            return BpmnEditResult.Reject(original, new BpmnEditDiagnostic(
                 BpmnEditSeverity.Rejected,
                 "CT-004",
                 $"'{stranger}' does not belong to '{command.ContainerId}', so this Lane cannot claim it.",
                 command.Id));
         }
 
-        /*
-         * CT-012: a Lane subdivides a Pool.
-         *
-         * Every rule about a Lane is written in terms of the Pool it divides — stacked inside it,
-         * subdividing its bounds, inheriting its orientation (section 1.5). Without one there is no
-         * rectangle to subdivide, no orientation to take and nowhere to put a header band, so the
-         * geometry has to be invented. Refused instead: the stencil already says as much, and a
-         * command that arrived anyway must not be the way round it.
-         */
-        var pool = BpmnStencil.PoolOwning(document, command.ContainerId);
-
+        // Pool-backed Lane layout is editor policy; BPMN also permits standalone Process Lanes.
         if (pool is null)
         {
-            return BpmnEditResult.Reject(document, new BpmnEditDiagnostic(
+            return BpmnEditResult.Reject(original, new BpmnEditDiagnostic(
                 BpmnEditSeverity.Rejected,
                 "CT-012",
-                $"'{command.ContainerId}' is not held by a Pool, and a Lane subdivides a Pool.",
+                $"The editor requires a drawn Pool for Lanes in '{command.ContainerId}'.",
                 command.Id));
         }
 
         var geometry = CreationGeometry(document, command.DiagramId);
+
+        if (command.DiagramId is { } requested
+            && CreationDestinationProblem(document, requested, command.ContainerId, command.Id) is { } destination)
+            return BpmnEditResult.Reject(original, destination);
+
         if (command.DiagramId is not null && ShapeFor(geometry, pool.Id) is null)
         {
-            return BpmnEditResult.Reject(document, new BpmnEditDiagnostic(
+            return BpmnEditResult.Reject(original, new BpmnEditDiagnostic(
                 BpmnEditSeverity.Rejected, "CT-012",
                 $"Pool '{pool.Id}' is not drawn on diagram '{command.DiagramId}'.", command.Id));
         }
 
         var isHorizontal = ShapeFor(geometry, pool.Id)?.IsHorizontal != false;
+
+        if (firstLane && ShapeFor(geometry, pool.Id) is { } poolShape)
+        {
+            var diagram = geometry.Diagrams.Count > 0 ? geometry.Diagrams[0] : null;
+            var enclosing = AroundProcessContent(document, diagram, RootProcessOf(document, command.ContainerId)!,
+                poolShape.Bounds, isHorizontal, true, command.ContentBounds);
+            var bounds = Union(poolShape.Bounds, enclosing);
+            document = document with
+            {
+                Diagrams = [.. document.Diagrams.Select(candidate => diagram?.Id == candidate.Id ? candidate with
+                {
+                    Plane = candidate.Plane with
+                    {
+                        Shapes = [.. candidate.Plane.Shapes.Select(shape => shape.Id == poolShape.Id ? shape with { Bounds = bounds } : shape)],
+                    },
+                } : candidate)],
+            };
+            geometry = CreationGeometry(document, command.DiagramId);
+
+            if (options.PreventCollisions && OverlapsAnotherPool(geometry, pool.Id, bounds) is { } clash)
+                return BpmnEditResult.Reject(original, clash);
+        }
 
         var laneSet = document.LaneSets.FirstOrDefault(set => set.ContainerId == command.ContainerId)
             ?? new BpmnLaneSet(command.LaneSetId ?? BpmnId.New("LaneSet"), command.ContainerId, []);
@@ -191,6 +235,14 @@ public static partial class BpmnDocumentEditor
         var existing = BpmnLaneLayout.LanesOf(geometry, pool.Id, isHorizontal);
 
         var shapeId = command.ShapeId ?? BpmnId.ForDiagramElement(command.Id);
+        var allocated = new List<string> { command.Id, shapeId };
+
+        if (!document.LaneSets.Any(set => set.ContainerId == command.ContainerId))
+            allocated.Add(laneSet.Id);
+
+        if (CreationIdsProblem(document, allocated) is { } collision)
+            return BpmnEditResult.Reject(original, collision);
+
         var placed = Tile(geometry, pool, existing, shapeId, command.Id, isHorizontal);
 
         var lane = new BpmnLane(command.Id, command.Name, laneSet.Id, members);
@@ -198,11 +250,13 @@ public static partial class BpmnDocumentEditor
 
         var created = document with
         {
-            Lanes = [.. document.Lanes, lane],
+            Lanes = [.. document.Lanes.Select(existingLane => existingLane with
+                { FlowNodeRefs = [.. existingLane.FlowNodeRefs.Where(id => !members.Contains(id))] }), lane],
             LaneSets = document.LaneSets.Any(set => set.Id == laneSet.Id)
                 ? [.. document.LaneSets.Select(set => set.Id == laneSet.Id ? updatedSet : set)]
                 : [.. document.LaneSets, updatedSet],
             Diagrams = WithLaneGeometry(document, placed, command.DiagramId),
+            FlowNodes = [.. document.FlowNodes.Select(node => members.Contains(node.Id) ? node with { LaneId = command.Id } : node)],
         };
 
         return BpmnEditResult.Applied(created) with { CreatedIds = [command.Id] };
@@ -214,8 +268,8 @@ public static partial class BpmnDocumentEditor
     /// <remarks>
     /// The stack is the Pool, and <see cref="BpmnLaneLayout.Retile"/> shares it out: the existing
     /// Lanes keep their proportions and give up an equal share to the newcomer, which is what
-    /// section 1.5.3 means by the Lanes always tiling their Pool. There is always a Pool — a Lane
-    /// without one is refused as CT-012 before this is reached.
+    /// section 1.5.3 means by the Lanes always tiling their Pool. Creation establishes a missing
+    /// Pool before reaching this editor-specific layout.
     /// </remarks>
     private static List<(string ShapeId, string ElementId, Bounds Bounds, bool IsHorizontal)> Tile(
         BpmnDocument document,
@@ -226,9 +280,10 @@ public static partial class BpmnDocumentEditor
         bool isHorizontal)
     {
         var result = new List<(string ShapeId, string ElementId, Bounds Bounds, bool IsHorizontal)>(existing.Count + 1);
-
         var poolShape = ShapeFor(document, pool.Id);
-        if (poolShape is null) return result;
+
+        if (poolShape is null)
+            return result;
 
         // A placeholder for the newcomer, sized as an equal share of the stack, so Retile's
         // proportional split gives it room without disturbing the others' relative sizes.
@@ -254,7 +309,7 @@ public static partial class BpmnDocumentEditor
         : pool with { Width = (pool.Width - BpmnLaneLayout.HeaderSize) / count };
 
     private static Bounds Union(IEnumerable<Bounds> boxes) =>
-        boxes.Aggregate((first, second) => Union(first, second));
+        boxes.Aggregate(Union);
 
     private static BpmnShape? ShapeFor(BpmnDocument document, string elementId) => document.Diagrams
         .SelectMany(diagram => diagram.Plane.Shapes)

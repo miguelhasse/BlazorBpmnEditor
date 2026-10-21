@@ -5,7 +5,7 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Model.Extensions.Schema;
 /// <summary>Thread-safe namespace registry for opt-in moddle descriptors.</summary>
 public sealed class BpmnExtensionRegistry
 {
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
     private readonly Dictionary<string, BpmnExtensionSchema> _schemas = new(StringComparer.Ordinal);
 
     /// <summary>Registered packages in registration order, as a read-only snapshot.</summary>
@@ -131,7 +131,7 @@ public sealed class BpmnExtensionRegistry
             Collect(registered, schema);
             foreach (var owner in _schemas.Values)
                 foreach (var trait in owner.Types.Where(t => t.Extends.Count > 0))
-                    if (trait.Extends.Any(target => IsExtensionA(registered, schema, Qualify(target, owner), new HashSet<string>(StringComparer.Ordinal)))) Collect(trait, owner);
+                    if (trait.Extends.Any(target => IsExtensionA(registered, schema, Qualify(target, owner), new(StringComparer.Ordinal)))) Collect(trait, owner);
             return result.AsReadOnly();
         }
     }
@@ -143,8 +143,8 @@ public sealed class BpmnExtensionRegistry
         {
             return Array.AsReadOnly(_schemas.Values.SelectMany(s => s.Types.Where(t => !t.IsAbstract && t.Extends.Count == 0 &&
                 (t.AllowedIn.Count > 0
-                    ? t.AllowedIn.Any(target => Applicable(bpmnType, Qualify(target, s), new HashSet<string>(StringComparer.Ordinal)))
-                    : IsExtensionA(t, s, "Element", new HashSet<string>(StringComparer.Ordinal))))).ToArray());
+                    ? t.AllowedIn.Any(target => Applicable(bpmnType, Qualify(target, s), new(StringComparer.Ordinal)))
+                    : IsExtensionA(t, s, "Element", new(StringComparer.Ordinal))))).ToArray());
         }
     }
 
@@ -154,7 +154,7 @@ public sealed class BpmnExtensionRegistry
         lock (_gate)
         {
             return Array.AsReadOnly(_schemas.Values.SelectMany(s => s.Types.Where(t => t.Extends.Count > 0 &&
-                Applicable(bpmnType, t.QualifiedName, new HashSet<string>(StringComparer.Ordinal)))
+                Applicable(bpmnType, t.QualifiedName, new(StringComparer.Ordinal)))
                 .SelectMany(GetAllProperties)).Where(p => p.IsAttr).DistinctBy(p => p.QualifiedName).ToArray());
         }
     }
@@ -190,7 +190,7 @@ public sealed class BpmnExtensionRegistry
     private bool Applicable(string bpmnType, string target, HashSet<string> visited)
     {
         if (target == "*" || BpmnTypeNames.QualifiedName(bpmnType) == target) return true;
-        if (TryResolveType(bpmnType, out var concrete, out var concreteSchema) && IsExtensionA(concrete, concreteSchema, target, new HashSet<string>(StringComparer.Ordinal))) return true;
+        if (TryResolveType(bpmnType, out var concrete, out var concreteSchema) && IsExtensionA(concrete, concreteSchema, target, new(StringComparer.Ordinal))) return true;
         if (target.StartsWith("bpmn:", StringComparison.Ordinal) || target == "Element") return BpmnTypeNames.IsA(bpmnType, target);
         if (!visited.Add(target) || !TryResolveType(target, out var type, out var schema)) return false;
         return type.Extends.Concat(type.SuperClass).Any(parent => Applicable(bpmnType, Qualify(parent, schema), visited));

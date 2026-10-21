@@ -211,7 +211,7 @@ public abstract class McpWriteTests : IDisposable
 
     // --- batch -------------------------------------------------------------------------------------
 
-    private static object[] Operations(params string[] json) => [.. json.Select(text => JsonDocument.Parse(text).RootElement.Clone())];
+    private static object[] Operations(params string[] json) => [.. json.Select(text => JsonElement.Parse(text))];
 
     [Fact]
     public async Task AppliesABatchWhereLaterStepsUseWhatEarlierOnesMadeAndSavesOnce()

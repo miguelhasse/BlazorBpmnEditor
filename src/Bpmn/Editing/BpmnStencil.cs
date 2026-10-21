@@ -277,35 +277,7 @@ public static class BpmnStencil
         BpmnDocument document,
         string? containerId,
         string? diagramId = null) =>
-        WithSwimlaneRule(document, containerId, GroupsFor(ContextFor(document, containerId, diagramId)));
-
-    /// <summary>
-    /// Disables the Pool/Lane tool where neither action can be performed.
-    /// </summary>
-    /// <remarks>
-    /// The drop chooses a Lane inside an existing Pool and a Pool otherwise. Without a
-    /// Collaboration, neither operation has a valid home.
-    /// </remarks>
-    private static IReadOnlyList<BpmnStencilGroup> WithSwimlaneRule(
-        BpmnDocument document,
-        string? containerId,
-        IReadOnlyList<BpmnStencilGroup> groups)
-    {
-        if (document.Collaboration is not null || PoolOwning(document, containerId) is not null) return groups;
-
-        return
-        [
-            .. groups.Select(group => group with
-            {
-                Entries =
-                [
-                    .. group.Entries.Select(entry => entry.Kind == BpmnStencilKind.PoolOrLane
-                        ? entry with { IsEnabled = false, DisabledReason = "CT-001" }
-                        : entry),
-                ],
-            }),
-        ];
-    }
+        GroupsFor(ContextFor(document, containerId, diagramId));
 
     /// <summary>
     /// The Participant whose Process holds this container, following Sub-Processes outwards.
@@ -341,9 +313,8 @@ public static class BpmnStencil
     /// <returns>Groups in display order.</returns>
     public static IReadOnlyList<BpmnStencilGroup> GroupsFor(BpmnStencilContext context) => context switch
     {
-        // Nothing can be drawn before a plane exists; creating the root is a separate action, not
-        // a Flow Node dropped on the Definitions root.
-        BpmnStencilContext.EmptyCanvas => [],
+        // Pool creation establishes the Process, Collaboration and plane atomically.
+        BpmnStencilContext.EmptyCanvas => [Swimlanes()],
 
         // Pool/Lane resolves against the pointer; the Group is the only other Collaboration artifact.
         BpmnStencilContext.CollaborationPlane => [Swimlanes(), Artifacts()],

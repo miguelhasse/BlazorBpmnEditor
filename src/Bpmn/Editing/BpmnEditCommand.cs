@@ -722,6 +722,9 @@ public sealed record CreateLaneCommand(
     string? LaneSetId = null,
     string? ShapeId = null) : BpmnEditCommand
 {
+    /// <summary>Optional rendered Process content bounds, including external labels.</summary>
+    public Bounds? ContentBounds { get; init; }
+
     /// <inheritdoc />
     public override string Label => "Create Lane";
 

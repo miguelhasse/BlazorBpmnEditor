@@ -160,7 +160,7 @@ public sealed partial class BpmnWebMcp : IAsyncDisposable
             Options.RequireConfirmationForConsequential,
             Options.RequireConfirmationForPersistence,
             Session.RequestConfirmationAsync,
-            (key, arguments) => Text(key, arguments),
+            Text,
             () => Session.PendingConfirmation is not null);
 
         // The browser calls in from outside any render: every call joins the renderer's context first.

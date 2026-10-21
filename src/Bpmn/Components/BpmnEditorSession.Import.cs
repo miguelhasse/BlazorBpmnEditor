@@ -23,13 +23,11 @@ namespace Hasseware.AspNetCore.Components.Bpmn;
 /// </remarks>
 public sealed partial class BpmnEditorSession
 {
-    private BpmnImportPreview? _import;
-
     /// <summary>The import waiting for an answer, if any.</summary>
-    public BpmnImportPreview? PendingImport => _import;
+    public BpmnImportPreview? PendingImport { get; private set; }
 
     /// <summary>Whether an import is waiting for an answer.</summary>
-    public bool IsImporting => _import is not null;
+    public bool IsImporting => PendingImport is not null;
 
     /// <summary>
     /// Raised when an import is accepted, with the document that replaced the current one.
@@ -61,10 +59,10 @@ public sealed partial class BpmnEditorSession
     /// <returns>The preview, so a caller can inspect it as well as see it.</returns>
     public BpmnImportPreview PreviewImport(string fileName, string xml)
     {
-        _import = BpmnImportPreview.Of(fileName, xml);
+        PendingImport = BpmnImportPreview.Of(fileName, xml);
         NotifyStateChanged();
 
-        return _import;
+        return PendingImport;
     }
 
     /// <summary>
@@ -73,9 +71,9 @@ public sealed partial class BpmnEditorSession
     /// <returns>A task that completes once the new document is on screen.</returns>
     public async Task AcceptImportAsync()
     {
-        if (_import is not { Document: { } document } accepted) return;
+        if (PendingImport is not { Document: { } document } accepted) return;
 
-        _import = null;
+        PendingImport = null;
 
         /*
          * A new document in every sense: the history, the selection and the navigation path all
@@ -87,12 +85,12 @@ public sealed partial class BpmnEditorSession
         _selection = [];
         _selectionSnapshot = null;
         _selectionAnchor = null;
-        _accessibleCurrent = null;
+        AccessibleCurrent = null;
         _labelEdit = null;
         _pendingCall = null;
         _armedTool = null;
         _menu = null;
-        _menuSnapshot = null;
+        ContextMenuSnapshot = null;
         _activeDiagramId = null;
         _path.Clear();
 
@@ -113,9 +111,9 @@ public sealed partial class BpmnEditorSession
     /// </remarks>
     public void CancelImport()
     {
-        if (_import is null) return;
+        if (PendingImport is null) return;
 
-        _import = null;
+        PendingImport = null;
         NotifyStateChanged();
     }
 }

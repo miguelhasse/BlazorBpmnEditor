@@ -80,7 +80,7 @@ internal sealed class McpHarness : IAsyncDisposable
             arguments.ToDictionary(argument => argument.Name, argument => argument.Value),
             cancellationToken: TestContext.Current.CancellationToken);
         var text = ((TextContentBlock)raw.Content[0]).Text;
-        return (JsonDocument.Parse(text).RootElement.Clone(), raw.IsError ?? false, raw);
+        return (JsonElement.Parse(text), raw.IsError ?? false, raw);
     }
 
     public async ValueTask DisposeAsync()

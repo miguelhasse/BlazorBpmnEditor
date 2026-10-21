@@ -38,7 +38,7 @@
     <value>It is drawn expanded on '{0}' and its content is also drawn on '{1}'.</value>
   </data>
   <data name="CT-012" xml:space="preserve">
-    <value>A Lane subdivides a Pool, so its LaneSet's Process must be referenced by a Participant.</value>
+    <value>The editor's Lane layout requires a Pool referencing the LaneSet's Process.</value>
   </data>
   <data name="CT-012.Detail" xml:space="preserve">
     <value>No Participant references '{0}'.</value>

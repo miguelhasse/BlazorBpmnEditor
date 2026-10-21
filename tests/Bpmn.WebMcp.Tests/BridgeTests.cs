@@ -20,7 +20,7 @@ public sealed class BridgeTests : EditorContext
 
     private static BpmnWebMcpBridge BridgeFor(IBpmnToolHost host) => new(host, Tools, Direct);
 
-    private static JsonElement Parse(string json) => JsonDocument.Parse(json).RootElement.Clone();
+    private static JsonElement Parse(string json) => JsonElement.Parse(json);
 
     [Fact]
     public async Task AnswersAReadingToolExactlyAsTheSharedHandlerDoes()

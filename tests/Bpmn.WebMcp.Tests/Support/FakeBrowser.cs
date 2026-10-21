@@ -101,7 +101,7 @@ internal sealed class FakeBrowser : IJSRuntime
         public async Task<JsonElement> CallAsync(string tool, string argumentsJson = "{}")
         {
             var json = await Reference!.Value.ExecuteAsync(Guid.NewGuid().ToString("N"), tool, argumentsJson);
-            return JsonDocument.Parse(json).RootElement.Clone();
+            return JsonElement.Parse(json);
         }
 
         public ValueTask DisposeAsync()

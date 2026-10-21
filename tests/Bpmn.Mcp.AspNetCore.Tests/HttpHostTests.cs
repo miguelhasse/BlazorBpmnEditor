@@ -107,7 +107,7 @@ public sealed class HttpHostTests
     private static async Task<JsonElement> CallAsync(McpClient client, string tool, params (string Name, object? Value)[] arguments)
     {
         var result = await client.CallToolAsync(tool, arguments.ToDictionary(argument => argument.Name, argument => argument.Value), cancellationToken: Token);
-        return JsonDocument.Parse(((TextContentBlock)result.Content[0]).Text).RootElement.Clone();
+        return JsonElement.Parse(((TextContentBlock)result.Content[0]).Text);
     }
 
     private static StringContent Rpc() => new("""{"jsonrpc":"2.0","id":1,"method":"tools/list"}""", Encoding.UTF8, "application/json");

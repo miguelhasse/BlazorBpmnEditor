@@ -198,7 +198,11 @@ public sealed record EditRequest(
 /// plane itself. A Lane is never reported here: it classifies nodes without owning them.
 /// </param>
 /// <param name="PoolId">The Pool under the pointer, which governs Message Flow rather than containment.</param>
-public sealed record DropTarget(Model.Di.Bounds Bounds, string? ContainerId, string? PoolId);
+public sealed record DropTarget(Model.Di.Bounds Bounds, string? ContainerId, string? PoolId)
+{
+    /// <summary>Rendered content bounds by root Process, including unpersisted external labels.</summary>
+    public IReadOnlyDictionary<string, Model.Di.Bounds>? ProcessBounds { get; init; }
+}
 
 /// <summary>Raised when the canvas refused a gesture and rolled it back itself.</summary>
 /// <param name="Code">The rule code, for example <c>DI-011</c>.</param>

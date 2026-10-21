@@ -199,7 +199,7 @@ public sealed class SessionToolTests
 
         foreach (var name in new[] { "bpmn_get_document_info", "bpmn_save", "bpmn_undo", "bpmn_redo", "bpmn_select" })
         {
-            var result = await BpmnToolCatalog.InvokeAsync(host, name, System.Text.Json.JsonDocument.Parse(name == "bpmn_select" ? """{"elementIds":[]}""" : "{}").RootElement, Token);
+            var result = await BpmnToolCatalog.InvokeAsync(host, name, System.Text.Json.JsonElement.Parse(name == "bpmn_select" ? """{"elementIds":[]}""" : "{}"), Token);
 
             Assert.NotEqual("There is no tool with that name.", result.Message);
         }

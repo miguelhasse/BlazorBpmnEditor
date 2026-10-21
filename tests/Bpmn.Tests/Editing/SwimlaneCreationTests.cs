@@ -152,8 +152,8 @@ public sealed class SwimlaneCreationTests
             before.FlowNodes.Select(node => (node.Id, node.ContainerId)),
             result.Document.FlowNodes.Select(node => (node.Id, node.ContainerId)));
 
-        // And it claims nothing until something is moved into it.
-        Assert.Empty(result.Document.Lanes.Single().FlowNodeRefs);
+        Assert.Equal(["Task_1"], result.Document.Lanes.Single().FlowNodeRefs);
+        Assert.Equal("Lane_1", result.Document.FlowNodes.Single().LaneId);
     }
 
     [Fact]
@@ -191,27 +191,18 @@ public sealed class SwimlaneCreationTests
     }
 
     [Fact]
-    public void RefusesALaneOnAProcessNoPoolHolds()
+    public void CreatesAPoolForTheFirstLaneOnAStandaloneProcess()
     {
-        /*
-         * A Lane subdivides a Pool. Section 1.5 writes every rule about one in terms of the Pool it
-         * divides — stacked inside it, subdividing its bounds, taking its orientation — so without
-         * a Pool there is no rectangle it is a share of and the geometry would have to be invented.
-         * The stencil already shows the tool disabled here; this is the same answer for a command
-         * that arrived anyway, because a disabled tool is a hint and not an enforcement.
-         */
         var result = Apply(Bare(), new CreateLaneCommand("Lane_1", "Process_1", "Sales"));
 
-        Assert.False(result.IsApplied);
-        Assert.Equal("CT-012", Assert.Single(result.Rejections).Code);
-
-        // And nothing half-made: no Lane, no lane set, no shape.
-        Assert.Empty(result.Document.Lanes);
-        Assert.Empty(result.Document.LaneSets);
+        Assert.True(result.IsApplied, Codes(result));
+        Assert.Equal("Process_1", Assert.Single(result.Document.Collaboration!.Participants).ProcessRef);
+        Assert.Equal(["Task_1"], Assert.Single(result.Document.Lanes).FlowNodeRefs);
+        Assert.Equal(ShapeOf(Bare(), "Task_1"), ShapeOf(result.Document, "Task_1"));
     }
 
     [Fact]
-    public void RefusesALaneInASubProcessOfAPoollessProcess()
+    public void CreatesAPoolForALaneInASubProcessOfAStandaloneProcess()
     {
         // The rule follows containment outwards: an embedded Sub-Process is held by whatever holds
         // the Process it is in, so a Sub-Process on a bare Process has no Pool either.
@@ -226,7 +217,9 @@ public sealed class SwimlaneCreationTests
 
         var result = Apply(document, new CreateLaneCommand("Lane_1", "Sub_1", "Sales"));
 
-        Assert.Equal("CT-012", Assert.Single(result.Rejections).Code);
+        Assert.True(result.IsApplied, Codes(result));
+        Assert.Equal("Process_1", Assert.Single(result.Document.Collaboration!.Participants).ProcessRef);
+        Assert.Equal("Sub_1", Assert.Single(result.Document.LaneSets).ContainerId);
     }
 
     [Fact]
@@ -241,8 +234,8 @@ public sealed class SwimlaneCreationTests
             .SelectMany(group => group.Entries)
             .Single(entry => entry.Kind == BpmnStencilKind.PoolOrLane);
 
-        Assert.False(tool.IsEnabled);
-        Assert.Equal("CT-001", tool.DisabledReason);
+        Assert.True(tool.IsEnabled);
+        Assert.Null(tool.DisabledReason);
     }
 
     [Fact]

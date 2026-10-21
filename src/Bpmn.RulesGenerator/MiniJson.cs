@@ -33,13 +33,13 @@ internal static class MiniJson
             case '[': return ParseArray(json, ref index);
             case '"': return ParseString(json, ref index);
             case 't':
-                Expect(json, ref index, "true");
+                Expect(ref index, "true");
                 return true;
             case 'f':
-                Expect(json, ref index, "false");
+                Expect(ref index, "false");
                 return false;
             case 'n':
-                Expect(json, ref index, "null");
+                Expect(ref index, "null");
                 return null;
             default:
                 return ParseNumber(json, ref index);
@@ -154,7 +154,7 @@ internal static class MiniJson
         return double.Parse(json.Substring(start, index - start), CultureInfo.InvariantCulture);
     }
 
-    private static void Expect(string json, ref int index, string literal)
+    private static void Expect(ref int index, string literal)
     {
         index += literal.Length;
     }

@@ -15,7 +15,7 @@ public sealed class BpmnTemplateOptions
     public Dictionary<string, string> Engines { get; } = new(StringComparer.Ordinal);
 
     private readonly List<BpmnTemplateLoadError> _loadErrors = [];
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
 
     /// <summary>Registry shared by editors using these options.</summary>
     public BpmnElementTemplateRegistry Registry { get; } = new();

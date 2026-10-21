@@ -36,7 +36,6 @@ public sealed partial class BpmnEditorSession
     private BpmnTemplateOptions? _describedTemplates;
     private bool _describedReadOnly;
     private string? _describedCulture;
-    private BpmnDisplayLocalizer? _displayText;
     private bool _expansionsDirty;
     private ImmutableDictionary<string, BpmnExpansionState> _expansionSnapshot = ImmutableDictionary<string, BpmnExpansionState>.Empty;
     private BpmnDocument? _parameterDocument;
@@ -81,7 +80,7 @@ public sealed partial class BpmnEditorSession
     /// Localizes built-in command and snapshot captions with the host's <see cref="IStringLocalizer{T}"/> when
     /// one is registered, falling back to the built-in resources for the current UI culture.
     /// </summary>
-    private BpmnDisplayLocalizer DisplayText => _displayText ??=
+    private BpmnDisplayLocalizer DisplayText => field ??=
         _profileServices.GetService(typeof(IStringLocalizer<BpmnStrings>)) is IStringLocalizer<BpmnStrings> strings
             ? new BpmnDisplayLocalizer(strings)
             : _profileServices.GetService(typeof(BpmnDisplayLocalizer)) as BpmnDisplayLocalizer ?? BpmnDisplayLocalizer.CurrentCulture;
@@ -157,8 +156,8 @@ public sealed partial class BpmnEditorSession
         {
             var flags = (IsReadOnly ? 1 : 0) | (CanPaste ? 2 : 0) | (CanUndo ? 4 : 0) | (CanRedo ? 8 : 0);
             var culture = CultureInfo.CurrentUICulture.Name;
-            if (!_menuCache.Matches(_menu, _menuSnapshot, EditedDocument, culture, flags))
-                _menuCache.Store(BuildMenuEntries, _menu, _menuSnapshot, EditedDocument, culture, flags);
+            if (!_menuCache.Matches(_menu, ContextMenuSnapshot, EditedDocument, culture, flags))
+                _menuCache.Store(BuildMenuEntries, _menu, ContextMenuSnapshot, EditedDocument, culture, flags);
             return _menuCache.Value;
         }
     }
@@ -186,7 +185,7 @@ public sealed partial class BpmnEditorSession
     {
         EnsureDescriptionInputs();
         var unchanged = _parametersInitialized && ReferenceEquals(_parameterDocument, Document)
-            && (ReferenceEquals(snapshot, _snapshot) || snapshot == _snapshot)
+            && (ReferenceEquals(snapshot, ConfigurationSnapshot) || snapshot == ConfigurationSnapshot)
             && ReferenceEquals(State.Document, EditedDocument) && ReferenceEquals(State.DrawnDocument, DrawnDocument)
             && State.IsReadOnly == IsReadOnly && State.ActiveDiagramId == ActiveDiagramId
             && State.Overlays.AccessibleTree.IsOpen == ShowAccessibleTree

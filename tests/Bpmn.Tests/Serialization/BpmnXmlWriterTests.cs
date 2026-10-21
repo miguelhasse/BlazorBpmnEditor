@@ -803,8 +803,8 @@ public sealed class BpmnXmlWriterTests
             .Where(pair => pair.First != pair.Second)
             .ToList();
 
-        var line = Assert.Single(changed);
-        Assert.Contains("x=\"500\"", line.Second, StringComparison.Ordinal);
+        var (First, Second) = Assert.Single(changed);
+        Assert.Contains("x=\"500\"", Second, StringComparison.Ordinal);
     }
 
     [Fact]

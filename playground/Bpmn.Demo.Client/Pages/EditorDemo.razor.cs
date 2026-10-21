@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Hasseware.AspNetCore.Components.Bpmn;
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
@@ -11,7 +12,6 @@ using Hasseware.FluentUI.AspNetCore.Components.Bpmn;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.Extensions.Options;
 using Microsoft.FluentUI.AspNetCore.Components;
 
 namespace Bpmn.Demo.Client.Pages;
@@ -81,8 +81,6 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
 
     private bool HasEditor => _fluentEditor is not null || _plainEditor is not null;
 
-    [Inject]
-    private IOptions<BpmnOptions> BpmnOptions { get; set; } = default!;
     private BpmnDocument? _document;
     private string? _exportedXml;
     private string _exportedFormat = "XML";
@@ -186,11 +184,14 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
     /// <summary>The stored document the editor shows; created once, loaded with each sample.</summary>
     private BpmnDocumentBinding _binding = default!;
 
-    private string? _saveMessage;
-
     /// <summary>Where the binding stands: a save result, unsaved edits, or the stored revision.</summary>
-    private string SaveStatus => _saveMessage
-        ?? (_binding.IsDirty ? Localizer["Editor.Unsaved"].Value : _binding.StoredRevision is { } revision ? Localizer["Editor.Saved", revision].Value : string.Empty);
+    [AllowNull]
+    private string SaveStatus
+    {
+        get => field
+            ?? (_binding.IsDirty ? Localizer["Editor.Unsaved"].Value : _binding.StoredRevision is { } revision ? Localizer["Editor.Saved", revision].Value : string.Empty);
+        set;
+    }
 
     protected override Task OnInitializedAsync()
     {
@@ -199,7 +200,7 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
         _binding = Bindings.Create();
         _binding.Changed += (_, _) =>
         {
-            _saveMessage = null;
+            SaveStatus = null;
             _ = InvokeAsync(StateHasChanged);
         };
 
@@ -215,7 +216,7 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
         var result = await _binding.SaveAsync().ConfigureAwait(true);
 
         // A conflict also raises the editor's own notice; this line only says why nothing was saved.
-        _saveMessage = result.Succeeded ? null : Localizer["Editor.SaveConflict"].Value;
+        SaveStatus = result.Succeeded ? null : Localizer["Editor.SaveConflict"].Value;
         CloseFiles();
     }
 
@@ -327,11 +328,6 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
 
     /// <summary>The path the editor reported, which this page renders as a breadcrumb.</summary>
     private IReadOnlyList<BpmnDiagramStep> _path = [];
-
-    /// <summary>Where the selected element leads, refreshed when the selection changes.</summary>
-    private BpmnDrillTarget? _drill;
-
-    private string? _drillElementId;
 
     private void OnImported(BpmnImportPreview preview)
     {
@@ -492,9 +488,6 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
             var count => Localizer["Editor.SelectedElements", count],
         };
 
-        // What the Open button does next, asked once per selection rather than on every render.
-        _drillElementId = payload.ElementIds.Count == 1 ? payload.ElementIds[0] : null;
-        _drill = _drillElementId is null ? null : (Plain ? _plainEditor?.DrillTargetFor(_drillElementId) : _fluentEditor?.DrillTargetFor(_drillElementId));
     }
 
     private bool _showProperties;

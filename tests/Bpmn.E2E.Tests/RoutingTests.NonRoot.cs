@@ -52,11 +52,11 @@ public partial class RoutingTests
         var segment = Enumerable.Range(2, before.Count - 3)
             .MaxBy(index => Math.Abs(before[index].X - before[index - 1].X)
                 + Math.Abs(before[index].Y - before[index - 1].Y));
-        var first = before[segment - 1];
+        var (X, Y) = before[segment - 1];
         var second = before[segment];
         var position = await Page.EvaluateAsync<double[]>(CTM_EXPRESSION,
-            new[] { (first.X + second.X) / 2, (first.Y + second.Y) / 2 });
-        var vertical = Math.Abs(first.X - second.X) < 1.5;
+            new[] { (X + second.X) / 2, (Y + second.Y) / 2 });
+        var vertical = Math.Abs(X - second.X) < 1.5;
 
         await DragNonRootPointerAsync(position[0], position[1],
             vertical ? 24 : 0, vertical ? 0 : 24, flow);

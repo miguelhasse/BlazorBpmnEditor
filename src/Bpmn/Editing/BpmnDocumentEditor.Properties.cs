@@ -769,7 +769,7 @@ public static partial class BpmnDocumentEditor
         // SF-006: the default branch is the one taken when no condition holds, so a default flow
         // with a condition is a contradiction. Both values can be sent in one command, which is how
         // a user turns a conditional flow into the default.
-        BpmnSequenceFlow { IsDefault: true, ConditionExpression: { Length: > 0 } } flow => new BpmnEditDiagnostic(
+        BpmnSequenceFlow { IsDefault: true, ConditionExpression.Length: > 0 } flow => new BpmnEditDiagnostic(
             BpmnEditSeverity.Rejected,
             "SF-006",
             "A default flow cannot carry a condition. Clear the condition in the same edit to make this the default.",
