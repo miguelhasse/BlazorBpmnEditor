@@ -1,6 +1,8 @@
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.AspNetCore.Components.Bpmn.Interop;
 
+using Microsoft.AspNetCore.Components;
+
 namespace Hasseware.AspNetCore.Components.Bpmn;
 
 /// <summary>
@@ -28,6 +30,13 @@ public abstract class BpmnContextMenuBase : BpmnCanvasWidgetBase<BpmnContextMenu
     /// key the control the user clicked would keep showing a state the document refused.
     /// </remarks>
     protected int Revision { get; private set; }
+
+    /// <summary>Rebuilds the type selector after a refused switch.</summary>
+    protected int TypeRevision { get; private set; }
+
+    /// <summary>The snapshot's current type, including its event definition.</summary>
+    protected string? SelectedTypeValue => Selected?.SwitchableTypes
+        .Where(option => option.IsCurrent).Select(TypeValue).FirstOrDefault();
 
     /// <inheritdoc />
     protected override BpmnContextMenuState? WidgetState => State.Overlays.ContextMenu;
@@ -97,6 +106,28 @@ public abstract class BpmnContextMenuBase : BpmnCanvasWidgetBase<BpmnContextMenu
         ? Task.CompletedTask
         : Session.SwitchElementTypeAsync(
             new SwitchElementTypeCommand(Selected.ElementId, option.Type, option.EventDefinition));
+
+    /// <summary>The stable value of a type option, independent of its localized label.</summary>
+    /// <param name="option">The option.</param>
+    /// <returns>A value distinguishing type and event definition.</returns>
+    protected static string TypeValue(BpmnTypeOption option) => $"{option.Type}:{option.EventDefinition}";
+
+    /// <summary>Selects an offered type and restores the control from the resulting snapshot.</summary>
+    /// <param name="value">The option's stable value.</param>
+    /// <returns>A task that completes once the switch is applied or refused.</returns>
+    protected async Task SelectTypeAsync(string? value)
+    {
+        var option = Selected?.SwitchableTypes.FirstOrDefault(option => TypeValue(option) == value)
+            ?? throw new ArgumentException("The selected type is not offered by this menu.", nameof(value));
+        if (option.IsCurrent || Selected?.Capabilities.CanSwitchType != true) return;
+
+        await SwitchTypeAsync(option).ConfigureAwait(true);
+        if (SelectedTypeValue != value)
+        {
+            TypeRevision++;
+            await FocusTarget.FocusAsync(preventScroll: true).ConfigureAwait(true);
+        }
+    }
 
     /// <summary>
     /// Submits one property.

@@ -65,20 +65,18 @@
         @if (Selected is { SwitchableTypes.Count: > 1 } switchable && switchable.Capabilities.CanSwitchType)
         {
             <div class="bpmn-menu__group" role="group" aria-label="@SwitchTypeLabel">
-                <p class="bpmn-menu__heading">@SwitchTypeLabel</p>
-
-                @foreach (var option in switchable.SwitchableTypes)
-                {
-                    <button type="button"
-                            class="bpmn-menu__item bpmn-menu__item--type"
-                            role="menuitemradio"
-                            aria-checked="@(option.IsCurrent ? "true" : "false")"
-                            @key="@($"{option.Type}:{option.EventDefinition}")"
-                            disabled="@option.IsCurrent"
-                            @onclick="@(() => SwitchTypeAsync(option))">
-                        @Display.TypeOption(option)
-                    </button>
-                }
+                <label class="bpmn-menu__type">
+                    <span class="bpmn-menu__heading">@SwitchTypeLabel</span>
+                    <select class="bpmn-menu__type-select"
+                            @key="(switchable.ElementId, TypeRevision)"
+                            value="@SelectedTypeValue"
+                            @onchange="@(args => SelectTypeAsync(args.Value as string))">
+                        @foreach (var option in switchable.SwitchableTypes)
+                        {
+                            <option value="@TypeValue(option)">@Display.TypeOption(option)</option>
+                        }
+                    </select>
+                </label>
             </div>
         }
 

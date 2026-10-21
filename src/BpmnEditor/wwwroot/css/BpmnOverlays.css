@@ -94,14 +94,25 @@
   opacity: 0.45;
 }
 
-/* The current type stays visible and marked rather than being hidden from its own group. */
-.bpmn-menu__item--type[aria-checked='true'] {
-  font-weight: 600;
-  opacity: 1;
+.bpmn-menu__type {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
 }
 
-.bpmn-menu__item--type[aria-checked='true']::before {
-  content: '\2713\00a0';
+.bpmn-menu__type .bpmn-menu__heading {
+  padding: 0;
+}
+
+.bpmn-menu__type-select {
+  inline-size: 100%;
+  min-inline-size: 0;
+  padding: 0.25rem;
+  border: 1px solid var(--bpmn-surface-border);
+  border-radius: 4px;
+  background: var(--bpmn-surface-background);
+  color: inherit;
+  font: inherit;
 }
 
 .bpmn-menu__empty {

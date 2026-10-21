@@ -50,6 +50,10 @@ export class ContextMenuController {
   #longPressTimer: ReturnType<typeof setTimeout> | null = null;
   #longPressOrigin: { x: number; y: number; target: EventTarget | null } | null = null;
   #attached = false;
+  #request: ContextMenuRequestPayload | null = null;
+  #observer: MutationObserver | null = null;
+  #resizeObserver: ResizeObserver | null = null;
+  #frame: number | null = null;
 
   /**
    * @param host The canvas root. Suppression is scoped to this element's subtree.
@@ -83,6 +87,16 @@ export class ContextMenuController {
     this.#host.addEventListener('touchend', this.#cancelLongPress);
     this.#host.addEventListener('touchmove', this.#cancelLongPress, { passive: true });
     this.#host.addEventListener('touchcancel', this.#cancelLongPress);
+    this.#paper.on('translate scale resize render:done', this.#schedule);
+    this.#paper.model.on('change:position change:size change:vertices change:source change:target', this.#schedule);
+    window.addEventListener('scroll', this.#schedule, true);
+    window.addEventListener('resize', this.#schedule);
+    this.#observer = new MutationObserver(this.#schedule);
+    this.#observer.observe(this.#host, {
+      childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'data-bpmn-element'],
+    });
+    this.#resizeObserver = new ResizeObserver(this.#schedule);
+    this.#resizeObserver.observe(this.#host);
 
     return this;
   }
@@ -98,6 +112,15 @@ export class ContextMenuController {
     this.#host.removeEventListener('touchend', this.#cancelLongPress);
     this.#host.removeEventListener('touchmove', this.#cancelLongPress);
     this.#host.removeEventListener('touchcancel', this.#cancelLongPress);
+    this.#paper.off('translate scale resize render:done', this.#schedule);
+    this.#paper.model.off('change:position change:size change:vertices change:source change:target', this.#schedule);
+    window.removeEventListener('scroll', this.#schedule, true);
+    window.removeEventListener('resize', this.#schedule);
+    this.#observer?.disconnect();
+    this.#resizeObserver?.disconnect();
+    if (this.#frame !== null) cancelAnimationFrame(this.#frame);
+    this.#frame = null;
+    this.#request = null;
   }
 
   /** Opens the menu for a target the host resolved itself — the keyboard path, from outside. */
@@ -206,12 +229,42 @@ export class ContextMenuController {
       ? 'canvas'
       : cell.isLink() ? 'link' : 'element';
 
-    this.#callbacks.requested({
+    const request: ContextMenuRequestPayload = {
       target,
       elementId: cell === null ? null : String(cell.id),
       anchor,
       source,
       selection: [...this.#callbacks.selection()],
+    };
+    this.#request = request;
+    this.#callbacks.requested(request);
+    this.#schedule();
+  }
+
+  readonly #schedule = (): void => {
+    if (this.#frame !== null || this.#request === null || this.#host.querySelector('.bpmn-menu') === null) return;
+    this.#frame = requestAnimationFrame(() => {
+      this.#frame = null;
+      this.#layout();
     });
+  };
+
+  #layout(): void {
+    const menu = this.#host.querySelector<HTMLElement>('.bpmn-menu');
+    const request = this.#request;
+    if (menu === null || request === null) return;
+    if ((menu.dataset.bpmnElement ?? null) !== request.elementId) return;
+
+    const cell = request.elementId === null ? undefined : findCell(this.#paper.model, request.elementId);
+    const view = cell === undefined ? undefined : findView(this.#paper, cell);
+    const anchor = view?.el instanceof SVGElement
+      ? this.#anchors.ofRect(view.el.getBoundingClientRect())
+      : this.#anchors.ofLocalRect(request.anchor.bounds);
+    const left = `${(anchor.client.x + this.#host.scrollLeft).toString()}px`;
+    const top = `${(anchor.client.y + anchor.client.height + this.#host.scrollTop).toString()}px`;
+
+    // Blazor may restore the initial inline style while rendering a property edit.
+    if (menu.style.left !== left) menu.style.left = left;
+    if (menu.style.top !== top) menu.style.top = top;
   }
 }

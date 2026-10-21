@@ -16,6 +16,11 @@ internal static class KitFixture
     }
     public static Type Composition => typeof(FluentBpmnEditor);
     public static Type DiagramNavigator => typeof(FluentBpmnDiagramNavigator);
+    public static Task PickMenuTypeAsync(IRenderedComponent<BpmnPart> menu, string value) =>
+        menu.InvokeAsync(() => menu.FindComponent<FluentSelect<BpmnTypeOption, string>>()
+            .Instance.ValueChanged.InvokeAsync(value));
+    public static string? MenuTypeValue(IRenderedComponent<BpmnPart> menu) =>
+        menu.FindComponent<FluentSelect<BpmnTypeOption, string>>().Instance.Value;
     public static Task PickDiagramAsync(IRenderedComponent<Microsoft.AspNetCore.Components.DynamicComponent> editor, string diagramId) =>
         editor.InvokeAsync(() => editor.FindComponent<FluentSelect<BpmnDiagramTarget, string>>()
             .Instance.ValueChanged.InvokeAsync(diagramId));

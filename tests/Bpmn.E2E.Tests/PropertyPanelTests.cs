@@ -137,7 +137,7 @@ public class PropertyPanelTests(DemoAppFixture app) : PageTest, IClassFixture<De
         var taskId = await TaskIdAsync();
         var body = Page.Locator($".joint-cell[model-id='{taskId}'] [joint-selector='body']").First;
         await body.ClickAsync(new() { Button = MouseButton.Right });
-        await Page.Locator(".bpmn-menu__item--type", new() { HasTextString = "Script Task" }).ClickAsync();
+        await Page.PickAsync(Page.Locator(".bpmn-menu__type-select"), "Script Task");
         await Page.Keyboard.PressAsync("Escape");
         await SelectAsync(taskId);
 

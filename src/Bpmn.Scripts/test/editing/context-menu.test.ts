@@ -5,7 +5,7 @@
  * statements about the DOM, and testing them against a fake would be testing the fake.
  */
 import { dia } from '@joint/core';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ContextMenuController } from '../../src/editing/context-menu.js';
 import type { ContextMenuRequestPayload } from '../../src/interop/contracts.js';
@@ -29,8 +29,21 @@ let host: HTMLElement;
 let requests: ContextMenuRequestPayload[];
 let selection: string[];
 let controller: ContextMenuController;
+let handlers: Map<string, () => void>;
+let views: Map<string, dia.CellView>;
+let pan: { x: number; y: number };
+let scale: number;
 
 beforeEach(() => {
+  vi.useFakeTimers();
+  vi.stubGlobal('ResizeObserver', class {
+    observe(): void { /* Resize is dispatched explicitly. */ }
+    disconnect(): void { /* No native observer in jsdom. */ }
+  });
+  handlers = new Map();
+  views = new Map();
+  pan = { x: 0, y: 0 };
+  scale = 1;
   graph = new dia.Graph();
   host = document.createElement('div');
   document.body.appendChild(host);
@@ -41,7 +54,16 @@ beforeEach(() => {
     clientToLocalPoint: (point: { x: number; y: number }) => point,
     clientToLocalRect: (x: number, y: number, width: number, height: number) => ({ x, y, width, height }),
     scale: () => ({ sx: 1, sy: 1 }),
-    findViewByModel: () => undefined,
+    findViewByModel: (cell: dia.Cell) => views.get(String(cell.id)),
+    on: (events: string, callback: () => void) => {
+      for (const event of events.split(' ')) handlers.set(event, callback);
+    },
+    off: (events: string) => {
+      for (const event of events.split(' ')) handlers.delete(event);
+    },
+    localToClientRect: (x: number, y: number, width: number, height: number) => ({
+      x: x * scale + pan.x, y: y * scale + pan.y, width: width * scale, height: height * scale,
+    }),
   } as unknown as dia.Paper;
 
   requests = [];
@@ -51,6 +73,13 @@ beforeEach(() => {
     requested: (payload) => { requests.push(payload); },
     selection: () => selection,
   }).attach();
+});
+
+afterEach(() => {
+  controller.dispose();
+  host.remove();
+  vi.unstubAllGlobals();
+  vi.useRealTimers();
 });
 
 const place = (id: string): dia.Element => {
@@ -85,6 +114,112 @@ const rightClick = (target: EventTarget, at = { x: 40, y: 50 }): MouseEvent => {
   target.dispatchEvent(event);
   return event;
 };
+
+describe('keeping the open menu anchored', () => {
+  function menuFor(id: string | null): HTMLDivElement {
+    const menu = document.createElement('div');
+    menu.className = 'bpmn-menu';
+    if (id !== null) menu.dataset.bpmnElement = id;
+    menu.innerHTML = '<input value="unsaved">';
+    host.append(menu);
+    return menu;
+  }
+
+  async function layout(): Promise<void> {
+    await vi.advanceTimersByTimeAsync(40);
+  }
+
+  it('projects a blank menu point after pan and zoom, even when markup arrives later', async () => {
+    rightClick(host, { x: 120, y: 64 });
+    pan = { x: 20, y: -10 };
+    scale = 2;
+    handlers.get('translate')?.();
+    const menu = menuFor(null);
+    await layout();
+
+    expect(menu.style.left).toBe('260px');
+    expect(menu.style.top).toBe('118px');
+    expect(requests).toHaveLength(1);
+  });
+
+  it.each(['element', 'link'])('remeasures a %s on scroll without reopening or moving focus', async (kind) => {
+    const cell = kind === 'element' ? place('Task_1') : new dia.Link({ id: 'Task_1', type: 'standard.Link' });
+    if (kind === 'link') graph.addCell(cell);
+    const el = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    el.setAttribute('model-id', 'Task_1');
+    let rect = new DOMRect(40, 50, 100, 80);
+    el.getBoundingClientRect = () => rect;
+    host.append(el);
+    views.set('Task_1', { el, model: cell } as unknown as dia.CellView);
+    rightClick(el);
+    const menu = menuFor('Task_1');
+    const input = menu.querySelector('input')!;
+    input.focus();
+    await layout();
+    expect(menu.style.top).toBe('130px');
+
+    rect = new DOMRect(80, 20, 120, 60);
+    window.dispatchEvent(new Event('scroll'));
+    await layout();
+    expect(menu.style.left).toBe('80px');
+    expect(menu.style.top).toBe('80px');
+    expect(document.activeElement).toBe(input);
+    expect(input.value).toBe('unsaved');
+    expect(requests).toHaveLength(1);
+  });
+
+  it('repairs the inline position after a Blazor rerender without an observer loop', async () => {
+    rightClick(host);
+    const menu = menuFor(null);
+    await layout();
+    pan.x = 90;
+    handlers.get('scale')?.();
+    await layout();
+    menu.style.left = '40px';
+    await layout();
+    expect(menu.style.left).toBe('130px');
+    await layout();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('includes native host scroll offsets and follows nested scrolling', async () => {
+    rightClick(host);
+    const menu = menuFor(null);
+    host.scrollLeft = 25;
+    host.scrollTop = 30;
+    host.dispatchEvent(new Event('scroll'));
+    await layout();
+    expect(menu.style.left).toBe('65px');
+    expect(menu.style.top).toBe('80px');
+  });
+
+  it('ignores markup for an old target and tracks the latest invocation after reopening', async () => {
+    rightClick(host);
+    const old = menuFor('Task_1');
+    await layout();
+    expect(old.style.left).toBe('');
+    old.remove();
+    rightClick(host, { x: 200, y: 100 });
+    const current = menuFor(null);
+    await layout();
+    expect(current.style.left).toBe('200px');
+    expect(old.style.left).toBe('');
+  });
+
+  it('cancels pending work and removes listeners when disposed', async () => {
+    rightClick(host);
+    const menu = menuFor(null);
+    await layout();
+    pan.x = 90;
+    handlers.get('translate')?.();
+    controller.dispose();
+    window.dispatchEvent(new Event('scroll'));
+    await layout();
+    expect(menu.style.left).toBe('40px');
+    expect(handlers.size).toBe(0);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+});
 
 describe('suppressing the browser menu', () => {
   it('prevents the default over blank paper and still asks for a menu', () => {

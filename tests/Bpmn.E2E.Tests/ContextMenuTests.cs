@@ -203,16 +203,138 @@ public class ContextMenuTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
         var id = await TaskIdAsync();
         await RightClickAsync(id);
 
-        // Section 7: eight Task kinds, with the current one marked rather than hidden.
-        await Expect(Page.Locator(".bpmn-menu__item--type")).ToHaveCountAsync(8);
-        await Expect(Page.Locator(".bpmn-menu__item--type[aria-checked='true']")).ToHaveTextAsync("User Task");
+        var select = Page.Locator(".bpmn-menu__type-select");
+        await Expect(select.Locator("option, fluent-option")).ToHaveCountAsync(8);
+        await Expect(select.Locator("option:checked, fluent-option[selected]")).ToHaveTextAsync("User Task");
 
-        await Page.Locator(".bpmn-menu__item--type", new() { HasTextString = "Service Task" }).ClickAsync();
+        await Page.PickAsync(select, "Service Task");
 
         // Same id, same label, new type — and the menu now marks the new one.
         await Expect(Page.Locator($".joint-cell[model-id='{id}']"))
             .ToHaveAttributeAsync("aria-label", "Service Task: Review Request");
-        await Expect(Page.Locator(".bpmn-menu__item--type[aria-checked='true']")).ToHaveTextAsync("Service Task");
+        await Expect(select.Locator("option:checked, fluent-option[selected]")).ToHaveTextAsync("Service Task");
+        await Page.Keyboard.PressAsync("Escape");
+        await Expect(Page.Locator(".bpmn-menu")).ToHaveCountAsync(0);
+    }
+
+    [Fact]
+    public async Task OpenMenuFollowsTargetThroughWheelPanZoomAndContainerScroll()
+    {
+        await GoToEditorAsync();
+        var id = await TaskIdAsync();
+        await RightClickAsync(id);
+        await Page.Locator(".bpmn-menu").FocusAsync();
+        var before = await Page.Locator(".bpmn-menu").BoundingBoxAsync();
+
+        await WheelCanvasAsync(30, zoom: false);
+        await ExpectTargetAlignmentAsync(id);
+        var after = await Page.Locator(".bpmn-menu").BoundingBoxAsync();
+        Assert.NotNull(before);
+        Assert.NotNull(after);
+        Assert.True(Math.Abs(after.Y - before.Y) > 1);
+
+        await WheelCanvasAsync(-40, zoom: true);
+        await ExpectTargetAlignmentAsync(id);
+        await Expect(Page.Locator(".bpmn-menu")).ToBeFocusedAsync();
+
+        var select = Page.Locator(".bpmn-menu__type-select");
+        await Page.PickAsync(select, "Service Task");
+        await Expect(select.Locator("option:checked, fluent-option[selected]")).ToHaveTextAsync("Service Task");
+        await ExpectTargetAlignmentAsync(id);
+        await Page.Locator(".bpmn-menu").FocusAsync();
+
+        await Page.EvaluateAsync(
+            """
+            () => {
+              const host = document.querySelector('.bpmn-canvas');
+              host.style.overflow = 'auto';
+              const spacer = document.createElement('div');
+              spacer.style.cssText = 'width:2000px;height:2000px;pointer-events:none';
+              host.append(spacer);
+              host.scrollTop = 15;
+              host.scrollLeft = 10;
+            }
+            """);
+        await ExpectTargetAlignmentAsync(id);
+        await Expect(Page.Locator(".bpmn-menu")).ToBeFocusedAsync();
+
+        var scrollTop = await Page.EvaluateAsync<double>(
+            """
+            () => {
+              const body = document.querySelector('.demo-chrome__body');
+              body.style.maxHeight = '250px';
+              body.style.overflow = 'auto';
+              document.querySelector('.bpmn-editor').style.minHeight = '900px';
+              body.scrollTop = 20;
+              return body.scrollTop;
+            }
+            """);
+        Assert.True(scrollTop > 0);
+        await ExpectTargetAlignmentAsync(id);
+    }
+
+    [Fact]
+    public async Task BlankMenuFollowsItsDiagramPointThroughPanAndZoom()
+    {
+        await GoToEditorAsync();
+        await Page.EvaluateAsync(
+            """
+            () => {
+              const svg = document.querySelector('.bpmn-canvas__paper > svg');
+              const viewport = svg.querySelector('.joint-viewport');
+              const box = svg.getBoundingClientRect();
+              const point = new DOMPoint(box.x + 200, box.y + 150);
+              window.menuDiagramPoint = point.matrixTransform(viewport.getScreenCTM().inverse());
+              svg.dispatchEvent(new MouseEvent('contextmenu', {
+                bubbles: true, cancelable: true, clientX: point.x, clientY: point.y
+              }));
+            }
+            """);
+        await Expect(Page.Locator(".bpmn-menu__title")).ToHaveTextAsync("Canvas");
+
+        await WheelCanvasAsync(25, zoom: false);
+        await WheelCanvasAsync(-40, zoom: true);
+        await Page.WaitForFunctionAsync(
+            """
+            () => {
+              const viewport = document.querySelector('.joint-viewport');
+              const expected = window.menuDiagramPoint.matrixTransform(viewport.getScreenCTM());
+              const menu = document.querySelector('.bpmn-menu').getBoundingClientRect();
+              return Math.abs(menu.left - expected.x) < 1 && Math.abs(menu.top - expected.y) < 1;
+            }
+            """);
+        await Expect(Page.Locator(".bpmn-menu__title")).ToHaveTextAsync("Canvas");
+    }
+
+    [Fact]
+    public async Task FluentCommandsUseHorizontalIconButtonsAndWrapWhenConstrained()
+    {
+        if (KitRoute.For(this) == KitRoute.Plain) return;
+        await GoToEditorAsync();
+        await RightClickAsync(await TaskIdAsync());
+        var commands = Page.Locator(".bpmn-menu__commands");
+        await Expect(commands.GetByRole(AriaRole.Menuitem)).ToHaveCountAsync(5);
+        var geometry = await commands.EvaluateAsync<double[][]>(
+            """
+            group => [...group.querySelectorAll('.bpmn-menu__item')]
+              .map(button => {
+                const box = button.getBoundingClientRect();
+                return [box.x, box.y, box.width, box.height];
+              })
+            """);
+        Assert.True(geometry[1][0] > geometry[0][0]);
+        Assert.InRange(Math.Abs(geometry[1][1] - geometry[0][1]), 0, 1);
+        Assert.InRange(geometry[0][2], 24, 40);
+        await Expect(commands.GetByRole(AriaRole.Menuitem, new() { Name = "Copy", Exact = true }))
+            .ToHaveAttributeAsync("title", "Copy");
+        await commands.EvaluateAsync("group => group.style.width = '100px'");
+        await Page.WaitForFunctionAsync(
+            """
+            () => {
+              const buttons = document.querySelectorAll('.bpmn-menu__commands .bpmn-menu__item');
+              return buttons[4].getBoundingClientRect().top > buttons[0].getBoundingClientRect().top;
+            }
+            """);
     }
 
     [Fact]
@@ -238,8 +360,8 @@ public class ContextMenuTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
 
         Assert.True(prevented, "read-only did not suppress the browser menu");
         await Expect(Page.Locator(".bpmn-menu")).ToHaveCountAsync(1);
-        await Expect(Page.Locator(".bpmn-menu__item--type")).ToHaveCountAsync(0);
-        await Expect(Page.Locator(".bpmn-menu__item", new() { HasText = "Delete" })).ToHaveCountAsync(0);
+        await Expect(Page.Locator(".bpmn-menu__type-select")).ToHaveCountAsync(0);
+        await Expect(Page.GetByRole(AriaRole.Menuitem, new() { Name = "Delete", Exact = true })).ToHaveCountAsync(0);
         foreach (var field in await Page.Locator(".bpmn-menu").GetByRole(AriaRole.Textbox).AllAsync())
             await Expect(field).Not.ToBeEditableAsync();
     }
@@ -262,7 +384,7 @@ public class ContextMenuTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
         await Expect(input).ToHaveCountAsync(0);
 
         await RightClickAsync(id);
-        await Page.Locator(".bpmn-menu__item", new() { HasTextString = "Edit label" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Menuitem, new() { Name = "Edit label", Exact = true }).ClickAsync();
         await Expect(input).ToHaveValueAsync("Review Request");
         var menuBox = await input.BoundingBoxAsync();
         Assert.NotNull(menuBox);
@@ -434,6 +556,28 @@ public class ContextMenuTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
     }
 
     // --- helpers ------------------------------------------------------------------------
+
+    private Task WheelCanvasAsync(double deltaY, bool zoom) => Page.EvaluateAsync(
+        """
+        async ([deltaY, zoom]) => {
+          const svg = document.querySelector('.bpmn-canvas__paper > svg');
+          const box = svg.getBoundingClientRect();
+          svg.dispatchEvent(new WheelEvent('wheel', {
+            bubbles: true, cancelable: true, deltaY, ctrlKey: zoom,
+            clientX: box.x + box.width / 2, clientY: box.y + box.height / 2
+          }));
+          await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        }
+        """, new object[] { deltaY, zoom });
+
+    private Task ExpectTargetAlignmentAsync(string id) => Page.WaitForFunctionAsync(
+        """
+        id => {
+          const target = document.querySelector(`.joint-cell[model-id="${id}"]`).getBoundingClientRect();
+          const menu = document.querySelector('.bpmn-menu').getBoundingClientRect();
+          return Math.abs(menu.left - target.left) < 1 && Math.abs(menu.top - target.bottom) < 1;
+        }
+        """, id);
 
     private Task<string> TaskIdAsync() => Page.EvaluateAsync<string>(
         """

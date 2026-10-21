@@ -54,6 +54,19 @@ A replacement inline label editor should retain a `.bpmn-label-editor` wrapper w
 markup to size the input to its content and keep the editor anchored during scrolling and zooming.
 Keep the base's focus target, text binding, and commit/cancel handlers.
 
+Context menus retain a `.bpmn-menu` wrapper with
+`data-bpmn-element="@Selected?.ElementId"` and the base's `PositionStyle`. The canvas keeps this
+wrapper at the target's bottom-left through scrolling, panning, zooming and rerenders; blank-canvas
+menus follow the invocation's diagram point. Position updates do not reopen the menu or move focus.
+Keep geometry in the canvas rather than adding kit-owned JavaScript.
+
+Render Switch Type as a labelled dropdown when the snapshot permits switching and supplies more
+than one option. Use `SelectedTypeValue`, `TypeValue` and `SelectTypeAsync` from
+`BpmnContextMenuBase`; key the selector by `(Selected.ElementId, TypeRevision)` so a refused switch
+restores the snapshot's current type. Options include both type and event definition, and their
+display text comes from `Display.TypeOption`. Type switches keep the menu open; command buttons
+retain their normal dismissal. Icon-only commands need localized accessible names and tooltips.
+
 ## Register defaults, not host overrides
 
 Use `UseDefault<TComponent>`, never `Use<TComponent>`, in a kit registration extension. Defaults

@@ -5,6 +5,7 @@ using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.AspNetCore.Components.Bpmn.Interop;
 using Hasseware.AspNetCore.Components.Bpmn.Model.Di;
 using Hasseware.FluentUI.AspNetCore.Components.Bpmn;
+using Microsoft.FluentUI.AspNetCore.Components;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Components;
 
@@ -22,6 +23,36 @@ public sealed class CanvasContextTests : FluentTestContext
             new ContextMenuRequested("element", "Task_1", Anchor(), "mouse", ["Task_1"])));
 
         Assert.Equal("Task_1", menu.Find(".bpmn-menu").GetAttribute("data-bpmn-element"));
+    }
+
+    [Fact]
+    public async Task CommandsAreIconOnlyWithAccessibleNamesTooltipsAndOriginalOrder()
+    {
+        BpmnEditorSession? session = null;
+        var snapshot = Snapshot("Task_1") with
+        {
+            Capabilities = BpmnElementCapabilities.None with { CanEditLabel = true },
+        };
+        var menu = this.RenderSeeded<FluentBpmnContextMenu>(
+            seed => seed.Snapshots([snapshot]).Session(value => session = value), canvas: true);
+        await menu.InvokeAsync(() => session!.HandleContextMenuRequestedAsync(
+            new ContextMenuRequested("element", "Task_1", Anchor(), "pointer", ["Task_1"])));
+
+        var buttons = menu.FindComponents<FluentButton>();
+        Assert.Equal(new[] { "Edit label", "Copy", "Cut", "Duplicate", "Delete" },
+            buttons.Select(button => button.Instance.Title));
+        Assert.All(buttons, button =>
+        {
+            Assert.True(button.Instance.IconOnly);
+            Assert.NotNull(button.Instance.IconStart);
+            Assert.Equal(button.Instance.Title, button.Find("[role=menuitem]").GetAttribute("aria-label"));
+            Assert.Empty(button.Find("[role=menuitem]").TextContent.Trim());
+        });
+        Assert.True(buttons[^1].Instance.Disabled);
+        Assert.Single(menu.FindAll(".bpmn-menu__commands"));
+
+        await buttons[1].InvokeAsync(() => buttons[1].Instance.OnClick.InvokeAsync());
+        Assert.False(session!.IsContextMenuOpen);
     }
 
     [Fact]

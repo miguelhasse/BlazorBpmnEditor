@@ -388,9 +388,11 @@
   padding-block: 0.15rem;
 }
 .fluent-bpmn-editor .bpmn-menu__item {
-  display: block;
-  inline-size: 100%;
-  padding: 0.3rem 0.5rem;
+  flex: 0 0 auto;
+  inline-size: 2rem;
+  min-inline-size: 2rem;
+  block-size: 2rem;
+  padding: 0.25rem;
   border: 0;
   border-radius: 4px;
   background: none;
@@ -410,12 +412,16 @@
   cursor: default;
   opacity: 0.45;
 }
-.fluent-bpmn-editor .bpmn-menu__item--type[aria-checked='true'] {
-  font-weight: 600;
-  opacity: 1;
+.fluent-bpmn-editor .bpmn-menu__commands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
 }
-.fluent-bpmn-editor .bpmn-menu__item--type[aria-checked='true']::before {
-  content: '\2713\00a0';
+.fluent-bpmn-editor .bpmn-menu__type-select {
+  display: block;
+  min-inline-size: 0;
+  padding: 0.25rem 0.5rem;
 }
 .fluent-bpmn-editor .bpmn-menu__empty {
   margin: 0;
