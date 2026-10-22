@@ -47,8 +47,17 @@
   min-inline-size: 0;
   min-block-size: 0;
 }
+.fluent-bpmn-editor .bpmn-toolbar__color {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+}
+
 .fluent-bpmn-editor .bpmn-toolbar {
   display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
   gap: 0.25rem;

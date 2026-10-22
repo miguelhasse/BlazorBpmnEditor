@@ -89,6 +89,7 @@ export interface PointContract {
  * text field here could only ever shadow it with an empty value.
  */
 export interface BpmnLabelContract {
+  readonly color?: string | null;
   readonly id?: string | null;
   readonly bounds: BoundsContract | null;
   readonly styleId?: string | null;
@@ -99,6 +100,8 @@ export interface BpmnLabelContract {
  * (section 6 note, section 10.4) and is null everywhere else.
  */
 export interface BpmnShapeContract {
+  readonly backgroundColor?: string | null;
+  readonly borderColor?: string | null;
   readonly id: string;
   readonly bpmnElement: string;
   readonly bounds: BoundsContract;
@@ -109,6 +112,7 @@ export interface BpmnShapeContract {
 }
 
 export interface BpmnEdgeContract {
+  readonly borderColor?: string | null;
   readonly id: string;
   readonly bpmnElement: string;
   readonly waypoints: readonly PointContract[];

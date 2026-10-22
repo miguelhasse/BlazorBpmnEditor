@@ -16,7 +16,7 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Serialization;
 /// <remarks>
 /// <para>
 /// A file is an envelope around the semantic model:
-/// <c>{ "format": "hasseware.bpmn", "version": "1.0", "document": { … } }</c>. The document is
+/// <c>{ "format": "hasseware.bpmn", "version": "1.1", "document": { … } }</c>. The document is
 /// <see cref="BpmnDocument"/> as camelCase JSON — the same member names the canvas interop uses —
 /// with enums as strings, vendor attributes keyed <c>{namespaceUri}localName</c> and
 /// <c>extensionElements</c> as ordered trees, so everything the XML reader keeps survives.
@@ -33,13 +33,13 @@ public static class BpmnJsonFormat
     public const string Name = "hasseware.bpmn";
 
     /// <summary>The format version this library writes.</summary>
-    public const string Version = "1.0";
+    public const string Version = "1.1";
 
     /// <summary>The major version this library reads.</summary>
     public const int MajorVersion = 1;
 
     /// <summary>The minor version this library writes.</summary>
-    public const int MinorVersion = 0;
+    public const int MinorVersion = 1;
 
     /// <summary>The conventional file extension.</summary>
     public const string FileExtension = ".json";

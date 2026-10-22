@@ -8,6 +8,19 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Components;
 
 internal static class KitFixture
 {
+    public static Task ChangeColorAsync(IRenderedComponent<Microsoft.AspNetCore.Components.DynamicComponent> editor,
+        string channel, string color)
+    {
+        var picker = editor.FindComponents<FluentColorPickerInput>()
+            .Single(component => component.Instance.Label == (channel switch
+            {
+                "Background" => "Fill color",
+                "Border" => "Border / line color",
+                _ => "Text color",
+            }));
+        return editor.InvokeAsync(() => picker.Instance.ValueChanged.InvokeAsync(color));
+    }
+
     public static Task ConfirmAnnotationNormalizationAsync(IRenderedComponent<BpmnPart> offer) =>
         offer.InvokeAsync(() => offer.FindComponent<FluentCheckbox>().Instance.ValueChanged.InvokeAsync(true));
 

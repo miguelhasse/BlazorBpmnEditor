@@ -76,8 +76,23 @@
   min-block-size: 0;
 }
 
+.bpmn-toolbar__color {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.bpmn-toolbar__color input[type="color"] {
+  width: 2rem;
+  height: 1.75rem;
+  padding: 0;
+}
+
 .bpmn-toolbar {
   display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
   gap: 0.25rem;

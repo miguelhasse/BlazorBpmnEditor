@@ -84,6 +84,72 @@ public sealed class KitParityTests : BunitContext
         Assert.Equal("100%", editor.Find(".bpmn-toolbar__zoom").TextContent);
     }
 
+    [Theory]
+    [InlineData("Background")]
+    [InlineData("Border")]
+    [InlineData("Text")]
+    public async Task ToolbarColorChangesSupportHistoryAndReset(string channel)
+    {
+        var editor = RenderEditor();
+        var session = Session(editor);
+        await editor.InvokeAsync(() => session.SetSelectionAsync(["Task_1"]));
+
+        await KitFixture.ChangeColorAsync(editor, channel, "#123456");
+
+        string? ReadColor() => channel switch
+        {
+            "Background" => session.EditedDocument!.Diagrams[0].Plane.Shapes[0].BackgroundColor,
+            "Border" => session.EditedDocument!.Diagrams[0].Plane.Shapes[0].BorderColor,
+            _ => session.EditedDocument!.Diagrams[0].Plane.Shapes[0].Label?.Color,
+        };
+        Assert.Equal("#123456", ReadColor());
+        Assert.Contains("#123456", editor.Find(".bpmn-toolbar").TextContent, StringComparison.Ordinal);
+        await editor.InvokeAsync(session.UndoAsync);
+        Assert.Null(ReadColor());
+        await editor.InvokeAsync(session.RedoAsync);
+        Assert.Equal("#123456", ReadColor());
+        var label = channel switch { "Background" => "Fill color", "Border" => "Border / line color", _ => "Text color" };
+        editor.Find($"[aria-label='Reset {label}']").Click();
+        Assert.Null(ReadColor());
+    }
+
+    [Fact]
+    public async Task ToolbarColorsTrackMixedSelectionAndReadOnlyState()
+    {
+        var document = new BpmnDocumentBuilder("Process_1")
+            .Node("Task_1", BpmnFlowNodeType.UserTask, new Bounds(200, 120, 100, 80), "Work")
+            .Node("Task_2", BpmnFlowNodeType.Task, new Bounds(400, 120, 100, 80), "Other").Build();
+        var parameters = new Dictionary<string, object> { ["Document"] = document };
+        var editor = Render<DynamicComponent>(p => p.Add(c => c.Type, KitFixture.Composition)
+            .Add(c => c.Parameters, parameters));
+        var session = Session(editor);
+        Assert.True(Button(editor, "Reset Fill color").HasAttribute("disabled"));
+        await editor.InvokeAsync(() => session.SetSelectionAsync(["Task_1"]));
+        await KitFixture.ChangeColorAsync(editor, "Background", "#123456");
+        await editor.InvokeAsync(() => session.SetSelectionAsync(["Task_1", "Task_2"]));
+        Assert.Contains("Mixed", editor.Find(".bpmn-toolbar").TextContent, StringComparison.Ordinal);
+        await KitFixture.ChangeColorAsync(editor, "Background", "#abcdef");
+        Assert.All(session.EditedDocument!.Diagrams[0].Plane.Shapes, shape => Assert.Equal("#abcdef", shape.BackgroundColor));
+        parameters["Document"] = session.EditedDocument;
+        parameters["IsReadOnly"] = true;
+        editor.Render(p => p.Add(c => c.Type, KitFixture.Composition).Add(c => c.Parameters, parameters));
+        Assert.True(Button(editor, "Reset Fill color").HasAttribute("disabled"));
+    }
+
+    [Fact]
+    public async Task ToolbarColorsRejectShorthandWithoutRecordingAnEdit()
+    {
+        var editor = RenderEditor();
+        var session = Session(editor);
+        await editor.InvokeAsync(() => session.SetSelectionAsync(["Task_1"]));
+
+        await KitFixture.ChangeColorAsync(editor, "Background", "#abc");
+
+        Assert.Contains("#RRGGBB", editor.Find(".bpmn-toolbar [role='alert']").TextContent, StringComparison.Ordinal);
+        Assert.False(session.State.CanUndo);
+        Assert.Null(session.EditedDocument!.Diagrams[0].Plane.Shapes[0].BackgroundColor);
+    }
+
     [Fact]
     public async Task DynamicBuiltInCaptionsUseCoreResourcesInBothKits()
     {

@@ -13,6 +13,7 @@ import { isCollapsedContainer } from '../model/element-kind.js';
 import { CONNECTOR_CORNER_RADIUS } from '../geometry/constants.js';
 import { roundedPath } from '../routing/rounded-path.js';
 import * as factory from '../shapes/registry.js';
+import { applyDiColors } from '../shapes/colors.js';
 
 import { buildEmbeddingTree } from './hierarchy.js';
 
@@ -237,6 +238,12 @@ export function renderDocument(
   }
 
   // --- commit --------------------------------------------------------------
+  const colorShapes = new Map(plane.shapes.map((shape) => [shape.bpmnElement, shape]));
+  for (const cell of cells) {
+    const di = cell.isLink() ? plane.edgeFor(String(cell.id))
+      : colorShapes.get(String(cell.id));
+    if (di !== undefined) applyDiColors(cell, di);
+  }
   // Paint order is the order of the list: shapes first, then connectors over them. It is written down, with gaps, so that a cell added
   // later can take a place between two neighbours without renumbering the rest.
   cells.forEach((cell, position) => cell.set('z', (position + 1) * Z_STEP));

@@ -213,6 +213,13 @@ export const BpmnTextAnnotationElement = dia.Element.define(
     size: { width: constants.TEXT_ANNOTATION_WIDTH, height: constants.TEXT_ANNOTATION_HEIGHT },
     attrs: {
       root: connectableRoot,
+      background: {
+        width: 'calc(w)',
+        height: 'calc(h)',
+        fill: 'none',
+        stroke: 'none',
+        'pointer-events': 'none',
+      },
       hitArea: {
         fill: 'none',
         stroke: 'transparent',
@@ -239,6 +246,7 @@ export const BpmnTextAnnotationElement = dia.Element.define(
   },
   {
     markup: [
+      { tagName: 'rect', selector: 'background' },
       { tagName: 'path', selector: 'hitArea', className: 'bpmn-annotation-hit-area' },
       { tagName: 'rect', selector: 'textHitArea', className: 'bpmn-annotation-text-hit-area' },
       { tagName: 'path', selector: 'bracket', className: 'bpmn-annotation-bracket' },

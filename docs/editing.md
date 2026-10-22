@@ -53,6 +53,7 @@ and a command in, a new document out.
 | `ReparentElementCommand` | Moves an element into a different container or Lane |
 | `ReconnectConnectorCommand` | Moves one end of a connector to a different element |
 | `UpdateWaypointsCommand` | Replaces a connector's route |
+| `SetColorsCommand` | Sets/resets a DI color channel for selected elements on one diagram |
 | `CreateElementCommand` | Adds a Flow Node and its `BPMNShape` together |
 | `CreateConnectorCommand` | Adds a connector and its `BPMNEdge` together |
 | `DeleteElementsCommand` | Removes elements plus everything that cannot outlive them |
@@ -66,6 +67,27 @@ keep its old reference.
 A move reports every affected shape, including the descendants of a moved container. The canvas
 sends the whole set because it is what actually resolved the drag; recomputing which children moved
 would be a second implementation of containment.
+
+## Selected-item colors
+
+Both built-in toolbars provide independent fill, border/line, and text pickers with per-channel
+reset. Changes apply atomically to the selected items on the active diagram; fill applies only to
+shapes, while border/line and text also apply to connectors. Empty selection and read-only mode
+disable editing. Mixed selections show **Mixed**; unset overrides show **Theme default**. Selecting
+an item does not persist the displayed picker fallback.
+The Fluent picker offers a click-to-select wheel palette and exact hex text entry; existing or
+typed colors are not snapped to the nearest palette color.
+
+`SetColorsCommand(diagramId, elementIds, channel, color)` uses semantic element ids but edits their
+DI entries only on the named diagram. `color` is an opaque `#RRGGBB` value, or null to remove that
+channel. `BpmnColorChannel.All` with null resets all channels. Invalid values, nonexistent diagrams,
+and stale targets reject the whole operation. Repeated identical commits do not add history entries.
+Each changed multi-selection gesture is one undo/redo step.
+
+Text changes create a color-only DI label when needed, without inventing geometry. Edits write
+MIWG attributes and clear matching bioc aliases; reset removes both so old aliases cannot reappear.
+Other color channels, label styles, vendor extensions, bounds, and waypoints stay unchanged.
+See [BPMN in Color interchange](xml-interchange.md#bpmn-in-color).
 
 ## Property, extension and template commands
 

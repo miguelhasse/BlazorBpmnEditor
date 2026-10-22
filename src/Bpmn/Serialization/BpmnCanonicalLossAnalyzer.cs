@@ -1,5 +1,7 @@
 using System.Xml.Linq;
 
+using Hasseware.AspNetCore.Components.Bpmn.Model.Di;
+
 namespace Hasseware.AspNetCore.Components.Bpmn.Serialization;
 
 /// <summary>Finds retained XML content that canonical serialization cannot reproduce.</summary>
@@ -40,6 +42,11 @@ internal static class BpmnCanonicalLossAnalyzer
                          .Where(attribute => !attribute.IsNamespaceDeclaration))
             {
                 if (canonicalElement.Attribute(attribute.Name) is not null) continue;
+                // These attributes are modeled in DI extras; absence represents an explicit reset.
+                if (sourceElement.Name.Namespace == BpmnXmlNames.Diagram
+                    && BpmnDiColors.IsApplicable(sourceElement.Name.LocalName,
+                        attribute.Name.NamespaceName, attribute.Name.LocalName))
+                    continue;
 
                 diagnostics.Add(new BpmnExportDiagnostic(
                     BpmnExportSeverity.Dropped,

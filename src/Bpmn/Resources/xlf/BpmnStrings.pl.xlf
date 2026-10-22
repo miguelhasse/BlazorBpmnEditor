@@ -2957,6 +2957,56 @@
         <target state="translated">Narzędzia diagramu</target>
         <note />
       </trans-unit>
+      <trans-unit id="Toolbar.Color.Background">
+        <source>Fill color</source>
+        <target state="new">Fill color</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Color.Border">
+        <source>Border / line color</source>
+        <target state="new">Border / line color</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Color.Default">
+        <source>Theme default</source>
+        <target state="new">Theme default</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Color.Error.COLOR-001">
+        <source>Enter a six-digit RGB hex color (#RRGGBB).</source>
+        <target state="new">Enter a six-digit RGB hex color (#RRGGBB).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Color.Error.COLOR-002">
+        <source>Every selected item must be drawn on the current diagram.</source>
+        <target state="new">Every selected item must be drawn on the current diagram.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Color.Error.COLOR-003">
+        <source>Only shapes have a fill color.</source>
+        <target state="new">Only shapes have a fill color.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Color.Mixed">
+        <source>Mixed</source>
+        <target state="new">Mixed</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Color.Reset">
+        <source>Reset color</source>
+        <target state="new">Reset color</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Color.ResetChannel">
+        <source>Reset {0}</source>
+        <target state="new">Reset {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Toolbar.Color.Text">
+        <source>Text color</source>
+        <target state="new">Text color</target>
+        <note />
+      </trans-unit>
       <trans-unit id="TypeOption.Event">
         <source>{0} {1}</source>
         <target state="translated">{0} {1}</target>

@@ -1043,6 +1043,7 @@ internal sealed class BpmnCanonicalWriter(BpmnDocument document, BpmnWriteOption
         var element = new XElement(Di + "BPMNLabel");
         Set(element, "id", label.Id);
         Set(element, "labelStyle", label.StyleId);
+        WriteDiagramExtras(element, label.Extras);
         if (label.Bounds is { } bounds) element.Add(WriteBounds(bounds));
         owner.Add(element);
     }

@@ -181,6 +181,7 @@ public static class BpmnJsonReader
 
             if (document is null) throw new BpmnJsonException("The document is empty.");
 
+            diagnostics.AddRange(BpmnColorDiagnostics.Find(document));
             return new BpmnImportResult(document, diagnostics);
         }
     }

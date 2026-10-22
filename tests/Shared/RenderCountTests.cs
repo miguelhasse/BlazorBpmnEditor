@@ -96,7 +96,8 @@ public sealed class RenderCountTests : BunitContext
                 _output.WriteLine($"{row.Key}: instances={row.Count()}, renders={row.Sum(component => component.Value - before.GetValueOrDefault(component.Key))}");
             var deltas = after.GroupBy(component => component.Key.Type.Name)
                 .ToDictionary(group => group.Key, group => group.Sum(component => component.Value - before.GetValueOrDefault(component.Key)));
-            var budget = scenario switch { "Viewport" => 6, "Selection" => 11, "SingleEdit" => 21, _ => 21 };
+            // Selection now also refreshes the toolbar's selected-item color controls.
+            var budget = scenario switch { "Viewport" => 6, "Selection" => 12, "SingleEdit" => 21, _ => 21 };
             Assert.InRange(deltas.Values.Sum(), 1, budget);
             Assert.Equal(scenario == "UnchangedParameters" ? 0 : scenario == "SingleEdit" ? 2 : 1, notifications);
             Assert.Equal(0, deltas.GetValueOrDefault(nameof(BpmnPart)));

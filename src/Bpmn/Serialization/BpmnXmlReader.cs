@@ -342,6 +342,7 @@ public static class BpmnXmlReader
                 .ToList();
             document = document with { Source = source.WithImportLosses(dropped) };
 
+            _diagnostics.AddRange(BpmnColorDiagnostics.Find(document));
             return new BpmnImportResult(document, _diagnostics, schemaValidationStatus);
         }
 
@@ -1440,9 +1441,12 @@ public static class BpmnXmlReader
 
             var bounds = ReadBounds(label.Element(BpmnXmlNames.DiagramCommon + "Bounds"));
 
-            // A BPMNLabel carries geometry and style only; the text lives on the semantic
+            // A BPMNLabel carries geometry and appearance; the text lives on the semantic
             // element, so an empty label element just means "position it here".
-            return new BpmnLabel(Attribute(label, "id"), bounds, Attribute(label, "labelStyle"));
+            return new BpmnLabel(Attribute(label, "id"), bounds, Attribute(label, "labelStyle"))
+            {
+                Extras = ReadDiagramExtras(label),
+            };
         }
 
         /// <summary>

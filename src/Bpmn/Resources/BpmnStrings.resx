@@ -1,5 +1,15 @@
 <?xml version='1.0' encoding='utf-8'?>
 <root>
+  <data name="Toolbar.Color.Background" xml:space="preserve"><value>Fill color</value></data>
+  <data name="Toolbar.Color.Border" xml:space="preserve"><value>Border / line color</value></data>
+  <data name="Toolbar.Color.Text" xml:space="preserve"><value>Text color</value></data>
+  <data name="Toolbar.Color.Mixed" xml:space="preserve"><value>Mixed</value></data>
+  <data name="Toolbar.Color.Default" xml:space="preserve"><value>Theme default</value></data>
+  <data name="Toolbar.Color.Reset" xml:space="preserve"><value>Reset color</value></data>
+  <data name="Toolbar.Color.ResetChannel" xml:space="preserve"><value>Reset {0}</value></data>
+  <data name="Toolbar.Color.Error.COLOR-001" xml:space="preserve"><value>Enter a six-digit RGB hex color (#RRGGBB).</value></data>
+  <data name="Toolbar.Color.Error.COLOR-002" xml:space="preserve"><value>Every selected item must be drawn on the current diagram.</value></data>
+  <data name="Toolbar.Color.Error.COLOR-003" xml:space="preserve"><value>Only shapes have a fill color.</value></data>
   <data name="ImportOffer.AnnotationPolicy" xml:space="preserve"><value>Editor annotation policy will change {0} annotation(s): remove {1} Association(s) and straighten {2} route(s). The first eligible Association in source order is kept. This is editor policy, not a BPMN requirement.</value></data>
   <data name="ImportOffer.AnnotationIds" xml:space="preserve"><value>Affected annotations: {0}</value></data>
   <data name="ImportOffer.RemovedAssociations" xml:space="preserve"><value>Associations to remove: {0}</value></data>

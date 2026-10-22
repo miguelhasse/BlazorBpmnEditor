@@ -111,6 +111,12 @@ For example, a standard editor can embed a custom toolbar without changing appli
 ```
 
 `MyToolbar` must derive from `BpmnToolbarBase`; see [Writing a UI kit package](writing-a-ui-kit.md).
+
+The built-in standard and Fluent toolbars include selected-item fill, border/line, and text color
+pickers with reset, multi-selection, mixed values, and read-only support. They use the shared
+`BpmnToolbarBase` color methods and the normal command/history pipeline; no host callbacks are needed.
+Custom toolbar replacements can reuse `ColorChannels`, `CanColor`, `ColorValue`, `ColorStatus`,
+`ColorLabel`, and `SetColorAsync`, or omit color controls entirely.
 For the same replacement across all editors:
 
 ```csharp

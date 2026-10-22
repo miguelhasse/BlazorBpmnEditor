@@ -57,6 +57,34 @@ Both modes preserve, in full:
   kept verbatim rather than deleted.
 - BPMNDI `di:extension` content and `BPMNLabelStyle` definitions.
 
+## BPMN in Color
+
+The editor reads, writes, and renders the [BPMN MIWG BPMN in Color extension](https://github.com/bpmn-miwg/bpmn-in-color).
+Its namespace is `http://www.omg.org/spec/BPMN/non-normative/color/1.0`; the prefix is arbitrary.
+
+| DI element | Attribute | Rendering |
+|---|---|---|
+| `BPMNShape` | `color:background-color` | Shape fill, including swimlane headers |
+| `BPMNShape` | `color:border-color` | Outline and notation glyphs |
+| `BPMNEdge` | `color:border-color` | Connector line and markers |
+| `BPMNLabel` | `color:color` | Internal or external label text |
+
+Values are opaque six-digit hex triplets (`#RRGGBB`), case-insensitive. Shorthand, alpha, named colors,
+gradients, and shadows are not MIWG colors. Invalid or inapplicable imported attributes are preserved
+and reported as degraded, never inserted into SVG/CSS. Missing colors use the current theme; authored
+colors override ordinary light/dark themes. OS forced-colors mode uses system colors instead.
+
+For compatibility, shape `bioc:fill` and shape/edge `bioc:stroke` are also read from
+`http://bpmn.io/schema/bpmn/biocolor/1.0`. A valid MIWG value wins over a valid alias. Invalid values
+fall through to a valid alias or the theme. The same opaque hex-triplet restriction applies to aliases.
+
+Colors stay in DI `Extras.ForeignAttributes`, including label extras, so unrelated extensions and
+invalid source values survive both export modes. The model exposes validated `BackgroundColor`,
+`BorderColor`, and label `Color` accessors, and the lean canvas payload sends only resolved values.
+An unedited export does not manufacture MIWG colors from aliases or theme defaults. Color edits write
+MIWG attributes and remove the corresponding alias; reset removes both. Color-only labels without
+bounds remain valid and preserve their extensions. Color edits do not move shapes or reroute edges.
+
 ## How fidelity mode decides what to touch
 
 The canonical writer builds the document the model describes. The fidelity writer then merges that

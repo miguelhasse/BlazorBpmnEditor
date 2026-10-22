@@ -12,7 +12,7 @@ Every file has a versioned envelope:
 ```json
 {
   "format": "hasseware.bpmn",
-  "version": "1.0",
+  "version": "1.1",
   "document": {
     "definitions": {
       "id": "Definitions_1",
@@ -35,10 +35,15 @@ the readers and writers rather than serializing the model with unrelated seriali
 
 ### Compatibility and input limits
 
-- The writer emits `1.0`. The reader accepts major version **1**, including newer minor versions.
+- The writer emits `1.1`. The reader accepts major version **1**, including older and newer minor versions.
   A newer minor adds an `Info` import diagnostic; unknown properties are ignored, not retained for
   re-export. Other majors and malformed version strings are refused. The reader also accepts `1`
   as minor zero; writers always emit `major.minor`.
+- Version `1.1` adds DI label extension storage, including MIWG text colors. Shape, edge, and label
+  colors have one persisted representation: namespace-qualified keys in `extras.foreignAttributes`.
+  Computed `BackgroundColor`, `BorderColor`, and `Color` accessors are not duplicate JSON fields.
+  Version `1.0` documents without label extras remain readable; a `1.0` reader cannot preserve
+  the newly introduced label extras.
 - The `format` string must exactly match `hasseware.bpmn`; `document` must be an object.
 - Default input limit: **64 MiB of UTF-8 bytes**. String input is measured before parsing; stream
   input is checked while reading. `MaxInputBytes <= 0` disables that limit.

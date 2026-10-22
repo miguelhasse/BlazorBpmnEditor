@@ -3,11 +3,14 @@
  * supplies colour, typography and the few presentational attributes that belong in CSS.
  */
 .bpmn-label {
-  fill: var(--bpmn-label-color);
   font-family: var(--bpmn-font-family);
   /* Labels are decoration over the diagram: clicking one must hit the shape beneath it. */
   pointer-events: none;
   user-select: none;
+}
+
+.bpmn-label:not([data-bpmn-color-ink]) {
+  fill: var(--bpmn-label-color);
 }
 
 .bpmn-event-ring,
@@ -68,6 +71,18 @@
  * system palette — comes back and the icon steps aside.
  */
 @media (forced-colors: active) {
+  [data-bpmn-color-stroke] {
+    stroke: CanvasText !important;
+  }
+
+  [data-bpmn-color-ink] {
+    fill: CanvasText !important;
+  }
+
+  [data-bpmn-color-background] {
+    fill: Canvas !important;
+  }
+
   .bpmn-template-icon {
     display: none;
   }

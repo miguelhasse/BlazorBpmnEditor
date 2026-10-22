@@ -145,6 +145,7 @@ public static partial class BpmnDocumentEditor
 
         return command switch
         {
+            SetColorsCommand colors => ApplyColors(document, colors),
             MoveShapesCommand move => ApplyMove(document, move, options),
             ResizeShapeCommand resize => ApplyResize(document, resize, options),
             MoveLaneSplitterCommand splitter => ApplyMoveLaneSplitter(document, splitter),

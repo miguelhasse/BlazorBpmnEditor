@@ -95,5 +95,25 @@ internal static class CanvasDocumentPayload
                 type.Properties[index].ShouldSerialize = static (_, value) => value is BpmnElementExtras { ForeignAttributes.Count: > 0 };
             }
         }
+
+        if (type.Type == typeof(BpmnShape))
+        {
+            AddColor("backgroundColor", value => ((BpmnShape)value).BackgroundColor);
+            AddColor("borderColor", value => ((BpmnShape)value).BorderColor);
+        }
+        else if (type.Type == typeof(BpmnEdge))
+            AddColor("borderColor", value => ((BpmnEdge)value).BorderColor);
+        else if (type.Type == typeof(BpmnLabel))
+            AddColor("color", value => ((BpmnLabel)value).Color);
+
+        void AddColor(string name, Func<object, object?> get)
+        {
+            // JsonIgnore keeps derived values out of persisted JSON; only the canvas needs them.
+            var existing = type.Properties.FirstOrDefault(property => property.Name == name);
+            if (existing is not null) type.Properties.Remove(existing);
+            var property = type.CreateJsonPropertyInfo(typeof(string), name);
+            property.Get = get;
+            type.Properties.Add(property);
+        }
     }
 }

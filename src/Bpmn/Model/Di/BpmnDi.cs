@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 using Hasseware.AspNetCore.Components.Bpmn.Model.Extensions;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Model.Di;
@@ -51,7 +53,15 @@ public sealed record BpmnLabelStyle(
 /// them clips or ellipsises visually while the full string stays intact.
 /// </param>
 /// <param name="StyleId">A referenced <see cref="BpmnLabelStyle"/>.</param>
-public sealed record BpmnLabel(string? Id = null, Bounds? Bounds = null, string? StyleId = null);
+public sealed record BpmnLabel(string? Id = null, Bounds? Bounds = null, string? StyleId = null)
+{
+    /// <summary>Preserved DI extension content, including MIWG text color.</summary>
+    public BpmnElementExtras Extras { get; init; } = BpmnElementExtras.None;
+
+    /// <summary>The valid MIWG text color, or null for the theme default.</summary>
+    [JsonIgnore]
+    public string? Color => BpmnDiColors.Resolve(Extras, "color");
+}
 
 /// <summary>
 /// The DI entry for a drawn element.
@@ -80,6 +90,14 @@ public sealed record BpmnShape(
 {
     /// <summary>DI-level extension content, preserved verbatim (section 10.5).</summary>
     public BpmnElementExtras Extras { get; init; } = BpmnElementExtras.None;
+
+    /// <summary>The MIWG fill, falling back to bpmn.io fill.</summary>
+    [JsonIgnore]
+    public string? BackgroundColor => BpmnDiColors.Resolve(Extras, "background-color", "fill");
+
+    /// <summary>The MIWG outline, falling back to bpmn.io stroke.</summary>
+    [JsonIgnore]
+    public string? BorderColor => BpmnDiColors.Resolve(Extras, "border-color", "stroke");
 }
 
 /// <summary>
@@ -100,6 +118,10 @@ public sealed record BpmnEdge(
 {
     /// <summary>DI-level extension content, preserved verbatim (section 10.5).</summary>
     public BpmnElementExtras Extras { get; init; } = BpmnElementExtras.None;
+
+    /// <summary>The MIWG line color, falling back to bpmn.io stroke.</summary>
+    [JsonIgnore]
+    public string? BorderColor => BpmnDiColors.Resolve(Extras, "border-color", "stroke");
 }
 
 

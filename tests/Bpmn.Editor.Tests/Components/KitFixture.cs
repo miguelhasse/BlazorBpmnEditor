@@ -5,6 +5,13 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Components;
 
 internal static class KitFixture
 {
+    public static Task ChangeColorAsync(IRenderedComponent<Microsoft.AspNetCore.Components.DynamicComponent> editor,
+        string channel, string color)
+    {
+        editor.Find($"input[data-color-channel='{channel}']").Change(color);
+        return Task.CompletedTask;
+    }
+
     public static Task ConfirmAnnotationNormalizationAsync(IRenderedComponent<BpmnPart> offer)
     {
         offer.Find(".bpmn-import__annotation-consent").Change(true);
