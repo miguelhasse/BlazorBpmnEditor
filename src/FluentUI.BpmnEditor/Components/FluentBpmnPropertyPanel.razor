@@ -36,7 +36,7 @@
 
                             <FluentTextInput Class="bpmn-properties__text bpmn-properties__id" ReadOnly="@Inspecting"
                                              Value="@one.ElementId" AriaLabel="@EditorText("PropertyPanel.ElementId")"
-                                             @key="@($"id:{one.ElementId}:{Revision}")"
+                                             @key="@($"id:{one.ElementId}:{Revision}")" autocomplete="off"
                                              ValueChanged="@(value => RenameAsync(one.ElementId, value))" />
                         </dd>
                     </div>

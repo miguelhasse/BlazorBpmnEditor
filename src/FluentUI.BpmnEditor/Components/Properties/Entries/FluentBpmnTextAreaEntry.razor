@@ -5,6 +5,6 @@
     <FluentTextArea Class="@(Block + "__text")" ReadOnly="@ReadOnly" Value="@_value"
                     AriaLabel="@Entry.Label" Placeholder="@Entry.Placeholder" Immediate="true"
                     aria-invalid="@(ValidationContext.Entry.Error is not null ? "true" : null)"
-                    aria-describedby="@(ValidationContext.Entry.Error is not null ? ErrorId : null)"
+                    aria-describedby="@(ValidationContext.Entry.Error is not null ? ErrorId : null)" autocomplete="off"
                     ValueChanged="DraftChanged" OnFocusOut="CommitAsync" Height="@(FormattableString.Invariant($"{MultilineRows * 1.5}em"))" />
 </FluentBpmnPropertyEntryFrame>

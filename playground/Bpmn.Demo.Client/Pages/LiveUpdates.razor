@@ -11,7 +11,7 @@
 <div class="live-controls">
     <label>
         @Localizer["Live.Path"]
-        <input class="live-path" @bind="_path" disabled="@_watching" />
+        <input class="live-path" @bind="_path" disabled="@_watching" autocomplete="off" />
     </label>
     <button type="button" class="live-watch" @onclick="WatchAsync" disabled="@_watching">@Localizer["Live.Watch"]</button>
     <button type="button" class="live-change" @onclick="ChangeAsync">@Localizer["Live.Change"]</button>

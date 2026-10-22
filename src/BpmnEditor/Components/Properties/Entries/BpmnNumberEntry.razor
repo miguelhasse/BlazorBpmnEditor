@@ -4,5 +4,5 @@
 <BpmnPropertyEntryFrame Context="@Context">
     <input type="number" step="any" class="@(Block + "__text")" readonly="@ReadOnly" value="@Entry.Value"
            placeholder="@Entry.Placeholder" aria-invalid="@(Entry.Error is not null ? "true" : null)"
-           @onchange="@(args => SubmitAsync(args.Value as string))" />
+           @onchange="@(args => SubmitAsync(args.Value as string))" autocomplete="off" />
 </BpmnPropertyEntryFrame>

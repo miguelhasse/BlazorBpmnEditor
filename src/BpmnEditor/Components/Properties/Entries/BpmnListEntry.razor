@@ -28,7 +28,7 @@
                             {
                                 <input type="text" class="@(Block + "__text")" readonly="@ReadOnly"
                                        value="@_rows[rowIndex].GetValueOrDefault(column.Name)" placeholder="@Entry.Placeholder"
-                                       aria-label="@EditorL["ListEntry.CellLabel", column.Label, rowIndex + 1]"
+                                       aria-label="@EditorL["ListEntry.CellLabel", column.Label, rowIndex + 1]" autocomplete="off"
                                        @onchange="@(args => ChangeCellAsync(rowIndex, column.Name, args.Value as string))" />
                             }
                         </td>

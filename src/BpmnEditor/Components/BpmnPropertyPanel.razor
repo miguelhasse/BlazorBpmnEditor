@@ -37,6 +37,7 @@
                                readonly="@Inspecting"
                                value="@one.ElementId"
                                aria-label="@EditorText("PropertyPanel.ElementId")"
+                               autocomplete="off"
                                @key="@($"id:{one.ElementId}:{Revision}")"
                                @onchange="@(args => RenameAsync(one.ElementId, args.Value as string))" />
                     </dd>

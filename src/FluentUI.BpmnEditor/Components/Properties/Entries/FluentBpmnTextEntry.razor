@@ -6,5 +6,5 @@
                      AriaLabel="@Entry.Label" Placeholder="@Entry.Placeholder" Immediate="true"
                      aria-invalid="@(ValidationContext.Entry.Error is not null ? "true" : null)"
                      aria-describedby="@(ValidationContext.Entry.Error is not null ? ErrorId : null)"
-                     ValueChanged="DraftChanged" OnFocusOut="CommitAsync" />
+                     ValueChanged="DraftChanged" OnFocusOut="CommitAsync" autocomplete="off" />
 </FluentBpmnPropertyEntryFrame>

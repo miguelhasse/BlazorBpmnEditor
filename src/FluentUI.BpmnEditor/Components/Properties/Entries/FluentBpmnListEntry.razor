@@ -29,7 +29,7 @@
                                 <FluentTextInput Class="@(Block + "__text")" ReadOnly="@ReadOnly"
                                                  Value="@_rows[rowIndex].GetValueOrDefault(column.Name)" Placeholder="@Entry.Placeholder"
                                                  AriaLabel="@EditorL["ListEntry.CellLabel", column.Label, rowIndex + 1].Value"
-                                                 ValueChanged="@(value => ChangeCellAsync(rowIndex, column.Name, value))" />
+                                                 ValueChanged="@(value => ChangeCellAsync(rowIndex, column.Name, value))" autocomplete="off" />
                             }
                         </td>
                     }
