@@ -110,6 +110,10 @@ public sealed partial class BpmnEditor : ComponentBase
     [Parameter]
     public RenderFragment? ToolbarContent { get; set; }
 
+    /// <summary>Whether the configured toolbar shows color controls. Hidden by default; custom ToolbarContent controls its own visibility.</summary>
+    [Parameter]
+    public bool ShowColorPicker { get; set; }
+
     /// <summary>Footer slot, a full-width row below the canvas and panel; rendered inside the editor's scope.</summary>
     [Parameter]
     public RenderFragment? Footer { get; set; }

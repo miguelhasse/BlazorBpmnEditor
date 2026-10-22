@@ -16,7 +16,7 @@
                 {
                     <span class="@(Block + "__feel-badge")">@Text("Expression.Feel")</span>
                 }
-                <FluentTextArea Class="@(Block + "__text " + Block + "__feel")" Height="@(MultilineRows * 1.5 + "em")"
+                <FluentTextArea Class="@(Block + "__text " + Block + "__feel")" Height="@(FormattableString.Invariant($"{MultilineRows * 1.5}em"))"
                                 ReadOnly="@ReadOnly" Value="@(ReadOnly ? _value : Expression)" Placeholder="@Entry.Placeholder"
                                 AriaLabel="@Entry.Label" Immediate="true" aria-invalid="@(Entry.Error is not null || Warning is not null ? "true" : null)"
                                 aria-describedby="@DescribedBy" @key="Context.Revision"

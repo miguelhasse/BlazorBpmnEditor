@@ -22,8 +22,12 @@ public abstract class BpmnToolbarBase : BpmnEditorComponentBase
     protected override bool ShouldRenderOnStateChange(BpmnEditorState previous, BpmnEditorState current) =>
         ChildContent is not null || previous.Zoom != current.Zoom || previous.IsReadOnly != current.IsReadOnly
             || previous.CanUndo != current.CanUndo || previous.CanRedo != current.CanRedo
-            || previous.Document != current.Document || previous.ActiveDiagramId != current.ActiveDiagramId
-            || previous.Selection != current.Selection;
+            || ShowColorPicker && (previous.Document != current.Document
+                || previous.ActiveDiagramId != current.ActiveDiagramId || previous.Selection != current.Selection);
+
+    /// <summary>Whether selected-item color controls are shown. Hidden by default.</summary>
+    [Parameter]
+    public bool ShowColorPicker { get; set; }
 
     /// <summary>The independently editable color channels.</summary>
     protected IReadOnlyList<BpmnColorChannel> ColorChannels { get; } =

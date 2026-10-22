@@ -3007,6 +3007,11 @@
         <target state="new">Text color</target>
         <note />
       </trans-unit>
+      <trans-unit id="Toolbar.Color.Title">
+        <source>Colors</source>
+        <target state="new">Colors</target>
+        <note />
+      </trans-unit>
       <trans-unit id="TypeOption.Event">
         <source>{0} {1}</source>
         <target state="translated">{0} {1}</target>

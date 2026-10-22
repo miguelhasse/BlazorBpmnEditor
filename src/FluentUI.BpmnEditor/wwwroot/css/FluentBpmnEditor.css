@@ -47,11 +47,27 @@
   min-inline-size: 0;
   min-block-size: 0;
 }
-.fluent-bpmn-editor .bpmn-toolbar__color {
-  display: inline-flex;
+.bpmn-toolbar__colors-popover[opened="true"] {
+  display: contents;
+}
+
+.bpmn-toolbar__colors-popover::part(dialog) {
+  box-sizing: border-box;
+  max-block-size: calc(100dvh - 2rem);
+  overflow: auto;
+}
+
+.bpmn-toolbar__colors-popover .bpmn-toolbar__color {
+  display: flex;
   align-items: center;
-  gap: 0.25rem;
+  justify-content: space-between;
+  gap: 0.5rem;
   font-size: 0.75rem;
+  margin-block: 0.5rem;
+}
+
+.bpmn-toolbar__colors-popover .bpmn-toolbar__color-status {
+  overflow-wrap: anywhere;
 }
 
 .fluent-bpmn-editor .bpmn-toolbar {

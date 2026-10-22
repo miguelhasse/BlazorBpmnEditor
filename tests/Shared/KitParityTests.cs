@@ -90,9 +90,10 @@ public sealed class KitParityTests : BunitContext
     [InlineData("Text")]
     public async Task ToolbarColorChangesSupportHistoryAndReset(string channel)
     {
-        var editor = RenderEditor();
+        var editor = RenderEditor(true);
         var session = Session(editor);
         await editor.InvokeAsync(() => session.SetSelectionAsync(["Task_1"]));
+        OpenColors(editor);
 
         await KitFixture.ChangeColorAsync(editor, channel, "#123456");
 
@@ -103,7 +104,6 @@ public sealed class KitParityTests : BunitContext
             _ => session.EditedDocument!.Diagrams[0].Plane.Shapes[0].Label?.Color,
         };
         Assert.Equal("#123456", ReadColor());
-        Assert.Contains("#123456", editor.Find(".bpmn-toolbar").TextContent, StringComparison.Ordinal);
         await editor.InvokeAsync(session.UndoAsync);
         Assert.Null(ReadColor());
         await editor.InvokeAsync(session.RedoAsync);
@@ -119,35 +119,109 @@ public sealed class KitParityTests : BunitContext
         var document = new BpmnDocumentBuilder("Process_1")
             .Node("Task_1", BpmnFlowNodeType.UserTask, new Bounds(200, 120, 100, 80), "Work")
             .Node("Task_2", BpmnFlowNodeType.Task, new Bounds(400, 120, 100, 80), "Other").Build();
-        var parameters = new Dictionary<string, object> { ["Document"] = document };
+        var parameters = new Dictionary<string, object> { ["Document"] = document, ["ShowColorPicker"] = true };
         var editor = Render<DynamicComponent>(p => p.Add(c => c.Type, KitFixture.Composition)
             .Add(c => c.Parameters, parameters));
         var session = Session(editor);
-        Assert.True(Button(editor, "Reset Fill color").HasAttribute("disabled"));
+        Assert.True(ColorAvailabilityButton(editor).HasAttribute("disabled"));
+        Assert.All(editor.FindAll(".bpmn-toolbar__colors-popover"),
+            popover => Assert.Equal("false", popover.GetAttribute("opened")));
         await editor.InvokeAsync(() => session.SetSelectionAsync(["Task_1"]));
+        OpenColors(editor);
         await KitFixture.ChangeColorAsync(editor, "Background", "#123456");
         await editor.InvokeAsync(() => session.SetSelectionAsync(["Task_1", "Task_2"]));
-        Assert.Contains("Mixed", editor.Find(".bpmn-toolbar").TextContent, StringComparison.Ordinal);
+        Assert.Equal("#123456", session.EditedDocument!.Diagrams[0].Plane.Shapes[0].BackgroundColor);
+        Assert.Null(session.EditedDocument.Diagrams[0].Plane.Shapes[1].BackgroundColor);
+        Assert.False(editor.Find("[aria-label='Reset Fill color']").HasAttribute("disabled"));
         await KitFixture.ChangeColorAsync(editor, "Background", "#abcdef");
         Assert.All(session.EditedDocument!.Diagrams[0].Plane.Shapes, shape => Assert.Equal("#abcdef", shape.BackgroundColor));
         parameters["Document"] = session.EditedDocument;
         parameters["IsReadOnly"] = true;
         editor.Render(p => p.Add(c => c.Type, KitFixture.Composition).Add(c => c.Parameters, parameters));
-        Assert.True(Button(editor, "Reset Fill color").HasAttribute("disabled"));
+        Assert.True(ColorAvailabilityButton(editor).HasAttribute("disabled"));
+        Assert.All(editor.FindAll(".bpmn-toolbar__colors-popover"),
+            popover => Assert.Equal("false", popover.GetAttribute("opened")));
+    }
+
+    [Fact]
+    public async Task ToolbarColorsCloseWhenSelectionIsCleared()
+    {
+        var editor = RenderEditor(true);
+        var session = Session(editor);
+        await editor.InvokeAsync(() => session.SetSelectionAsync(["Task_1"]));
+        OpenColors(editor);
+
+        await editor.InvokeAsync(() => session.SetSelectionAsync([]));
+
+        Assert.True(ColorAvailabilityButton(editor).HasAttribute("disabled"));
+        Assert.All(editor.FindAll(".bpmn-toolbar__colors-popover"),
+            popover => Assert.Equal("false", popover.GetAttribute("opened")));
+        Assert.False(session.CanUndo);
     }
 
     [Fact]
     public async Task ToolbarColorsRejectShorthandWithoutRecordingAnEdit()
     {
-        var editor = RenderEditor();
+        var editor = RenderEditor(true);
         var session = Session(editor);
         await editor.InvokeAsync(() => session.SetSelectionAsync(["Task_1"]));
+        OpenColors(editor);
 
         await KitFixture.ChangeColorAsync(editor, "Background", "#abc");
 
-        Assert.Contains("#RRGGBB", editor.Find(".bpmn-toolbar [role='alert']").TextContent, StringComparison.Ordinal);
+        Assert.Contains("#RRGGBB", editor.Find("[role='alert']").TextContent, StringComparison.Ordinal);
         Assert.False(session.State.CanUndo);
         Assert.Null(session.EditedDocument!.Diagrams[0].Plane.Shapes[0].BackgroundColor);
+    }
+
+    [Fact]
+    public async Task ToolbarColorsAreOptInAndCanBeHiddenWithoutChangingHistory()
+    {
+        var editor = RenderEditor();
+        var session = Session(editor);
+        Assert.False(editor.FindComponent<BpmnToolbarBase>().Instance.ShowColorPicker);
+        Assert.Empty(editor.FindAll(".bpmn-toolbar__color, [aria-label='Colors']"));
+        var parameters = new Dictionary<string, object>(editor.Instance.Parameters!) { ["ShowColorPicker"] = true };
+        editor.Render(p => p.Add(c => c.Parameters, parameters));
+        Assert.True(editor.FindComponent<BpmnToolbarBase>().Instance.ShowColorPicker);
+        await editor.InvokeAsync(() => session.SetSelectionAsync(["Task_1"]));
+        OpenColors(editor);
+        await KitFixture.ChangeColorAsync(editor, "Background", "#123456");
+        var document = session.EditedDocument;
+        parameters["ShowColorPicker"] = false;
+        editor.Render(p => p.Add(c => c.Parameters, parameters));
+        Assert.Empty(editor.FindAll(".bpmn-toolbar__color, [aria-label='Colors']"));
+        Assert.Same(document, session.EditedDocument);
+        await editor.InvokeAsync(session.UndoAsync);
+        Assert.False(session.CanUndo);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void ToolbarColorsCustomContentOverridesEditorVisibility(bool showColorPicker)
+    {
+        RenderFragment toolbar = builder =>
+        {
+            builder.OpenComponent<ColorTestToolbar>(0);
+            builder.AddComponentParameter(1, nameof(BpmnToolbarBase.ShowColorPicker), showColorPicker);
+            builder.CloseComponent();
+        };
+        var parameters = Parameters(false);
+        parameters["ToolbarContent"] = toolbar;
+        parameters["ShowColorPicker"] = !showColorPicker;
+        var editor = Render<DynamicComponent>(p => p.Add(c => c.Type, KitFixture.Composition)
+            .Add(c => c.Parameters, parameters));
+        Assert.Equal(showColorPicker, editor.FindComponent<ColorTestToolbar>().Instance.ShowColorPicker);
+    }
+
+    [Fact]
+    public void ToolbarColorsAreForwardedToConfiguredToolbar()
+    {
+        Services.Configure<BpmnOptions>(options =>
+            options.Components.Use<ColorTestToolbar>(BpmnEditorPart.Toolbar));
+        var editor = RenderEditor(true);
+        Assert.True(editor.FindComponent<ColorTestToolbar>().Instance.ShowColorPicker);
     }
 
     [Fact]
@@ -327,7 +401,22 @@ public sealed class KitParityTests : BunitContext
         Assert.Empty(editor.FindAll("[role='menu']"));
     }
 
-    private IRenderedComponent<DynamicComponent> RenderEditor() => Render<DynamicComponent>(p => p.Add(c => c.Type, KitFixture.Composition).Add(c => c.Parameters, Parameters(false)));
+    private IRenderedComponent<DynamicComponent> RenderEditor(bool showColorPicker = false)
+    {
+        var parameters = Parameters(false);
+        parameters["ShowColorPicker"] = showColorPicker;
+        return Render<DynamicComponent>(p => p.Add(c => c.Type, KitFixture.Composition).Add(c => c.Parameters, parameters));
+    }
+    private static void OpenColors(IRenderedComponent<DynamicComponent> editor)
+    {
+        var trigger = editor.FindAll("[aria-label='Colors']").FirstOrDefault(element => element.LocalName == "fluent-button");
+        if (trigger?.GetAttribute("aria-expanded") == "false") trigger.Click();
+    }
+    private static IElement ColorAvailabilityButton(IRenderedComponent<DynamicComponent> editor)
+    {
+        var triggers = editor.FindAll("fluent-button[aria-label='Colors']");
+        return triggers.Count > 0 ? triggers[0] : Button(editor, "Reset Fill color");
+    }
     private static Dictionary<string, object> Parameters(bool readOnly) => new() { ["Document"] = Document(), ["IsReadOnly"] = readOnly, ["ShowStencil"] = true };
     private static BpmnEditorSession Session(IRenderedComponent<DynamicComponent> editor) => editor.FindComponent<BpmnEditorScope>().Instance.Session;
     private static IElement Button<T>(IRenderedComponent<T> rendered, string label) where T : IComponent => rendered.Find($"[aria-label='{label}']");
@@ -352,4 +441,6 @@ public sealed class KitParityTests : BunitContext
         public LocalizedString this[string name, params object[] arguments] => this[name];
         public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => [];
     }
+
+    public sealed class ColorTestToolbar : BpmnToolbarBase;
 }

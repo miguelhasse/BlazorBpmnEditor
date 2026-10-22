@@ -42,22 +42,24 @@
             aria-label="@EditorText("Toolbar.Shortcuts")"
             @onclick="@ShowShortcuts">?</button>
 
-    @foreach (var channel in ColorChannels)
+    @if (ShowColorPicker)
     {
-        <label class="bpmn-toolbar__color">
-            <span>@ColorLabel(channel)</span>
-            <input type="color" aria-label="@ColorLabel(channel)" data-color-channel="@channel"
-                   value="@(ColorValue(channel) ?? "#000000")" disabled="@(!CanColor(channel))"
-                   @onchange="@(args => SetColorAsync(channel, args.Value as string))" />
-            <span class="bpmn-toolbar__color-status">@ColorStatus(channel)</span>
-        </label>
-        <button type="button" class="bpmn-toolbar__button" disabled="@(!CanColor(channel))"
-                aria-label="@Text("Toolbar.Color.ResetChannel", ColorLabel(channel))"
-                @onclick="@(() => SetColorAsync(channel, null))">@Text("Toolbar.Color.Reset")</button>
-    }
-    @if (ColorError is not null)
-    {
-        <span role="alert">@ColorError</span>
+        @foreach (var channel in ColorChannels)
+        {
+            <label class="bpmn-toolbar__color">
+                <span>@ColorLabel(channel)</span>
+                <input type="color" autocomplete="off" aria-label="@ColorLabel(channel)" data-color-channel="@channel"
+                       value="@(ColorValue(channel) ?? "#000000")" disabled="@(!CanColor(channel))"
+                       @onchange="@(args => SetColorAsync(channel, args.Value as string))" />
+            </label>
+            <button type="button" class="bpmn-toolbar__button" disabled="@(!CanColor(channel))"
+                    aria-label="@Text("Toolbar.Color.ResetChannel", ColorLabel(channel))"
+                    @onclick="@(() => SetColorAsync(channel, null))">@Text("Toolbar.Color.Reset")</button>
+        }
+        @if (ColorError is not null)
+        {
+            <span role="alert">@ColorError</span>
+        }
     }
 
     @ChildContent

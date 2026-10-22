@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <root>
   <data name="Toolbar.Color.Background" xml:space="preserve"><value>Fill color</value></data>
+  <data name="Toolbar.Color.Title" xml:space="preserve"><value>Colors</value></data>
   <data name="Toolbar.Color.Border" xml:space="preserve"><value>Border / line color</value></data>
   <data name="Toolbar.Color.Text" xml:space="preserve"><value>Text color</value></data>
   <data name="Toolbar.Color.Mixed" xml:space="preserve"><value>Mixed</value></data>

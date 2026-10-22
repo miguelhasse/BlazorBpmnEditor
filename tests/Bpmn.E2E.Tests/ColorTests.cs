@@ -31,6 +31,22 @@ public sealed class ColorTests(DemoAppFixture app) : PageTest, IClassFixture<Dem
         var id = await task.GetAttributeAsync("model-id")
             ?? throw new InvalidOperationException("The task has no model id.");
         await task.Locator(".bpmn-activity-body").ClickAsync();
+        if (route == KitRoute.Fluent)
+        {
+            var colors = page.GetByRole(AriaRole.Button, new() { Name = "Colors", Exact = true });
+            await Expect(colors).ToHaveAttributeAsync("aria-expanded", "false");
+            await OpenColorsAsync(page);
+            var dialog = page.GetByRole(AriaRole.Dialog, new() { Name = "Colors", Exact = true });
+            await Expect(dialog).ToBeVisibleAsync();
+            await page.GetByRole(AriaRole.Textbox, new() { Name = "Fill color", Exact = true }).PressAsync("Escape");
+            await Expect(dialog).Not.ToBeVisibleAsync();
+            await Expect(colors).ToBeFocusedAsync();
+            await OpenColorsAsync(page);
+        }
+        var colorInputs = page.Locator(".bpmn-toolbar__color input");
+        await Expect(colorInputs).ToHaveCountAsync(3);
+        foreach (var input in await colorInputs.AllAsync())
+            await Expect(input).ToHaveAttributeAsync("autocomplete", "off");
         var body = task.Locator(".bpmn-activity-body");
         var before = await body.EvaluateAsync<string>("element => getComputedStyle(element).fill");
 
@@ -42,7 +58,9 @@ public sealed class ColorTests(DemoAppFixture app) : PageTest, IClassFixture<Dem
             var fill = await swatch.EvaluateAsync<string>("element => getComputedStyle(element).fill");
             await swatch.ClickAsync();
             await Expect(body).ToHaveCSSAsync("fill", fill);
+            await Expect(page.GetByRole(AriaRole.Dialog, new() { Name = "Colors", Exact = true })).ToBeVisibleAsync();
             await page.GetByRole(AriaRole.Button, new() { Name = "Undo", Exact = true }).ClickAsync();
+            await Expect(page.GetByRole(AriaRole.Dialog, new() { Name = "Colors", Exact = true })).Not.ToBeVisibleAsync();
             await Expect(body).ToHaveCSSAsync("fill", before);
             await page.GetByRole(AriaRole.Button, new() { Name = "Undo", Exact = true }).ExpectDisabledAsync();
         }
@@ -69,6 +87,7 @@ public sealed class ColorTests(DemoAppFixture app) : PageTest, IClassFixture<Dem
         Assert.Equal("#123456", stored.BorderColor);
         Assert.Equal("#654321", stored.Label!.Color);
 
+        await OpenColorsAsync(page);
         await page.GetByRole(AriaRole.Button, new() { Name = "Reset Fill color", Exact = true }).ClickAsync();
         await Expect(body).ToHaveCSSAsync("fill", before);
         await Expect(body).ToHaveCSSAsync("stroke", "rgb(18, 52, 86)");
@@ -91,6 +110,7 @@ public sealed class ColorTests(DemoAppFixture app) : PageTest, IClassFixture<Dem
 
         var line = page.Locator(".bpmn-connector-line").First;
         await line.ClickAsync(new() { Force = true });
+        await OpenColorsAsync(page);
         await page.GetByRole(AriaRole.Button, new() { Name = "Reset Fill color", Exact = true }).ExpectDisabledAsync();
         await SetColorAsync(page, "Border", "Border / line color", "#224466");
         await Expect(line).ToHaveCSSAsync("stroke", "rgb(34, 68, 102)");
@@ -106,10 +126,26 @@ public sealed class ColorTests(DemoAppFixture app) : PageTest, IClassFixture<Dem
         var toolbar = page.Locator(".bpmn-toolbar");
         Assert.True(await toolbar.EvaluateAsync<bool>("element => element.scrollWidth <= element.clientWidth + 1"),
             "Color controls must wrap instead of overflowing the toolbar.");
+        if (route == KitRoute.Fluent)
+        {
+            await OpenColorsAsync(page);
+            var popover = await page.GetByRole(AriaRole.Dialog, new() { Name = "Colors", Exact = true })
+                .Locator("[part='dialog']").First.BoundingBoxAsync();
+            Assert.NotNull(popover);
+            Assert.InRange(popover.X, 0, 900 - popover.Width);
+        }
+    }
+
+    private static async Task OpenColorsAsync(IPage page)
+    {
+        var trigger = page.GetByRole(AriaRole.Button, new() { Name = "Colors", Exact = true });
+        if (await trigger.CountAsync() > 0 && await trigger.GetAttributeAsync("aria-expanded") == "false")
+            await trigger.ClickAsync();
     }
 
     private static async Task SetColorAsync(IPage page, string channel, string label, string value)
     {
+        await OpenColorsAsync(page);
         var native = page.Locator($"input[type='color'][data-color-channel='{channel}']");
         if (await native.CountAsync() > 0)
         {

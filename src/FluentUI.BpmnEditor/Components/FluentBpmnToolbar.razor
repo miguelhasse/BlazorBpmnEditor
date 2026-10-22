@@ -42,23 +42,38 @@
                   aria-label="@EditorText("Toolbar.Shortcuts")"
                   OnClick="@ShowShortcuts"></FluentButton>
 
-    @foreach (var channel in ColorChannels)
+    @if (ShowColorPicker)
     {
-        <div class="bpmn-toolbar__color" data-color-channel="@channel">
-            <FluentColorPickerInput Label="@ColorLabel(channel)" AriaLabel="@ColorLabel(channel)"
-                                    Value="@ColorValue(channel)" ValueChanged="@(value => SetColorAsync(channel, value))"
-                                    Disabled="@(!CanColor(channel))" FindClosestColor="false"
-                                    View="ColorPickerView.ColorWheel" Immediate="false" Width="130px" />
-            <span class="bpmn-toolbar__color-status">@ColorStatus(channel)</span>
-        </div>
-        <FluentButton Appearance="ButtonAppearance.Subtle" Type="ButtonType.Button" Class="bpmn-toolbar__button"
-                      Title="@Text("Toolbar.Color.ResetChannel", ColorLabel(channel))"
-                      Disabled="@(!CanColor(channel))" aria-label="@Text("Toolbar.Color.ResetChannel", ColorLabel(channel))"
-                      OnClick="@(() => SetColorAsync(channel, null))">@Text("Toolbar.Color.Reset")</FluentButton>
-    }
-    @if (ColorError is not null)
-    {
-        <span role="alert">@ColorError</span>
+        <FluentButton @ref="_colorsButton" Id="@_colorsButtonId"
+                      Appearance="ButtonAppearance.Subtle" Type="ButtonType.Button" Class="bpmn-toolbar__button"
+                      Title="@Text("Toolbar.Color.Title")" aria-label="@Text("Toolbar.Color.Title")"
+                      aria-haspopup="dialog" aria-controls="@($"{_colorsButtonId}-popover")"
+                      aria-expanded="@(_colorsOpened ? "true" : "false")"
+                      Disabled="@(!CanEditColors)"
+                      OnClick="@(() => _colorsOpened = !_colorsOpened)">@Text("Toolbar.Color.Title")</FluentButton>
+        <FluentPopover Id="@($"{_colorsButtonId}-popover")" AnchorId="@_colorsButtonId"
+                       @bind-Opened="@_colorsOpened" @onkeydown="@OnColorsKeyDown"
+                       Nested="true" Class="bpmn-toolbar__colors-popover"
+                       Width="min(24rem, calc(30vw - 2rem))" Padding="0.75rem" OffsetVertical="8"
+                       role="dialog" aria-label="@Text("Toolbar.Color.Title")">
+            @foreach (var channel in ColorChannels)
+            {
+                <div class="bpmn-toolbar__color" data-color-channel="@channel">
+                    <FluentColorPickerInput Label="@ColorLabel(channel)" AriaLabel="@ColorLabel(channel)"
+                                            Value="@ColorValue(channel)" ValueChanged="@(value => SetColorAsync(channel, value))"
+                                            Disabled="@(!CanColor(channel))" FindClosestColor="false"
+                                            View="ColorPickerView.ColorWheel" Immediate="false" Width="130px" autocomplete="off" />
+                    <FluentButton Appearance="ButtonAppearance.Subtle" Type="ButtonType.Button"
+                                  Title="@Text("Toolbar.Color.ResetChannel", ColorLabel(channel))"
+                                  Disabled="@(!CanColor(channel))" aria-label="@Text("Toolbar.Color.ResetChannel", ColorLabel(channel))"
+                                  OnClick="@(() => SetColorAsync(channel, null))">@Text("Toolbar.Color.Reset")</FluentButton>
+                </div>
+            }
+            @if (ColorError is not null)
+            {
+                <span role="alert">@ColorError</span>
+            }
+        </FluentPopover>
     }
 
     @ChildContent

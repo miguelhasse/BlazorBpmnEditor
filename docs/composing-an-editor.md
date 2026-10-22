@@ -112,11 +112,18 @@ For example, a standard editor can embed a custom toolbar without changing appli
 
 `MyToolbar` must derive from `BpmnToolbarBase`; see [Writing a UI kit package](writing-a-ui-kit.md).
 
-The built-in standard and Fluent toolbars include selected-item fill, border/line, and text color
-pickers with reset, multi-selection, mixed values, and read-only support. They use the shared
-`BpmnToolbarBase` color methods and the normal command/history pipeline; no host callbacks are needed.
+The built-in standard and Fluent toolbars offer opt-in selected-item fill, border/line, and text color
+pickers with reset, multi-selection, mixed values, and read-only support. Set `ShowColorPicker="true"`
+on either editor component to enable its configured toolbar's controls; the default is `false`.
+Fluent groups the channels inside a **Colors** popover; the standard toolbar keeps them inline.
+They use shared `BpmnToolbarBase` color methods and the normal command/history pipeline;
+no host callbacks are needed.
 Custom toolbar replacements can reuse `ColorChannels`, `CanColor`, `ColorValue`, `ColorStatus`,
-`ColorLabel`, and `SetColorAsync`, or omit color controls entirely.
+`ColorLabel`, and `SetColorAsync`, honoring the inherited `ShowColorPicker` parameter.
+`ToolbarContent` still replaces the configured toolbar: set visibility explicitly on any toolbar
+you put in that slot, for example `<BpmnToolbar ShowColorPicker="true" />` or
+`<FluentBpmnToolbar ShowColorPicker="true" />`. Changing visibility never changes document colors.
+
 For the same replacement across all editors:
 
 ```csharp

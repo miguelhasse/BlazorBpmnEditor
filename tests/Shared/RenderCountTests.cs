@@ -29,11 +29,15 @@ public sealed class RenderCountTests : BunitContext
     }
 
     [Theory]
-    [InlineData("Viewport")]
-    [InlineData("Selection")]
-    [InlineData("UnchangedParameters")]
-    [InlineData("SingleEdit")]
-    public async Task RecordFullCompositionRenderCounts(string scenario)
+    [InlineData("Viewport", false)]
+    [InlineData("Selection", false)]
+    [InlineData("UnchangedParameters", false)]
+    [InlineData("SingleEdit", false)]
+    [InlineData("Viewport", true)]
+    [InlineData("Selection", true)]
+    [InlineData("UnchangedParameters", true)]
+    [InlineData("SingleEdit", true)]
+    public async Task RecordFullCompositionRenderCounts(string scenario, bool showColorPicker)
     {
         var document = BpmnXmlReader.Read(File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
             "large-virtualization-stress.bpmn"))).Document;
@@ -54,6 +58,7 @@ public sealed class RenderCountTests : BunitContext
             ["Document"] = document,
             ["DiagramId"] = document.Diagrams[0].Id,
             ["ShowStencil"] = true,
+            ["ShowColorPicker"] = showColorPicker,
             ["Footer"] = footer,
         };
         var editor = Render<DynamicComponent>(p => p.Add(c => c.Type, KitFixture.Composition)
@@ -96,8 +101,7 @@ public sealed class RenderCountTests : BunitContext
                 _output.WriteLine($"{row.Key}: instances={row.Count()}, renders={row.Sum(component => component.Value - before.GetValueOrDefault(component.Key))}");
             var deltas = after.GroupBy(component => component.Key.Type.Name)
                 .ToDictionary(group => group.Key, group => group.Sum(component => component.Value - before.GetValueOrDefault(component.Key)));
-            // Selection now also refreshes the toolbar's selected-item color controls.
-            var budget = scenario switch { "Viewport" => 6, "Selection" => 12, "SingleEdit" => 21, _ => 21 };
+            var budget = scenario switch { "Viewport" => 6, "Selection" => showColorPicker ? 12 : 11, "SingleEdit" => 21, _ => 21 };
             Assert.InRange(deltas.Values.Sum(), 1, budget);
             Assert.Equal(scenario == "UnchangedParameters" ? 0 : scenario == "SingleEdit" ? 2 : 1, notifications);
             Assert.Equal(0, deltas.GetValueOrDefault(nameof(BpmnPart)));

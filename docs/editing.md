@@ -70,9 +70,14 @@ would be a second implementation of containment.
 
 ## Selected-item colors
 
+Color controls are hidden by default. Set `ShowColorPicker="true"` on `BpmnEditor` or
+`FluentBpmnEditor` to enable them on the configured toolbar, or on an explicitly authored
+`BpmnToolbar`/`FluentBpmnToolbar` in `ToolbarContent`. Custom toolbar content controls its own visibility.
+
 Both built-in toolbars provide independent fill, border/line, and text pickers with per-channel
-reset. Changes apply atomically to the selected items on the active diagram; fill applies only to
-shapes, while border/line and text also apply to connectors. Empty selection and read-only mode
+reset. The standard toolbar displays them inline; Fluent groups all three channels under one
+**Colors** button in a popover. Changes apply atomically to the selected items on the active diagram;
+fill applies only to shapes, while border/line and text also apply to connectors. Empty selection and read-only mode
 disable editing. Mixed selections show **Mixed**; unset overrides show **Theme default**. Selecting
 an item does not persist the displayed picker fallback.
 The Fluent picker offers a click-to-select wheel palette and exact hex text entry; existing or

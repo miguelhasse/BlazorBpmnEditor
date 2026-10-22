@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Reflection;
 using Bunit;
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
@@ -66,6 +67,28 @@ public sealed class FluentKitTests : FluentTestContext
             Assert.Equal(property.PropertyType, fluent.GetProperty(property.Name)?.PropertyType);
         foreach (var method in standard.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly).Where(m => !m.IsSpecialName))
             Assert.Equal(method.ReturnType, fluent.GetMethod(method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray())?.ReturnType);
+    }
+
+    [Theory, InlineData(false), InlineData(true)]
+    public void MultilineHeightUsesCssDecimalSeparator(bool feel)
+    {
+        var previousCulture = CultureInfo.CurrentCulture;
+        try
+        {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("de-DE");
+            var entry = new BpmnPropertyEntry("value", "Value", BpmnPropertyEntryKind.TextArea, "42")
+            {
+                Feel = feel ? BpmnFeelMode.Required : BpmnFeelMode.None,
+            };
+            var view = Render<FluentBpmnPropertyEntryView>(p => p.AddCascadingValue(FluentPropertyScope.Default)
+                .Add(c => c.Context, Context(entry)));
+
+            Assert.Equal("4.5em", view.FindComponent<FluentTextArea>().Instance.Height);
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = previousCulture;
+        }
     }
 
     [Theory, InlineData(false), InlineData(true)]
