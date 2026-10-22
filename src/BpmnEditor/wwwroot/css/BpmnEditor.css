@@ -76,16 +76,81 @@
   min-block-size: 0;
 }
 
-.bpmn-toolbar__color {
+.bpmn-toolbar__colors > .bpmn-toolbar__button {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  font-size: 0.75rem;
+  padding: 0.25rem;
+  border: 1px solid var(--bpmn-surface-border);
+  border-radius: 4px;
+  background: var(--bpmn-surface-background);
+  color: var(--bpmn-surface-foreground);
+  font: inherit;
+  cursor: pointer;
 }
 
-.bpmn-toolbar__color input[type="color"] {
-  width: 2rem;
-  height: 1.75rem;
+.bpmn-toolbar__colors > .bpmn-toolbar__button:hover:not(:disabled) {
+  background: var(--bpmn-surface-hover);
+}
+
+.bpmn-toolbar__colors > .bpmn-toolbar__button:focus-visible {
+  outline: 2px solid var(--bpmn-selection-color);
+  outline-offset: 1px;
+}
+
+.bpmn-toolbar__colors > .bpmn-toolbar__button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.bpmn-toolbar__color-icon {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1px;
+}
+
+.bpmn-toolbar__color-dropdown {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  max-inline-size: calc(100vw - 2rem);
+  max-block-size: calc(100dvh - 2rem);
+  overflow: auto;
+  border: 1px solid var(--bpmn-surface-border);
+  border-radius: 6px;
+  background: var(--bpmn-surface-background);
+  color: var(--bpmn-surface-foreground);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 18%);
+  font-family: var(--bpmn-font-family);
+  font-size: 0.8125rem;
+}
+
+.bpmn-toolbar__color-dropdown:popover-open {
+  display: grid;
+  gap: 0.375rem;
+}
+
+.bpmn-toolbar__color-dropdown .bpmn-toolbar__color {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bpmn-toolbar__color-dropdown label {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 2rem;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bpmn-toolbar__color-dropdown input[type="color"] {
+  inline-size: 2rem;
+  block-size: 1.75rem;
   padding: 0;
 }
 
@@ -311,7 +376,7 @@
 .bpmn-stencil__silhouette {
   fill: none;
   stroke: currentcolor;
-  stroke-width: 1.5;
+  stroke-width: 1.5px;
   stroke-linejoin: round;
 }
 

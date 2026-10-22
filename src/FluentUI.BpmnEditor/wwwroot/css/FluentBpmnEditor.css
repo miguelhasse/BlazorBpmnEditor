@@ -53,21 +53,43 @@
 
 .bpmn-toolbar__colors-popover::part(dialog) {
   box-sizing: border-box;
+  max-inline-size: calc(100vw - 2rem);
   max-block-size: calc(100dvh - 2rem);
   overflow: auto;
+  border: 1px solid var(--bpmn-surface-border);
+  border-radius: 6px;
+  background: var(--bpmn-surface-background);
+  color: var(--bpmn-surface-foreground);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 18%);
+  font-family: var(--bpmn-font-family);
+  font-size: 0.8125rem;
 }
 
 .bpmn-toolbar__colors-popover .bpmn-toolbar__color {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 130px 2rem;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  font-size: 0.75rem;
-  margin-block: 0.5rem;
+  gap: 0.25rem;
+  padding-block: 0.125rem;
+  font-family: var(--bpmn-font-family);
+  font-size: 0.8125rem;
 }
 
-.bpmn-toolbar__colors-popover .bpmn-toolbar__color-status {
+.bpmn-toolbar__colors-popover .bpmn-toolbar__color > label {
+  margin: 0;
+  font: inherit;
   overflow-wrap: anywhere;
+}
+
+.bpmn-toolbar__colors-popover .bpmn-toolbar__color .fluent-color-picker-input {
+  margin: 0;
+  min-inline-size: 0;
+  font: inherit;
+}
+
+.bpmn-toolbar__colors-popover .bpmn-toolbar__color ::part(control) {
+  font-family: var(--bpmn-font-family);
+  font-size: 0.8125rem;
 }
 
 .fluent-bpmn-editor .bpmn-toolbar {
@@ -219,7 +241,7 @@
 .fluent-bpmn-editor .bpmn-stencil__silhouette {
   fill: none;
   stroke: currentcolor;
-  stroke-width: 1.5;
+  stroke-width: 1.5px;
   stroke-linejoin: round;
 }
 .fluent-bpmn-editor .bpmn-stencil__label {

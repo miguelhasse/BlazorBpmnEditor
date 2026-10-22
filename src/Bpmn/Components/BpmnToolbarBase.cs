@@ -29,6 +29,18 @@ public abstract class BpmnToolbarBase : BpmnEditorComponentBase
     [Parameter]
     public bool ShowColorPicker { get; set; }
 
+    /// <summary>Whether zoom controls, zoom readout, reset and fit are shown. Shown by default.</summary>
+    [Parameter]
+    public bool ShowZoom { get; set; } = true;
+
+    /// <summary>Whether undo and redo controls are shown. Shown by default.</summary>
+    [Parameter]
+    public bool ShowUndoRedo { get; set; } = true;
+
+    /// <summary>Whether the keyboard shortcut help button is shown. Shown by default.</summary>
+    [Parameter]
+    public bool ShowShortcuts { get; set; } = true;
+
     /// <summary>The independently editable color channels.</summary>
     protected IReadOnlyList<BpmnColorChannel> ColorChannels { get; } =
         [BpmnColorChannel.Background, BpmnColorChannel.Border, BpmnColorChannel.Text];
@@ -44,15 +56,23 @@ public abstract class BpmnToolbarBase : BpmnEditorComponentBase
     private IEnumerable<string?> SelectedColors(BpmnColorChannel channel)
     {
         var plane = ColorPlane;
-        if (plane is null) yield break;
+
+        if (plane is null)
+            yield break;
+
         foreach (var shape in plane.Shapes.Where(shape => State.Selection.Contains(shape.BpmnElement)))
+        {
             yield return channel switch
             {
                 BpmnColorChannel.Background => shape.BackgroundColor,
                 BpmnColorChannel.Border => shape.BorderColor,
                 _ => shape.Label?.Color,
             };
-        if (channel == BpmnColorChannel.Background) yield break;
+        }
+
+        if (channel == BpmnColorChannel.Background)
+            yield break;
+
         foreach (var edge in plane.Edges.Where(edge => State.Selection.Contains(edge.BpmnElement)))
             yield return channel == BpmnColorChannel.Border ? edge.BorderColor : edge.Label?.Color;
     }
@@ -79,11 +99,12 @@ public abstract class BpmnToolbarBase : BpmnEditorComponentBase
     protected async Task SetColorAsync(BpmnColorChannel channel, string? value)
     {
         var diagram = State.Document?.Diagrams.FirstOrDefault(item => item.Plane == ColorPlane);
-        if (State.IsReadOnly || diagram is null || State.Selection.IsEmpty) return;
-        var result = await Session.ApplyAsync(new SetColorsCommand(diagram.Id, State.Selection, channel, value))
-            .ConfigureAwait(true);
-        var rejections = result.Rejections
-            .Select(item => TextOr($"Toolbar.Color.Error.{item.Code}", item.Message)).ToArray();
+
+        if (State.IsReadOnly || diagram is null || State.Selection.IsEmpty)
+            return;
+
+        var result = await Session.ApplyAsync(new SetColorsCommand(diagram.Id, State.Selection, channel, value)).ConfigureAwait(true);
+        var rejections = result.Rejections.Select(item => TextOr($"Toolbar.Color.Error.{item.Code}", item.Message)).ToArray();
         ColorError = rejections.Length == 0 ? null : string.Join(" ", rejections);
     }
 
@@ -121,5 +142,5 @@ public abstract class BpmnToolbarBase : BpmnEditorComponentBase
     protected Task RedoAsync() => Session.RedoAsync();
 
     /// <summary>Opens the keyboard shortcut help.</summary>
-    protected void ShowShortcuts() => Session.ShowShortcutHelp();
+    protected void ShowShortcutHelp() => Session.ShowShortcutHelp();
 }

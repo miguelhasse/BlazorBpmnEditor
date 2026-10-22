@@ -85,6 +85,54 @@ public sealed class KitParityTests : BunitContext
     }
 
     [Theory]
+    [InlineData(false, false, false)]
+    [InlineData(false, false, true)]
+    [InlineData(false, true, false)]
+    [InlineData(false, true, true)]
+    [InlineData(true, false, false)]
+    [InlineData(true, false, true)]
+    [InlineData(true, true, false)]
+    [InlineData(true, true, true)]
+    public async Task ToolbarVisibilityGroupsToggleIndependently(bool zoom, bool undoRedo, bool shortcuts)
+    {
+        var toolbarType = RenderEditor().FindComponent<BpmnToolbarBase>().Instance.GetType();
+        RenderFragment extra = builder => builder.AddMarkupContent(0, "<span data-extra-control>Extra</span>");
+        var parameters = new Dictionary<string, object>
+        {
+            [nameof(BpmnToolbarBase.ShowZoom)] = zoom,
+            [nameof(BpmnToolbarBase.ShowUndoRedo)] = undoRedo,
+            [nameof(BpmnToolbarBase.ShowShortcuts)] = shortcuts,
+            [nameof(BpmnToolbarBase.ShowColorPicker)] = true,
+            [nameof(BpmnToolbarBase.ChildContent)] = extra,
+        };
+        var scope = this.Render<DynamicComponent>(p => p.Add(c => c.Type, toolbarType).Add(c => c.Parameters, parameters),
+            scope: p => p.Add(c => c.Document, Document()));
+        await scope.Scope.InvokeAsync(() => scope.Session.ApplyAsync(new UpdatePropertiesCommand("Task_1", "name", "Changed")));
+        var document = scope.Session.EditedDocument;
+
+        void AssertVisibility(bool showZoom, bool showUndoRedo, bool showShortcuts)
+        {
+            foreach (var label in new[] { "Zoom out", "Zoom in", "Reset zoom", "Fit to content" })
+                Assert.Equal(showZoom ? 1 : 0, scope.Cut.FindAll($"[aria-label='{label}']").Count);
+            Assert.Equal(showZoom ? 1 : 0, scope.Cut.FindAll(".bpmn-toolbar__zoom").Count);
+            foreach (var label in new[] { "Undo", "Redo" })
+                Assert.Equal(showUndoRedo ? 1 : 0, scope.Cut.FindAll($"[aria-label='{label}']").Count);
+            Assert.Equal(showShortcuts ? 1 : 0, scope.Cut.FindAll("[aria-label='Show keyboard shortcuts']").Count);
+            Assert.Single(scope.Cut.FindAll("[aria-label='Colors'][aria-haspopup='dialog']"));
+            Assert.Single(scope.Cut.FindAll("[data-extra-control]"));
+            Assert.Same(document, scope.Session.EditedDocument);
+            Assert.True(scope.Session.CanUndo);
+        }
+
+        AssertVisibility(zoom, undoRedo, shortcuts);
+        parameters[nameof(BpmnToolbarBase.ShowZoom)] = !zoom;
+        parameters[nameof(BpmnToolbarBase.ShowUndoRedo)] = !undoRedo;
+        parameters[nameof(BpmnToolbarBase.ShowShortcuts)] = !shortcuts;
+        scope.Cut.Render(p => p.Add(c => c.Type, toolbarType).Add(c => c.Parameters, parameters));
+        AssertVisibility(!zoom, !undoRedo, !shortcuts);
+    }
+
+    [Theory]
     [InlineData("Background")]
     [InlineData("Border")]
     [InlineData("Text")]
@@ -111,6 +159,26 @@ public sealed class KitParityTests : BunitContext
         var label = channel switch { "Background" => "Fill color", "Border" => "Border / line color", _ => "Text color" };
         editor.Find($"[aria-label='Reset {label}']").Click();
         Assert.Null(ReadColor());
+    }
+
+    [Fact]
+    public async Task ToolbarColorsGroupAllChannelsUnderOneTrigger()
+    {
+        var editor = RenderEditor(true);
+        var session = Session(editor);
+        await editor.InvokeAsync(() => session.SetSelectionAsync(["Task_1"]));
+        var trigger = ColorAvailabilityButton(editor);
+        Assert.Equal("Colors", trigger.GetAttribute("aria-label"));
+        Assert.Single(editor.FindAll("button[popovertarget], fluent-button[aria-label='Colors']"));
+        var nativePopup = editor.FindAll(".bpmn-toolbar__color-dropdown");
+        if (nativePopup.Count > 0)
+        {
+            var popup = Assert.Single(nativePopup);
+            Assert.Equal("Colors", popup.GetAttribute("aria-label"));
+            Assert.Equal(popup.Id, trigger.GetAttribute("popovertarget"));
+            Assert.Equal(3, popup.QuerySelectorAll("input[type='color']").Length);
+            Assert.Equal(3, popup.QuerySelectorAll("button[aria-label^='Reset']").Length);
+        }
     }
 
     [Fact]
@@ -415,7 +483,7 @@ public sealed class KitParityTests : BunitContext
     private static IElement ColorAvailabilityButton(IRenderedComponent<DynamicComponent> editor)
     {
         var triggers = editor.FindAll("fluent-button[aria-label='Colors']");
-        return triggers.Count > 0 ? triggers[0] : Button(editor, "Reset Fill color");
+        return triggers.Count > 0 ? triggers[0] : editor.Find("button[popovertarget]");
     }
     private static Dictionary<string, object> Parameters(bool readOnly) => new() { ["Document"] = Document(), ["IsReadOnly"] = readOnly, ["ShowStencil"] = true };
     private static BpmnEditorSession Session(IRenderedComponent<DynamicComponent> editor) => editor.FindComponent<BpmnEditorScope>().Instance.Session;

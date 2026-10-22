@@ -12,6 +12,7 @@ import { LabelEditController } from '../editing/label-edit.js';
 import { LinkEditController } from '../editing/link-tools.js';
 import { SegmentDragController } from '../editing/segment-drag.js';
 import { suppressNativeMenu } from '../editing/native-menu.js';
+import { positionToolbarColors } from '../editing/toolbar-colors.js';
 import { LaneSplitterController } from '../editing/lane-splitter.js';
 import { ResizeController } from '../editing/resize-tool.js';
 import { RubberBandController } from '../editing/rubber-band.js';
@@ -71,6 +72,7 @@ export class BpmnCanvasInstance {
   readonly #laneSplitters: LaneSplitterController | null;
   readonly #live: LiveRouting | null;
   readonly #releaseNativeMenu: () => void;
+  readonly #releaseToolbarColors: () => void;
   readonly #linkEdit: LinkEditController | null;
   readonly #segmentDrag: SegmentDragController | null;
   readonly #snapping: SnapController;
@@ -207,6 +209,7 @@ export class BpmnCanvasInstance {
      * canvas talks to JavaScript.
      */
     this.#releaseNativeMenu = suppressNativeMenu(hostElement.closest<HTMLElement>('.bpmn-editor') ?? hostElement);
+    this.#releaseToolbarColors = positionToolbarColors(hostElement.closest<HTMLElement>('.bpmn-editor') ?? hostElement);
     this.#stencilDrag = new StencilDragImage(hostElement.closest('.bpmn-editor') ?? hostElement);
 
     this.#interaction = new InteractionController(this.#paperHost.paper, config.editing, {
@@ -607,6 +610,7 @@ export class BpmnCanvasInstance {
       () => { this.#resize?.destroy(); },
       () => { this.#laneSplitters?.destroy(); },
       () => { this.#releaseNativeMenu(); },
+      () => { this.#releaseToolbarColors(); },
       () => { this.#rubberBand?.destroy(); },
       () => { this.#connect.destroy(); },
       () => { this.#interaction.destroy(); },

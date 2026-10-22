@@ -3,63 +3,92 @@
 @inherits BpmnToolbarBase
 
 <div class="@CssClass("bpmn-toolbar")" role="toolbar" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
-    <button type="button" class="bpmn-toolbar__button"
-            title="@EditorText("Toolbar.ZoomOut.Title")"
-            aria-label="@EditorText("Toolbar.ZoomOut")"
-            @onclick="@(() => ExecuteAsync(ViewportCommand.ZoomOut))">&#8722;</button>
+    @if (ShowZoom)
+    {
+        <button type="button" class="bpmn-toolbar__button"
+                title="@EditorText("Toolbar.ZoomOut.Title")"
+                aria-label="@EditorText("Toolbar.ZoomOut")"
+                @onclick="@(() => ExecuteAsync(ViewportCommand.ZoomOut))">&#8722;</button>
 
-    <span class="bpmn-toolbar__zoom" aria-live="polite">@ZoomLabel</span>
+        <span class="bpmn-toolbar__zoom" aria-live="polite">@ZoomLabel</span>
 
-    <button type="button" class="bpmn-toolbar__button"
-            title="@EditorText("Toolbar.ZoomIn.Title")"
-            aria-label="@EditorText("Toolbar.ZoomIn")"
-            @onclick="@(() => ExecuteAsync(ViewportCommand.ZoomIn))">&#43;</button>
+        <button type="button" class="bpmn-toolbar__button"
+                title="@EditorText("Toolbar.ZoomIn.Title")"
+                aria-label="@EditorText("Toolbar.ZoomIn")"
+                @onclick="@(() => ExecuteAsync(ViewportCommand.ZoomIn))">&#43;</button>
 
-    <button type="button" class="bpmn-toolbar__button"
-            title="@EditorText("Toolbar.Reset.Title")"
-            aria-label="@EditorText("Toolbar.Reset")"
-            @onclick="@(() => ExecuteAsync(ViewportCommand.Reset))">@EditorText("Toolbar.Reset.Text")</button>
+        <button type="button" class="bpmn-toolbar__button"
+                title="@EditorText("Toolbar.Reset.Title")"
+                aria-label="@EditorText("Toolbar.Reset")"
+                @onclick="@(() => ExecuteAsync(ViewportCommand.Reset))">@EditorText("Toolbar.Reset.Text")</button>
 
-    <button type="button" class="bpmn-toolbar__button"
-            title="@EditorText("Toolbar.Fit.Title")"
-            aria-label="@EditorText("Toolbar.Fit")"
-            @onclick="@(() => ExecuteAsync(ViewportCommand.FitToContent))">@EditorText("Toolbar.Fit.Text")</button>
+        <button type="button" class="bpmn-toolbar__button"
+                title="@EditorText("Toolbar.Fit.Title")"
+                aria-label="@EditorText("Toolbar.Fit")"
+                @onclick="@(() => ExecuteAsync(ViewportCommand.FitToContent))">@EditorText("Toolbar.Fit.Text")</button>
+    }
 
-    <button type="button" class="bpmn-toolbar__button"
-            title="@EditorText("Toolbar.Undo")"
-            aria-label="@EditorText("Toolbar.Undo")"
-            disabled="@(!CanUndo)"
-            @onclick="@(() => UndoAsync())">@EditorText("Toolbar.Undo")</button>
+    @if (ShowUndoRedo)
+    {
+        <button type="button" class="bpmn-toolbar__button"
+                title="@EditorText("Toolbar.Undo")"
+                aria-label="@EditorText("Toolbar.Undo")"
+                disabled="@(!CanUndo)"
+                @onclick="@(() => UndoAsync())">@EditorText("Toolbar.Undo")</button>
 
-    <button type="button" class="bpmn-toolbar__button"
-            title="@EditorText("Toolbar.Redo")"
-            aria-label="@EditorText("Toolbar.Redo")"
-            disabled="@(!CanRedo)"
-            @onclick="@(() => RedoAsync())">@EditorText("Toolbar.Redo")</button>
-
-    <button type="button" class="bpmn-toolbar__button"
-            title="@EditorText("Toolbar.Shortcuts")"
-            aria-label="@EditorText("Toolbar.Shortcuts")"
-            @onclick="@ShowShortcuts">?</button>
+        <button type="button" class="bpmn-toolbar__button"
+                title="@EditorText("Toolbar.Redo")"
+                aria-label="@EditorText("Toolbar.Redo")"
+                disabled="@(!CanRedo)"
+                @onclick="@(() => RedoAsync())">@EditorText("Toolbar.Redo")</button>
+    }
 
     @if (ShowColorPicker)
     {
-        @foreach (var channel in ColorChannels)
-        {
-            <label class="bpmn-toolbar__color">
-                <span>@ColorLabel(channel)</span>
-                <input type="color" autocomplete="off" aria-label="@ColorLabel(channel)" data-color-channel="@channel"
-                       value="@(ColorValue(channel) ?? "#000000")" disabled="@(!CanColor(channel))"
-                       @onchange="@(args => SetColorAsync(channel, args.Value as string))" />
-            </label>
-            <button type="button" class="bpmn-toolbar__button" disabled="@(!CanColor(channel))"
-                    aria-label="@Text("Toolbar.Color.ResetChannel", ColorLabel(channel))"
-                    @onclick="@(() => SetColorAsync(channel, null))">@Text("Toolbar.Color.Reset")</button>
-        }
-        @if (ColorError is not null)
-        {
-            <span role="alert">@ColorError</span>
-        }
+        <div class="bpmn-toolbar__colors" @key="CanEditColors">
+            <button type="button" class="bpmn-toolbar__button" disabled="@(!CanEditColors)"
+                    aria-label="@Text("Toolbar.Color.Title")" title="@Text("Toolbar.Color.Title")"
+                    aria-haspopup="dialog" popovertarget="@_colorsId">
+                <svg class="bpmn-toolbar__color-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                    <path d="M10 2a8 8 0 1 0 0 16h1a2 2 0 0 0 1.5-3.3 1 1 0 0 1 .8-1.7H15a3 3 0 0 0 3-3 8 8 0 0 0-8-8Z" />
+                    <circle cx="6" cy="8" r="1" /><circle cx="9" cy="5.5" r="1" />
+                    <circle cx="13" cy="6" r="1" /><circle cx="15" cy="9.5" r="1" />
+                </svg>
+                <span>@Text("Toolbar.Color.Title")</span>
+                <span aria-hidden="true">&#9662;</span>
+            </button>
+            <div id="@_colorsId" class="bpmn-toolbar__color-dropdown" popover="auto"
+                 role="dialog" aria-label="@Text("Toolbar.Color.Title")">
+                @foreach (var channel in ColorChannels)
+                {
+                    <div class="bpmn-toolbar__color">
+                        <label>
+                            <span>@ColorLabel(channel)</span>
+                            <input type="color" autocomplete="off" aria-label="@ColorLabel(channel)"
+                                   aria-description="@ColorStatus(channel)" title="@ColorStatus(channel)"
+                                   data-color-channel="@channel"
+                                   value="@(ColorValue(channel) ?? "#000000")" disabled="@(!CanColor(channel))"
+                                   @onchange="@(args => SetColorAsync(channel, args.Value as string))" />
+                        </label>
+                        <button type="button" class="bpmn-toolbar__button" disabled="@(!CanColor(channel))"
+                                aria-label="@Text("Toolbar.Color.ResetChannel", ColorLabel(channel))"
+                                @onclick="@(() => SetColorAsync(channel, null))">@Text("Toolbar.Color.Reset")</button>
+                    </div>
+                }
+                @if (ColorError is not null)
+                {
+                    <span role="alert">@ColorError</span>
+                }
+            </div>
+        </div>
+    }
+
+    @if (ShowShortcuts)
+    {
+        <button type="button" class="bpmn-toolbar__button"
+                title="@EditorText("Toolbar.Shortcuts")"
+                aria-label="@EditorText("Toolbar.Shortcuts")"
+                @onclick="@ShowShortcutHelp">?</button>
     }
 
     @ChildContent

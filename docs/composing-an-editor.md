@@ -112,10 +112,24 @@ For example, a standard editor can embed a custom toolbar without changing appli
 
 `MyToolbar` must derive from `BpmnToolbarBase`; see [Writing a UI kit package](writing-a-ui-kit.md).
 
+Both toolbar implementations inherit independent visibility parameters from `BpmnToolbarBase`:
+`ShowZoom` controls Zoom in/out, the zoom readout, Reset, and Fit to content; `ShowUndoRedo`
+controls Undo/Redo; `ShowShortcuts` controls the shortcut-help button. All three default to `true`.
+Set them on the toolbar component, including a toolbar in `ToolbarContent`, for example:
+
+```razor
+<BpmnToolbar ShowZoom="false" ShowUndoRedo="true" ShowShortcuts="false" />
+```
+
+The same parameters work on `FluentBpmnToolbar`. Hiding controls does not disable keyboard
+shortcuts or commands, change history, or hide custom `ChildContent`.
+Custom toolbar subclasses should use `ShowShortcutHelp()` to open shortcut help; the former
+`ShowShortcuts()` handler is renamed to make room for the visibility parameter.
+
 The built-in standard and Fluent toolbars offer opt-in selected-item fill, border/line, and text color
 pickers with reset, multi-selection, mixed values, and read-only support. Set `ShowColorPicker="true"`
 on either editor component to enable its configured toolbar's controls; the default is `false`.
-Fluent groups the channels inside a **Colors** popover; the standard toolbar keeps them inline.
+Both toolbars group the channels inside a **Colors** popup.
 They use shared `BpmnToolbarBase` color methods and the normal command/history pipeline;
 no host callbacks are needed.
 Custom toolbar replacements can reuse `ColorChannels`, `CanColor`, `ColorValue`, `ColorStatus`,

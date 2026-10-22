@@ -12,7 +12,7 @@ internal static class KitFixture
         string channel, string color)
     {
         var picker = editor.FindComponents<FluentColorPickerInput>()
-            .Single(component => component.Instance.Label == (channel switch
+            .Single(component => component.Instance.AriaLabel == (channel switch
             {
                 "Background" => "Fill color",
                 "Border" => "Border / line color",

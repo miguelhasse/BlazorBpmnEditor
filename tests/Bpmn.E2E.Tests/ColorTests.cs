@@ -30,6 +30,12 @@ public sealed class ColorTests(DemoAppFixture app) : PageTest, IClassFixture<Dem
         await Expect(task).ToBeVisibleAsync(new() { Timeout = 30_000 });
         var id = await task.GetAttributeAsync("model-id")
             ?? throw new InvalidOperationException("The task has no model id.");
+        await task.ClickAsync(new() { Button = MouseButton.Right });
+        var contextMenu = page.Locator(".bpmn-menu");
+        await Expect(contextMenu).ToBeVisibleAsync();
+        var menuFont = await contextMenu.EvaluateAsync<string>(
+            "element => { const style = getComputedStyle(element); return `${style.fontFamily}|${style.fontSize}`; }");
+        await page.Keyboard.PressAsync("Escape");
         await task.Locator(".bpmn-activity-body").ClickAsync();
         if (route == KitRoute.Fluent)
         {
@@ -47,6 +53,63 @@ public sealed class ColorTests(DemoAppFixture app) : PageTest, IClassFixture<Dem
         await Expect(colorInputs).ToHaveCountAsync(3);
         foreach (var input in await colorInputs.AllAsync())
             await Expect(input).ToHaveAttributeAsync("autocomplete", "off");
+        if (route == KitRoute.Fluent)
+        {
+            var trigger = page.GetByRole(AriaRole.Button, new() { Name = "Colors", Exact = true });
+            await Expect(trigger.Locator("svg")).ToHaveCountAsync(1);
+            var pickers = page.Locator(".bpmn-toolbar__color .fluent-color-picker-input");
+            await Expect(pickers).ToHaveCountAsync(3);
+            foreach (var picker in await pickers.AllAsync())
+            {
+                await Expect(picker).ToHaveCSSAsync("margin-top", "0px");
+                await Expect(picker).ToHaveCSSAsync("margin-bottom", "0px");
+                await Expect(picker).ToHaveCSSAsync("margin-left", "0px");
+                await Expect(picker).ToHaveCSSAsync("margin-right", "0px");
+                Assert.Equal(menuFont, await picker.Locator("input").EvaluateAsync<string>(
+                    "element => { const style = getComputedStyle(element); return `${style.fontFamily}|${style.fontSize}`; }"));
+            }
+            foreach (var label in await page.Locator(".bpmn-toolbar__color > label").AllAsync())
+                Assert.Equal(menuFont, await label.EvaluateAsync<string>(
+                    "element => { const style = getComputedStyle(element); return `${style.fontFamily}|${style.fontSize}`; }"));
+        }
+        else
+        {
+            var colors = page.GetByRole(AriaRole.Button, new() { Name = "Colors", Exact = true });
+            await Expect(colors).ToHaveCountAsync(1);
+            await Expect(colors.Locator("svg")).ToHaveCountAsync(1);
+            Assert.Equal(0, await page.Locator(".bpmn-toolbar > button[aria-label^='Reset'][aria-label$='color']").CountAsync());
+            await OpenColorsAsync(page);
+            var dropdown = page.Locator(".bpmn-toolbar__color-dropdown:popover-open");
+            await Expect(dropdown).ToHaveCountAsync(1);
+            await Expect(dropdown).ToHaveCSSAsync("position", "fixed");
+            await page.WaitForFunctionAsync(
+                """
+                () => {
+                  const popup = document.querySelector('.bpmn-toolbar__color-dropdown:popover-open');
+                  const trigger = popup.parentElement.querySelector('button[popovertarget]');
+                  const anchor = trigger.getBoundingClientRect();
+                  const box = popup.getBoundingClientRect();
+                  return Math.abs(box.y - anchor.bottom - 4) < 1 && Math.abs(box.x - anchor.x) < 1;
+                }
+                """);
+            await Expect(dropdown.Locator("input[type='color']")).ToHaveCountAsync(3);
+            await Expect(dropdown.GetByRole(AriaRole.Button)).ToHaveCountAsync(3);
+            await dropdown.Locator("input").First.PressAsync("Escape");
+            await Expect(dropdown).ToHaveCountAsync(0);
+            await Expect(colors).ToBeFocusedAsync();
+            await colors.PressAsync("Enter");
+            await Expect(dropdown).ToHaveCountAsync(1);
+            await OpenColorsAsync(page);
+            await Expect(dropdown).ToHaveCountAsync(1);
+            await Expect(dropdown).ToHaveAttributeAsync("aria-label", "Colors");
+            await page.Locator(".bpmn-toolbar__zoom").ClickAsync();
+            await Expect(dropdown).ToHaveCountAsync(0);
+        }
+
+        var silhouettes = await page.Locator(".bpmn-stencil__silhouette").AllAsync();
+        Assert.NotEmpty(silhouettes);
+        foreach (var silhouette in silhouettes)
+            await Expect(silhouette).ToHaveCSSAsync("stroke-width", "1.5px");
         var body = task.Locator(".bpmn-activity-body");
         var before = await body.EvaluateAsync<string>("element => getComputedStyle(element).fill");
 
@@ -111,7 +174,7 @@ public sealed class ColorTests(DemoAppFixture app) : PageTest, IClassFixture<Dem
         var line = page.Locator(".bpmn-connector-line").First;
         await line.ClickAsync(new() { Force = true });
         await OpenColorsAsync(page);
-        await page.GetByRole(AriaRole.Button, new() { Name = "Reset Fill color", Exact = true }).ExpectDisabledAsync();
+        await page.GetByRole(AriaRole.Button, new() { Name = "Reset Fill color", Exact = true, IncludeHidden = true }).ExpectDisabledAsync();
         await SetColorAsync(page, "Border", "Border / line color", "#224466");
         await Expect(line).ToHaveCSSAsync("stroke", "rgb(34, 68, 102)");
         var marker = await line.GetAttributeAsync("marker-end")
@@ -133,13 +196,53 @@ public sealed class ColorTests(DemoAppFixture app) : PageTest, IClassFixture<Dem
                 .Locator("[part='dialog']").First.BoundingBoxAsync();
             Assert.NotNull(popover);
             Assert.InRange(popover.X, 0, 900 - popover.Width);
+            Assert.True(await page.GetByRole(AriaRole.Dialog, new() { Name = "Colors", Exact = true })
+                .Locator("[part='dialog']").First.EvaluateAsync<bool>("element => element.scrollWidth <= element.clientWidth + 1"),
+                "Color rows must fit the compact Fluent popover.");
         }
+
+        await page.SetViewportSizeAsync(480, 800);
+        await OpenColorsAsync(page);
+        var compactDialog = route == KitRoute.Fluent
+            ? page.GetByRole(AriaRole.Dialog, new() { Name = "Colors", Exact = true }).Locator("[part='dialog']").First
+            : page.Locator(".bpmn-toolbar__color-dropdown:popover-open");
+        var compactBounds = await compactDialog.BoundingBoxAsync();
+        Assert.NotNull(compactBounds);
+        Assert.InRange(compactBounds.X, 0, 480 - compactBounds.Width);
+        Assert.True(await compactDialog.EvaluateAsync<bool>("element => element.scrollWidth <= element.clientWidth + 1"));
+        if (route == KitRoute.Plain)
+        {
+            await page.WaitForFunctionAsync(
+                """
+                () => {
+                  const popup = document.querySelector('.bpmn-toolbar__color-dropdown:popover-open');
+                  const box = popup.getBoundingClientRect();
+                  return box.x >= 16 && box.right <= document.documentElement.clientWidth - 16;
+                }
+                """);
+        }
+
+        var canvas = page.Locator(".bpmn-canvas").First;
+        var canvasBounds = await canvas.BoundingBoxAsync();
+        Assert.NotNull(canvasBounds);
+        await canvas.ClickAsync(new() { Position = new() { X = 4, Y = (float)canvasBounds.Height - 4 } });
+        await Expect(compactDialog).Not.ToBeVisibleAsync();
+        var disabledTrigger = page.GetByRole(AriaRole.Button, new() { Name = "Colors", Exact = true });
+        await disabledTrigger.ExpectDisabledAsync();
     }
 
     private static async Task OpenColorsAsync(IPage page)
     {
         var trigger = page.GetByRole(AriaRole.Button, new() { Name = "Colors", Exact = true });
-        if (await trigger.CountAsync() > 0 && await trigger.GetAttributeAsync("aria-expanded") == "false")
+        var id = await trigger.GetAttributeAsync("popovertarget");
+        if (id is not null)
+        {
+            if (!await page.Locator($"[id='{id}']").EvaluateAsync<bool>("element => element.matches(':popover-open')"))
+                await trigger.ClickAsync();
+            return;
+        }
+
+        if (await trigger.GetAttributeAsync("aria-expanded") == "false")
             await trigger.ClickAsync();
     }
 

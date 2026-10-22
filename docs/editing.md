@@ -75,11 +75,13 @@ Color controls are hidden by default. Set `ShowColorPicker="true"` on `BpmnEdito
 `BpmnToolbar`/`FluentBpmnToolbar` in `ToolbarContent`. Custom toolbar content controls its own visibility.
 
 Both built-in toolbars provide independent fill, border/line, and text pickers with per-channel
-reset. The standard toolbar displays them inline; Fluent groups all three channels under one
-**Colors** button in a popover. Changes apply atomically to the selected items on the active diagram;
+reset. Both toolbars group all three channels under one palette icon and **Colors** button.
+The standard popup contains a native color input and Reset action per channel; Fluent uses its
+wheel/hex pickers in a compact popover. Escape or an outside click dismisses either popup.
+Changes apply atomically to the selected items on the active diagram;
 fill applies only to shapes, while border/line and text also apply to connectors. Empty selection and read-only mode
-disable editing. Mixed selections show **Mixed**; unset overrides show **Theme default**. Selecting
-an item does not persist the displayed picker fallback.
+disable editing. Standard input tooltips distinguish **Mixed** and **Theme default** from explicit
+colors. Selecting an item does not persist the displayed picker fallback.
 The Fluent picker offers a click-to-select wheel palette and exact hex text entry; existing or
 typed colors are not snapped to the nearest palette color.
 
