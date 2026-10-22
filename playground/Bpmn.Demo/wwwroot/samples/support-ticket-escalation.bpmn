@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="swimdraft" exporterVersion="1.0">
+  <bpmn2:collaboration id="Collaboration_1">
+    <bpmn2:participant id="pool_se" name="Support ticket handling" processRef="Process_pool_se" />
+  </bpmn2:collaboration>
+  <bpmn2:process id="Process_pool_se" isExecutable="false">
+    <bpmn2:laneSet id="LaneSet_pool_se">
+      <bpmn2:lane id="lane_se_t1" name="Tier 1 support">
+        <bpmn2:flowNodeRef>start_se</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_se_triage</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>g_se_t1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_se_fix1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_se_esc</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_se_confirm</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>end_se_closed</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="lane_se_t2" name="Tier 2 support">
+        <bpmn2:flowNodeRef>t_se_diag</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>g_se_bug</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_se_work</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="lane_se_eng" name="Engineering">
+        <bpmn2:flowNodeRef>t_se_defect</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>ev_se_fix</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+    <bpmn2:startEvent id="start_se" name="Ticket submitted">
+      <bpmn2:outgoing>f_se1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:userTask id="t_se_triage" name="Triage ticket">
+      <bpmn2:incoming>f_se1</bpmn2:incoming>
+      <bpmn2:outgoing>f_se2</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="g_se_t1" name="Solvable at tier 1?" default="f_se4">
+      <bpmn2:incoming>f_se2</bpmn2:incoming>
+      <bpmn2:outgoing>f_se3</bpmn2:outgoing>
+      <bpmn2:outgoing>f_se4</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:task id="t_se_fix1" name="Apply known fix">
+      <bpmn2:incoming>f_se3</bpmn2:incoming>
+      <bpmn2:outgoing>f_se5</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:task id="t_se_esc" name="Escalate to tier 2">
+      <bpmn2:incoming>f_se4</bpmn2:incoming>
+      <bpmn2:outgoing>f_se6</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:userTask id="t_se_diag" name="Diagnose issue">
+      <bpmn2:incoming>f_se6</bpmn2:incoming>
+      <bpmn2:outgoing>f_se7</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="g_se_bug" name="Product defect found?" default="f_se9">
+      <bpmn2:incoming>f_se7</bpmn2:incoming>
+      <bpmn2:outgoing>f_se8</bpmn2:outgoing>
+      <bpmn2:outgoing>f_se9</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:task id="t_se_defect" name="Raise defect ticket">
+      <bpmn2:incoming>f_se8</bpmn2:incoming>
+      <bpmn2:outgoing>f_se10</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:intermediateCatchEvent id="ev_se_fix" name="Fix released">
+      <bpmn2:incoming>f_se10</bpmn2:incoming>
+      <bpmn2:outgoing>f_se11</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition id="ev_se_fix_def" />
+    </bpmn2:intermediateCatchEvent>
+    <bpmn2:task id="t_se_work" name="Provide workaround">
+      <bpmn2:incoming>f_se9</bpmn2:incoming>
+      <bpmn2:outgoing>f_se12</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sendTask id="t_se_confirm" name="Confirm fix with customer">
+      <bpmn2:incoming>f_se5</bpmn2:incoming>
+      <bpmn2:incoming>f_se11</bpmn2:incoming>
+      <bpmn2:incoming>f_se12</bpmn2:incoming>
+      <bpmn2:outgoing>f_se13</bpmn2:outgoing>
+    </bpmn2:sendTask>
+    <bpmn2:endEvent id="end_se_closed" name="Ticket closed">
+      <bpmn2:incoming>f_se13</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="f_se1" sourceRef="start_se" targetRef="t_se_triage" />
+    <bpmn2:sequenceFlow id="f_se2" sourceRef="t_se_triage" targetRef="g_se_t1" />
+    <bpmn2:sequenceFlow id="f_se3" name="Yes" sourceRef="g_se_t1" targetRef="t_se_fix1">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">Yes</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="f_se4" name="No" sourceRef="g_se_t1" targetRef="t_se_esc" />
+    <bpmn2:sequenceFlow id="f_se5" sourceRef="t_se_fix1" targetRef="t_se_confirm" />
+    <bpmn2:sequenceFlow id="f_se6" sourceRef="t_se_esc" targetRef="t_se_diag" />
+    <bpmn2:sequenceFlow id="f_se7" sourceRef="t_se_diag" targetRef="g_se_bug" />
+    <bpmn2:sequenceFlow id="f_se8" name="Yes" sourceRef="g_se_bug" targetRef="t_se_defect">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">Yes</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="f_se9" name="No" sourceRef="g_se_bug" targetRef="t_se_work" />
+    <bpmn2:sequenceFlow id="f_se10" sourceRef="t_se_defect" targetRef="ev_se_fix" />
+    <bpmn2:sequenceFlow id="f_se11" sourceRef="ev_se_fix" targetRef="t_se_confirm" />
+    <bpmn2:sequenceFlow id="f_se12" sourceRef="t_se_work" targetRef="t_se_confirm" />
+    <bpmn2:sequenceFlow id="f_se13" sourceRef="t_se_confirm" targetRef="end_se_closed" />
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+      <bpmndi:BPMNShape id="pool_se_di" bpmnElement="pool_se" isHorizontal="true">
+        <dc:Bounds x="20" y="20" width="1570" height="500" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="lane_se_t1_di" bpmnElement="lane_se_t1" isHorizontal="true">
+        <dc:Bounds x="50" y="20" width="1540" height="240" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="lane_se_t2_di" bpmnElement="lane_se_t2" isHorizontal="true">
+        <dc:Bounds x="50" y="260" width="1540" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="lane_se_eng_di" bpmnElement="lane_se_eng" isHorizontal="true">
+        <dc:Bounds x="50" y="390" width="1540" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="start_se_di" bpmnElement="start_se">
+        <dc:Bounds x="112" y="59" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="89" y="101" width="83" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_se_triage_di" bpmnElement="t_se_triage">
+        <dc:Bounds x="230" y="37" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="g_se_t1_di" bpmnElement="g_se_t1">
+        <dc:Bounds x="405" y="52" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="385" y="32" width="91" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_se_fix1_di" bpmnElement="t_se_fix1">
+        <dc:Bounds x="530" y="147" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_se_esc_di" bpmnElement="t_se_esc">
+        <dc:Bounds x="530" y="37" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_se_diag_di" bpmnElement="t_se_diag">
+        <dc:Bounds x="680" y="277" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="g_se_bug_di" bpmnElement="g_se_bug">
+        <dc:Bounds x="855" y="292" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="825" y="272" width="110" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_se_defect_di" bpmnElement="t_se_defect">
+        <dc:Bounds x="980" y="407" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ev_se_fix_di" bpmnElement="ev_se_fix">
+        <dc:Bounds x="1162" y="429" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1149" y="471" width="62" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_se_work_di" bpmnElement="t_se_work">
+        <dc:Bounds x="980" y="277" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_se_confirm_di" bpmnElement="t_se_confirm">
+        <dc:Bounds x="1280" y="37" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="end_se_closed_di" bpmnElement="end_se_closed">
+        <dc:Bounds x="1462" y="59" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1447" y="101" width="67" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="f_se1_di" bpmnElement="f_se1">
+        <di:waypoint x="148" y="77" />
+        <di:waypoint x="230" y="77" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_se2_di" bpmnElement="f_se2">
+        <di:waypoint x="330" y="77" />
+        <di:waypoint x="405" y="77" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_se3_di" bpmnElement="f_se3">
+        <di:waypoint x="455" y="77" />
+        <di:waypoint x="510" y="77" />
+        <di:waypoint x="510" y="187" />
+        <di:waypoint x="530" y="187" />
+        <bpmndi:BPMNLabel><dc:Bounds x="461" y="57" width="21" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_se4_di" bpmnElement="f_se4">
+        <di:waypoint x="455" y="77" />
+        <di:waypoint x="530" y="77" />
+        <bpmndi:BPMNLabel><dc:Bounds x="461" y="83" width="17" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_se5_di" bpmnElement="f_se5">
+        <di:waypoint x="630" y="187" />
+        <di:waypoint x="1260" y="187" />
+        <di:waypoint x="1260" y="77" />
+        <di:waypoint x="1280" y="77" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_se6_di" bpmnElement="f_se6">
+        <di:waypoint x="630" y="77" />
+        <di:waypoint x="660" y="77" />
+        <di:waypoint x="660" y="317" />
+        <di:waypoint x="680" y="317" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_se7_di" bpmnElement="f_se7">
+        <di:waypoint x="780" y="317" />
+        <di:waypoint x="855" y="317" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_se8_di" bpmnElement="f_se8">
+        <di:waypoint x="905" y="317" />
+        <di:waypoint x="960" y="317" />
+        <di:waypoint x="960" y="447" />
+        <di:waypoint x="980" y="447" />
+        <bpmndi:BPMNLabel><dc:Bounds x="911" y="297" width="21" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_se9_di" bpmnElement="f_se9">
+        <di:waypoint x="905" y="317" />
+        <di:waypoint x="980" y="317" />
+        <bpmndi:BPMNLabel><dc:Bounds x="911" y="323" width="17" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_se10_di" bpmnElement="f_se10">
+        <di:waypoint x="1080" y="447" />
+        <di:waypoint x="1162" y="447" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_se11_di" bpmnElement="f_se11">
+        <di:waypoint x="1198" y="447" />
+        <di:waypoint x="1260" y="447" />
+        <di:waypoint x="1260" y="77" />
+        <di:waypoint x="1280" y="77" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_se12_di" bpmnElement="f_se12">
+        <di:waypoint x="1080" y="317" />
+        <di:waypoint x="1260" y="317" />
+        <di:waypoint x="1260" y="77" />
+        <di:waypoint x="1280" y="77" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_se13_di" bpmnElement="f_se13">
+        <di:waypoint x="1380" y="77" />
+        <di:waypoint x="1462" y="77" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

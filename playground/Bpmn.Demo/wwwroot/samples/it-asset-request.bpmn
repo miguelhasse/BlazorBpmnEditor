@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="swimdraft" exporterVersion="1.0">
+  <bpmn2:collaboration id="Collaboration_1">
+    <bpmn2:participant id="pool_ar" name="IT asset request" processRef="Process_pool_ar" />
+    <bpmn2:participant id="pool_ar_sup" name="Supplier" processRef="Process_pool_ar_sup" />
+    <bpmn2:messageFlow id="mfar1" name="Purchase order" sourceRef="t_ar_order" targetRef="pool_ar_sup" />
+    <bpmn2:messageFlow id="mfar2" name="Delivery notice" sourceRef="pool_ar_sup" targetRef="ev_ar_del" />
+  </bpmn2:collaboration>
+  <bpmn2:process id="Process_pool_ar" isExecutable="false">
+    <bpmn2:laneSet id="LaneSet_pool_ar">
+      <bpmn2:lane id="lane_ar_emp" name="Employee">
+        <bpmn2:flowNodeRef>start_ar</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="lane_ar_mgr" name="Line manager">
+        <bpmn2:flowNodeRef>t_ar_appr</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>g_ar_appr</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_ar_ref</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>end_ar_dec</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="lane_ar_desk" name="IT service desk">
+        <bpmn2:flowNodeRef>t_ar_stock</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>g_ar_stock</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_ar_order</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>ev_ar_del</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_ar_prep</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_ar_issue</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_ar_reg</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>end_ar_done</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+    <bpmn2:startEvent id="start_ar" name="Asset requested">
+      <bpmn2:outgoing>far1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:userTask id="t_ar_appr" name="Approve asset request">
+      <bpmn2:incoming>far1</bpmn2:incoming>
+      <bpmn2:outgoing>far2</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="g_ar_appr" name="Request approved?" default="far4">
+      <bpmn2:incoming>far2</bpmn2:incoming>
+      <bpmn2:outgoing>far3</bpmn2:outgoing>
+      <bpmn2:outgoing>far4</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sendTask id="t_ar_ref" name="Notify employee of refusal">
+      <bpmn2:incoming>far4</bpmn2:incoming>
+      <bpmn2:outgoing>far5</bpmn2:outgoing>
+    </bpmn2:sendTask>
+    <bpmn2:endEvent id="end_ar_dec" name="Request declined">
+      <bpmn2:incoming>far5</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:task id="t_ar_stock" name="Check stock availability">
+      <bpmn2:incoming>far3</bpmn2:incoming>
+      <bpmn2:outgoing>far6</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:exclusiveGateway id="g_ar_stock" name="Asset in stock?" default="far8">
+      <bpmn2:incoming>far6</bpmn2:incoming>
+      <bpmn2:outgoing>far7</bpmn2:outgoing>
+      <bpmn2:outgoing>far8</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sendTask id="t_ar_order" name="Place order with supplier">
+      <bpmn2:incoming>far8</bpmn2:incoming>
+      <bpmn2:outgoing>far9</bpmn2:outgoing>
+    </bpmn2:sendTask>
+    <bpmn2:intermediateCatchEvent id="ev_ar_del" name="Delivery received">
+      <bpmn2:incoming>far9</bpmn2:incoming>
+      <bpmn2:outgoing>far10</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition id="ev_ar_del_def" />
+    </bpmn2:intermediateCatchEvent>
+    <bpmn2:task id="t_ar_prep" name="Tag and configure asset">
+      <bpmn2:incoming>far7</bpmn2:incoming>
+      <bpmn2:incoming>far10</bpmn2:incoming>
+      <bpmn2:outgoing>far11</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:task id="t_ar_issue" name="Issue asset to employee">
+      <bpmn2:incoming>far11</bpmn2:incoming>
+      <bpmn2:outgoing>far12</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:serviceTask id="t_ar_reg" name="Update asset register">
+      <bpmn2:incoming>far12</bpmn2:incoming>
+      <bpmn2:outgoing>far13</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:endEvent id="end_ar_done" name="Asset issued">
+      <bpmn2:incoming>far13</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="far1" sourceRef="start_ar" targetRef="t_ar_appr" />
+    <bpmn2:sequenceFlow id="far2" sourceRef="t_ar_appr" targetRef="g_ar_appr" />
+    <bpmn2:sequenceFlow id="far3" name="Yes" sourceRef="g_ar_appr" targetRef="t_ar_stock">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">Yes</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="far4" name="No" sourceRef="g_ar_appr" targetRef="t_ar_ref" />
+    <bpmn2:sequenceFlow id="far5" sourceRef="t_ar_ref" targetRef="end_ar_dec" />
+    <bpmn2:sequenceFlow id="far6" sourceRef="t_ar_stock" targetRef="g_ar_stock" />
+    <bpmn2:sequenceFlow id="far7" name="Yes" sourceRef="g_ar_stock" targetRef="t_ar_prep">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">Yes</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="far8" name="No" sourceRef="g_ar_stock" targetRef="t_ar_order" />
+    <bpmn2:sequenceFlow id="far9" sourceRef="t_ar_order" targetRef="ev_ar_del" />
+    <bpmn2:sequenceFlow id="far10" sourceRef="ev_ar_del" targetRef="t_ar_prep" />
+    <bpmn2:sequenceFlow id="far11" sourceRef="t_ar_prep" targetRef="t_ar_issue" />
+    <bpmn2:sequenceFlow id="far12" sourceRef="t_ar_issue" targetRef="t_ar_reg" />
+    <bpmn2:sequenceFlow id="far13" sourceRef="t_ar_reg" targetRef="end_ar_done" />
+  </bpmn2:process>
+  <bpmn2:process id="Process_pool_ar_sup" isExecutable="false">
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+      <bpmndi:BPMNShape id="pool_ar_di" bpmnElement="pool_ar" isHorizontal="true">
+        <dc:Bounds x="20" y="20" width="1720" height="390" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="lane_ar_emp_di" bpmnElement="lane_ar_emp" isHorizontal="true">
+        <dc:Bounds x="50" y="20" width="1690" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="lane_ar_mgr_di" bpmnElement="lane_ar_mgr" isHorizontal="true">
+        <dc:Bounds x="50" y="150" width="1690" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="lane_ar_desk_di" bpmnElement="lane_ar_desk" isHorizontal="true">
+        <dc:Bounds x="50" y="280" width="1690" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="pool_ar_sup_di" bpmnElement="pool_ar_sup" isHorizontal="true">
+        <dc:Bounds x="20" y="470" width="1720" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="start_ar_di" bpmnElement="start_ar">
+        <dc:Bounds x="112" y="59" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="89" y="101" width="82" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_ar_appr_di" bpmnElement="t_ar_appr">
+        <dc:Bounds x="230" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="g_ar_appr_di" bpmnElement="g_ar_appr">
+        <dc:Bounds x="405" y="182" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="381" y="162" width="98" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_ar_ref_di" bpmnElement="t_ar_ref">
+        <dc:Bounds x="530" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="end_ar_dec_di" bpmnElement="end_ar_dec">
+        <dc:Bounds x="712" y="189" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="687" y="231" width="87" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_ar_stock_di" bpmnElement="t_ar_stock">
+        <dc:Bounds x="530" y="297" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="g_ar_stock_di" bpmnElement="g_ar_stock">
+        <dc:Bounds x="705" y="312" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="692" y="292" width="76" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_ar_order_di" bpmnElement="t_ar_order">
+        <dc:Bounds x="830" y="297" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ev_ar_del_di" bpmnElement="ev_ar_del">
+        <dc:Bounds x="1012" y="319" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="987" y="361" width="87" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_ar_prep_di" bpmnElement="t_ar_prep">
+        <dc:Bounds x="1130" y="297" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_ar_issue_di" bpmnElement="t_ar_issue">
+        <dc:Bounds x="1280" y="297" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_ar_reg_di" bpmnElement="t_ar_reg">
+        <dc:Bounds x="1430" y="297" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="end_ar_done_di" bpmnElement="end_ar_done">
+        <dc:Bounds x="1612" y="319" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1598" y="361" width="65" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="far1_di" bpmnElement="far1">
+        <di:waypoint x="148" y="77" />
+        <di:waypoint x="210" y="77" />
+        <di:waypoint x="210" y="207" />
+        <di:waypoint x="230" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="far2_di" bpmnElement="far2">
+        <di:waypoint x="330" y="207" />
+        <di:waypoint x="405" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="far3_di" bpmnElement="far3">
+        <di:waypoint x="455" y="207" />
+        <di:waypoint x="510" y="207" />
+        <di:waypoint x="510" y="337" />
+        <di:waypoint x="530" y="337" />
+        <bpmndi:BPMNLabel><dc:Bounds x="461" y="187" width="21" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="far4_di" bpmnElement="far4">
+        <di:waypoint x="455" y="207" />
+        <di:waypoint x="530" y="207" />
+        <bpmndi:BPMNLabel><dc:Bounds x="461" y="213" width="17" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="far5_di" bpmnElement="far5">
+        <di:waypoint x="630" y="207" />
+        <di:waypoint x="712" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="far6_di" bpmnElement="far6">
+        <di:waypoint x="630" y="337" />
+        <di:waypoint x="705" y="337" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="far7_di" bpmnElement="far7">
+        <di:waypoint x="755" y="337" />
+        <di:waypoint x="810" y="337" />
+        <di:waypoint x="810" y="392" />
+        <di:waypoint x="1110" y="392" />
+        <di:waypoint x="1110" y="337" />
+        <di:waypoint x="1130" y="337" />
+        <bpmndi:BPMNLabel><dc:Bounds x="761" y="317" width="21" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="far8_di" bpmnElement="far8">
+        <di:waypoint x="755" y="337" />
+        <di:waypoint x="830" y="337" />
+        <bpmndi:BPMNLabel><dc:Bounds x="761" y="343" width="17" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="far9_di" bpmnElement="far9">
+        <di:waypoint x="930" y="337" />
+        <di:waypoint x="1012" y="337" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="far10_di" bpmnElement="far10">
+        <di:waypoint x="1048" y="337" />
+        <di:waypoint x="1130" y="337" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="far11_di" bpmnElement="far11">
+        <di:waypoint x="1230" y="337" />
+        <di:waypoint x="1280" y="337" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="far12_di" bpmnElement="far12">
+        <di:waypoint x="1380" y="337" />
+        <di:waypoint x="1430" y="337" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="far13_di" bpmnElement="far13">
+        <di:waypoint x="1530" y="337" />
+        <di:waypoint x="1612" y="337" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="mfar1_di" bpmnElement="mfar1">
+        <di:waypoint x="880" y="377" />
+        <di:waypoint x="880" y="440" />
+        <di:waypoint x="880" y="470" />
+        <bpmndi:BPMNLabel><dc:Bounds x="886" y="433" width="78" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="mfar2_di" bpmnElement="mfar2">
+        <di:waypoint x="1110" y="470" />
+        <di:waypoint x="1110" y="440" />
+        <di:waypoint x="1110" y="337" />
+        <di:waypoint x="1048" y="337" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1116" y="433" width="75" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

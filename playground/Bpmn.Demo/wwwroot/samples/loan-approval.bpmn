@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="swimdraft" exporterVersion="1.0">
+  <bpmn2:collaboration id="Collaboration_1">
+    <bpmn2:participant id="pool_loan" name="Loan approval" processRef="Process_pool_loan" />
+  </bpmn2:collaboration>
+  <bpmn2:process id="Process_pool_loan" isExecutable="false">
+    <bpmn2:laneSet id="LaneSet_pool_loan">
+      <bpmn2:lane id="lane_loan_officer" name="Loan officer">
+        <bpmn2:flowNodeRef>start_loan</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_loan_review</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>g_loan_complete</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_loan_request</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>ev_loan_docs</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_loan_offer</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_loan_decline</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>end_loan_declined</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="lane_loan_uw" name="Underwriting">
+        <bpmn2:flowNodeRef>t_loan_score</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>g_loan_approve</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="lane_loan_ops" name="Operations">
+        <bpmn2:flowNodeRef>t_loan_disburse</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>end_loan_paid</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+    <bpmn2:startEvent id="start_loan" name="Application received">
+      <bpmn2:outgoing>floan1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:userTask id="t_loan_review" name="Review application pack">
+      <bpmn2:incoming>floan1</bpmn2:incoming>
+      <bpmn2:incoming>floan6</bpmn2:incoming>
+      <bpmn2:outgoing>floan2</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="g_loan_complete" name="Application complete?" default="floan4">
+      <bpmn2:incoming>floan2</bpmn2:incoming>
+      <bpmn2:outgoing>floan3</bpmn2:outgoing>
+      <bpmn2:outgoing>floan4</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sendTask id="t_loan_request" name="Request missing documents">
+      <bpmn2:incoming>floan4</bpmn2:incoming>
+      <bpmn2:outgoing>floan5</bpmn2:outgoing>
+    </bpmn2:sendTask>
+    <bpmn2:intermediateCatchEvent id="ev_loan_docs" name="Documents received">
+      <bpmn2:incoming>floan5</bpmn2:incoming>
+      <bpmn2:outgoing>floan6</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition id="ev_loan_docs_def" />
+    </bpmn2:intermediateCatchEvent>
+    <bpmn2:businessRuleTask id="t_loan_score" name="Score application">
+      <bpmn2:incoming>floan3</bpmn2:incoming>
+      <bpmn2:outgoing>floan7</bpmn2:outgoing>
+    </bpmn2:businessRuleTask>
+    <bpmn2:exclusiveGateway id="g_loan_approve" name="Loan approved?" default="floan9">
+      <bpmn2:incoming>floan7</bpmn2:incoming>
+      <bpmn2:outgoing>floan8</bpmn2:outgoing>
+      <bpmn2:outgoing>floan9</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sendTask id="t_loan_offer" name="Send loan offer">
+      <bpmn2:incoming>floan8</bpmn2:incoming>
+      <bpmn2:outgoing>floan10</bpmn2:outgoing>
+    </bpmn2:sendTask>
+    <bpmn2:serviceTask id="t_loan_disburse" name="Disburse funds">
+      <bpmn2:incoming>floan10</bpmn2:incoming>
+      <bpmn2:outgoing>floan11</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:endEvent id="end_loan_paid" name="Loan disbursed">
+      <bpmn2:incoming>floan11</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sendTask id="t_loan_decline" name="Notify applicant of decline">
+      <bpmn2:incoming>floan9</bpmn2:incoming>
+      <bpmn2:outgoing>floan12</bpmn2:outgoing>
+    </bpmn2:sendTask>
+    <bpmn2:endEvent id="end_loan_declined" name="Application declined">
+      <bpmn2:incoming>floan12</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="floan1" sourceRef="start_loan" targetRef="t_loan_review" />
+    <bpmn2:sequenceFlow id="floan2" sourceRef="t_loan_review" targetRef="g_loan_complete" />
+    <bpmn2:sequenceFlow id="floan3" name="Yes" sourceRef="g_loan_complete" targetRef="t_loan_score">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">Yes</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="floan4" name="No" sourceRef="g_loan_complete" targetRef="t_loan_request" />
+    <bpmn2:sequenceFlow id="floan5" sourceRef="t_loan_request" targetRef="ev_loan_docs" />
+    <bpmn2:sequenceFlow id="floan6" sourceRef="ev_loan_docs" targetRef="t_loan_review" />
+    <bpmn2:sequenceFlow id="floan7" sourceRef="t_loan_score" targetRef="g_loan_approve" />
+    <bpmn2:sequenceFlow id="floan8" name="Yes" sourceRef="g_loan_approve" targetRef="t_loan_offer">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">Yes</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="floan9" name="No" sourceRef="g_loan_approve" targetRef="t_loan_decline" />
+    <bpmn2:sequenceFlow id="floan10" sourceRef="t_loan_offer" targetRef="t_loan_disburse" />
+    <bpmn2:sequenceFlow id="floan11" sourceRef="t_loan_disburse" targetRef="end_loan_paid" />
+    <bpmn2:sequenceFlow id="floan12" sourceRef="t_loan_decline" targetRef="end_loan_declined" />
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+      <bpmndi:BPMNShape id="pool_loan_di" bpmnElement="pool_loan" isHorizontal="true">
+        <dc:Bounds x="20" y="20" width="1270" height="500" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="lane_loan_officer_di" bpmnElement="lane_loan_officer" isHorizontal="true">
+        <dc:Bounds x="50" y="20" width="1240" height="240" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="lane_loan_uw_di" bpmnElement="lane_loan_uw" isHorizontal="true">
+        <dc:Bounds x="50" y="260" width="1240" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="lane_loan_ops_di" bpmnElement="lane_loan_ops" isHorizontal="true">
+        <dc:Bounds x="50" y="390" width="1240" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="start_loan_di" bpmnElement="start_loan">
+        <dc:Bounds x="112" y="59" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="80" y="101" width="101" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_loan_review_di" bpmnElement="t_loan_review">
+        <dc:Bounds x="230" y="37" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="g_loan_complete_di" bpmnElement="g_loan_complete">
+        <dc:Bounds x="405" y="52" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="375" y="32" width="110" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_loan_request_di" bpmnElement="t_loan_request">
+        <dc:Bounds x="530" y="37" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ev_loan_docs_di" bpmnElement="ev_loan_docs">
+        <dc:Bounds x="712" y="59" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="679" y="101" width="103" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_loan_score_di" bpmnElement="t_loan_score">
+        <dc:Bounds x="530" y="277" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="g_loan_approve_di" bpmnElement="g_loan_approve">
+        <dc:Bounds x="705" y="292" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="689" y="272" width="82" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_loan_offer_di" bpmnElement="t_loan_offer">
+        <dc:Bounds x="830" y="37" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_loan_disburse_di" bpmnElement="t_loan_disburse">
+        <dc:Bounds x="980" y="407" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="end_loan_paid_di" bpmnElement="end_loan_paid">
+        <dc:Bounds x="1162" y="429" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1141" y="471" width="78" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_loan_decline_di" bpmnElement="t_loan_decline">
+        <dc:Bounds x="830" y="147" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="end_loan_declined_di" bpmnElement="end_loan_declined">
+        <dc:Bounds x="1012" y="169" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="980" y="211" width="100" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="floan1_di" bpmnElement="floan1">
+        <di:waypoint x="148" y="77" />
+        <di:waypoint x="230" y="77" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="floan2_di" bpmnElement="floan2">
+        <di:waypoint x="330" y="77" />
+        <di:waypoint x="405" y="77" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="floan3_di" bpmnElement="floan3">
+        <di:waypoint x="455" y="77" />
+        <di:waypoint x="510" y="77" />
+        <di:waypoint x="510" y="317" />
+        <di:waypoint x="530" y="317" />
+        <bpmndi:BPMNLabel><dc:Bounds x="461" y="57" width="21" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="floan4_di" bpmnElement="floan4">
+        <di:waypoint x="455" y="77" />
+        <di:waypoint x="530" y="77" />
+        <bpmndi:BPMNLabel><dc:Bounds x="461" y="83" width="17" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="floan5_di" bpmnElement="floan5">
+        <di:waypoint x="630" y="77" />
+        <di:waypoint x="712" y="77" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="floan6_di" bpmnElement="floan6">
+        <di:waypoint x="748" y="77" />
+        <di:waypoint x="810" y="77" />
+        <di:waypoint x="810" y="132" />
+        <di:waypoint x="210" y="132" />
+        <di:waypoint x="210" y="77" />
+        <di:waypoint x="230" y="77" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="floan7_di" bpmnElement="floan7">
+        <di:waypoint x="630" y="317" />
+        <di:waypoint x="705" y="317" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="floan8_di" bpmnElement="floan8">
+        <di:waypoint x="755" y="317" />
+        <di:waypoint x="810" y="317" />
+        <di:waypoint x="810" y="77" />
+        <di:waypoint x="830" y="77" />
+        <bpmndi:BPMNLabel><dc:Bounds x="761" y="297" width="21" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="floan9_di" bpmnElement="floan9">
+        <di:waypoint x="755" y="317" />
+        <di:waypoint x="810" y="317" />
+        <di:waypoint x="810" y="187" />
+        <di:waypoint x="830" y="187" />
+        <bpmndi:BPMNLabel><dc:Bounds x="761" y="323" width="17" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="floan10_di" bpmnElement="floan10">
+        <di:waypoint x="930" y="77" />
+        <di:waypoint x="960" y="77" />
+        <di:waypoint x="960" y="447" />
+        <di:waypoint x="980" y="447" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="floan11_di" bpmnElement="floan11">
+        <di:waypoint x="1080" y="447" />
+        <di:waypoint x="1162" y="447" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="floan12_di" bpmnElement="floan12">
+        <di:waypoint x="930" y="187" />
+        <di:waypoint x="1012" y="187" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

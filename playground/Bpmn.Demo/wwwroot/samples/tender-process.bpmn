@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="swimdraft" exporterVersion="1.0">
+  <bpmn2:collaboration id="Collaboration_1">
+    <bpmn2:participant id="pool_tp" name="Tendering organisation" processRef="Process_pool_tp" />
+    <bpmn2:participant id="pool_tp_suppliers" name="Suppliers" processRef="Process_pool_tp_suppliers" />
+    <bpmn2:messageFlow id="mftp1" name="Invitation to tender" sourceRef="t_tp_publish" targetRef="pool_tp_suppliers" />
+    <bpmn2:messageFlow id="mftp2" name="Sealed bids" sourceRef="pool_tp_suppliers" targetRef="t_tp_open" />
+  </bpmn2:collaboration>
+  <bpmn2:process id="Process_pool_tp" isExecutable="false">
+    <bpmn2:laneSet id="LaneSet_pool_tp">
+      <bpmn2:lane id="lane_tp_proc" name="Procurement">
+        <bpmn2:flowNodeRef>start_tp</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_tp_prepare</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_tp_publish</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>ev_tp_deadline</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_tp_open</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_tp_cancel</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>end_tp_cancel</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_tp_notify</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_tp_award</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>end_tp_award</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="lane_tp_panel" name="Evaluation panel">
+        <bpmn2:flowNodeRef>t_tp_score</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>g_tp_compliant</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>t_tp_select</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+    <bpmn2:startEvent id="start_tp" name="Tender approved">
+      <bpmn2:outgoing>ftp1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:userTask id="t_tp_prepare" name="Prepare tender documents">
+      <bpmn2:incoming>ftp1</bpmn2:incoming>
+      <bpmn2:outgoing>ftp2</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sendTask id="t_tp_publish" name="Publish invitation">
+      <bpmn2:incoming>ftp2</bpmn2:incoming>
+      <bpmn2:outgoing>ftp3</bpmn2:outgoing>
+    </bpmn2:sendTask>
+    <bpmn2:intermediateCatchEvent id="ev_tp_deadline" name="Submission deadline">
+      <bpmn2:incoming>ftp3</bpmn2:incoming>
+      <bpmn2:outgoing>ftp4</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition id="ev_tp_deadline_def" />
+    </bpmn2:intermediateCatchEvent>
+    <bpmn2:task id="t_tp_open" name="Open and log bids">
+      <bpmn2:incoming>ftp4</bpmn2:incoming>
+      <bpmn2:outgoing>ftp5</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:userTask id="t_tp_score" name="Score bids against criteria">
+      <bpmn2:incoming>ftp5</bpmn2:incoming>
+      <bpmn2:outgoing>ftp6</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="g_tp_compliant" name="Compliant bid received?" default="ftp8">
+      <bpmn2:incoming>ftp6</bpmn2:incoming>
+      <bpmn2:outgoing>ftp7</bpmn2:outgoing>
+      <bpmn2:outgoing>ftp8</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:task id="t_tp_cancel" name="Cancel tender">
+      <bpmn2:incoming>ftp8</bpmn2:incoming>
+      <bpmn2:outgoing>ftp9</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:endEvent id="end_tp_cancel" name="Tender cancelled">
+      <bpmn2:incoming>ftp9</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:userTask id="t_tp_select" name="Select winning bid">
+      <bpmn2:incoming>ftp7</bpmn2:incoming>
+      <bpmn2:outgoing>ftp10</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sendTask id="t_tp_notify" name="Notify all bidders">
+      <bpmn2:incoming>ftp10</bpmn2:incoming>
+      <bpmn2:outgoing>ftp11</bpmn2:outgoing>
+    </bpmn2:sendTask>
+    <bpmn2:task id="t_tp_award" name="Award contract">
+      <bpmn2:incoming>ftp11</bpmn2:incoming>
+      <bpmn2:outgoing>ftp12</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:endEvent id="end_tp_award" name="Contract awarded">
+      <bpmn2:incoming>ftp12</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="ftp1" sourceRef="start_tp" targetRef="t_tp_prepare" />
+    <bpmn2:sequenceFlow id="ftp2" sourceRef="t_tp_prepare" targetRef="t_tp_publish" />
+    <bpmn2:sequenceFlow id="ftp3" sourceRef="t_tp_publish" targetRef="ev_tp_deadline" />
+    <bpmn2:sequenceFlow id="ftp4" sourceRef="ev_tp_deadline" targetRef="t_tp_open" />
+    <bpmn2:sequenceFlow id="ftp5" sourceRef="t_tp_open" targetRef="t_tp_score" />
+    <bpmn2:sequenceFlow id="ftp6" sourceRef="t_tp_score" targetRef="g_tp_compliant" />
+    <bpmn2:sequenceFlow id="ftp7" name="Yes" sourceRef="g_tp_compliant" targetRef="t_tp_select">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">Yes</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="ftp8" name="No" sourceRef="g_tp_compliant" targetRef="t_tp_cancel" />
+    <bpmn2:sequenceFlow id="ftp9" sourceRef="t_tp_cancel" targetRef="end_tp_cancel" />
+    <bpmn2:sequenceFlow id="ftp10" sourceRef="t_tp_select" targetRef="t_tp_notify" />
+    <bpmn2:sequenceFlow id="ftp11" sourceRef="t_tp_notify" targetRef="t_tp_award" />
+    <bpmn2:sequenceFlow id="ftp12" sourceRef="t_tp_award" targetRef="end_tp_award" />
+  </bpmn2:process>
+  <bpmn2:process id="Process_pool_tp_suppliers" isExecutable="false">
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+      <bpmndi:BPMNShape id="pool_tp_di" bpmnElement="pool_tp" isHorizontal="true">
+        <dc:Bounds x="20" y="20" width="1720" height="370" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="lane_tp_proc_di" bpmnElement="lane_tp_proc" isHorizontal="true">
+        <dc:Bounds x="50" y="20" width="1690" height="240" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="lane_tp_panel_di" bpmnElement="lane_tp_panel" isHorizontal="true">
+        <dc:Bounds x="50" y="260" width="1690" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="pool_tp_suppliers_di" bpmnElement="pool_tp_suppliers" isHorizontal="true">
+        <dc:Bounds x="20" y="450" width="1720" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="start_tp_di" bpmnElement="start_tp">
+        <dc:Bounds x="112" y="59" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="87" y="101" width="86" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_tp_prepare_di" bpmnElement="t_tp_prepare">
+        <dc:Bounds x="230" y="37" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_tp_publish_di" bpmnElement="t_tp_publish">
+        <dc:Bounds x="380" y="37" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ev_tp_deadline_di" bpmnElement="ev_tp_deadline">
+        <dc:Bounds x="562" y="59" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="528" y="101" width="104" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_tp_open_di" bpmnElement="t_tp_open">
+        <dc:Bounds x="680" y="37" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_tp_score_di" bpmnElement="t_tp_score">
+        <dc:Bounds x="830" y="277" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="g_tp_compliant_di" bpmnElement="g_tp_compliant">
+        <dc:Bounds x="1005" y="292" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="970" y="272" width="120" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_tp_cancel_di" bpmnElement="t_tp_cancel">
+        <dc:Bounds x="1130" y="37" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="end_tp_cancel_di" bpmnElement="end_tp_cancel">
+        <dc:Bounds x="1312" y="169" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1287" y="211" width="87" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_tp_select_di" bpmnElement="t_tp_select">
+        <dc:Bounds x="1130" y="277" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_tp_notify_di" bpmnElement="t_tp_notify">
+        <dc:Bounds x="1280" y="37" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_tp_award_di" bpmnElement="t_tp_award">
+        <dc:Bounds x="1430" y="37" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="end_tp_award_di" bpmnElement="end_tp_award">
+        <dc:Bounds x="1612" y="59" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1586" y="101" width="89" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="ftp1_di" bpmnElement="ftp1">
+        <di:waypoint x="148" y="77" />
+        <di:waypoint x="230" y="77" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="ftp2_di" bpmnElement="ftp2">
+        <di:waypoint x="330" y="77" />
+        <di:waypoint x="380" y="77" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="ftp3_di" bpmnElement="ftp3">
+        <di:waypoint x="480" y="77" />
+        <di:waypoint x="562" y="77" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="ftp4_di" bpmnElement="ftp4">
+        <di:waypoint x="598" y="77" />
+        <di:waypoint x="680" y="77" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="ftp5_di" bpmnElement="ftp5">
+        <di:waypoint x="780" y="77" />
+        <di:waypoint x="810" y="77" />
+        <di:waypoint x="810" y="317" />
+        <di:waypoint x="830" y="317" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="ftp6_di" bpmnElement="ftp6">
+        <di:waypoint x="930" y="317" />
+        <di:waypoint x="1005" y="317" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="ftp7_di" bpmnElement="ftp7">
+        <di:waypoint x="1055" y="317" />
+        <di:waypoint x="1130" y="317" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1061" y="297" width="21" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="ftp8_di" bpmnElement="ftp8">
+        <di:waypoint x="1055" y="317" />
+        <di:waypoint x="1110" y="317" />
+        <di:waypoint x="1110" y="77" />
+        <di:waypoint x="1130" y="77" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1061" y="323" width="17" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="ftp9_di" bpmnElement="ftp9">
+        <di:waypoint x="1230" y="77" />
+        <di:waypoint x="1260" y="77" />
+        <di:waypoint x="1260" y="187" />
+        <di:waypoint x="1312" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="ftp10_di" bpmnElement="ftp10">
+        <di:waypoint x="1230" y="317" />
+        <di:waypoint x="1260" y="317" />
+        <di:waypoint x="1260" y="77" />
+        <di:waypoint x="1280" y="77" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="ftp11_di" bpmnElement="ftp11">
+        <di:waypoint x="1380" y="77" />
+        <di:waypoint x="1430" y="77" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="ftp12_di" bpmnElement="ftp12">
+        <di:waypoint x="1530" y="77" />
+        <di:waypoint x="1612" y="77" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="mftp1_di" bpmnElement="mftp1">
+        <di:waypoint x="430" y="117" />
+        <di:waypoint x="430" y="420" />
+        <di:waypoint x="430" y="450" />
+        <bpmndi:BPMNLabel><dc:Bounds x="436" y="413" width="93" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="mftp2_di" bpmnElement="mftp2">
+        <di:waypoint x="730" y="450" />
+        <di:waypoint x="730" y="420" />
+        <di:waypoint x="730" y="117" />
+        <bpmndi:BPMNLabel><dc:Bounds x="736" y="413" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
