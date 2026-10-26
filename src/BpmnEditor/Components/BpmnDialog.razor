@@ -1,0 +1,17 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnDialogBase
+
+@if (RenderDialog)
+{
+    <dialog @ref="DialogElement" class="@($"bpmn-dialog {Class}")" role="dialog" aria-modal="true" @onkeydown:stopPropagation="true" @attributes="AdditionalAttributes">
+        <header class="bpmn-dialog__header">
+            @TitleTemplate
+            <button type="button" class="bpmn-dialog__close" autofocus @onclick="@(() => OnDismiss.InvokeAsync())">@CloseText</button>
+        </header>
+        <div @ref="BodyElement" class="bpmn-dialog__body bpmn-dialog__content" tabindex="-1">@ChildContent</div>
+        @if (ActionTemplate is not null)
+        {
+            <footer class="bpmn-dialog__actions">@ActionTemplate</footer>
+        }
+    </dialog>
+}

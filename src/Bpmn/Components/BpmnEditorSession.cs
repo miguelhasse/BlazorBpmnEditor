@@ -717,6 +717,9 @@ public sealed partial class BpmnEditorSession
         _selectionAnchor = null;
         _labelEdit = null;
         _pendingCall = null;
+        _messageCatalog = new();
+        _messageFocusReturn = null;
+        _messageFocusPending = null;
         _armedTool = null;
         PendingImport = null;
 

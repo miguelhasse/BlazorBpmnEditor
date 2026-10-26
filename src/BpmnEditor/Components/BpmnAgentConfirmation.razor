@@ -2,14 +2,18 @@
 @namespace Hasseware.AspNetCore.Components.Bpmn
 @inherits BpmnAgentConfirmationBase
 
-@if (Request is { } request)
-{
-    <div class="@CssClass("bpmn-confirm")" role="alertdialog" aria-modal="true" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
-        <div class="bpmn-confirm__backdrop" @onclick="DenyAsync"></div>
-
+<BpmnDialog Visible="@(Request is not null)" Class="@CssClass("bpmn-confirm")" OnDismiss="DenyAsync" DismissOnBackdrop="true" role="alertdialog" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+    <TitleTemplate>
+        @if (Request is { } request)
+        {
+            <h2 class="bpmn-confirm__title">@request.Title</h2>
+        }
+    </TitleTemplate>
+    <ChildContent>
+    @if (Request is { } request)
+    {
         <div class="bpmn-confirm__panel @(request.IsDestructive ? "bpmn-confirm__panel--destructive" : null)">
             <p class="bpmn-confirm__origin">@EditorText("AgentConfirmation.RequestedBy", AgentName)</p>
-            <h2 class="bpmn-confirm__title">@request.Title</h2>
             <p class="bpmn-confirm__summary">@request.Summary</p>
 
             @if (request.Details.Count > 0)
@@ -26,14 +30,17 @@
                 </ul>
             }
 
-            <div class="bpmn-confirm__actions">
-                <button type="button" class="bpmn-confirm__deny" @onclick="DenyAsync">
-                    @EditorText("AgentConfirmation.Deny")
-                </button>
-                <button type="button" class="bpmn-confirm__allow" @onclick="AllowAsync">
-                    @EditorText("AgentConfirmation.Allow")
-                </button>
-            </div>
         </div>
-    </div>
-}
+    }
+    </ChildContent>
+    <ActionTemplate>
+        <div class="bpmn-confirm__actions @(Request?.IsDestructive == true ? "bpmn-confirm__panel--destructive" : null)">
+            <button type="button" class="bpmn-confirm__deny" @onclick="DenyAsync">
+                @EditorText("AgentConfirmation.Deny")
+            </button>
+            <button type="button" class="bpmn-confirm__allow" @onclick="AllowAsync">
+                @EditorText("AgentConfirmation.Allow")
+            </button>
+        </div>
+    </ActionTemplate>
+</BpmnDialog>

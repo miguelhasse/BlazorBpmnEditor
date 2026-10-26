@@ -3,11 +3,17 @@
 @inherits BpmnAgentConfirmationBase
 
 <FluentBpmnDialog Visible="@(Request is not null)" Class="@CssClass("bpmn-confirm")" OnDismiss="DenyAsync" role="alertdialog" aria-modal="true" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+    <TitleTemplate>
+        @if (Request is { } request)
+        {
+            <h2 class="bpmn-confirm__title">@request.Title</h2>
+        }
+    </TitleTemplate>
+    <ChildContent>
     @if (Request is { } request)
     {
         <div class="bpmn-confirm__panel @(request.IsDestructive ? "bpmn-confirm__panel--destructive" : null)">
             <p class="bpmn-confirm__origin">@EditorText("AgentConfirmation.RequestedBy", AgentName)</p>
-            <h2 class="bpmn-confirm__title">@request.Title</h2>
             <p class="bpmn-confirm__summary">@request.Summary</p>
 
             @if (request.Details.Count > 0)
@@ -20,14 +26,17 @@
                 </ul>
             }
 
-            <div class="bpmn-confirm__actions">
-                <FluentButton Type="ButtonType.Button" IconStart="@(new Icons.Regular.Size20.Dismiss())" Class="bpmn-confirm__deny" OnClick="DenyAsync">
-                    @EditorText("AgentConfirmation.Deny")
-                </FluentButton>
-                <FluentButton Type="ButtonType.Button" Class="bpmn-confirm__allow" OnClick="AllowAsync">
-                    @EditorText("AgentConfirmation.Allow")
-                </FluentButton>
-            </div>
         </div>
     }
+    </ChildContent>
+    <ActionTemplate>
+        <div class="bpmn-confirm__actions @(Request?.IsDestructive == true ? "bpmn-confirm__panel--destructive" : null)">
+            <FluentButton Type="ButtonType.Button" IconStart="@(new Icons.Regular.Size20.Dismiss())" Class="bpmn-confirm__deny" OnClick="DenyAsync">
+                @EditorText("AgentConfirmation.Deny")
+            </FluentButton>
+            <FluentButton Type="ButtonType.Button" Class="bpmn-confirm__allow" OnClick="AllowAsync">
+                @EditorText("AgentConfirmation.Allow")
+            </FluentButton>
+        </div>
+    </ActionTemplate>
 </FluentBpmnDialog>

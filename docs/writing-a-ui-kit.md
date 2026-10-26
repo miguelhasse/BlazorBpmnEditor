@@ -131,6 +131,28 @@ last matching predicate, FEEL editor, explicit kind, kit/default kind, then Core
 A property-panel `EntryTemplate` bypasses registry rendering. The optional Bpmn.Feel package can
 replace either kit's FEEL default without depending on either kit.
 
+## Dialog rendering
+
+All built-in modal parts use one header Close button and native Escape dismissal. Footer actions
+such as Cancel, Save, Open, Deny and Allow remain separate commands; do not add another generic
+Close action to the footer. Close/Escape must never accept an import, save a draft or approve an
+agent request.
+
+Standard `BpmnDialog` renders a native `<dialog>` and derives from Core's `BpmnDialogBase`.
+Core owns its small TypeScript modal lifecycle helper; it works without a canvas instance.
+`FluentBpmnDialog` uses inline `FluentDialog` and `FluentDialogBody`: `TitleTemplate` supplies
+heading content, `TitleActionTemplate` holds the wrapper-owned Close button, and `ActionTemplate`
+supplies footer actions. Neither kit requires a dialog service/provider.
+
+Keep wrappers mounted while setting `Visible=false`, allowing the native modal to close before
+host removal. Use `OnDismiss` for the existing non-accepting session action and `OnClosed` when
+focus restoration must wait for native modal release. Native modal behavior owns initial focus
+and Tab containment; no FirstButton/LastButton references or sentinel spans are needed. Use
+`FocusAsync` to focus the dialog's content region when replacing focused form content. This avoids leaving
+focus on the document body or redirecting an in-flight Enter keypress onto Close. Use
+stable form IDs and explicit form association for submit actions rendered outside their form.
+External-change offers remain nonmodal alerts.
+
 ## Performance
 
 `BpmnEditorComponentBase.ShouldRenderOnStateChange(previous, current)` defaults to `true`.
@@ -157,7 +179,8 @@ conservative exceptions and the both-kit render-budget harness.
 
 - Core owns all shared behavior. No kit references another kit or Core internals.
 - `BpmnCanvas` alone owns canvas `IJSObjectReference` / `DotNetObjectReference` handles;
-  `BpmnCanvasEventBridge` alone declares canvas `[JSInvokable]` methods. Kits own no JS modules.
+  `BpmnCanvasEventBridge` alone declares canvas `[JSInvokable]` methods. Core's `BpmnDialogBase`
+  separately owns native modal lifecycle interop without a canvas handle. Kits own no JS modules.
   Bpmn.Feel is a separate optional interop owner, not a kit implementation shortcut.
 - BPMN notation comes from `BpmnIconRegistry` / `BpmnIcon`, not a UI framework's generic icons.
   Framework icons are appropriate for undo, close and other non-BPMN chrome.

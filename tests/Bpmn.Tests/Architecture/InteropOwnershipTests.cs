@@ -9,10 +9,8 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Architecture;
 /// Enforces the ownership rules the interop design depends on.
 /// </summary>
 /// <remarks>
-/// These are the constraints that keep the JavaScript boundary to one lifetime and one owner
-/// (implementation plan section 5). They are the kind of rule that decays quietly under review
-/// pressure — a second component "just needs" a module reference once — so they are asserted
-/// mechanically rather than documented and hoped for.
+/// Canvas and native modal lifetimes have separate, explicit Core owners. Kits cannot create
+/// another interop owner or route modal behavior through a canvas instance.
 /// </remarks>
 public sealed class InteropOwnershipTests
 {
@@ -41,7 +39,7 @@ public sealed class InteropOwnershipTests
     }
 
     [Fact]
-    public void OnlyBpmnCanvasHoldsAJavaScriptModuleReference()
+    public void OnlyCanvasAndNativeDialogHoldJavaScriptModuleReferences()
     {
         // Async state machines are compiler-generated nested types that hoist locals into fields;
         // they belong to the method that declared them, not to a second owner.
@@ -55,11 +53,11 @@ public sealed class InteropOwnershipTests
             .Select(type => type.Name)
             .ToList();
 
-        Assert.Equal([nameof(BpmnCanvas)], owners);
+        Assert.Equal(new[] { nameof(BpmnCanvas), nameof(BpmnDialogBase) }.Order(), owners.Order());
     }
 
     [Fact]
-    public void OnlyTheEventBridgeDeclaresJSInvokableMethods()
+    public void OnlyCanvasBridgeAndNativeDialogDeclareJSInvokableMethods()
     {
         var owners = LibraryAssembly.GetTypes()
             .Where(type => type
@@ -68,14 +66,15 @@ public sealed class InteropOwnershipTests
             .Select(type => type.Name)
             .ToList();
 
-        Assert.Equal([nameof(BpmnCanvasEventBridge)], owners);
+        Assert.Equal(new[] { nameof(BpmnCanvasEventBridge), nameof(BpmnDialogBase) }.Order(), owners.Order());
     }
 
     [Fact]
-    public void OnlyBpmnCanvasSourceMentionsDotNetObjectReferenceOrModuleImport()
+    public void OnlyCanvasAndNativeDialogSourcesCreateInteropOwners()
     {
         var offenders = EnumerateLibrarySources()
             .Where(file => Path.GetFileName(file) != "BpmnCanvas.razor.cs")
+            .Where(file => Path.GetFileName(file) != "BpmnDialogBase.cs")
             .Where(file =>
             {
                 var text = File.ReadAllText(file);
@@ -108,6 +107,11 @@ public sealed class InteropOwnershipTests
         {
             Assert.Contains($"'{name}'", bridgeSource, StringComparison.Ordinal);
         }
+
+        var dialogSource = File.ReadAllText(Path.Combine(SourceRoot, "Bpmn.Scripts", "src", "interop", "dialog.ts"));
+        var dismiss = Assert.Single(typeof(BpmnDialogBase).GetMethods(),
+            method => method.GetCustomAttribute<JSInvokableAttribute>() is not null);
+        Assert.Contains($"'{dismiss.Name}'", dialogSource, StringComparison.Ordinal);
     }
 
     [Fact]

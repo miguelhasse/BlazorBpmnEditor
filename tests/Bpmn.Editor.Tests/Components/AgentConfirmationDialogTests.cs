@@ -84,7 +84,7 @@ public sealed class AgentConfirmationDialogTests : BunitContext
         var denied = await AskAsync(editor);
         await editor.Find(".bpmn-confirm__deny").ClickAsync(new());
         var dismissed = await AskAsync(editor);
-        await editor.Find(".bpmn-confirm__backdrop").ClickAsync(new());
+        await editor.InvokeAsync(() => editor.FindComponents<BpmnDialog>().Single(dialog => dialog.Instance.Visible).Instance.DismissAsync());
 
         Assert.False(await denied);
         Assert.False(await dismissed);

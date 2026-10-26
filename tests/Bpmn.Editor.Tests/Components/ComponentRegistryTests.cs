@@ -193,7 +193,7 @@ public sealed class ComponentRegistryTests : BunitContext
         var editor = Render<BpmnEditor>();
         Assert.Single(editor.FindComponents<BpmnToolbar>());
         Assert.Single(editor.FindComponents<BpmnPropertyPanel>());
-        Assert.Equal(7, editor.FindAll(".bpmn-toolbar button[type=button]").Count);
+        Assert.Equal(8, editor.FindAll(".bpmn-toolbar button[type=button]").Count);
         Assert.Equal("Zoom out", editor.Find(".bpmn-toolbar button").GetAttribute("aria-label"));
     }
 

@@ -61,6 +61,8 @@ public sealed class BpmnGeneralPropertiesProvider : IBpmnPropertiesProvider
             _ => BpmnPropertyEntryKind.Text,
         }, property.Value)
         {
+            EditorKey = property.Name == "messageRef" && property.Kind == BpmnPropertyKind.Choice && property.Group is BpmnPropertyGroupKind.SendTask
+                or BpmnPropertyGroupKind.ReceiveTask or BpmnPropertyGroupKind.MessageFlow ? "bpmn:messageReference" : null,
             ExpressionLanguage = IsExpression(property.Name)
                 ? property.Value?.StartsWith('=') == true ? BpmnExpressionLanguage.Feel : BpmnExpressionLanguage.Juel
                 : BpmnExpressionLanguage.None,

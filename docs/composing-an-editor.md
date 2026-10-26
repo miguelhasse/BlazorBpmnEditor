@@ -42,6 +42,7 @@ This example uses the standard kit's registered defaults but replaces its layout
         <BpmnPart Part="BpmnEditorPart.ValidationPanel" />
         <BpmnPart Part="BpmnEditorPart.ImportOffer" />
         <BpmnPart Part="BpmnEditorPart.CalledElementPicker" />
+        <BpmnPart Part="BpmnEditorPart.MessageCatalog" />
         <BpmnPart Part="BpmnEditorPart.ShortcutHelp" />
     </section>
 </BpmnEditorScope>
@@ -70,6 +71,14 @@ model-to-client coordinate flow and gesture refresh behavior.
 After initialization, `scope.Session` exposes commands such as `UndoAsync()`, `RedoAsync()` and
 `ValidateAsync()`. Session document/history commands work without a canvas. Canvas-only commands
 are no-ops until a canvas attaches. A scope accepts at most one attached canvas.
+
+Render `BpmnEditorPart.MessageCatalog` outside the canvas in custom layouts to support the toolbar
+and inline Message authoring actions. Both supplied compositions already include it. The part
+derives from `BpmnMessageCatalogBase`; hosts can replace it through the normal component options.
+`Session.ShowMessages()` opens document definitions, `NewMessage(ownerId)` creates a draft that
+will assign on save, and `NewMessage()` creates an unassigned draft. `SaveMessageAsync(name)`
+publishes through history; cancellation does not change the document. Standalone property forms
+without an authoring session retain Message selection but do not offer catalog actions.
 
 Stencil drop and keyboard creation target `Session.ActiveDiagramId`, including diagrams opened
 through drill-down. Blank-area creation uses that plane's Process or embedded Sub-Process;
@@ -165,6 +174,19 @@ Resolution order:
 Each kit composition supplies its own defaults, so both kits can share one DI container without
 registration order changing their appearance. A bare custom scope uses application defaults unless
 it supplies `KitDefaults`, for example `KitDefaults="@BpmnStandardDefaults.Kit"`.
+
+## Modal dialogs
+
+Built-in Message catalog, called-element picker, shortcut help, import preview and agent
+confirmation dialogs provide one header Close button and Escape dismissal. Closing cancels
+pending work (or denies an agent request); existing footer actions retain their meanings.
+External-change offers remain nonmodal alerts.
+
+Both kits use native modal focus containment without first/last-button markers. Standard HTML
+dialogs use `BpmnDialog` and Core's TypeScript lifecycle helper; Fluent dialogs use
+`FluentBpmnDialog` with `FluentDialogBody` title/body/action templates. Neither needs a dialog
+service/provider. Custom parts should preserve those dismissal and keyboard contracts; see
+[Writing a UI kit](writing-a-ui-kit.md#dialog-rendering).
 
 ## Offering the editor to browser agents
 

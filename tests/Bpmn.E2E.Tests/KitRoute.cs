@@ -98,7 +98,7 @@ internal static class KitRoute
                 const dialog = host.shadowRoot.querySelector('dialog');
                 await Promise.all(dialog.getAnimations().map(animation => animation.finished));
                 const surface = dialog.getBoundingClientRect();
-                const panel = host.querySelector('[class*="__panel"]').getBoundingClientRect();
+                const panel = host.querySelector('fluent-dialog-body').getBoundingClientRect();
                 return [dialog.clientWidth - panel.width, surface.left, surface.top,
                     surface.right, surface.bottom, window.innerWidth, window.innerHeight];
             }

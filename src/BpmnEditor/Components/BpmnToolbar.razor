@@ -91,5 +91,8 @@
                 @onclick="@ShowShortcutHelp">?</button>
     }
 
+    <button @ref="MessagesButton" type="button" class="bpmn-toolbar__button" data-message-action="manage"
+            disabled="@(!CanManageMessages)" @onclick="ShowMessages">@Text("MessageCatalog.Title")</button>
+
     @ChildContent
 </div>

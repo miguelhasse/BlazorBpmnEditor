@@ -27,6 +27,8 @@ public sealed class ImportOfferTests : BunitContext
         JSInterop.Mode = JSRuntimeMode.Strict;
         Services.AddBpmnEditor();
         _module = JSInterop.SetupModule(BpmnInteropContract.ModulePath);
+        _module.SetupVoid("showDialog", _ => true).SetVoidResult();
+        _module.SetupVoid("closeDialog", _ => true).SetVoidResult();
         _canvas = _module.SetupModule("initialize", _ => true);
         _canvas.Setup<CanvasInitResult>("getInitResult", _ => true)
             .SetResult(new CanvasInitResult(InstanceId, BpmnInteropContract.Version, 1, true, null));

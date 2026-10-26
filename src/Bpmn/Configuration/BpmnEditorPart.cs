@@ -54,4 +54,7 @@ public enum BpmnEditorPart
     /// <see cref="BpmnAgentConfirmationBase"/>.
     /// </summary>
     AgentConfirmation,
+
+    /// <summary>The document Message catalog; derives from <see cref="BpmnMessageCatalogBase"/>.</summary>
+    MessageCatalog,
 }

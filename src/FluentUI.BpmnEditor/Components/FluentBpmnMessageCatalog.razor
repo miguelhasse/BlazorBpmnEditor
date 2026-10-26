@@ -1,0 +1,69 @@
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
+@inherits BpmnMessageCatalogBase
+
+<FluentBpmnDialog @ref="_dialog" Visible="@Catalog.IsOpen" Class="@CssClass("bpmn-message-catalog")" CloseLabel="@Text("MessageCatalog.Close")" OnDismiss="CloseAsync" OnClosed="CompleteClose" aria-labelledby="@TitleId" @attributes="AdditionalAttributes">
+    <TitleTemplate>
+        <h2 id="@TitleId">@Text("MessageCatalog.Title")</h2>
+    </TitleTemplate>
+    <ChildContent>
+        <section class="bpmn-message-catalog__panel">
+            @if (Catalog.Error is { } error) { <p role="alert">@error</p> }
+            @if (Catalog.Draft is { } draft)
+            {
+                <form id="@($"{TitleId}-form")" @onsubmit="SaveAsync" @onsubmit:preventDefault>
+                    <p>@Text("MessageCatalog.Id"): <code>@draft.Id</code></p>
+                    <label>@Text("MessageCatalog.Name")
+                        <FluentTextInput AriaLabel="@Text("MessageCatalog.Name")" @bind-Value="DraftName" ReadOnly="@ReadOnly" Immediate="true" data-message-name />
+                    </label>
+                    @if (!draft.IsNew)
+                    {
+                        <p>@Text("MessageCatalog.SharedWarning")</p>
+                        @UsageContent(draft.Id)
+                    }
+                </form>
+            }
+            else if (Catalog.DeleteId is { } deleteId)
+            {
+                <p>@Text("MessageCatalog.ConfirmDelete", deleteId)</p>
+                @UsageContent(deleteId)
+            }
+            else
+            {
+                @if (!ReadOnly) { <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" data-message-action="new" OnClick="NewMessage">@Text("MessageCatalog.New")</FluentButton> }
+                @if (Messages.Count == 0) { <p>@Text("MessageCatalog.Empty")</p> }
+                <ul class="bpmn-message-catalog__list">
+                    @foreach (var message in Messages)
+                    {
+                        <li @key="message.Id" data-message-id="@message.Id">
+                            <strong>@NameOf(message)</strong> <code>@message.Id</code>
+                            @UsageContent(message.Id)
+                            @if (!ReadOnly)
+                            {
+                                <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" data-message-action="edit" OnClick="@(() => EditMessage(message.Id))">@Text("MessageCatalog.Edit")</FluentButton>
+                                <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" data-message-action="delete" Disabled="@(!CanDelete(message.Id))" aria-disabled="@(!CanDelete(message.Id) ? "true" : null)" OnClick="@(() => ConfirmDelete(message.Id))">@Text("MessageCatalog.Delete")</FluentButton>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+        </section>
+    </ChildContent>
+    <ActionTemplate>
+        @if (Catalog.Draft is not null)
+        {
+            @if (!ReadOnly) { <FluentButton Appearance="ButtonAppearance.Primary" Type="ButtonType.Submit" FormId="@($"{TitleId}-form")" role="button" Disabled="@Catalog.IsBusy" aria-disabled="@(Catalog.IsBusy ? "true" : null)" data-message-action="save">@Text("MessageCatalog.Save")</FluentButton> }
+            <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" OnClick="CancelEdit">@Text("MessageCatalog.Cancel")</FluentButton>
+        }
+        else if (Catalog.DeleteId is { } deleteId)
+        {
+            <FluentButton Appearance="ButtonAppearance.Primary" Type="ButtonType.Button" role="button" Disabled="@(ReadOnly || Catalog.IsBusy || !CanDelete(deleteId))" aria-disabled="@(ReadOnly || Catalog.IsBusy || !CanDelete(deleteId) ? "true" : null)" data-message-action="confirm-delete" OnClick="DeleteAsync">@Text("MessageCatalog.Delete")</FluentButton>
+            <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" OnClick="CancelEdit">@Text("MessageCatalog.Cancel")</FluentButton>
+        }
+    </ActionTemplate>
+</FluentBpmnDialog>
+
+@code {
+    private FluentBpmnDialog? _dialog;
+    protected override bool RestoreFocusOnClose => false;
+    protected override Task FocusDialogAsync() => _dialog?.FocusAsync().AsTask() ?? Task.CompletedTask;
+}

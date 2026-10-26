@@ -161,19 +161,6 @@
     font-size: 0.9rem;
     opacity: 0.8;
 }
-.fluent-bpmn-editor .bpmn-shortcut-help__close {
-    margin-block-start: 1.25rem;
-    padding: 0.35rem 1rem;
-    border-radius: 4px;
-    border: 1px solid var(--bpmn-surface-border);
-    background: transparent;
-    color: inherit;
-    font: inherit;
-    cursor: pointer;
-}
-.fluent-bpmn-editor .bpmn-shortcut-help__close:hover {
-    background: var(--bpmn-surface-hover);
-}
 .fluent-bpmn-editor .bpmn-stencil {
   display: flex;
   flex-direction: column;
@@ -255,6 +242,12 @@
   opacity: 0.8;
 }
 
+
+.fluent-bpmn-editor .bpmn-message-reference__actions { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-block-start: 0.25rem; }
+.fluent-bpmn-editor .bpmn-message-catalog::part(dialog) { width: min(42rem, 95vw); max-height: 85vh; overflow: auto; background: var(--bpmn-surface-background); color: var(--bpmn-surface-foreground); }
+.fluent-bpmn-editor .bpmn-message-catalog__panel button { margin: 0.25rem; font: inherit; }
+.fluent-bpmn-editor .bpmn-message-catalog__list { list-style: none; padding: 0; }
+.fluent-bpmn-editor .bpmn-message-catalog__list > li { padding-block: 0.75rem; border-block-end: 1px solid var(--bpmn-surface-border); overflow-wrap: anywhere; }
 
 .fluent-bpmn-editor .bpmn-picker__title {
   margin-block: 0 0.75rem;
@@ -1131,6 +1124,8 @@
 }
 .fluent-bpmn-editor .fluent-input-container { min-inline-size: 0; inline-size: 100%; }
 
+.fluent-bpmn-editor fluent-dialog.bpmn-dialog { display: contents; }
+
 .fluent-bpmn-editor :is(.bpmn-import, .bpmn-picker, .bpmn-shortcut-help, .bpmn-confirm) {
   --dialog-backdrop: var(--bpmn-overlay-scrim);
 }
@@ -1153,7 +1148,7 @@
   max-inline-size: none;
   max-block-size: none;
   overflow: visible;
-  padding: 1.25rem 1.5rem;
+  padding: 0;
   border: 0;
   border-radius: 0;
   background: transparent;

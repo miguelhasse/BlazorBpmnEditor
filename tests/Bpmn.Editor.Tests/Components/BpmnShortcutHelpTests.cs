@@ -1,8 +1,7 @@
 using Bunit;
 
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
-
-using Microsoft.AspNetCore.Components.Web;
+using Hasseware.AspNetCore.Components.Bpmn.Interop;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Components;
 
@@ -16,6 +15,13 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Components;
 /// </remarks>
 public sealed class BpmnShortcutHelpTests : BunitContext
 {
+    public BpmnShortcutHelpTests()
+    {
+        var module = JSInterop.SetupModule(BpmnInteropContract.ModulePath);
+        module.SetupVoid("showDialog", _ => true).SetVoidResult();
+        module.SetupVoid("closeDialog", _ => true).SetVoidResult();
+    }
+
     [Fact]
     public void RendersNothingWhileHidden()
     {
@@ -105,42 +111,40 @@ public sealed class BpmnShortcutHelpTests : BunitContext
     }
 
     [Fact]
-    public void ClosesOnEscape()
+    public async Task ClosesOnNativeDismissal()
     {
         BpmnEditorSession? session = null;
         var component = this.RenderSeeded<BpmnShortcutHelp>(seed => seed.ShowHelp()
             .Bindings(KeyboardOptions.Default.Bindings)
             .Session(s => session = s));
 
-        component.Find(".bpmn-shortcut-help").KeyDown(new KeyboardEventArgs { Key = "Escape" });
+        await component.InvokeAsync(() => component.FindComponent<BpmnDialog>().Instance.DismissAsync());
 
         Assert.False(session!.State.ShortcutHelpVisible);
     }
 
     [Fact]
-    public void IgnoresOtherKeys()
+    public void DelegatesKeyboardDismissalToNativeModal()
     {
         BpmnEditorSession? session = null;
         var component = this.RenderSeeded<BpmnShortcutHelp>(seed => seed.ShowHelp()
             .Bindings(KeyboardOptions.Default.Bindings)
             .Session(s => session = s));
 
-        component.Find(".bpmn-shortcut-help").KeyDown(new KeyboardEventArgs { Key = "a" });
-
+        Assert.Single(component.FindAll("dialog"));
         Assert.True(session!.State.ShortcutHelpVisible);
     }
 
     [Fact]
-    public void ClosesOnTheBackdrop()
+    public void EnablesNativeBackdropDismissal()
     {
         BpmnEditorSession? session = null;
         var component = this.RenderSeeded<BpmnShortcutHelp>(seed => seed.ShowHelp()
             .Bindings(KeyboardOptions.Default.Bindings)
             .Session(s => session = s));
 
-        component.Find(".bpmn-shortcut-help__backdrop").Click();
-
-        Assert.False(session!.State.ShortcutHelpVisible);
+        Assert.True(component.FindComponent<BpmnDialog>().Instance.DismissOnBackdrop);
+        Assert.True(session!.State.ShortcutHelpVisible);
     }
 
     [Fact]
@@ -151,7 +155,7 @@ public sealed class BpmnShortcutHelpTests : BunitContext
             .Bindings(KeyboardOptions.Default.Bindings)
             .Session(s => session = s));
 
-        component.Find(".bpmn-shortcut-help__close").Click();
+        component.Find(".bpmn-dialog__header .bpmn-dialog__close").Click();
 
         Assert.False(session!.State.ShortcutHelpVisible);
     }

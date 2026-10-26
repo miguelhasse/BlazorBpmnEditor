@@ -42,6 +42,7 @@ public static class FluentBpmnDefaults
             .UseDefault<FluentBpmnExternalChangeOffer>(BpmnEditorPart.ExternalChangeOffer)
             .UseDefault<FluentBpmnAgentConfirmation>(BpmnEditorPart.AgentConfirmation)
             .UseDefault<FluentBpmnCalledElementPicker>(BpmnEditorPart.CalledElementPicker)
+            .UseDefault<FluentBpmnMessageCatalog>(BpmnEditorPart.MessageCatalog)
             .UseDefault<FluentBpmnShortcutHelp>(BpmnEditorPart.ShortcutHelp)
             .UseDefault<BpmnLabelEditor>(BpmnEditorPart.LabelEditor)
             .UseDefault<BpmnAccessibleTree>(BpmnEditorPart.AccessibleTree);
@@ -58,6 +59,7 @@ public static class FluentBpmnDefaults
             .UseDefaultEditor<FluentBpmnCheckboxEntry>(BpmnPropertyEntryKind.Checkbox)
             .UseDefaultEditor<FluentBpmnNumberEntry>(BpmnPropertyEntryKind.Number)
             .UseDefaultEditor<FluentBpmnSelectEntry>(BpmnPropertyEntryKind.Select)
+            .UseDefaultEditor<FluentBpmnMessageReferenceEntry>("bpmn:messageReference")
             .UseDefaultEditor<FluentBpmnListEntry>(BpmnPropertyEntryKind.List)
             .UseDefaultFeelEditor<FluentBpmnFeelEntry>();
     }

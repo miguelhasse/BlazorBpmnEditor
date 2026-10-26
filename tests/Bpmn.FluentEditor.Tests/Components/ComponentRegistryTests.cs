@@ -194,7 +194,7 @@ public sealed class ComponentRegistryTests : FluentTestContext
         var editor = Render<FluentBpmnEditor>();
         Assert.Single(editor.FindComponents<FluentBpmnToolbar>());
         Assert.Single(editor.FindComponents<FluentBpmnPropertyPanel>());
-        Assert.Equal(7, editor.FindAll(".bpmn-toolbar fluent-button[type=button]").Count);
+        Assert.Equal(8, editor.FindAll(".bpmn-toolbar fluent-button[type=button]").Count);
         Assert.Equal("Zoom out", editor.Find(".bpmn-toolbar fluent-button").GetAttribute("aria-label"));
     }
 

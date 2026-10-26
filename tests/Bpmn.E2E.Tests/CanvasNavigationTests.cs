@@ -145,7 +145,7 @@ public partial class CanvasNavigationTests(DemoAppFixture app) : PageTest, IClas
         await Expect(Page.Locator(".demo-edit-status")).ToContainTextAsync(id);
         await Page.GetByRole(AriaRole.Button, new() { Name = "Show keyboard shortcuts" }).ClickAsync();
         await Expect(dialog).ToBeVisibleAsync();
-        await Page.Locator(".bpmn-shortcut-help__close").ClickAsync();
+        await Page.Locator(".bpmn-shortcut-help .bpmn-dialog__close").ClickAsync();
         await Expect(Page.Locator(".bpmn-shortcut-help")).ToHaveCountAsync(0);
         await Page.GetByRole(AriaRole.Button, new() { Name = "Fit" }).ClickAsync();
     }
@@ -164,7 +164,7 @@ public partial class CanvasNavigationTests(DemoAppFixture app) : PageTest, IClas
         var trigger = Page.GetByRole(AriaRole.Button, new() { Name = "Show keyboard shortcuts" });
         await trigger.ClickAsync();
         await Expect(Page.ShortcutDialog()).ToBeVisibleAsync();
-        await Page.Locator(".bpmn-shortcut-help__close").ClickAsync();
+        await Page.Locator(".bpmn-shortcut-help .bpmn-dialog__close").ClickAsync();
         await Expect(Page.Locator(".bpmn-shortcut-help")).ToHaveCountAsync(0);
         await Expect(trigger).ToBeFocusedAsync();
     }
@@ -187,7 +187,7 @@ public partial class CanvasNavigationTests(DemoAppFixture app) : PageTest, IClas
             host => {
                 const dialog = host.shadowRoot.querySelector('dialog');
                 const surface = dialog.getBoundingClientRect();
-                const panel = host.querySelector('.bpmn-shortcut-help__panel').getBoundingClientRect();
+                const panel = host.querySelector('fluent-dialog-body').getBoundingClientRect();
                 const descriptions = [...host.querySelectorAll('dd')].map(row => row.getBoundingClientRect().left);
                 return [surface.width - panel.width, surface.left, surface.top,
                     surface.right, surface.bottom, Math.max(...descriptions) - Math.min(...descriptions),
@@ -202,7 +202,7 @@ public partial class CanvasNavigationTests(DemoAppFixture app) : PageTest, IClas
         Assert.InRange(layout[4], 0, height);
         Assert.InRange(layout[5], 0, 1);
         Assert.InRange(layout[6], 0, 1);
-        await Page.Locator(".bpmn-shortcut-help__close").ClickAsync();
+        await Page.Locator(".bpmn-shortcut-help .bpmn-dialog__close").ClickAsync();
         await Expect(Page.Locator(".bpmn-shortcut-help")).ToHaveCountAsync(0);
     }
 

@@ -14,6 +14,7 @@ public sealed class BpmnPropertyEditorRegistry
     private readonly Dictionary<BpmnPropertyEntryKind, Type> _defaultKinds = [];
     private readonly Dictionary<BpmnPropertyEntryKind, Type> _kinds = [];
     private readonly Dictionary<string, Type> _keys = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, Type> _defaultKeys = new(StringComparer.Ordinal);
     private readonly List<(Func<BpmnPropertyEntry, bool> Predicate, Type Component)> _predicates = [];
 
     /// <summary>Registers an editor for a kind.</summary>
@@ -57,6 +58,14 @@ public sealed class BpmnPropertyEditorRegistry
         return this;
     }
 
+    /// <summary>Registers a keyed kit default without replacing host editors.</summary>
+    public BpmnPropertyEditorRegistry UseDefaultEditor<TComponent>(string key) where TComponent : IComponent
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+        if (_defaultKeys.TryAdd(key, typeof(TComponent))) Revision++;
+        return this;
+    }
+
     /// <summary>Registers the FEEL editor unless the host has replaced it; for UI kits.</summary>
     public BpmnPropertyEditorRegistry UseDefaultFeelEditor<TComponent>() where TComponent : IComponent
     {
@@ -77,6 +86,8 @@ public sealed class BpmnPropertyEditorRegistry
         var merged = new BpmnPropertyEditorRegistry { _feelEditor = _feelEditor, _defaultFeelEditor = kit._defaultFeelEditor ?? _defaultFeelEditor };
         foreach (var pair in _kinds) merged._kinds[pair.Key] = pair.Value;
         foreach (var pair in _keys) merged._keys[pair.Key] = pair.Value;
+        foreach (var pair in kit._defaultKeys) merged._defaultKeys[pair.Key] = pair.Value;
+        foreach (var pair in _defaultKeys) merged._defaultKeys.TryAdd(pair.Key, pair.Value);
         merged._predicates.AddRange(_predicates);
         foreach (var pair in kit._defaultKinds) merged._defaultKinds[pair.Key] = pair.Value;
         foreach (var pair in _defaultKinds) merged._defaultKinds.TryAdd(pair.Key, pair.Value);
@@ -95,6 +106,7 @@ public sealed class BpmnPropertyEditorRegistry
         }
         if (entry.Feel is BpmnFeelMode.Required or BpmnFeelMode.Optional && (_feelEditor ?? _defaultFeelEditor) is { } feel) return feel;
         if (_kinds.TryGetValue(entry.Kind, out var component)) return component;
+        if (entry.EditorKey is { } defaultKey && _defaultKeys.TryGetValue(defaultKey, out var keyedDefault)) return keyedDefault;
         return _defaultKinds.GetValueOrDefault(entry.Kind) ?? typeof(BpmnReadOnlyEntry);
     }
 }

@@ -2,7 +2,16 @@
 
 @if (Visible || _shown || _transitioning)
 {
-    <FluentDialog @ref="_dialog" Class="@Class" Modal="true" @ondialogtoggle="StateChangedAsync" @attributes="AdditionalAttributes">
-        @ChildContent
+    <FluentDialog @ref="_dialog" Class="@($"bpmn-dialog {Class}")" Modal="true" PreventDismissOnEscape="false" @ondialogtoggle="StateChangedAsync" @onkeydown:stopPropagation="true" @attributes="AdditionalAttributes">
+        <FluentDialogBody>
+            <TitleTemplate>@TitleTemplate</TitleTemplate>
+            <TitleActionTemplate>
+                <FluentButton Type="ButtonType.Button" Appearance="ButtonAppearance.Outline" Class="bpmn-dialog__close" role="button" AutoFocus="true" OnClick="@(() => OnDismiss.InvokeAsync())">@CloseText</FluentButton>
+            </TitleActionTemplate>
+            <ChildContent>
+                <div @ref="_body" class="bpmn-dialog__content" tabindex="-1">@ChildContent</div>
+            </ChildContent>
+            <ActionTemplate>@ActionTemplate</ActionTemplate>
+        </FluentDialogBody>
     </FluentDialog>
 }

@@ -12,6 +12,16 @@ internal static class KitFixture
         return Task.CompletedTask;
     }
 
+    public static Task ChangeMessageNameAsync(IRenderedComponent<Microsoft.AspNetCore.Components.DynamicComponent> editor, string value)
+    {
+        editor.Find("[data-message-name]").Change(value);
+        return Task.CompletedTask;
+    }
+    public static Task SelectMessageAsync(IRenderedComponent<Microsoft.AspNetCore.Components.DynamicComponent> editor, string value)
+    {
+        editor.Find(".bpmn-message-reference select").Change(value);
+        return Task.CompletedTask;
+    }
     public static Task ConfirmAnnotationNormalizationAsync(IRenderedComponent<BpmnPart> offer)
     {
         offer.Find(".bpmn-import__annotation-consent").Change(true);

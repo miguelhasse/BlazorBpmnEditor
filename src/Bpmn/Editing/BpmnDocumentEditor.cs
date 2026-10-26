@@ -164,6 +164,9 @@ public static partial class BpmnDocumentEditor
             ExpandSubProcessCommand expand => ApplyExpand(document, expand, options),
             CollapseSubProcessCommand collapse => ApplyCollapse(document, collapse, options),
             UpdatePropertiesCommand properties => ApplyProperties(document, properties, options),
+            CreateMessageCommand createMessage => ApplyCreateMessage(document, createMessage),
+            UpdateMessageNameCommand updateMessage => ApplyUpdateMessageName(document, updateMessage),
+            DeleteMessageCommand deleteMessage => ApplyDeleteMessage(document, deleteMessage.ElementId),
             SetExtensionValueCommand extension => ApplyExtensionValue(document, extension, options),
             SetLoopExtensionValueCommand extension => ApplyLoopExtensionValue(document, extension, options),
             ReplaceCamundaCollectionCommand camunda => ApplyCamundaCollection(document, camunda, options),
@@ -2340,6 +2343,22 @@ public static partial class BpmnDocumentEditor
                 new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "EDIT-020", "A delete must name at least one element."));
         }
 
+        var messagesToDelete = command.ElementIds
+            .Where(id => document.Find(id) is BpmnMessage)
+            .ToHashSet(StringComparer.Ordinal);
+        foreach (var messageId in messagesToDelete)
+        {
+            var inspection = BpmnMessageCatalog.Inspect(document, messageId)!;
+            if (!inspection.CanDelete)
+            {
+                return BpmnEditResult.Reject(document, new BpmnEditDiagnostic(
+                    BpmnEditSeverity.Rejected,
+                    "MSG-004",
+                    inspection.Reason ?? "This Message cannot be deleted safely.",
+                    messageId));
+            }
+        }
+
         var diagnostics = new List<BpmnEditDiagnostic>();
         var lanes = new HashSet<string>(StringComparer.Ordinal);
         var roots = new HashSet<string>(StringComparer.Ordinal);
@@ -2389,8 +2408,19 @@ public static partial class BpmnDocumentEditor
             .ToList();
 
         var edited = RefillPools(RemoveElements(document, removed, lanes), pools);
+        if (messagesToDelete.Count > 0)
+        {
+            edited = edited with
+            {
+                Catalog = edited.Catalog with
+                {
+                    Messages = [.. edited.Catalog.Messages.Where(message => !messagesToDelete.Contains(message.Id))],
+                },
+            };
+        }
 
         removed.UnionWith(lanes);
+        removed.UnionWith(messagesToDelete);
         return BpmnEditResult.Applied(edited, diagnostics) with
         {
             DeletedElementIds = removed.ToFrozenSet(StringComparer.Ordinal),

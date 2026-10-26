@@ -169,6 +169,28 @@ Hosts can supply the classifier in custom snapshots, or use `IBpmnPropertiesProv
 keeps its existing name and priority; `FromDescriptor` copies classification into entry `GroupId`.
 Provider-supplied labels remain host-owned rather than automatically translated.
 
+### Message definitions
+
+Use **New message** beside a Send/Receive Task's **Message** selector to create a root-level
+`bpmn:message` and assign it in one undo step. Message Flows use the same control. **Edit shared
+message** changes the definition's name, not the selected task's name; the dialog shows usages
+and warns that engine runtime message names may change. **Manage messages**, or **Messages** in
+the toolbar, opens the document catalog without assigning catalog-created definitions.
+
+Names may be blank or duplicated; choices include IDs to distinguish them. IDs are generated,
+document-unique, and read-only. Name edits preserve payload type, documentation and vendor data.
+Only safely unused definitions can be deleted, after confirmation. Task, event, Message Flow,
+Operation, and retained-source references block deletion; opaque content may also block deletion
+when its references cannot be inspected safely. Clearing a selector does not delete its definition.
+
+The catalog is inspectable in read-only mode. Cancel writes nothing; Save and Delete use the
+same history/publication path as diagram edits. Messages are definitions, not canvas shapes:
+creating one adds no DI geometry, Message Flow, transport binding, or correlation configuration.
+
+Core hosts can use `CreateMessageCommand`, `UpdateMessageNameCommand`, and `DeleteMessageCommand`.
+For atomic creation plus assignment, combine creation with an `UpdatePropertiesCommand` setting
+`messageRef` inside a `CompoundCommand`.
+
 ### Extension commands
 
 | Extension command | Use |

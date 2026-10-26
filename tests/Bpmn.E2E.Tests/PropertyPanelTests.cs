@@ -315,6 +315,64 @@ public class PropertyPanelTests(DemoAppFixture app) : PageTest, IClassFixture<De
 
     // --- helpers ------------------------------------------------------------------
 
+    [Theory]
+    [InlineData("Send Task")]
+    [InlineData("Receive Task")]
+    public async Task CreatesMessageFromTaskAndPersistsRootDefinition(string taskType)
+    {
+        await GoToEditorAsync();
+        Assert.True(Page.Context.Browser?.IsConnected);
+        await ShowPanelAsync();
+        var taskId = await TaskIdAsync();
+        await Page.Locator($".joint-cell[model-id='{taskId}'] [joint-selector='body']").First
+            .ClickAsync(new() { Button = MouseButton.Right });
+        await Page.PickAsync(Page.Locator(".bpmn-menu__type-select"), taskType);
+        await Page.Keyboard.PressAsync("Escape");
+        await SelectAsync(taskId);
+        await Page.Locator(".bpmn-message-reference [data-message-action=new]").ClickAsync();
+        var dialog = Page.Locator(".bpmn-message-catalog");
+        await Expect(dialog).ToBeVisibleAsync();
+        await Expect(dialog.Locator("[data-message-action=save]")).ToBeVisibleAsync();
+        await dialog.GetByRole(AriaRole.Textbox, new() { Name = "Message name (optional)" }).FillAsync("OrderSubmitted");
+        await dialog.GetByRole(AriaRole.Button, new() { Name = "Save", Exact = true }).ClickAsync();
+        await Expect(dialog).ToBeHiddenAsync();
+        Assert.True(await Page.Locator(".bpmn-message-reference").EvaluateAsync<bool>(
+            "element => element === document.activeElement || element.contains(document.activeElement)"),
+            await Page.EvaluateAsync<string>("() => document.activeElement?.outerHTML ?? 'none'"));
+        await Expect(Page.Locator(".bpmn-message-reference").GetByRole(AriaRole.Combobox))
+            .ToContainTextAsync("OrderSubmitted");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Messages", Exact = true }).ClickAsync();
+        await Expect(dialog.GetByRole(AriaRole.Button, new() { Name = "Delete", Exact = true })).ToBeDisabledAsync();
+        await dialog.GetByRole(AriaRole.Button, new() { Name = "Edit name", Exact = true }).ClickAsync();
+        await Expect(dialog).ToContainTextAsync("This definition is shared");
+        await dialog.GetByRole(AriaRole.Textbox, new() { Name = "Message name (optional)" }).FillAsync("OrderSubmittedV2");
+        await dialog.GetByRole(AriaRole.Button, new() { Name = "Save", Exact = true }).ClickAsync();
+        await dialog.GetByRole(AriaRole.Button, new() { Name = "Close", Exact = true }).ClickAsync();
+        await Expect(dialog).ToBeHiddenAsync();
+
+        await Page.OpenDemoFilesAsync();
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Export XML", Exact = true }).ClickAsync();
+        var xml = await Page.Locator(".demo-export-xml").TextContentAsync() ?? throw new InvalidOperationException("XML export is empty.");
+        var saved = Serialization.BpmnXmlReader.Read(xml).Document;
+        var message = Assert.Single(saved.Catalog.Messages);
+        Assert.Equal("OrderSubmittedV2", message.Name);
+        Assert.True(message.Id == saved.FindFlowNode(taskId)!.MessageRef, xml);
+        Assert.DoesNotContain(saved.Diagrams.SelectMany(diagram => diagram.Plane.Shapes), shape => shape.BpmnElement == message.Id);
+        await Page.Locator(".demo-exported > summary").DispatchEventAsync("click");
+        var transfer = await Page.EvaluateHandleAsync("""
+            xml => {
+              const transfer = new DataTransfer();
+              transfer.items.add(new File([xml], 'messages.bpmn', { type: 'application/xml' }));
+              return transfer;
+            }
+            """, xml);
+        await Page.Locator(".bpmn-canvas").DispatchEventAsync("drop", new Dictionary<string, object> { ["dataTransfer"] = transfer });
+        await Page.ImportAccept().ClickAsync();
+        await Expect(Page.Locator(".bpmn-import")).ToHaveCountAsync(0);
+        await Page.Locator(".bpmn-a11y-tree__item", new() { HasTextString = "Review Request" }).FocusAsync();
+        await Expect(Page.Locator(".bpmn-message-reference").GetByRole(AriaRole.Combobox)).ToContainTextAsync("OrderSubmittedV2");
+    }
+
     /// <summary>The label as drawn, with the wrapper's line breaks turned back into spaces.</summary>
     private Task<string> DrawnLabelAsync(string modelId) => Page.EvaluateAsync<string>(
         $$"""

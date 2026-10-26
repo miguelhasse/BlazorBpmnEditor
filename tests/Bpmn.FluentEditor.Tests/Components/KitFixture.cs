@@ -21,6 +21,12 @@ internal static class KitFixture
         return editor.InvokeAsync(() => picker.Instance.ValueChanged.InvokeAsync(color));
     }
 
+    public static Task ChangeMessageNameAsync(IRenderedComponent<Microsoft.AspNetCore.Components.DynamicComponent> editor, string value) =>
+        editor.InvokeAsync(() => editor.FindComponents<FluentTextInput>().Single(input =>
+            input.Instance.AdditionalAttributes?.ContainsKey("data-message-name") == true).Instance.ValueChanged.InvokeAsync(value));
+    public static Task SelectMessageAsync(IRenderedComponent<Microsoft.AspNetCore.Components.DynamicComponent> editor, string value) =>
+        editor.InvokeAsync(() => editor.FindComponents<FluentSelect<BpmnPropertyChoice, string>>().Single(input =>
+            input.Instance.AriaLabel == "Message").Instance.ValueChanged.InvokeAsync(value));
     public static Task ConfirmAnnotationNormalizationAsync(IRenderedComponent<BpmnPart> offer) =>
         offer.InvokeAsync(() => offer.FindComponent<FluentCheckbox>().Instance.ValueChanged.InvokeAsync(true));
 

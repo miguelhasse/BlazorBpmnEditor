@@ -5,11 +5,16 @@
 @using Hasseware.AspNetCore.Components.Bpmn.Serialization
 
 <FluentBpmnDialog Visible="@(Preview is not null)" Class="@CssClass("bpmn-import")" OnDismiss="CancelAsync" role="dialog" aria-modal="true" aria-label="@EffectiveAriaLabel" @attributes="AdditionalAttributes">
+    <TitleTemplate>
+        @if (Preview is { } preview)
+        {
+            <h2 class="bpmn-import__title">@EditorText("ImportOffer.Title", preview.FileName)</h2>
+        }
+    </TitleTemplate>
+    <ChildContent>
     @if (Preview is { } preview)
     {
-
         <div class="bpmn-import__panel">
-            <h2 class="bpmn-import__title">@EditorText("ImportOffer.Title", preview.FileName)</h2>
 
             @if (preview.Error is { Length: > 0 } error)
             {
@@ -116,7 +121,11 @@
 
             <p class="bpmn-import__note">@EditorText("ImportOffer.Note")</p>
 
-            <div class="bpmn-import__actions">
+        </div>
+    }
+    </ChildContent>
+    <ActionTemplate>
+        <div class="bpmn-import__actions">
                 <FluentButton Type="ButtonType.Button" IconStart="@(new Icons.Regular.Size20.Dismiss())" Class="bpmn-import__cancel" OnClick="CancelAsync">
                     @EditorText("ImportOffer.Cancel")
                 </FluentButton>
@@ -128,6 +137,5 @@
                     @EditorText("ImportOffer.Open")
                 </FluentButton>
             </div>
-        </div>
-    }
+    </ActionTemplate>
 </FluentBpmnDialog>

@@ -125,6 +125,11 @@ public sealed record BpmnEditorState
     /// <summary>Whether a Call Activity awaits a definition.</summary>
     public bool IsPickingCalledElement { get; init; }
 
+    /// <summary>The document Message catalog and pending form.</summary>
+    public BpmnMessageCatalogState MessageCatalog { get; init; } = new();
+
+    internal string? MessageFocusOrigin { get; init; }
+
     /// <summary>The callable processes and global tasks.</summary>
     public ImmutableArray<(string Id, string? Name)> CallableDefinitions { get; init; } = [];
 

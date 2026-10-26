@@ -10,6 +10,21 @@ public sealed class FluentBpmnDialogTests : FluentTestContext
     private const string Hide = "Microsoft.FluentUI.Blazor.Components.Dialog.Hide";
 
     [Fact]
+    public void UsesBodyTemplatesAndOneHeaderClose()
+    {
+        var component = Render<FluentBpmnDialog>(parameters => parameters
+            .Add(p => p.TitleTemplate, "<h2>Title</h2>")
+            .Add(p => p.ChildContent, "<p>Body</p>")
+            .Add(p => p.ActionTemplate, "<button>Save</button>"));
+        var body = component.FindComponent<FluentDialogBody>().Instance;
+        Assert.NotNull(body.TitleTemplate);
+        Assert.NotNull(body.TitleActionTemplate);
+        Assert.NotNull(body.ActionTemplate);
+        Assert.Equal("Close", Assert.Single(component.FindAll(".bpmn-dialog__close")).TextContent.Trim());
+        Assert.Empty(component.FindAll("span[tabindex]"));
+    }
+
+    [Fact]
     public void HiddenDialogDoesNotOpenNativeModal()
     {
         var component = Render<FluentBpmnDialog>(parameters => parameters.Add(p => p.Visible, false));

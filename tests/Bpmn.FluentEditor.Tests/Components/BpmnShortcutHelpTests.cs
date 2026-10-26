@@ -158,7 +158,7 @@ public sealed class BpmnShortcutHelpTests : FluentTestContext
             .Bindings(KeyboardOptions.Default.Bindings)
             .Session(s => session = s));
 
-        component.Find(".bpmn-shortcut-help__close").Click();
+        component.Find(".bpmn-dialog__close").Click();
 
         Assert.False(session!.State.ShortcutHelpVisible);
     }

@@ -41,6 +41,7 @@ public static class BpmnStandardDefaults
             .UseDefault<BpmnExternalChangeOffer>(BpmnEditorPart.ExternalChangeOffer)
             .UseDefault<BpmnAgentConfirmation>(BpmnEditorPart.AgentConfirmation)
             .UseDefault<BpmnCalledElementPicker>(BpmnEditorPart.CalledElementPicker)
+            .UseDefault<BpmnMessageCatalog>(BpmnEditorPart.MessageCatalog)
             .UseDefault<BpmnShortcutHelp>(BpmnEditorPart.ShortcutHelp);
     }
 
@@ -55,6 +56,7 @@ public static class BpmnStandardDefaults
             .UseDefaultEditor<BpmnCheckboxEntry>(BpmnPropertyEntryKind.Checkbox)
             .UseDefaultEditor<BpmnNumberEntry>(BpmnPropertyEntryKind.Number)
             .UseDefaultEditor<BpmnSelectEntry>(BpmnPropertyEntryKind.Select)
+            .UseDefaultEditor<BpmnMessageReferenceEntry>("bpmn:messageReference")
             .UseDefaultEditor<BpmnListEntry>(BpmnPropertyEntryKind.List)
             .UseDefaultFeelEditor<BpmnFeelEntry>();
     }

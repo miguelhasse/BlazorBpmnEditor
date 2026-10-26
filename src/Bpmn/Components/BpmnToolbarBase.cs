@@ -22,6 +22,8 @@ public abstract class BpmnToolbarBase : BpmnEditorComponentBase
     protected override bool ShouldRenderOnStateChange(BpmnEditorState previous, BpmnEditorState current) =>
         ChildContent is not null || previous.Zoom != current.Zoom || previous.IsReadOnly != current.IsReadOnly
             || previous.CanUndo != current.CanUndo || previous.CanRedo != current.CanRedo
+            || previous.Document != current.Document || previous.MessageCatalog != current.MessageCatalog
+            || previous.MessageFocusOrigin != current.MessageFocusOrigin;
             || ShowColorPicker && (previous.Document != current.Document
                 || previous.ActiveDiagramId != current.ActiveDiagramId || previous.Selection != current.Selection);
 
@@ -142,5 +144,21 @@ public abstract class BpmnToolbarBase : BpmnEditorComponentBase
     protected Task RedoAsync() => Session.RedoAsync();
 
     /// <summary>Opens the keyboard shortcut help.</summary>
-    protected void ShowShortcutHelp() => Session.ShowShortcutHelp();
+    protected void ShowShortcuts() => Session.ShowShortcutHelp();
+
+    /// <summary>The document catalog's invoking control.</summary>
+    protected ElementReference MessagesButton { get; set; }
+
+    /// <summary>Whether a document catalog can be opened.</summary>
+    protected bool CanManageMessages => State.Document is not null && Session.HasMessageCatalog;
+
+    /// <summary>Opens the document-level Message catalog.</summary>
+    protected void ShowMessages() => Session.ShowMessages();
+
+    /// <inheritdoc />
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (Session.TakeMessageFocus("toolbar"))
+            await MessagesButton.FocusAsync(preventScroll: true).ConfigureAwait(true);
+    }
 }

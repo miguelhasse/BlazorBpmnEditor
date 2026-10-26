@@ -1,7 +1,6 @@
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace Hasseware.AspNetCore.Components.Bpmn;
 
@@ -24,9 +23,6 @@ public abstract class BpmnShortcutHelpBase : BpmnEditorComponentBase
         previous.ShortcutHelpVisible != current.ShortcutHelpVisible
             || !ReferenceEquals(previous.Configuration, current.Configuration);
 
-    private bool _wasVisible;
-    private bool _focusPending;
-
     /// <summary>A stable id prefix for the overlay's labelled-by relationships.</summary>
     protected string Id { get; } = $"bpmn-shortcuts-{Guid.NewGuid():N}";
 
@@ -48,9 +44,6 @@ public abstract class BpmnShortcutHelpBase : BpmnEditorComponentBase
 
     /// <summary>Whether the overlay is shown.</summary>
     protected bool IsVisible => State.ShortcutHelpVisible;
-
-    /// <summary>The element the close button's reference is captured on.</summary>
-    protected ElementReference CloseButton { get; set; }
 
     /// <summary>
     /// One row per action, with every key combination bound to it.
@@ -80,27 +73,6 @@ public abstract class BpmnShortcutHelpBase : BpmnEditorComponentBase
         return string.Join(" + ", keys);
     }
 
-    /// <inheritdoc />
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-
-        // Focus has to move into the overlay when it opens, or a keyboard user is left with focus
-        // on the canvas behind it and no way to reach Close.
-        if (IsVisible && !_wasVisible) _focusPending = true;
-
-        _wasVisible = IsVisible;
-    }
-
-    /// <inheritdoc />
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (!_focusPending || !IsVisible) return;
-
-        _focusPending = false;
-        await CloseButton.FocusAsync().ConfigureAwait(true);
-    }
-
     /// <summary>Closes the overlay.</summary>
     /// <returns>A completed task.</returns>
     protected Task CloseAsync()
@@ -109,9 +81,4 @@ public abstract class BpmnShortcutHelpBase : BpmnEditorComponentBase
         return Task.CompletedTask;
     }
 
-    /// <summary>Escape closes the overlay.</summary>
-    /// <param name="args">The key event.</param>
-    /// <returns>A completed task.</returns>
-    protected Task HandleKeyDownAsync(KeyboardEventArgs args) =>
-        args.Key == "Escape" ? CloseAsync() : Task.CompletedTask;
 }

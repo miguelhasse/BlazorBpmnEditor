@@ -37,6 +37,7 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
     protected override bool ShouldRenderOnStateChange(BpmnEditorState previous, BpmnEditorState current) =>
         _groupsChangedOnParameters || _editorsChangedOnParameters || GroupTemplate is not null || EntryTemplate is not null || EmptyTemplate is not null
             || previous.Selection != current.Selection || previous.IsReadOnly != current.IsReadOnly
+            || previous.MessageFocusOrigin != current.MessageFocusOrigin
             || !ReferenceEquals(previous.Document, current.Document)
             || !ReferenceEquals(previous.DrawnDocument, current.DrawnDocument)
             || !ReferenceEquals(previous.Validation, current.Validation)

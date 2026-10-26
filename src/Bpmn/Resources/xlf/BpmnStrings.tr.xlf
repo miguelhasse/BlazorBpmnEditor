@@ -1082,6 +1082,101 @@
         <target state="translated">Etiketi düzenle</target>
         <note />
       </trans-unit>
+      <trans-unit id="MessageCatalog.Cancel">
+        <source>Cancel</source>
+        <target state="new">Cancel</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.Close">
+        <source>Close</source>
+        <target state="new">Close</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.ConfirmDelete">
+        <source>Delete unused message {0}? This can be undone.</source>
+        <target state="new">Delete unused message {0}? This can be undone.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.Delete">
+        <source>Delete</source>
+        <target state="new">Delete</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.Edit">
+        <source>Edit name</source>
+        <target state="new">Edit name</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.EditShared">
+        <source>Edit shared message</source>
+        <target state="new">Edit shared message</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.Empty">
+        <source>No messages defined. Create a message to make it available for assignment.</source>
+        <target state="new">No messages defined. Create a message to make it available for assignment.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.Id">
+        <source>ID</source>
+        <target state="new">ID</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.InUse">
+        <source>Referenced messages cannot be deleted. Clear their references first.</source>
+        <target state="new">Referenced messages cannot be deleted. Clear their references first.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.Manage">
+        <source>Manage messages</source>
+        <target state="new">Manage messages</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.Name">
+        <source>Message name (optional)</source>
+        <target state="new">Message name (optional)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.New">
+        <source>New message</source>
+        <target state="new">New message</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.Save">
+        <source>Save</source>
+        <target state="new">Save</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.SharedWarning">
+        <source>This definition is shared. Changing its name affects every reference and may change the runtime message name used by your engine.</source>
+        <target state="new">This definition is shared. Changing its name affects every reference and may change the runtime message name used by your engine.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.Title">
+        <source>Messages</source>
+        <target state="new">Messages</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.Unavailable">
+        <source>This document cannot currently be edited.</source>
+        <target state="new">This document cannot currently be edited.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.Uncertain">
+        <source>Deletion blocked: retained content may contain references this editor cannot safely inspect.</source>
+        <target state="new">Deletion blocked: retained content may contain references this editor cannot safely inspect.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.Unnamed">
+        <source>Unnamed message</source>
+        <target state="new">Unnamed message</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageCatalog.Usages">
+        <source>References: {0}</source>
+        <target state="new">References: {0}</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Property.RawText">
         <source>{0} text</source>
         <target state="translated">{0} metni</target>

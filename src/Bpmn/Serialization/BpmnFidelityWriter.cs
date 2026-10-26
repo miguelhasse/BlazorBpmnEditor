@@ -36,6 +36,12 @@ internal sealed class BpmnFidelityWriter(BpmnDocument document, List<BpmnExportD
     /// <param name="canonical">The document the model describes.</param>
     internal void Merge(XElement source, XElement canonical)
     {
+        if (source.Name != canonical.Name && source.Name.Namespace == BpmnXmlNames.Model
+            && canonical.Name.Namespace == BpmnXmlNames.Model)
+        {
+            if (source.Name.LocalName is "sendTask" or "receiveTask") source.Attribute("messageRef")?.Remove();
+            source.Name = canonical.Name;
+        }
         MergeAttributes(source, canonical);
         MergeChildren(source, canonical);
     }
@@ -147,12 +153,17 @@ internal sealed class BpmnFidelityWriter(BpmnDocument document, List<BpmnExportD
             source.Attribute("scriptFormat")?.Remove();
         }
 
-        // messageRef on a Send or Receive Task is modelled, so clearing it in the editor must clear it here.
+        // Modeled Message references must not survive clearing and subsequent definition deletion.
         if (source.Name.Namespace == BpmnXmlNames.Model
-            && source.Name.LocalName is "sendTask" or "receiveTask"
+            && source.Name.LocalName is "sendTask" or "receiveTask" or "messageFlow" or "messageEventDefinition"
             && canonical.Attribute("messageRef") is null)
         {
             source.Attribute("messageRef")?.Remove();
+        }
+
+        if (source.Name == BpmnXmlNames.Model + "message" && canonical.Attribute("name") is null)
+        {
+            source.Attribute("name")?.Remove();
         }
     }
 

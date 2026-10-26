@@ -8,6 +8,8 @@ import type { DotNetObjectRef } from './interop/dotnet.js';
 import { BpmnEventBridge } from './interop/event-bridge.js';
 import type { BpmnDocumentContract } from './model/contracts.js';
 
+export { showDialog, closeDialog } from './interop/dialog.js';
+
 /**
  * The public module surface imported by BpmnCanvas.
  *

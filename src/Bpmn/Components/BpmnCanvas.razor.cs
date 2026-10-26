@@ -17,16 +17,17 @@ using Microsoft.JSInterop;
 namespace Hasseware.AspNetCore.Components.Bpmn;
 
 /// <summary>
-/// Hosts the BPMN canvas and owns the whole JavaScript interop boundary.
+/// Hosts the BPMN canvas and owns its JavaScript interop boundary.
 /// </summary>
 /// <remarks>
 /// <para>
-/// This is the only type in the library that imports the canvas module, holds the resulting
+/// This is the only type that creates the canvas instance, holds its resulting
 /// <see cref="IJSObjectReference"/>, or creates and disposes the
 /// <see cref="DotNetObjectReference{T}"/> for <see cref="BpmnCanvasEventBridge"/>. Every other
 /// component talks to the canvas through this component's .NET API — methods in, events out
 /// (implementation plan section 5). One owner means one lifetime to get right, and an
-/// architecture test enforces it rather than leaving it to review.
+/// architecture test enforces it rather than leaving it to review. <see cref="BpmnDialogBase"/>
+/// separately uses the module's native modal helpers, without creating a canvas instance.
 /// </para>
 /// <para>
 /// Blazor never manipulates the SVG. The canvas host below is an empty element that JointJS owns

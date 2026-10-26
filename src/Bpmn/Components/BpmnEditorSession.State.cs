@@ -103,6 +103,8 @@ public sealed partial class BpmnEditorSession
             ExternalChange = DocumentBinding?.ExternalChange,
             PendingConfirmation = PendingConfirmation,
             IsPickingCalledElement = IsPickingCalledElement,
+            MessageCatalog = _messageCatalog,
+            MessageFocusOrigin = _messageFocusReturn,
             CallableDefinitions = _callablesCache.Items,
             ShortcutHelpVisible = _shortcutHelpVisible,
             Validation = Validation,

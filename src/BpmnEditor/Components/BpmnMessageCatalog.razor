@@ -1,0 +1,67 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn
+@inherits BpmnMessageCatalogBase
+
+<BpmnDialog @ref="_dialog" Visible="@Catalog.IsOpen" Class="@CssClass("bpmn-message-catalog")" CloseLabel="@Text("MessageCatalog.Close")" OnDismiss="CloseAsync" OnClosed="CompleteClose" aria-labelledby="@TitleId" @attributes="AdditionalAttributes">
+    <TitleTemplate>
+        <h2 id="@TitleId">@Text("MessageCatalog.Title")</h2>
+    </TitleTemplate>
+    <ChildContent>
+        <section class="bpmn-message-catalog__panel">
+            @if (Catalog.Error is { } error) { <p role="alert">@error</p> }
+            @if (Catalog.Draft is { } draft)
+            {
+                <form id="@($"{TitleId}-form")" @onsubmit="SaveAsync" @onsubmit:preventDefault>
+                    <p>@Text("MessageCatalog.Id"): <code>@draft.Id</code></p>
+                    <label>@Text("MessageCatalog.Name")<input data-message-name type="text" @bind="DraftName" readonly="@ReadOnly" /></label>
+                    @if (!draft.IsNew)
+                    {
+                        <p>@Text("MessageCatalog.SharedWarning")</p>
+                        @UsageContent(draft.Id)
+                    }
+                </form>
+            }
+            else if (Catalog.DeleteId is { } deleteId)
+            {
+                <p>@Text("MessageCatalog.ConfirmDelete", deleteId)</p>
+                @UsageContent(deleteId)
+            }
+            else
+            {
+                @if (!ReadOnly) { <button type="button" data-message-action="new" @onclick="NewMessage">@Text("MessageCatalog.New")</button> }
+                @if (Messages.Count == 0) { <p>@Text("MessageCatalog.Empty")</p> }
+                <ul class="bpmn-message-catalog__list">
+                    @foreach (var message in Messages)
+                    {
+                        <li @key="message.Id" data-message-id="@message.Id">
+                            <strong>@NameOf(message)</strong> <code>@message.Id</code>
+                            @UsageContent(message.Id)
+                            @if (!ReadOnly)
+                            {
+                                <button type="button" data-message-action="edit" @onclick="@(() => EditMessage(message.Id))">@Text("MessageCatalog.Edit")</button>
+                                <button type="button" data-message-action="delete" disabled="@(!CanDelete(message.Id))" @onclick="@(() => ConfirmDelete(message.Id))">@Text("MessageCatalog.Delete")</button>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+        </section>
+    </ChildContent>
+    <ActionTemplate>
+        @if (Catalog.Draft is not null)
+        {
+            @if (!ReadOnly) { <button type="submit" form="@($"{TitleId}-form")" disabled="@Catalog.IsBusy" data-message-action="save">@Text("MessageCatalog.Save")</button> }
+            <button type="button" @onclick="CancelEdit">@Text("MessageCatalog.Cancel")</button>
+        }
+        else if (Catalog.DeleteId is { } deleteId)
+        {
+            <button type="button" disabled="@(ReadOnly || Catalog.IsBusy || !CanDelete(deleteId))" data-message-action="confirm-delete" @onclick="DeleteAsync">@Text("MessageCatalog.Delete")</button>
+            <button type="button" @onclick="CancelEdit">@Text("MessageCatalog.Cancel")</button>
+        }
+    </ActionTemplate>
+</BpmnDialog>
+
+@code {
+    private BpmnDialog? _dialog;
+    protected override bool RestoreFocusOnClose => false;
+    protected override Task FocusDialogAsync() => _dialog?.FocusAsync().AsTask() ?? Task.CompletedTask;
+}

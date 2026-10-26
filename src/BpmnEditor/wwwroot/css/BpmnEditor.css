@@ -177,32 +177,27 @@
 
 /* --- keyboard shortcut help ------------------------------------------------ */
 
-.bpmn-shortcut-help {
-    position: absolute;
-    inset: 0;
-    z-index: 20;
-    display: grid;
-    place-items: center;
-}
-
-.bpmn-shortcut-help__backdrop {
-    position: absolute;
-    inset: 0;
-    background: var(--bpmn-overlay-scrim);
-}
-
-.bpmn-shortcut-help__panel {
-    position: relative;
-    max-inline-size: min(32rem, calc(100% - 2rem));
-    max-block-size: calc(100% - 2rem);
-    overflow: auto;
-    padding: 1.25rem 1.5rem;
+dialog.bpmn-dialog {
+    box-sizing: border-box;
+    inline-size: min(32rem, calc(100vw - 2rem));
+    max-inline-size: calc(100vw - 2rem);
+    max-block-size: calc(100dvh - 2rem);
+    padding: 0;
+    border: 1px solid var(--bpmn-surface-border);
     border-radius: 6px;
     background: var(--bpmn-surface-background);
     color: var(--bpmn-surface-foreground);
-    border: 1px solid var(--bpmn-surface-border);
     box-shadow: 0 8px 32px rgb(0 0 0 / 25%);
+    font-family: var(--bpmn-font-family);
 }
+dialog.bpmn-dialog[open] { display: flex; flex-direction: column; }
+dialog.bpmn-dialog::backdrop { background: var(--bpmn-overlay-scrim); }
+.bpmn-dialog__header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.5rem; }
+.bpmn-dialog__header h2 { margin: 0; font-size: 1.05rem; overflow-wrap: anywhere; }
+.bpmn-dialog__body { min-block-size: 0; overflow: auto; padding: 0 1.5rem 1rem; }
+.bpmn-dialog__actions { display: flex; justify-content: flex-end; gap: 0.5rem; padding: 0 1.5rem 1rem; }
+dialog.bpmn-dialog .bpmn-dialog__close { flex-shrink: 0; font: inherit; color: inherit; background: var(--bpmn-surface-background); border: 1px solid var(--bpmn-surface-border); border-radius: 4px; padding: 0.3rem 0.6rem; cursor: pointer; }
+dialog.bpmn-dialog .bpmn-dialog__close:hover { background: var(--bpmn-surface-hover); }
 
 .bpmn-shortcut-help__title {
     margin-block: 0 0.75rem;
@@ -259,21 +254,6 @@
     margin: 0;
     font-size: 0.9rem;
     opacity: 0.8;
-}
-
-.bpmn-shortcut-help__close {
-    margin-block-start: 1.25rem;
-    padding: 0.35rem 1rem;
-    border-radius: 4px;
-    border: 1px solid var(--bpmn-surface-border);
-    background: transparent;
-    color: inherit;
-    font: inherit;
-    cursor: pointer;
-}
-
-.bpmn-shortcut-help__close:hover {
-    background: var(--bpmn-surface-hover);
 }
 
 /* --- stencil --------------------------------------------------------------- */
@@ -394,33 +374,15 @@
 
 /* --- the called-element picker ---------------------------------------------- */
 
-.bpmn-picker {
-  position: absolute;
-  inset: 0;
-  z-index: 25;
-  display: grid;
-  place-items: center;
-}
+.bpmn-message-reference__actions { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-block-start: 0.25rem; }
+dialog.bpmn-message-catalog { inline-size: min(42rem, calc(100vw - 2rem)); }
+.bpmn-message-catalog__panel button { margin: 0.25rem; font: inherit; }
+.bpmn-message-catalog__panel label { display: grid; gap: 0.25rem; }
+.bpmn-message-catalog__panel input { font: inherit; color: inherit; background: inherit; border: 1px solid var(--bpmn-surface-border); padding: 0.4rem; }
+.bpmn-message-catalog__list { list-style: none; padding: 0; }
+.bpmn-message-catalog__list > li { padding-block: 0.75rem; border-block-end: 1px solid var(--bpmn-surface-border); overflow-wrap: anywhere; }
 
-.bpmn-picker__backdrop {
-  position: absolute;
-  inset: 0;
-  background: var(--bpmn-overlay-scrim);
-}
-
-.bpmn-picker__panel {
-  position: relative;
-  min-inline-size: 20rem;
-  max-inline-size: min(28rem, calc(100% - 2rem));
-  max-block-size: calc(100% - 2rem);
-  overflow: auto;
-  padding: 1.25rem 1.5rem;
-  border: 1px solid var(--bpmn-surface-border);
-  border-radius: 6px;
-  background: var(--bpmn-surface-background);
-  color: var(--bpmn-surface-foreground);
-  box-shadow: 0 8px 32px rgb(0 0 0 / 25%);
-}
+dialog.bpmn-picker { inline-size: min(28rem, calc(100vw - 2rem)); }
 
 .bpmn-picker__title {
   margin-block: 0 0.75rem;

@@ -1,0 +1,24 @@
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn
+@inherits BpmnMessageReferenceEntryComponent
+@using Hasseware.AspNetCore.Components.Bpmn.Editing
+
+<FluentBpmnPropertyEntryFrame Context="@Context">
+    <div @ref="FocusTarget" tabindex="-1" class="bpmn-message-reference">
+        <FluentSelect TOption="BpmnPropertyChoice" TValue="string" Class="@(Block + "__select")"
+                      Items="@MessageChoices" OptionText="@(choice => choice.Label)" OptionValue="@(choice => choice.Value)"
+                      Value="@Entry.Value" ValueChanged="@(value => SubmitAsync(value))" Disabled="@ReadOnly"
+                      AriaLabel="@Entry.Label" aria-invalid="@(Entry.Error is not null ? "true" : null)" />
+        @if (!HasMessages) { <p>@Text("MessageCatalog.Empty")</p> }
+        @if (CanAuthor)
+        {
+            <div class="bpmn-message-reference__actions">
+                @if (!ReadOnly)
+                {
+                    <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" data-message-action="new" OnClick="NewMessage">@Text("MessageCatalog.New")</FluentButton>
+                    <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" data-message-action="edit" Disabled="@(!CanEditMessage)" aria-disabled="@(!CanEditMessage ? "true" : null)" OnClick="EditMessage">@Text("MessageCatalog.EditShared")</FluentButton>
+                }
+                <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" data-message-action="manage" OnClick="ManageMessages">@Text("MessageCatalog.Manage")</FluentButton>
+            </div>
+        }
+    </div>
+</FluentBpmnPropertyEntryFrame>

@@ -27,6 +27,28 @@ public sealed class BpmnXmlWriterTests
 
     // --- determinism ----------------------------------------------------------
 
+    [Theory]
+    [InlineData(BpmnFlowNodeType.SendTask)]
+    [InlineData(BpmnFlowNodeType.ReceiveTask)]
+    public void FidelityExportUsesChangedMessageTaskType(BpmnFlowNodeType type)
+    {
+        var document = BpmnXmlReader.Read("""
+            <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:acme="urn:acme"
+                         id="Definitions_1" targetNamespace="urn:test">
+              <process id="Process_1">
+                <userTask id="Task_1" acme:flag="keep"><documentation>Keep</documentation></userTask>
+              </process>
+            </definitions>
+            """).Document;
+        var task = document.FindFlowNode("Task_1")!;
+        document = document with { FlowNodes = [task with { Type = type, MessageRef = "Message_1" }] };
+        var saved = BpmnXmlReader.Read(BpmnXmlWriter.Write(document, BpmnWriteOptions.Fidelity).Xml).Document;
+        Assert.Equal(type, saved.FindFlowNode("Task_1")!.Type);
+        Assert.Equal("Message_1", saved.FindFlowNode("Task_1")!.MessageRef);
+        Assert.Equal("Keep", saved.FindFlowNode("Task_1")!.Extras.Documentation);
+        Assert.Contains("acme:flag=\"keep\"", BpmnXmlWriter.Write(saved, BpmnWriteOptions.Fidelity).Xml, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void CanonicalOutputIsByteIdenticalEveryTime()
     {

@@ -164,6 +164,21 @@ sets a part nobody configured, so a UI kit's registration never overrides the ho
 PropertyPanel have no Core default: configure them, supply a slot, or call `AddBpmnEditor()`
 for both standard defaults. Property entry editors follow the
 same rule through `BpmnPropertyEditorRegistry` (`UseDefaultEditor`); `AddFeelEditor<T>()` keeps working.
+
+## Message definitions
+
+Both editor kits provide **Messages** in the toolbar and **New message / Edit shared message /
+Manage messages** beside Send/Receive Task and Message Flow references. Create-and-assign is
+one undo step; catalog-created definitions stay unassigned. Blank/duplicate names are legal and
+choices show IDs. Message IDs are generated and read-only. Shared-name edits preserve payload and
+vendor metadata; safely unused definitions can be deleted after confirmation. Read-only catalogs
+are inspectable without mutation controls. Messages are standard definitions, not new canvas shapes.
+
+Core-only hosts can apply `CreateMessageCommand`, `UpdateMessageNameCommand`, and
+`DeleteMessageCommand` through the session. Custom layouts render `BpmnEditorPart.MessageCatalog`.
+See [editing](../../docs/editing.md#message-definitions) and
+[composition](../../docs/composing-an-editor.md).
+
 ## Extensions & element templates
 
 Vendor support is opt-in. Register local moddle schemas and template JSON through

@@ -7,14 +7,12 @@
     this instead of creating something incomplete. A dialog rather than an inline editor because the
     answer is a reference to an element that is not on the canvas — there is no label to type over.
 *@
-@if (IsVisible)
-{
-    <div class="@CssClass("bpmn-picker")" role="dialog" aria-modal="true" aria-labelledby="@TitleId" @attributes="AdditionalAttributes">
-        <div class="bpmn-picker__backdrop" @onclick="CancelAsync"></div>
-
-        <div class="bpmn-picker__panel" @onkeydown="HandleKeyDownAsync">
-            <h2 class="bpmn-picker__title" id="@TitleId">@EffectiveTitle</h2>
-
+<BpmnDialog Visible="@IsVisible" Class="@CssClass("bpmn-picker")" OnDismiss="CancelAsync" DismissOnBackdrop="true" aria-labelledby="@TitleId" @attributes="AdditionalAttributes">
+    <TitleTemplate>
+        <h2 class="bpmn-picker__title" id="@TitleId">@EffectiveTitle</h2>
+    </TitleTemplate>
+    <ChildContent>
+        <div class="bpmn-picker__panel">
             @if (Definitions.Count == 0)
             {
                 @*
@@ -52,7 +50,9 @@
                 </ul>
             }
 
-            <button type="button" class="bpmn-picker__cancel" @onclick="CancelAsync">@EditorText("CalledElementPicker.Cancel")</button>
         </div>
-    </div>
-}
+    </ChildContent>
+    <ActionTemplate>
+        <button type="button" class="bpmn-picker__cancel" @onclick="CancelAsync">@EditorText("CalledElementPicker.Cancel")</button>
+    </ActionTemplate>
+</BpmnDialog>

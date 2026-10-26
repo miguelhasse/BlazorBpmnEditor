@@ -32,6 +32,7 @@ public sealed class BpmnEditorComponentOptions
         [BpmnEditorPart.ShortcutHelp] = typeof(BpmnShortcutHelpBase),
         [BpmnEditorPart.ExternalChangeOffer] = typeof(BpmnExternalChangeOfferBase),
         [BpmnEditorPart.AgentConfirmation] = typeof(BpmnAgentConfirmationBase),
+        [BpmnEditorPart.MessageCatalog] = typeof(BpmnMessageCatalogBase),
     };
 
     internal int Revision { get; private set; }

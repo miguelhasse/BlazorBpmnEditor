@@ -11,6 +11,25 @@
   <data name="Toolbar.Color.Error.COLOR-001" xml:space="preserve"><value>Enter a six-digit RGB hex color (#RRGGBB).</value></data>
   <data name="Toolbar.Color.Error.COLOR-002" xml:space="preserve"><value>Every selected item must be drawn on the current diagram.</value></data>
   <data name="Toolbar.Color.Error.COLOR-003" xml:space="preserve"><value>Only shapes have a fill color.</value></data>
+  <data name="MessageCatalog.Title" xml:space="preserve"><value>Messages</value></data>
+  <data name="MessageCatalog.New" xml:space="preserve"><value>New message</value></data>
+  <data name="MessageCatalog.Edit" xml:space="preserve"><value>Edit name</value></data>
+  <data name="MessageCatalog.EditShared" xml:space="preserve"><value>Edit shared message</value></data>
+  <data name="MessageCatalog.Manage" xml:space="preserve"><value>Manage messages</value></data>
+  <data name="MessageCatalog.Close" xml:space="preserve"><value>Close</value></data>
+  <data name="MessageCatalog.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="MessageCatalog.Save" xml:space="preserve"><value>Save</value></data>
+  <data name="MessageCatalog.Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="MessageCatalog.Id" xml:space="preserve"><value>ID</value></data>
+  <data name="MessageCatalog.Name" xml:space="preserve"><value>Message name (optional)</value></data>
+  <data name="MessageCatalog.Empty" xml:space="preserve"><value>No messages defined. Create a message to make it available for assignment.</value></data>
+  <data name="MessageCatalog.Unnamed" xml:space="preserve"><value>Unnamed message</value></data>
+  <data name="MessageCatalog.SharedWarning" xml:space="preserve"><value>This definition is shared. Changing its name affects every reference and may change the runtime message name used by your engine.</value></data>
+  <data name="MessageCatalog.Usages" xml:space="preserve"><value>References: {0}</value></data>
+  <data name="MessageCatalog.InUse" xml:space="preserve"><value>Referenced messages cannot be deleted. Clear their references first.</value></data>
+  <data name="MessageCatalog.Uncertain" xml:space="preserve"><value>Deletion blocked: retained content may contain references this editor cannot safely inspect.</value></data>
+  <data name="MessageCatalog.ConfirmDelete" xml:space="preserve"><value>Delete unused message {0}? This can be undone.</value></data>
+  <data name="MessageCatalog.Unavailable" xml:space="preserve"><value>This document cannot currently be edited.</value></data>
   <data name="ImportOffer.AnnotationPolicy" xml:space="preserve"><value>Editor annotation policy will change {0} annotation(s): remove {1} Association(s) and straighten {2} route(s). The first eligible Association in source order is kept. This is editor policy, not a BPMN requirement.</value></data>
   <data name="ImportOffer.AnnotationIds" xml:space="preserve"><value>Affected annotations: {0}</value></data>
   <data name="ImportOffer.RemovedAssociations" xml:space="preserve"><value>Associations to remove: {0}</value></data>
