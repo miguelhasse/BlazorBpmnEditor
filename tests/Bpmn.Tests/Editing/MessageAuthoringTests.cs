@@ -1,5 +1,7 @@
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
+using Hasseware.AspNetCore.Components.Bpmn.Model.Di;
+using Hasseware.AspNetCore.Components.Bpmn.Model.Extensions;
 using Hasseware.AspNetCore.Components.Bpmn.Serialization;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Editing;
@@ -328,5 +330,59 @@ public sealed class MessageAuthoringTests
         Assert.False(BpmnMessageCatalog.Inspect(document, "Message_1")!.CanDelete);
         Assert.False(BpmnDocumentEditor.Apply(document, new DeleteMessageCommand("Message_1")).IsApplied);
         Assert.False(BpmnMessageCatalog.Inspect(document with { Source = null }, "Message_1")!.CanDelete);
+    }
+
+    [Theory]
+    [InlineData("event")]
+    [InlineData("loop")]
+    [InlineData("lane")]
+    [InlineData("diagram")]
+    [InlineData("plane")]
+    [InlineData("shape")]
+    [InlineData("edge")]
+    [InlineData("shape-label")]
+    [InlineData("edge-label")]
+    [InlineData("declaration")]
+    public void NestedAndDiagramExtensionsBlockUnsafeMessageDeletion(string carrier)
+    {
+        var extension = new BpmnExtensionElement("urn:vendor", "messageBinding",
+            new Dictionary<string, string> { ["messageRef"] = "Message_1" }, []);
+        var extras = new BpmnElementExtras { Extensions = [extension] };
+        var document = BpmnXmlReader.Read(Xml).Document with { Source = null };
+        var node = document.FindFlowNode("Send_1")!;
+        document = document with
+        {
+            FlowNodes =
+            [
+                node with
+                {
+                    EventDefinitions = carrier == "event"
+                        ? [new(BpmnEventDefinitionType.Message) { Extras = extras }] : [],
+                    MultiInstanceLoop = carrier == "loop" ? new() { Extras = extras } : null,
+                },
+            ],
+            Lanes = carrier == "lane" ? [new("Lane", null, "LaneSet", []) { Extras = extras }] : [],
+            Diagrams =
+            [
+                new("Diagram", new("Plane", "Process_1",
+                    [new("Shape", "Send_1", new Bounds(0, 0, 100, 80),
+                        Label: new() { Extras = carrier == "shape-label" ? extras : BpmnElementExtras.None })
+                    { Extras = carrier == "shape" ? extras : BpmnElementExtras.None }],
+                    [new("Edge", "Flow", [],
+                        Label: new() { Extras = carrier == "edge-label" ? extras : BpmnElementExtras.None })
+                    { Extras = carrier == "edge" ? extras : BpmnElementExtras.None }])
+                { Extras = carrier == "plane" ? extras : BpmnElementExtras.None })
+                { Extras = carrier == "diagram" ? extras : BpmnElementExtras.None },
+            ],
+            Catalog = document.Catalog with
+            {
+                ExtensionDeclarations = carrier == "declaration"
+                    ? [new("Declaration", null, false, [extension])] : [],
+            },
+        };
+
+        Assert.False(BpmnMessageCatalog.Inspect(document, "Message_1")!.CanDelete);
+        Assert.False(BpmnDocumentEditor.Apply(document, new DeleteMessageCommand("Message_1")).IsApplied);
+        Assert.False(BpmnDocumentEditor.Apply(document, new DeleteElementsCommand(["Message_1"])).IsApplied);
     }
 }

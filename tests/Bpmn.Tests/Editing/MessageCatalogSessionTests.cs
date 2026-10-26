@@ -157,4 +157,26 @@ public sealed class MessageCatalogSessionTests
         Assert.True(session.State.MessageCatalog.IsOpen);
         Assert.False(session.State.MessageCatalog.IsBusy);
     }
+
+    [Fact]
+    public async Task CancellingPendingSaveDoesNotLeaveCatalogBusyOrDismissNextDraft()
+    {
+        var session = Session();
+        session.ShowMessages();
+        session.NewMessage();
+        var completion = new TaskCompletionSource<BpmnEditResult?>();
+        session.PropertyCommandOverride = _ => completion.Task;
+        var saving = session.SaveMessageAsync("First");
+
+        session.CancelMessageEdit();
+        Assert.Null(session.State.MessageCatalog.Draft);
+        Assert.False(session.State.MessageCatalog.IsBusy);
+        session.NewMessage();
+        var nextDraft = session.State.MessageCatalog.Draft;
+        completion.SetResult(BpmnEditResult.Applied(session.EditedDocument!));
+        await saving;
+
+        Assert.Same(nextDraft, session.State.MessageCatalog.Draft);
+        Assert.False(session.State.MessageCatalog.IsBusy);
+    }
 }

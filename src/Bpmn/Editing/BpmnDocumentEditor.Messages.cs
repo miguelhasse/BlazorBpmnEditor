@@ -1,8 +1,8 @@
 using System.Xml.Linq;
-
 using Hasseware.AspNetCore.Components.Bpmn.Model;
 using Hasseware.AspNetCore.Components.Bpmn.Model.Extensions;
 using Hasseware.AspNetCore.Components.Bpmn.Serialization;
+using Hasseware.AspNetCore.Components.Bpmn.Validation;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Editing;
 
@@ -198,7 +198,8 @@ public static class BpmnMessageCatalog
             }
         }
 
-        foreach (var preserved in document.Catalog.Preserved)
+        foreach (var preserved in document.Catalog.Preserved.Concat(
+            document.Catalog.ExtensionDeclarations.SelectMany(declaration => declaration.Content)))
         {
             if (HasOpaqueMessageReference(document, preserved, message.Id))
             {
@@ -232,34 +233,42 @@ public static class BpmnMessageCatalog
     private static IEnumerable<BpmnElementExtras> AllExtras(BpmnDocument document)
     {
         yield return document.Definitions.Extras;
-        foreach (var process in document.Processes) yield return process.Extras;
-        foreach (var participant in document.Collaboration?.Participants ?? []) yield return participant.Extras;
-        if (document.Collaboration is { } collaboration) yield return collaboration.Extras;
-        foreach (var node in document.FlowNodes) yield return node.Extras;
-        foreach (var flow in document.MessageFlows) yield return flow.Extras;
-        foreach (var flow in document.SequenceFlows) yield return flow.Extras;
-        foreach (var association in document.Associations) yield return association.Extras;
-        foreach (var association in document.DataAssociations) yield return association.Extras;
-        foreach (var annotation in document.TextAnnotations) yield return annotation.Extras;
-        foreach (var group in document.Groups) yield return group.Extras;
-        foreach (var reference in document.DataObjectReferences) yield return reference.Extras;
-        foreach (var reference in document.DataStoreReferences) yield return reference.Extras;
-        foreach (var dataObject in document.DataObjects) yield return dataObject.Extras;
-        foreach (var message in document.Catalog.Messages) yield return message.Extras;
-        foreach (var signal in document.Catalog.Signals) yield return signal.Extras;
-        foreach (var error in document.Catalog.Errors) yield return error.Extras;
-        foreach (var escalation in document.Catalog.Escalations) yield return escalation.Extras;
+        foreach (var (_, extras) in BpmnValidator.Extended(document))
+            yield return extras;
+
+        foreach (var diagram in document.Diagrams)
+        {
+            yield return diagram.Extras;
+            yield return diagram.Plane.Extras;
+
+            foreach (var shape in diagram.Plane.Shapes)
+            {
+                if (shape.Label is { } label)
+                    yield return label.Extras;
+            }
+
+            foreach (var edge in diagram.Plane.Edges)
+            {
+                if (edge.Label is { } label)
+                    yield return label.Extras;
+            }
+        }
     }
 
     private static bool HasOpaqueMessageReference(BpmnDocument document, BpmnExtensionElement element, string messageId)
     {
-        if (IsUncertainOpaqueElement(element)) return true;
+        if (IsUncertainOpaqueElement(element))
+            return true;
 
         foreach (var (name, value) in element.Attributes)
         {
             var localName = name[(name.LastIndexOf('}') + 1)..];
-            if (IsMessageReferenceName(localName) && ReferenceNamesMessage(document, null, value, messageId)) return true;
-            if (IsUncertainOpaqueReference(element, localName)) return true;
+
+            if (IsMessageReferenceName(localName) && ReferenceNamesMessage(document, null, value, messageId))
+                return true;
+
+            if (IsUncertainOpaqueReference(element, localName))
+                return true;
         }
 
         return element.Children.Any(child => HasOpaqueMessageReference(document, child, messageId));
@@ -324,10 +333,15 @@ public static class BpmnMessageCatalog
     private static bool QNameNamesMessage(BpmnDocument document, string value, string messageId, XElement? context)
     {
         var colon = value.IndexOf(':');
-        if (colon < 0) return string.Equals(value, messageId, StringComparison.Ordinal);
+
+        if (colon < 0)
+            return string.Equals(value, messageId, StringComparison.Ordinal);
+
         var prefix = value[..colon];
         var localName = value[(colon + 1)..];
-        if (!string.Equals(localName, messageId, StringComparison.Ordinal)) return false;
+
+        if (!string.Equals(localName, messageId, StringComparison.Ordinal))
+            return false;
 
         string? namespaceUri = null;
         if (context is not null)

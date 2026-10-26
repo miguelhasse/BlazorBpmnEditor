@@ -1,9 +1,7 @@
 using System.Globalization;
-
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.AspNetCore.Components.Bpmn.Interop;
 using Hasseware.AspNetCore.Components.Bpmn.Model.Di;
-
 using Microsoft.AspNetCore.Components;
 
 namespace Hasseware.AspNetCore.Components.Bpmn;
@@ -23,7 +21,7 @@ public abstract class BpmnToolbarBase : BpmnEditorComponentBase
         ChildContent is not null || previous.Zoom != current.Zoom || previous.IsReadOnly != current.IsReadOnly
             || previous.CanUndo != current.CanUndo || previous.CanRedo != current.CanRedo
             || previous.Document != current.Document || previous.MessageCatalog != current.MessageCatalog
-            || previous.MessageFocusOrigin != current.MessageFocusOrigin;
+            || previous.MessageFocusOrigin != current.MessageFocusOrigin
             || ShowColorPicker && (previous.Document != current.Document
                 || previous.ActiveDiagramId != current.ActiveDiagramId || previous.Selection != current.Selection);
 
@@ -144,7 +142,7 @@ public abstract class BpmnToolbarBase : BpmnEditorComponentBase
     protected Task RedoAsync() => Session.RedoAsync();
 
     /// <summary>Opens the keyboard shortcut help.</summary>
-    protected void ShowShortcuts() => Session.ShowShortcutHelp();
+    protected void ShowShortcutHelp() => Session.ShowShortcutHelp();
 
     /// <summary>The document catalog's invoking control.</summary>
     protected ElementReference MessagesButton { get; set; }

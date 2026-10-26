@@ -81,7 +81,7 @@ public sealed partial class BpmnEditorSession
         if (_messageCatalog.CloseAfterSave) CloseMessages();
         else
         {
-            _messageCatalog = _messageCatalog with { Draft = null, DeleteId = null, Error = null };
+            _messageCatalog = _messageCatalog with { Draft = null, DeleteId = null, Error = null, IsBusy = false };
             NotifyStateChanged();
         }
     }
