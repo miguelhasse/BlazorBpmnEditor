@@ -14,10 +14,10 @@
             <div class="bpmn-message-reference__actions">
                 @if (!ReadOnly)
                 {
-                    <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" data-message-action="new" OnClick="NewMessage">@Text("MessageCatalog.New")</FluentButton>
-                    <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" data-message-action="edit" Disabled="@(!CanEditMessage)" aria-disabled="@(!CanEditMessage ? "true" : null)" OnClick="EditMessage">@Text("MessageCatalog.EditShared")</FluentButton>
+                    <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" data-message-action="new" OnClick="NewMessage">@Text("MessageReference.New")</FluentButton>
+                    <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" data-message-action="edit" Disabled="@(!CanEditMessage)" aria-disabled="@(!CanEditMessage ? "true" : null)" OnClick="EditMessage">@Text("MessageReference.EditShared")</FluentButton>
                 }
-                <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" data-message-action="manage" OnClick="ManageMessages">@Text("MessageCatalog.Manage")</FluentButton>
+                <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" data-message-action="manage" OnClick="ManageMessages">@Text("MessageReference.Manage")</FluentButton>
             </div>
         }
     </div>

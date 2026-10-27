@@ -102,6 +102,7 @@ public sealed class KitParityTests : BunitContext
             [nameof(BpmnToolbarBase.ShowZoom)] = zoom,
             [nameof(BpmnToolbarBase.ShowUndoRedo)] = undoRedo,
             [nameof(BpmnToolbarBase.ShowShortcuts)] = shortcuts,
+            [nameof(BpmnToolbarBase.ShowMessages)] = true,
             [nameof(BpmnToolbarBase.ShowColorPicker)] = true,
             [nameof(BpmnToolbarBase.ChildContent)] = extra,
         };
@@ -110,7 +111,7 @@ public sealed class KitParityTests : BunitContext
         await scope.Scope.InvokeAsync(() => scope.Session.ApplyAsync(new UpdatePropertiesCommand("Task_1", "name", "Changed")));
         var document = scope.Session.EditedDocument;
 
-        void AssertVisibility(bool showZoom, bool showUndoRedo, bool showShortcuts)
+        void AssertVisibility(bool showZoom, bool showUndoRedo, bool showShortcuts, bool showMessages)
         {
             foreach (var label in new[] { "Zoom out", "Zoom in", "Reset zoom", "Fit to content" })
                 Assert.Equal(showZoom ? 1 : 0, scope.Cut.FindAll($"[aria-label='{label}']").Count);
@@ -118,18 +119,20 @@ public sealed class KitParityTests : BunitContext
             foreach (var label in new[] { "Undo", "Redo" })
                 Assert.Equal(showUndoRedo ? 1 : 0, scope.Cut.FindAll($"[aria-label='{label}']").Count);
             Assert.Equal(showShortcuts ? 1 : 0, scope.Cut.FindAll("[aria-label='Show keyboard shortcuts']").Count);
+            Assert.Equal(showMessages ? 1 : 0, scope.Cut.FindAll("[data-message-action='manage']").Count);
             Assert.Single(scope.Cut.FindAll("[aria-label='Colors'][aria-haspopup='dialog']"));
             Assert.Single(scope.Cut.FindAll("[data-extra-control]"));
             Assert.Same(document, scope.Session.EditedDocument);
             Assert.True(scope.Session.CanUndo);
         }
 
-        AssertVisibility(zoom, undoRedo, shortcuts);
+        AssertVisibility(zoom, undoRedo, shortcuts, showMessages: true);
         parameters[nameof(BpmnToolbarBase.ShowZoom)] = !zoom;
         parameters[nameof(BpmnToolbarBase.ShowUndoRedo)] = !undoRedo;
         parameters[nameof(BpmnToolbarBase.ShowShortcuts)] = !shortcuts;
+        parameters[nameof(BpmnToolbarBase.ShowMessages)] = false;
         scope.Cut.Render(p => p.Add(c => c.Type, toolbarType).Add(c => c.Parameters, parameters));
-        AssertVisibility(!zoom, !undoRedo, !shortcuts);
+        AssertVisibility(!zoom, !undoRedo, !shortcuts, showMessages: false);
     }
 
     [Theory]

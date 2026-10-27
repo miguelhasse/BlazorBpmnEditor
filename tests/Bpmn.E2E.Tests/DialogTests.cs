@@ -9,6 +9,45 @@ public sealed class DialogTests(DemoAppFixture app) : PageTest, IClassFixture<De
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
+    public async Task MessageListScrollsVerticallyWithoutHorizontalOverflow(bool plain)
+    {
+        await OpenEditorAsync(plain);
+        Assert.True(Page.Context.Browser?.IsConnected);
+        await Page.SetViewportSizeAsync(700, 800);
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Messages", Exact = true }).ClickAsync();
+        var dialog = Page.Locator(".bpmn-message-catalog");
+        for (var index = 0; index < 9; index++)
+        {
+            await dialog.GetByRole(AriaRole.Button, new() { Name = "New message", Exact = true }).ClickAsync();
+            await dialog.GetByRole(AriaRole.Textbox, new() { Name = "Message name (optional)" })
+                .FillAsync(index == 0 ? new string('M', 120) : "");
+            await dialog.GetByRole(AriaRole.Button, new() { Name = "Save", Exact = true }).ClickAsync();
+            await Expect(dialog.Locator("[data-message-id]")).ToHaveCountAsync(index + 1);
+        }
+
+        var list = dialog.Locator(".bpmn-message-catalog__list");
+        var layout = await list.EvaluateAsync<double[]>(
+            """
+            list => {
+              const bounds = list.getBoundingClientRect();
+              const buttons = [...list.querySelectorAll('[data-message-select]')];
+              return [
+                list.scrollWidth - list.clientWidth,
+                list.scrollHeight - list.clientHeight,
+                Math.max(...buttons.map(button => button.getBoundingClientRect().right - bounds.right)),
+              ];
+            }
+            """);
+        Assert.True(layout[0] <= 1, $"Message list has {layout[0]}px horizontal overflow.");
+        Assert.True(layout[1] > 0, "Message list must scroll vertically.");
+        Assert.True(layout[2] <= 1, $"Message button exceeds list bounds by {layout[2]}px.");
+        await list.Locator("[data-message-select]").Last.ClickAsync();
+        await Expect(dialog.Locator("[data-message-details]")).ToBeVisibleAsync();
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
     public async Task MessageCatalogContainsFocusAndDiscardsDraftOnEscape(bool plain)
     {
         await OpenEditorAsync(plain);
@@ -51,7 +90,9 @@ public sealed class DialogTests(DemoAppFixture app) : PageTest, IClassFixture<De
         {
             await dialog.GetByRole(AriaRole.Button, new() { Name = "New message", Exact = true }).ClickAsync();
             await Expect(dialog.Locator(".bpmn-dialog__content")).ToBeFocusedAsync();
-            await dialog.GetByRole(AriaRole.Textbox, new() { Name = "Message name (optional)" }).FillAsync($"Message {index}");
+            var messageName = dialog.GetByRole(AriaRole.Textbox, new() { Name = "Message name (optional)" });
+            await Expect(messageName).ToHaveAttributeAsync("autocomplete", "off");
+            await messageName.FillAsync($"Message {index}");
             await Expect(dialog.GetByRole(AriaRole.Textbox, new() { Name = "Message name (optional)" })).ToBeFocusedAsync();
             if (index == 0)
                 await Page.Keyboard.PressAsync("Enter");
@@ -63,6 +104,20 @@ public sealed class DialogTests(DemoAppFixture app) : PageTest, IClassFixture<De
             Assert.True(await dialog.EvaluateAsync<bool>("host => host === document.activeElement || host.contains(document.activeElement)"),
                 await Page.EvaluateAsync<string>("() => document.activeElement?.outerHTML.slice(0, 500) ?? 'none'"));
         }
+        await Expect(dialog.Locator("[data-message-action=edit]")).ToHaveCountAsync(0);
+        await Expect(dialog.Locator("[data-message-action=delete]")).ToHaveCountAsync(0);
+        var list = dialog.Locator(".bpmn-message-catalog__list");
+        await Expect(list).ToHaveCSSAsync("overflow-y", "auto");
+        var firstMessageId = await dialog.Locator("[data-message-id]").Nth(0).GetAttributeAsync("data-message-id")
+            ?? throw new InvalidOperationException("The first message id was not rendered.");
+        var secondMessageId = await dialog.Locator("[data-message-id]").Nth(1).GetAttributeAsync("data-message-id")
+            ?? throw new InvalidOperationException("The second message id was not rendered.");
+        await dialog.Locator("[data-message-select]").Nth(0).ClickAsync();
+        await Expect(dialog.Locator("[data-message-details]")).ToHaveAttributeAsync("data-message-details", firstMessageId);
+        await Expect(dialog.Locator("[data-message-action=edit]")).ToHaveCountAsync(1);
+        await Expect(dialog.Locator("[data-message-action=delete]")).ToHaveCountAsync(1);
+        await dialog.Locator("[data-message-select]").Nth(1).ClickAsync();
+        await Expect(dialog.Locator("[data-message-details]")).ToHaveAttributeAsync("data-message-details", secondMessageId);
         await Page.Keyboard.PressAsync("Escape");
         await Expect(dialog).ToHaveCountAsync(0);
     }

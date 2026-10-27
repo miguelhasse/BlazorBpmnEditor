@@ -1,5 +1,6 @@
 @namespace Hasseware.AspNetCore.Components.Bpmn
 @inherits BpmnMessageCatalogBase
+@using Microsoft.AspNetCore.Components.Rendering
 
 <BpmnDialog @ref="_dialog" Visible="@Catalog.IsOpen" Class="@CssClass("bpmn-message-catalog")" CloseLabel="@Text("MessageCatalog.Close")" OnDismiss="CloseAsync" OnClosed="CompleteClose" aria-labelledby="@TitleId" @attributes="AdditionalAttributes">
     <TitleTemplate>
@@ -12,18 +13,18 @@
             {
                 <form id="@($"{TitleId}-form")" @onsubmit="SaveAsync" @onsubmit:preventDefault>
                     <p>@Text("MessageCatalog.Id"): <code>@draft.Id</code></p>
-                    <label>@Text("MessageCatalog.Name")<input data-message-name type="text" @bind="DraftName" readonly="@ReadOnly" /></label>
+                    <label>@Text("MessageCatalog.Name")<input data-message-name type="text" @bind="DraftName" readonly="@ReadOnly" autocomplete="off" /></label>
                     @if (!draft.IsNew)
                     {
                         <p>@Text("MessageCatalog.SharedWarning")</p>
-                        @UsageContent(draft.Id)
+                        @((RenderFragment)(__builder => RenderUsageContent(__builder, draft.Id)))
                     }
                 </form>
             }
             else if (Catalog.DeleteId is { } deleteId)
             {
                 <p>@Text("MessageCatalog.ConfirmDelete", deleteId)</p>
-                @UsageContent(deleteId)
+                @((RenderFragment)(__builder => RenderUsageContent(__builder, deleteId)))
             }
             else
             {
@@ -33,16 +34,25 @@
                     @foreach (var message in Messages)
                     {
                         <li @key="message.Id" data-message-id="@message.Id">
-                            <strong>@NameOf(message)</strong> <code>@message.Id</code>
-                            @UsageContent(message.Id)
-                            @if (!ReadOnly)
-                            {
-                                <button type="button" data-message-action="edit" @onclick="@(() => EditMessage(message.Id))">@Text("MessageCatalog.Edit")</button>
-                                <button type="button" data-message-action="delete" disabled="@(!CanDelete(message.Id))" @onclick="@(() => ConfirmDelete(message.Id))">@Text("MessageCatalog.Delete")</button>
-                            }
+                            <button type="button" class="bpmn-message-catalog__select" data-message-select="@message.Id"
+                                    aria-pressed="@IsMessageSelected(message)" @onclick="@(() => SelectMessage(message.Id))">
+                                <strong>@NameOf(message)</strong> <code>@message.Id</code>
+                            </button>
                         </li>
                     }
                 </ul>
+                @if (SelectedMessage is { } selectedMessage)
+                {
+                    <section class="bpmn-message-catalog__details" data-message-details="@selectedMessage.Id">
+                        <p><strong>@NameOf(selectedMessage)</strong> <code>@selectedMessage.Id</code></p>
+                        @((RenderFragment)(__builder => RenderUsageContent(__builder, selectedMessage.Id)))
+                        @if (!ReadOnly)
+                        {
+                            <button type="button" data-message-action="edit" @onclick="@(() => EditMessage(selectedMessage.Id))">@Text("MessageCatalog.Edit")</button>
+                            <button type="button" data-message-action="delete" disabled="@(!CanDelete(selectedMessage.Id))" @onclick="@(() => ConfirmDelete(selectedMessage.Id))">@Text("MessageCatalog.Delete")</button>
+                        }
+                    </section>
+                }
             }
         </section>
     </ChildContent>
@@ -62,6 +72,29 @@
 
 @code {
     private BpmnDialog? _dialog;
+
     protected override bool RestoreFocusOnClose => false;
     protected override Task FocusDialogAsync() => _dialog?.FocusAsync().AsTask() ?? Task.CompletedTask;
+
+    private void RenderUsageContent(RenderTreeBuilder __builder, string id)
+    {
+        var inspection = Inspect(id);
+        <p>@Text("MessageCatalog.Usages", inspection.Usages.Count)</p>
+        @if (inspection.Usages.Count > 0)
+        {
+            <details>
+                <summary>@Text("MessageCatalog.InUse")</summary>
+                <ul>
+                    @foreach (var usage in inspection.Usages)
+                    {
+                        <li>@($"{usage.OwnerId}: {usage.Attribute}")</li>
+                    }
+                </ul>
+            </details>
+        }
+        else if (!inspection.CanDelete)
+        {
+            <p>@Text("MessageCatalog.Uncertain")</p>
+        }
+    }
 }

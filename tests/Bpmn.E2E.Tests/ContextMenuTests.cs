@@ -197,6 +197,39 @@ public class ContextMenuTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
     }
 
     [Fact]
+    public async Task MenuControlsStayInsideTheMenuAndLabelsAreStacked()
+    {
+        await GoToEditorAsync();
+        await RightClickAsync(await TaskIdAsync());
+
+        var layout = await Page.EvaluateAsync<double[]>(
+            """
+            () => {
+              const menu = document.querySelector('.bpmn-menu');
+              const menuBounds = menu.getBoundingClientRect();
+              const rows = [...menu.querySelectorAll('.bpmn-menu__property')];
+              const controls = rows.map(row => {
+                const label = row.querySelector('.bpmn-menu__label');
+                const control = row.querySelector('input, textarea, select, fluent-text-input, fluent-text-area, fluent-select');
+                return label && control
+                  ? [control.getBoundingClientRect().right - menuBounds.right,
+                     label.getBoundingClientRect().bottom - control.getBoundingClientRect().top]
+                  : [0, 0];
+              });
+              return [
+                menu.scrollWidth - menu.clientWidth,
+                Math.max(...controls.map(([right]) => right)),
+                Math.max(...controls.map(([, labelGap]) => labelGap)),
+              ];
+            }
+            """);
+
+        Assert.True(layout[0] <= 1, $"Menu has {layout[0]}px horizontal overflow.");
+        Assert.True(layout[1] <= 1, $"A menu control exceeds the menu by {layout[1]}px.");
+        Assert.True(layout[2] <= 1, "A menu property label is not above its control.");
+    }
+
+    [Fact]
     public async Task SwitchingTypeKeepsTheElementAndItsLabel()
     {
         await GoToEditorAsync();

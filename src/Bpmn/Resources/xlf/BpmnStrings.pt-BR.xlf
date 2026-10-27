@@ -1177,6 +1177,21 @@
         <target state="new">References: {0}</target>
         <note />
       </trans-unit>
+      <trans-unit id="MessageReference.EditShared">
+        <source>Edit Shared</source>
+        <target state="new">Edit Shared</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageReference.Manage">
+        <source>Manage</source>
+        <target state="new">Manage</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MessageReference.New">
+        <source>New</source>
+        <target state="new">New</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Property.RawText">
         <source>{0} text</source>
         <target state="translated">Texto de {0}</target>

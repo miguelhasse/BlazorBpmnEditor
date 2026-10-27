@@ -17,10 +17,10 @@
             <div class="bpmn-message-reference__actions">
                 @if (!ReadOnly)
                 {
-                    <button type="button" data-message-action="new" @onclick="NewMessage">@Text("MessageCatalog.New")</button>
-                    <button type="button" data-message-action="edit" disabled="@(!CanEditMessage)" @onclick="EditMessage">@Text("MessageCatalog.EditShared")</button>
+                    <button type="button" data-message-action="new" @onclick="NewMessage">@Text("MessageReference.New")</button>
+                    <button type="button" data-message-action="edit" disabled="@(!CanEditMessage)" @onclick="EditMessage">@Text("MessageReference.EditShared")</button>
                 }
-                <button type="button" data-message-action="manage" @onclick="ManageMessages">@Text("MessageCatalog.Manage")</button>
+                <button type="button" data-message-action="manage" @onclick="ManageMessages">@Text("MessageReference.Manage")</button>
             </div>
         }
     </div>

@@ -41,7 +41,7 @@
         }
         @if (IsOpen && !Locked && Element.TemplateId is null)
         {
-            <FluentTextInput Class="bpmn-templates__search" AriaLabel="@EditorText("TemplateChooser.Search")" Value="@Search" Immediate="true"
+            <FluentTextInput Class="bpmn-templates__search" AriaLabel="@EditorText("TemplateChooser.Search")" Value="@Search" Immediate="true" autocomplete="off"
                              ValueChanged="@(value => SetSearch(new ChangeEventArgs { Value = value }))">
                 <StartTemplate><FluentIcon Value="@(new Icons.Regular.Size20.Search())" /></StartTemplate>
             </FluentTextInput>

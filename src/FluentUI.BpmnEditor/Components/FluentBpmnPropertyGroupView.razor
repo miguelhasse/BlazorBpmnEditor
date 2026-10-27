@@ -14,31 +14,33 @@ else
 {
     @if (IsTopLevel)
     {
-        <FluentAccordion>
-            <FluentAccordionItem Class="@("bpmn-properties__group " + (Context.Group.Namespace is not null ? "bpmn-properties__group--extension" : null))"
-                                 Expanded="@Context.Group.OpenByDefault" data-group-id="@Context.Group.Id">
-                <HeaderTemplate>
-                    <span class="bpmn-properties__heading" title="@Context.Group.Tooltip">
-                        @(Context.Group.Label ?? Context.Group.Id)
-                    </span>
-                </HeaderTemplate>
-                <ChildContent>
-                    @if (Context.Entries.Count > 0)
-                    {
-                        <div class="bpmn-properties__properties" role="group" aria-label="@(Context.Group.Label ?? Context.Group.Id)">
-                            @foreach (var entry in Context.Entries)
-                            {
-                                @Context.RenderEntry(entry)
-                            }
-                        </div>
-                    }
-                    @foreach (var child in Context.Children)
-                    {
-                        <FluentBpmnPropertyGroupView Context="@child" GroupTemplate="@GroupTemplate" />
-                    }
-                </ChildContent>
-            </FluentAccordionItem>
-        </FluentAccordion>
+        <div class="bpmn-properties__group bpmn-properties__accordion-section" data-group-id="@Context.Group.Id">
+            <FluentAccordion>
+                <FluentAccordionItem Class="@("bpmn-properties__accordion-item " + (Context.Group.Namespace is not null ? "bpmn-properties__group--extension" : null))"
+                                     Expanded="@Context.Group.OpenByDefault">
+                    <HeaderTemplate>
+                        <span class="bpmn-properties__heading" title="@Context.Group.Tooltip">
+                            @(Context.Group.Label ?? Context.Group.Id)
+                        </span>
+                    </HeaderTemplate>
+                    <ChildContent>
+                        @if (Context.Entries.Count > 0)
+                        {
+                            <div class="bpmn-properties__properties" role="group" aria-label="@(Context.Group.Label ?? Context.Group.Id)">
+                                @foreach (var entry in Context.Entries)
+                                {
+                                    @Context.RenderEntry(entry)
+                                }
+                            </div>
+                        }
+                        @foreach (var child in Context.Children)
+                        {
+                            <FluentBpmnPropertyGroupView Context="@child" GroupTemplate="@GroupTemplate" />
+                        }
+                    </ChildContent>
+                </FluentAccordionItem>
+            </FluentAccordion>
+        </div>
     }
     else
     {

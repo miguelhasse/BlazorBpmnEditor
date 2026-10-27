@@ -12,6 +12,9 @@
   <data name="Toolbar.Color.Error.COLOR-002" xml:space="preserve"><value>Every selected item must be drawn on the current diagram.</value></data>
   <data name="Toolbar.Color.Error.COLOR-003" xml:space="preserve"><value>Only shapes have a fill color.</value></data>
   <data name="MessageCatalog.Title" xml:space="preserve"><value>Messages</value></data>
+  <data name="MessageReference.New" xml:space="preserve"><value>New</value></data>
+  <data name="MessageReference.EditShared" xml:space="preserve"><value>Edit Shared</value></data>
+  <data name="MessageReference.Manage" xml:space="preserve"><value>Manage</value></data>
   <data name="MessageCatalog.New" xml:space="preserve"><value>New message</value></data>
   <data name="MessageCatalog.Edit" xml:space="preserve"><value>Edit name</value></data>
   <data name="MessageCatalog.EditShared" xml:space="preserve"><value>Edit shared message</value></data>

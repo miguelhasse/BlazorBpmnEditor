@@ -88,8 +88,11 @@
                       OnClick="@ShowShortcutHelp"></FluentButton>
     }
 
-    <FluentButton @ref="_messages" Appearance="ButtonAppearance.Subtle" Type="ButtonType.Button" role="button" Class="bpmn-toolbar__button" data-message-action="manage"
-                  Disabled="@(!CanManageMessages)" aria-disabled="@(!CanManageMessages ? "true" : null)" OnClick="ShowMessages">@Text("MessageCatalog.Title")</FluentButton>
+    @if (ShowMessages)
+    {
+        <FluentButton @ref="_messages" Appearance="ButtonAppearance.Subtle" Type="ButtonType.Button" role="button" Class="bpmn-toolbar__button" data-message-action="manage"
+                      Disabled="@(!CanManageMessages)" aria-disabled="@(!CanManageMessages ? "true" : null)" OnClick="OpenMessageCatalog">@Text("MessageCatalog.Title")</FluentButton>
+    }
 
     @ChildContent
 </div>

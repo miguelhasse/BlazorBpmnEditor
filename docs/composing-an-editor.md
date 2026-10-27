@@ -123,17 +123,18 @@ For example, a standard editor can embed a custom toolbar without changing appli
 
 Both toolbar implementations inherit independent visibility parameters from `BpmnToolbarBase`:
 `ShowZoom` controls Zoom in/out, the zoom readout, Reset, and Fit to content; `ShowUndoRedo`
-controls Undo/Redo; `ShowShortcuts` controls the shortcut-help button. All three default to `true`.
-Set them on the toolbar component, including a toolbar in `ToolbarContent`, for example:
+controls Undo/Redo; `ShowShortcuts` controls the shortcut-help button; and `ShowMessages` controls
+the document message-catalog button. All default to `true`. Set them on the toolbar component,
+including a toolbar in `ToolbarContent`, for example:
 
 ```razor
-<BpmnToolbar ShowZoom="false" ShowUndoRedo="true" ShowShortcuts="false" />
+<BpmnToolbar ShowZoom="false" ShowUndoRedo="true" ShowShortcuts="false" ShowMessages="false" />
 ```
 
 The same parameters work on `FluentBpmnToolbar`. Hiding controls does not disable keyboard
 shortcuts or commands, change history, or hide custom `ChildContent`.
-Custom toolbar subclasses should use `ShowShortcutHelp()` to open shortcut help; the former
-`ShowShortcuts()` handler is renamed to make room for the visibility parameter.
+Custom toolbar subclasses should use `ShowShortcutHelp()` to open shortcut help and
+`OpenMessageCatalog()` to open the message catalog.
 
 The built-in standard and Fluent toolbars offer opt-in selected-item fill, border/line, and text color
 pickers with reset, multi-selection, mixed values, and read-only support. Set `ShowColorPicker="true"`

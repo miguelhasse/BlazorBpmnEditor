@@ -35,7 +35,7 @@
         }
         @if (IsOpen && !Locked && Element.TemplateId is null)
         {
-            <input class="bpmn-templates__search" type="search" aria-label="@EditorText("TemplateChooser.Search")" value="@Search" @oninput="SetSearch" />
+            <input class="bpmn-templates__search" type="search" aria-label="@EditorText("TemplateChooser.Search")" value="@Search" autocomplete="off" @oninput="SetSearch" />
             <div class="bpmn-templates__list" role="listbox" aria-label="@EditorText("TemplateChooser.Applicable")">
                 @foreach (var category in Filtered.GroupBy(template => CategoryOf(template)))
                 {

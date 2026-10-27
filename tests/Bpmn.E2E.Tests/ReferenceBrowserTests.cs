@@ -32,6 +32,46 @@ public class ReferenceBrowserTests(DemoAppFixture app) : PageTest, IClassFixture
     }
 
     [Fact]
+    public async Task UsageRowsKeepTextCompactAndInsideThePanel()
+    {
+        await GoToEditorAsync();
+        Assert.True(Page.Context.Browser?.IsConnected);
+        await ShowPanelAsync();
+        var taskId = await TaskIdAsync();
+        await SelectAsync(taskId);
+        await Page.Locator(".bpmn-usages__go").First.ClickAsync();
+        const string flowId = "Flow_WithAnUnbrokenIdentifierThatMustWrapWithoutPushingTheUsageTextOutsideThePropertyPanel";
+        await Page.Textbox("Element id").FillAsync(flowId);
+        await Page.Keyboard.PressAsync("Tab");
+        await Expect(Page.Locator($".joint-cell[model-id='{flowId}']")).ToHaveCountAsync(1);
+        await SelectAsync(taskId);
+        await Expect(Page.Locator(".bpmn-usages__go")).ToHaveCountAsync(3);
+        await Expect(Page.Locator(".bpmn-usages__owner").First).ToHaveTextAsync(flowId);
+
+        var layout = await Page.Locator(".bpmn-usages").EvaluateAsync<double[]>(
+            """
+            usages => {
+              const rows = [...usages.querySelectorAll('.bpmn-usages__go')];
+              return [
+                usages.scrollWidth - usages.clientWidth,
+                Math.max(...rows.map(row => {
+                  const attribute = row.querySelector('.bpmn-usages__attribute').getBoundingClientRect();
+                  const icon = row.querySelector('[slot=start]');
+                  const leading = icon ?? row.querySelector('.bpmn-usages__attribute');
+                  const trailing = icon ? attribute : row.querySelector('.bpmn-usages__owner').getBoundingClientRect();
+                  return trailing.left - leading.getBoundingClientRect().right;
+                })),
+              ];
+            }
+            """);
+        Assert.True(layout[0] <= 1, $"Usage rows have {layout[0]}px horizontal overflow.");
+        Assert.True(layout[1] >= 0 && layout[1] <= 12, $"Usage text gap is {layout[1]}px.");
+
+        await Page.Locator(".bpmn-usages__go").First.ClickAsync();
+        await Expect(Page.Locator(".bpmn-properties__subtitle")).ToHaveTextAsync("Sequence Flow");
+    }
+
+    [Fact]
     public async Task FollowingAUsageSelectsWhatHoldsIt()
     {
         await GoToEditorAsync();

@@ -43,6 +43,9 @@ public sealed class MessageCatalogUiTests : BunitContext
         var editor = Editor();
         var session = Session(editor);
         await editor.InvokeAsync(() => session.SetSelectionAsync([owner]));
+        Assert.Equal("New", editor.Find(".bpmn-message-reference [data-message-action=new]").TextContent.Trim());
+        Assert.Equal("Edit Shared", editor.Find(".bpmn-message-reference [data-message-action=edit]").TextContent.Trim());
+        Assert.Equal("Manage", editor.Find(".bpmn-message-reference [data-message-action=manage]").TextContent.Trim());
         Assert.Contains("No messages defined", editor.Markup, StringComparison.Ordinal);
         editor.Find(".bpmn-message-reference [data-message-action=new]").Click();
         Assert.True(session.State.MessageCatalog.Draft!.IsNew);
@@ -71,11 +74,22 @@ public sealed class MessageCatalogUiTests : BunitContext
         var session = Session(editor);
         editor.Find(".bpmn-toolbar [data-message-action=manage]").Click();
         editor.Find(".bpmn-message-catalog [data-message-action=new]").Click();
+        Assert.Equal("off", editor.Find("[data-message-name]").GetAttribute("autocomplete"));
         await KitFixture.ChangeMessageNameAsync(editor, "");
         editor.Find(".bpmn-message-catalog form").Submit();
         editor.WaitForAssertion(() => Assert.Single(session.EditedDocument!.Catalog.Messages));
         Assert.All(session.EditedDocument!.FlowNodes, node => Assert.Null(node.MessageRef));
+        Assert.Empty(editor.FindAll(".bpmn-message-catalog [data-message-action=edit]"));
+        Assert.Empty(editor.FindAll(".bpmn-message-catalog [data-message-action=delete]"));
+        editor.Find(".bpmn-message-catalog [data-message-select]").Click();
+        Assert.Single(editor.FindAll(".bpmn-message-catalog [data-message-details]"));
+        Assert.Contains("References: 0", editor.Find("[data-message-details]").TextContent, StringComparison.Ordinal);
+        Assert.DoesNotContain("Deletion blocked:", editor.Find("[data-message-details]").TextContent, StringComparison.Ordinal);
+        Assert.Empty(editor.FindAll("[data-message-details] details"));
+        Assert.Single(editor.FindAll(".bpmn-message-catalog [data-message-action=edit]"));
         editor.Find(".bpmn-message-catalog [data-message-action=delete]").Click();
+        Assert.Contains("References: 0", editor.Find(".bpmn-message-catalog").TextContent, StringComparison.Ordinal);
+        Assert.Empty(editor.FindAll(".bpmn-message-catalog details"));
         Assert.Single(session.EditedDocument.Catalog.Messages);
         editor.Find(".bpmn-message-catalog [data-message-action=confirm-delete]").Click();
         editor.WaitForAssertion(() => Assert.Empty(session.EditedDocument.Catalog.Messages));
@@ -113,13 +127,46 @@ public sealed class MessageCatalogUiTests : BunitContext
         await editor.InvokeAsync(() => session.SetSelectionAsync(["Send"]));
         editor.Find(".bpmn-message-reference [data-message-action=edit]").Click();
         Assert.Contains("This definition is shared", editor.Markup, StringComparison.Ordinal);
-        Assert.Contains("Send", editor.Find(".bpmn-message-catalog").TextContent, StringComparison.Ordinal);
+        Assert.Contains("References: 1", editor.Find(".bpmn-message-catalog form").TextContent, StringComparison.Ordinal);
+        Assert.Equal("Referenced messages cannot be deleted. Clear their references first.",
+            editor.Find(".bpmn-message-catalog details > summary").TextContent);
+        Assert.Equal("Send: messageRef", editor.Find(".bpmn-message-catalog details li").TextContent);
         await KitFixture.ChangeMessageNameAsync(editor, "Renamed");
         editor.Find(".bpmn-message-catalog form").Submit();
         editor.WaitForAssertion(() => Assert.Equal("Renamed", session.EditedDocument.Catalog.Messages[0].Name));
         editor.Find(".bpmn-toolbar [data-message-action=manage]").Click();
+        editor.Find(".bpmn-message-catalog [data-message-select]").Click();
         Assert.True(editor.Find(".bpmn-message-catalog [data-message-action=delete]").HasAttribute("disabled"));
         Assert.Contains(id, editor.Find(".bpmn-message-catalog").TextContent, StringComparison.Ordinal);
+        Assert.Contains("References: 1", editor.Find("[data-message-details]").TextContent, StringComparison.Ordinal);
+        Assert.Equal("Send: messageRef", editor.Find("[data-message-details] details li").TextContent);
+    }
+
+    [Fact]
+    public void RetainedOpaqueContentShowsUncertainDeletionWarningWithoutKnownUsages()
+    {
+        var document = Serialization.BpmnXmlReader.Read("""
+            <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                         xmlns:vendor="urn:vendor"
+                         id="Definitions_1" targetNamespace="urn:test">
+              <message id="Message_1" />
+              <process id="Process_1">
+                <task id="Task_1">
+                  <extensionElements><vendor:correlationKey value="opaque" /></extensionElements>
+                </task>
+              </process>
+            </definitions>
+            """).Document;
+        var editor = Editor(document: document);
+        editor.Find(".bpmn-toolbar [data-message-action=manage]").Click();
+        editor.Find(".bpmn-message-catalog [data-message-select]").Click();
+
+        var details = editor.Find("[data-message-details]");
+        Assert.Contains("References: 0", details.TextContent, StringComparison.Ordinal);
+        Assert.Contains("Deletion blocked: retained content may contain references this editor cannot safely inspect.",
+            details.TextContent, StringComparison.Ordinal);
+        Assert.Empty(editor.FindAll("[data-message-details] details"));
+        Assert.True(editor.Find("[data-message-details] [data-message-action=delete]").HasAttribute("disabled"));
     }
 
     [Fact]
@@ -130,6 +177,8 @@ public sealed class MessageCatalogUiTests : BunitContext
         Assert.True(Session(editor).State.MessageCatalog.IsOpen);
         Assert.Empty(editor.FindAll(".bpmn-message-catalog [data-message-action=new]"));
         Assert.Empty(editor.FindAll(".bpmn-message-catalog [data-message-action=save]"));
+        Assert.Empty(editor.FindAll(".bpmn-message-catalog [data-message-action=edit]"));
+        Assert.Empty(editor.FindAll(".bpmn-message-catalog [data-message-action=delete]"));
     }
 
     [Fact]

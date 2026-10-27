@@ -375,12 +375,20 @@ dialog.bpmn-dialog .bpmn-dialog__close:hover { background: var(--bpmn-surface-ho
 /* --- the called-element picker ---------------------------------------------- */
 
 .bpmn-message-reference__actions { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-block-start: 0.25rem; }
-dialog.bpmn-message-catalog { inline-size: min(42rem, calc(100vw - 2rem)); }
+dialog.bpmn-message-catalog { box-sizing: border-box; inline-size: min(42rem, calc(100vw - 2rem)); max-block-size: 85vh; overflow: auto; }
 .bpmn-message-catalog__panel button { margin: 0.25rem; font: inherit; }
 .bpmn-message-catalog__panel label { display: grid; gap: 0.25rem; }
-.bpmn-message-catalog__panel input { font: inherit; color: inherit; background: inherit; border: 1px solid var(--bpmn-surface-border); padding: 0.4rem; }
-.bpmn-message-catalog__list { list-style: none; padding: 0; }
-.bpmn-message-catalog__list > li { padding-block: 0.75rem; border-block-end: 1px solid var(--bpmn-surface-border); overflow-wrap: anywhere; }
+.bpmn-message-catalog__panel input { box-sizing: border-box; inline-size: 100%; max-inline-size: 100%; min-inline-size: 0; font: inherit; color: inherit; background: inherit; border: 1px solid var(--bpmn-surface-border); padding: 0.4rem; }
+.bpmn-message-catalog__list { box-sizing: border-box; max-block-size: min(45vh, 24rem); overflow-y: auto; overscroll-behavior: contain; list-style: none; margin: 0; padding: 0; }
+.bpmn-message-catalog__list > li { min-inline-size: 0; padding-block: 0.25rem; border-block-end: 1px solid var(--bpmn-surface-border); overflow-wrap: anywhere; }
+.bpmn-message-catalog__select { box-sizing: border-box; display: block; inline-size: 100%; max-inline-size: 100%; min-inline-size: 0; padding: 0.5rem; border: 0; border-radius: 4px; background: transparent; color: inherit; font: inherit; text-align: start; overflow-wrap: anywhere; cursor: pointer; }
+.bpmn-message-catalog__select:hover,
+.bpmn-message-catalog__select[aria-pressed="true"] { background: var(--bpmn-surface-hover); }
+.bpmn-message-catalog__select:focus-visible { outline: 2px solid var(--bpmn-selection-color); outline-offset: -2px; }
+.bpmn-message-catalog__panel .bpmn-message-catalog__select { margin-inline: 0; white-space: normal; }
+.bpmn-message-catalog__select code,
+.bpmn-message-catalog__details code { overflow-wrap: anywhere; }
+.bpmn-message-catalog__details { min-inline-size: 0; padding-block-start: 0.75rem; border-block-start: 1px solid var(--bpmn-surface-border); }
 
 dialog.bpmn-picker { inline-size: min(28rem, calc(100vw - 2rem)); }
 

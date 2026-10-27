@@ -24,13 +24,14 @@
 /* --- the context menu ----------------------------------------------------- */
 
 .bpmn-menu {
+  box-sizing: border-box;
   position: absolute;
   z-index: 30;
   inline-size: max-content;
-  min-inline-size: 13rem;
-  max-inline-size: 20rem;
+  min-inline-size: min(13rem, calc(100% - 0.5rem));
+  max-inline-size: min(20rem, calc(100% - 0.5rem));
   max-block-size: 70%;
-  overflow-y: auto;
+  overflow: auto;
   padding: 0.25rem;
   border: 1px solid var(--bpmn-surface-border);
   border-radius: 6px;
@@ -105,7 +106,9 @@
 }
 
 .bpmn-menu__type-select {
+  box-sizing: border-box;
   inline-size: 100%;
+  max-inline-size: 100%;
   min-inline-size: 0;
   padding: 0.25rem;
   background: var(--bpmn-surface-background);
@@ -140,14 +143,21 @@
   display: grid;
   gap: 0.25rem;
   padding-block-end: 0.35rem;
+  min-inline-size: 0;
 }
 
 .bpmn-menu__property {
   display: grid;
-  grid-template-columns: 7rem 1fr;
-  align-items: center;
-  gap: 0.4rem;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 0.2rem;
   padding-inline: 0.5rem;
+  min-inline-size: 0;
+}
+
+.bpmn-menu__property > * {
+  min-inline-size: 0;
+  max-inline-size: 100%;
 }
 
 .bpmn-menu__label {
@@ -158,7 +168,9 @@
 
 .bpmn-menu__text,
 .bpmn-menu__select {
+  box-sizing: border-box;
   inline-size: 100%;
+  max-inline-size: 100%;
   min-inline-size: 0;
   padding: 0.15rem 0.3rem;
   border: 1px solid var(--bpmn-surface-border);
@@ -323,10 +335,13 @@
 /* --- property panel (M6) ---------------------------------------------------- */
 
 .bpmn-properties {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  inline-size: 100%;
   min-block-size: 0;
+  min-inline-size: 0;
   font-family: var(--bpmn-font-family);
   font-size: 0.8125rem;
   color: var(--bpmn-surface-foreground);
@@ -360,8 +375,9 @@
 
 .bpmn-properties__fact {
   display: grid;
-  grid-template-columns: 5rem 1fr;
+  grid-template-columns: minmax(0, 5rem) minmax(0, 1fr);
   gap: 0.4rem;
+  min-inline-size: 0;
 }
 
 .bpmn-properties__fact dt {
@@ -371,6 +387,7 @@
 
 .bpmn-properties__fact dd {
   margin: 0;
+  min-inline-size: 0;
   overflow-wrap: anywhere;
 }
 
@@ -382,13 +399,20 @@
 .bpmn-properties__properties {
   display: grid;
   gap: 0.35rem;
+  min-inline-size: 0;
 }
 
 .bpmn-properties__property {
   display: grid;
-  grid-template-columns: 7rem 1fr;
-  align-items: center;
-  gap: 0.4rem;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 0.2rem;
+  min-inline-size: 0;
+}
+
+.bpmn-properties__property > * {
+  min-inline-size: 0;
+  max-inline-size: 100%;
 }
 
 .bpmn-properties__label {
@@ -399,7 +423,9 @@
 
 .bpmn-properties__text,
 .bpmn-properties__select {
+  box-sizing: border-box;
   inline-size: 100%;
+  max-inline-size: 100%;
   min-inline-size: 0;
   padding: 0.2rem 0.35rem;
   border: 1px solid var(--bpmn-surface-border);
@@ -423,11 +449,21 @@
 }
 
 .bpmn-properties__group {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  align-self: stretch;
+  inline-size: 100%;
+  min-inline-size: 0;
   padding-block-start: 0.4rem;
   border-block-start: 1px solid var(--bpmn-chrome-border);
+}
+
+.bpmn-properties__nested-group {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
 }
 
 .bpmn-properties__heading {
@@ -521,8 +557,9 @@
 }
 
 .bpmn-usages__go {
+  box-sizing: border-box;
   display: grid;
-  grid-template-columns: 7rem 1fr;
+  grid-template-columns: fit-content(7rem) minmax(0, 1fr);
   gap: 0.4rem;
   inline-size: 100%;
   padding: 0.2rem 0.3rem;
@@ -839,8 +876,10 @@
 .bpmn-properties__feel-entry,
 .bpmn-menu__feel-entry {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.3rem;
+  min-inline-size: 0;
 }
 .bpmn-properties__feel-entry > :not(button),
 .bpmn-menu__feel-entry > :not(button) {

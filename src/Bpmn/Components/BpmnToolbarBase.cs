@@ -41,6 +41,10 @@ public abstract class BpmnToolbarBase : BpmnEditorComponentBase
     [Parameter]
     public bool ShowShortcuts { get; set; } = true;
 
+    /// <summary>Whether the message catalog button is shown. Shown by default.</summary>
+    [Parameter]
+    public bool ShowMessages { get; set; } = true;
+
     /// <summary>The independently editable color channels.</summary>
     protected IReadOnlyList<BpmnColorChannel> ColorChannels { get; } =
         [BpmnColorChannel.Background, BpmnColorChannel.Border, BpmnColorChannel.Text];
@@ -151,12 +155,12 @@ public abstract class BpmnToolbarBase : BpmnEditorComponentBase
     protected bool CanManageMessages => State.Document is not null && Session.HasMessageCatalog;
 
     /// <summary>Opens the document-level Message catalog.</summary>
-    protected void ShowMessages() => Session.ShowMessages();
+    protected void OpenMessageCatalog() => Session.ShowMessages();
 
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (Session.TakeMessageFocus("toolbar"))
+        if (Session.TakeMessageFocus("toolbar") && ShowMessages)
             await MessagesButton.FocusAsync(preventScroll: true).ConfigureAwait(true);
     }
 }

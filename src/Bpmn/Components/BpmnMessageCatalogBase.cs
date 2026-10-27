@@ -1,6 +1,5 @@
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
-using Microsoft.AspNetCore.Components;
 
 namespace Hasseware.AspNetCore.Components.Bpmn;
 
@@ -12,6 +11,7 @@ public abstract class BpmnMessageCatalogBase : BpmnEditorComponentBase
     private bool _focusPending;
     private bool _renderedOpen;
     private BpmnDocument? _inspectedDocument;
+    private string? _selectedMessageId;
     private readonly Dictionary<string, (bool CanDelete, IReadOnlyList<BpmnReferenceSite> Usages)> _inspections = [];
 
     /// <summary>Catalog visibility and current action.</summary>
@@ -34,6 +34,12 @@ public abstract class BpmnMessageCatalogBase : BpmnEditorComponentBase
 
     /// <summary>The pending Message name; empty names are legal.</summary>
     protected string? DraftName { get; set; }
+
+    /// <summary>The selected definition in the catalog list.</summary>
+    protected BpmnMessage? SelectedMessage => Messages.FirstOrDefault(message => message.Id == _selectedMessageId);
+
+    /// <summary>Whether a definition is selected in the catalog list.</summary>
+    protected bool IsMessageSelected(BpmnMessage message) => message.Id == _selectedMessageId;
 
     /// <summary>Accessible heading identity.</summary>
     protected string TitleId { get; } = "bpmn-messages-" + Guid.NewGuid().ToString("N");
@@ -66,6 +72,9 @@ public abstract class BpmnMessageCatalogBase : BpmnEditorComponentBase
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!Catalog.IsOpen && _renderedOpen)
+            _selectedMessageId = null;
+
         _renderedOpen = Catalog.IsOpen;
 
         if (!Catalog.IsOpen && RestoreFocusOnClose)
@@ -81,41 +90,14 @@ public abstract class BpmnMessageCatalogBase : BpmnEditorComponentBase
     /// <summary>A display name which does not confuse unnamed definitions with IDs.</summary>
     protected string NameOf(BpmnMessage message) => string.IsNullOrEmpty(message.Name) ? Text("MessageCatalog.Unnamed") : message.Name;
 
+    /// <summary>Selects a definition to show its details and actions.</summary>
+    protected void SelectMessage(string id) => _selectedMessageId = id;
+
     /// <summary>Whether deleting the current definition can be proved safe.</summary>
     protected bool CanDelete(string id) => Inspect(id).CanDelete;
 
-    /// <summary>Accessible usage details shared by both UI kits.</summary>
-    protected RenderFragment UsageContent(string id) => builder =>
-    {
-        var inspection = Inspect(id);
-        builder.OpenElement(0, "p");
-        builder.AddContent(1, Text("MessageCatalog.Usages", inspection.Usages.Count));
-        builder.CloseElement();
-        if (inspection.Usages.Count > 0)
-        {
-            builder.OpenElement(2, "details");
-            builder.OpenElement(3, "summary");
-            builder.AddContent(4, Text("MessageCatalog.InUse"));
-            builder.CloseElement();
-            builder.OpenElement(5, "ul");
-            foreach (var usage in inspection.Usages)
-            {
-                builder.OpenElement(6, "li");
-                builder.AddContent(7, $"{usage.OwnerId}: {usage.Attribute}");
-                builder.CloseElement();
-            }
-            builder.CloseElement();
-            builder.CloseElement();
-        }
-        else if (!inspection.CanDelete)
-        {
-            builder.OpenElement(8, "p");
-            builder.AddContent(9, Text("MessageCatalog.Uncertain"));
-            builder.CloseElement();
-        }
-    };
-
-    private (bool CanDelete, IReadOnlyList<BpmnReferenceSite> Usages) Inspect(string id)
+    /// <summary>Cached deletion safety and reference sites for a definition.</summary>
+    protected (bool CanDelete, IReadOnlyList<BpmnReferenceSite> Usages) Inspect(string id)
     {
         if (State.Document is not { } document)
             return (false, []);

@@ -50,6 +50,124 @@ public class PropertyPanelTests(DemoAppFixture app) : PageTest, IClassFixture<De
     }
 
     [Fact]
+    public async Task PropertyControlsAndSectionSeparatorsStayInsideThePanel()
+    {
+        await GoToEditorAsync();
+        await ShowPanelAsync();
+        await SelectAsync(await TaskIdAsync());
+
+        var layout = await Page.EvaluateAsync<double[]>(
+            """
+            () => {
+              const panel = document.querySelector('.bpmn-properties');
+              const panelBounds = panel.getBoundingClientRect();
+              const rows = [...panel.querySelectorAll('.bpmn-properties__property')];
+              const controls = rows.map(row => {
+                const label = row.querySelector('.bpmn-properties__label');
+                const control = row.querySelector('input, textarea, select, fluent-text-input, fluent-text-area, fluent-select');
+                return label && control
+                  ? [control.getBoundingClientRect().right - panelBounds.right,
+                     label.getBoundingClientRect().bottom - control.getBoundingClientRect().top]
+                  : [0, 0];
+              });
+              const widths = [...panel.querySelectorAll('.bpmn-properties__group')]
+                .map(group => group.getBoundingClientRect().width);
+              return [
+                panel.scrollWidth - panel.clientWidth,
+                Math.max(...controls.map(([right]) => right)),
+                Math.max(...controls.map(([, labelGap]) => labelGap)),
+                Math.max(...widths) - Math.min(...widths),
+                ...widths,
+              ];
+            }
+            """);
+
+        Assert.True(layout[0] <= 1, $"Panel has {layout[0]}px horizontal overflow.");
+        Assert.True(layout[1] <= 1, $"A property control exceeds the panel by {layout[1]}px.");
+        Assert.True(layout[2] <= 1, "A property label is not above its control.");
+        var sections = await Page.EvaluateAsync<string>(
+            """
+            () => JSON.stringify([...document.querySelectorAll('.bpmn-properties__group')].map(group => ({
+              tag: group.tagName,
+              width: group.getBoundingClientRect().width,
+              parentTag: group.parentElement.tagName,
+              parentWidth: group.parentElement.getBoundingClientRect().width,
+              rootMatches: group.matches('.fluent-bpmn-editor .bpmn-properties > fluent-accordion > fluent-accordion-item'),
+              style: group.getAttribute('style'),
+              parentDisplay: getComputedStyle(group.parentElement).display,
+              parentFlexDirection: getComputedStyle(group.parentElement).flexDirection,
+              display: getComputedStyle(group).display,
+              cssWidth: getComputedStyle(group).width,
+              alignSelf: getComputedStyle(group).alignSelf,
+            })))
+            """);
+        Assert.True(layout[3] <= 1,
+            $"Property section separators differ in width by {layout[3]}px: {string.Join(", ", layout.Skip(4))}. {sections}");
+    }
+
+    [Theory]
+    [InlineData(false, "")]
+    [InlineData(true, "")]
+    [InlineData(false, "OrderSubmittedWithAnUnbrokenMessageNameThatMustNotWidenThePropertyControl")]
+    [InlineData(true, "OrderSubmittedWithAnUnbrokenMessageNameThatMustNotWidenThePropertyControl")]
+    public async Task MessageReferenceControlsStayInsideTheirSurface(bool contextMenu, string messageName)
+    {
+        await GoToEditorAsync();
+        Assert.True(Page.Context.Browser?.IsConnected);
+        await ShowPanelAsync();
+        var taskId = await TaskIdAsync();
+        var task = Page.Locator($".joint-cell[model-id='{taskId}'] [joint-selector='body']").First;
+        await task.ClickAsync(new() { Button = MouseButton.Right });
+        await Page.PickAsync(Page.Locator(".bpmn-menu__type-select"), "Send Task");
+        await Page.Keyboard.PressAsync("Escape");
+        await SelectAsync(taskId);
+        await Page.Locator(".bpmn-properties [data-message-action=new]").ClickAsync();
+        var dialog = Page.Locator(".bpmn-message-catalog");
+        await dialog.GetByRole(AriaRole.Textbox, new() { Name = "Message name (optional)" }).FillAsync(messageName);
+        await dialog.GetByRole(AriaRole.Button, new() { Name = "Save", Exact = true }).ClickAsync();
+        await Expect(dialog).ToBeHiddenAsync();
+
+        if (contextMenu)
+        {
+            await task.ClickAsync(new() { Button = MouseButton.Right });
+        }
+
+        var surface = Page.Locator(contextMenu ? ".bpmn-menu" : ".bpmn-properties");
+        var reference = surface.Locator(".bpmn-message-reference");
+        var selectedName = string.IsNullOrEmpty(messageName) ? "Unnamed message" : messageName;
+        await Expect(reference.GetByRole(AriaRole.Combobox)).ToContainTextAsync(selectedName);
+        await Page.PickAsync(reference.Locator("[class$=__select]"), 1);
+        var layout = await reference.EvaluateAsync<double[]>(
+            """
+            reference => {
+              const row = reference.closest('label');
+              const bounds = row.getBoundingClientRect();
+              const elements = [];
+              const visit = root => {
+                for (const element of root.children) {
+                  if (element.getBoundingClientRect().width > 0) elements.push(element);
+                  visit(element);
+                  if (element.shadowRoot) visit(element.shadowRoot);
+                }
+              };
+              visit(reference);
+              const controls = elements.filter(element => element.matches(
+                'select, fluent-select, fluent-dropdown, button, fluent-button, [part=control]'));
+              return [
+                row.scrollWidth - row.clientWidth,
+                Math.max(...controls.map(element => element.getBoundingClientRect().right - bounds.right)),
+                Math.max(...controls.map(element => bounds.left - element.getBoundingClientRect().left)),
+              ];
+            }
+            """);
+        Assert.True(layout[0] <= 1, $"Message row has {layout[0]}px horizontal overflow.");
+        Assert.True(layout[1] <= 1, $"Message control exceeds the right edge by {layout[1]}px.");
+        Assert.True(layout[2] <= 1, $"Message control exceeds the left edge by {layout[2]}px.");
+        Assert.True(await surface.EvaluateAsync<bool>("element => element.scrollWidth <= element.clientWidth + 1"),
+            "Message surface has horizontal overflow.");
+    }
+
+    [Fact]
     public async Task AnEditInThePanelRedrawsTheLabel()
     {
         await GoToEditorAsync();

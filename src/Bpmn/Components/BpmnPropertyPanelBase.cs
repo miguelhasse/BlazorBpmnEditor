@@ -179,8 +179,7 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
         _parameterEditors = editors;
         _parameterEditorsRevision = editors.Revision;
         var snapshots = Session.SelectionSnapshots;
-        IEnumerable<IBpmnPropertiesProvider> providers = Providers ??
-            _builtIns.Concat(PanelOptions.Providers).Concat(Services.GetServices<IBpmnPropertiesProvider>());
+        var providers = Providers ?? _builtIns.Concat(PanelOptions.Providers).Concat(Services.GetServices<IBpmnPropertiesProvider>());
         var culture = System.Globalization.CultureInfo.CurrentUICulture;
 
         if (_groupsInitialized && ReferenceEquals(_groupDocument, Document) && _groupReadOnly == Inspecting
@@ -194,7 +193,7 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
         _groupDocument = Document;
         _groupReadOnly = Inspecting;
         _groupCulture = culture;
-        _groupProviders = providers.ToArray();
+        _groupProviders = [.. providers];
         _entryContexts.Clear();
         _groupContexts.Clear();
 
