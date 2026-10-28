@@ -1,4 +1,4 @@
-# ![Blazor BPMN Editor](assets/blazor-bpmn-editor-logo.svg)
+# ![Blazor BPMN Editor](assets/blazor-bpmn-editor-banner.svg)
 
 A BPMN 2.0 diagram editor component library for Blazor. Blazor owns the chrome; a TypeScript module
 owns an SVG canvas rendered by JointJS (`@joint/core`, open source only).

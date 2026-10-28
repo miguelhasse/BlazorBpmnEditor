@@ -11,7 +11,6 @@ public abstract class BpmnMessageCatalogBase : BpmnEditorComponentBase
     private bool _focusPending;
     private bool _renderedOpen;
     private BpmnDocument? _inspectedDocument;
-    private string? _selectedMessageId;
     private readonly Dictionary<string, (bool CanDelete, IReadOnlyList<BpmnReferenceSite> Usages)> _inspections = [];
 
     /// <summary>Catalog visibility and current action.</summary>
@@ -34,12 +33,6 @@ public abstract class BpmnMessageCatalogBase : BpmnEditorComponentBase
 
     /// <summary>The pending Message name; empty names are legal.</summary>
     protected string? DraftName { get; set; }
-
-    /// <summary>The selected definition in the catalog list.</summary>
-    protected BpmnMessage? SelectedMessage => Messages.FirstOrDefault(message => message.Id == _selectedMessageId);
-
-    /// <summary>Whether a definition is selected in the catalog list.</summary>
-    protected bool IsMessageSelected(BpmnMessage message) => message.Id == _selectedMessageId;
 
     /// <summary>Accessible heading identity.</summary>
     protected string TitleId { get; } = "bpmn-messages-" + Guid.NewGuid().ToString("N");
@@ -72,9 +65,6 @@ public abstract class BpmnMessageCatalogBase : BpmnEditorComponentBase
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!Catalog.IsOpen && _renderedOpen)
-            _selectedMessageId = null;
-
         _renderedOpen = Catalog.IsOpen;
 
         if (!Catalog.IsOpen && RestoreFocusOnClose)
@@ -89,9 +79,6 @@ public abstract class BpmnMessageCatalogBase : BpmnEditorComponentBase
 
     /// <summary>A display name which does not confuse unnamed definitions with IDs.</summary>
     protected string NameOf(BpmnMessage message) => string.IsNullOrEmpty(message.Name) ? Text("MessageCatalog.Unnamed") : message.Name;
-
-    /// <summary>Selects a definition to show its details and actions.</summary>
-    protected void SelectMessage(string id) => _selectedMessageId = id;
 
     /// <summary>Whether deleting the current definition can be proved safe.</summary>
     protected bool CanDelete(string id) => Inspect(id).CanDelete;

@@ -36,26 +36,29 @@
                     @foreach (var message in Messages)
                     {
                         <li @key="message.Id" data-message-id="@message.Id">
-                            <FluentButton Appearance="ButtonAppearance.Subtle" Type="ButtonType.Button" Class="bpmn-message-catalog__select"
-                                          data-message-select="@message.Id" aria-pressed="@IsMessageSelected(message)"
-                                          OnClick="@(() => SelectMessage(message.Id))">
+                            <div tabindex="0" class="bpmn-message-catalog__heading" data-message-heading="@message.Id">
                                 <strong>@NameOf(message)</strong> <code>@message.Id</code>
-                            </FluentButton>
+                            </div>
+                            <section class="bpmn-message-catalog__details" data-message-details="@message.Id">
+                                @((RenderFragment)(__builder => RenderUsageContent(__builder, message.Id)))
+                                @if (!ReadOnly)
+                                {
+                                    <div class="bpmn-message-catalog__actions">
+                                        <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" data-message-action="edit"
+                                                      IconStart="@(new Icons.Regular.Size20.Edit())" IconOnly="true"
+                                                      aria-label="@Text("MessageCatalog.Edit")" Tooltip="@Text("MessageCatalog.Edit")"
+                                                      OnClick="@(() => EditMessage(message.Id))" />
+                                        <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" data-message-action="delete"
+                                                      IconStart="@(new Icons.Regular.Size20.Delete())" IconOnly="true"
+                                                      aria-label="@Text("MessageCatalog.Delete")" Tooltip="@Text("MessageCatalog.Delete")"
+                                                      Disabled="@(!CanDelete(message.Id))" aria-disabled="@(!CanDelete(message.Id) ? "true" : null)"
+                                                      OnClick="@(() => ConfirmDelete(message.Id))" />
+                                    </div>
+                                }
+                            </section>
                         </li>
                     }
                 </ul>
-                @if (SelectedMessage is { } selectedMessage)
-                {
-                    <section class="bpmn-message-catalog__details" data-message-details="@selectedMessage.Id">
-                        <p><strong>@NameOf(selectedMessage)</strong> <code>@selectedMessage.Id</code></p>
-                        @((RenderFragment)(__builder => RenderUsageContent(__builder, selectedMessage.Id)))
-                        @if (!ReadOnly)
-                        {
-                            <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" data-message-action="edit" OnClick="@(() => EditMessage(selectedMessage.Id))">@Text("MessageCatalog.Edit")</FluentButton>
-                            <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button" data-message-action="delete" Disabled="@(!CanDelete(selectedMessage.Id))" aria-disabled="@(!CanDelete(selectedMessage.Id) ? "true" : null)" OnClick="@(() => ConfirmDelete(selectedMessage.Id))">@Text("MessageCatalog.Delete")</FluentButton>
-                        }
-                    </section>
-                }
             }
         </section>
     </ChildContent>
@@ -82,7 +85,7 @@
     private void RenderUsageContent(RenderTreeBuilder __builder, string id)
     {
         var inspection = Inspect(id);
-        <p>@Text("MessageCatalog.Usages", inspection.Usages.Count)</p>
+        <p class="bpmn-message-catalog__usage-count">@Text("MessageCatalog.Usages", inspection.Usages.Count)</p>
         @if (inspection.Usages.Count > 0)
         {
             <details>

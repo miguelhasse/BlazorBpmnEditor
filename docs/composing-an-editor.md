@@ -80,6 +80,11 @@ will assign on save, and `NewMessage()` creates an unassigned draft. `SaveMessag
 publishes through history; cancellation does not change the document. Standalone property forms
 without an authoring session retain Message selection but do not offer catalog actions.
 
+The built-in catalogs keep message names and IDs in a scrollable list. Each row reveals its
+references and Edit/Delete actions while hovered or containing keyboard focus, without message selection.
+Fluent row actions use icons with localized accessible names and tooltips; standard row actions
+use text. Read-only catalogs retain reference inspection without mutation actions.
+
 Stencil drop and keyboard creation target `Session.ActiveDiagramId`, including diagrams opened
 through drill-down. Blank-area creation uses that plane's Process or embedded Sub-Process;
 hit containers still take precedence. A pending Call Activity retains its original destination
