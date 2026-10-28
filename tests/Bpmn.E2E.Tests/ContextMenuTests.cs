@@ -197,6 +197,34 @@ public class ContextMenuTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
     }
 
     [Fact]
+    public async Task FluentMenuSwitchLabelsAppearToTheRight()
+    {
+        await GoToEditorAsync();
+        Assert.True(Page.Context.Browser?.IsConnected);
+        await RightClickAsync(await TaskIdAsync());
+        var switches = Page.Locator(".bpmn-menu fluent-switch");
+        if (await Page.Locator(".fluent-bpmn-editor").CountAsync() == 0)
+        {
+            await Expect(switches).ToHaveCountAsync(0);
+            return;
+        }
+
+        await Expect(switches).ToHaveCountAsync(1);
+        Assert.True(await switches.EvaluateAllAsync<bool>(
+            """
+            switches => switches.every(control => {
+              const label = control.closest('.bpmn-menu__property').querySelector('.bpmn-menu__label');
+              const field = control.getBoundingClientRect();
+              const text = label.getBoundingClientRect();
+              return text.left >= field.right && Math.abs((text.top + text.bottom - field.top - field.bottom) / 2) <= 2;
+            })
+            """), "Switch labels must appear to the right, vertically centered.");
+        var checkedBefore = await switches.EvaluateAsync<bool>("element => element.checked");
+        await Page.Locator(".bpmn-menu__property:has(fluent-switch) > .bpmn-menu__label").ClickAsync();
+        await Expect(switches).ToHaveJSPropertyAsync("checked", !checkedBefore);
+    }
+
+    [Fact]
     public async Task MenuControlsStayInsideTheMenuAndLabelsAreStacked()
     {
         await GoToEditorAsync();

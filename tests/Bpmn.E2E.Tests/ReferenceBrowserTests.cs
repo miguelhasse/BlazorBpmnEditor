@@ -57,15 +57,27 @@ public class ReferenceBrowserTests(DemoAppFixture app) : PageTest, IClassFixture
                 Math.max(...rows.map(row => {
                   const attribute = row.querySelector('.bpmn-usages__attribute').getBoundingClientRect();
                   const icon = row.querySelector('[slot=start]');
-                  const leading = icon ?? row.querySelector('.bpmn-usages__attribute');
-                  const trailing = icon ? attribute : row.querySelector('.bpmn-usages__owner').getBoundingClientRect();
-                  return trailing.left - leading.getBoundingClientRect().right;
+                  return icon ? attribute.left - icon.getBoundingClientRect().right
+                    : attribute.left - row.getBoundingClientRect().left;
+                })),
+                Math.max(...rows.map(row => {
+                  const attribute = row.querySelector('.bpmn-usages__attribute').getBoundingClientRect();
+                  const owner = row.querySelector('.bpmn-usages__owner').getBoundingClientRect();
+                  return Math.max(Math.abs(attribute.left - owner.left), attribute.bottom - owner.top);
                 })),
               ];
             }
             """);
         Assert.True(layout[0] <= 1, $"Usage rows have {layout[0]}px horizontal overflow.");
         Assert.True(layout[1] >= 0 && layout[1] <= 12, $"Usage text gap is {layout[1]}px.");
+        Assert.True(layout[2] <= 1, "Usage attribute and owner must be stacked with matching left edges.");
+        if (await Page.Locator(".fluent-bpmn-editor").CountAsync() == 0)
+        {
+            await Expect(Page.Locator(".bpmn-usages__list")).ToHaveCSSAsync("list-style-type", "square");
+            await Expect(Page.Locator(".bpmn-usages__item")).ToHaveCountAsync(3);
+            Assert.True(await Page.Locator(".bpmn-usages__item").EvaluateAllAsync<bool>(
+                "items => items.every(item => getComputedStyle(item).display === 'list-item')"));
+        }
 
         await Page.Locator(".bpmn-usages__go").First.ClickAsync();
         await Expect(Page.Locator(".bpmn-properties__subtitle")).ToHaveTextAsync("Sequence Flow");

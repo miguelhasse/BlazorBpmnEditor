@@ -553,14 +553,14 @@
   gap: 0.1rem;
   margin: 0;
   padding: 0;
-  list-style: none;
+  padding-inline-start: 1rem;
+  list-style-type: square;
 }
 
 .bpmn-usages__go {
   box-sizing: border-box;
   display: grid;
-  grid-template-columns: fit-content(7rem) minmax(0, 1fr);
-  gap: 0.4rem;
+  grid-template-columns: minmax(0, 1fr);
   inline-size: 100%;
   padding: 0.2rem 0.3rem;
   border: 0;
@@ -583,8 +583,13 @@
 }
 
 .bpmn-usages__attribute {
+  display: block;
   opacity: 0.75;
   overflow-wrap: anywhere;
+}
+
+.bpmn-usages__content {
+  min-inline-size: 0;
 }
 
 .bpmn-usages__owner {

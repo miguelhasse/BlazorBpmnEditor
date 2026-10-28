@@ -23,15 +23,17 @@
                             class="bpmn-usages__go"
                             title="@TitleOf(usage)"
                             @onclick="@(() => SelectAsync(usage))">
-                        <span class="bpmn-usages__attribute">@usage.Attribute</span>
-                        <span class="bpmn-usages__owner">
-                            @usage.OwnerId
-                            @if (usage.DiagramId is { Length: > 0 } diagram)
-                            {
-                                @* Section 10.1: the same element can be drawn on more than one
-                                   plane, so a DI usage is not located until the diagram is named. *@
-                                <span class="bpmn-usages__diagram">@diagram</span>
-                            }
+                        <span class="bpmn-usages__content">
+                            <span class="bpmn-usages__attribute">@usage.Attribute</span>
+                            <span class="bpmn-usages__owner">
+                                @usage.OwnerId
+                                @if (usage.DiagramId is { Length: > 0 } diagram)
+                                {
+                                    @* Section 10.1: the same element can be drawn on more than one
+                                       plane, so a DI usage is not located until the diagram is named. *@
+                                    <span class="bpmn-usages__diagram">@diagram</span>
+                                }
+                            </span>
                         </span>
                     </button>
                 </li>

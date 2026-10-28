@@ -726,11 +726,13 @@
   font-size: 0.7rem;
 }
 .fluent-bpmn-editor .bpmn-properties__properties {
+  inline-size: 100%;
   display: grid;
   gap: 0.35rem;
   min-inline-size: 0;
 }
 .fluent-bpmn-editor .bpmn-properties__property {
+  inline-size: 100%;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: start;
@@ -758,6 +760,37 @@
   color: inherit;
   font: inherit;
   font-size: 0.75rem;
+}
+.fluent-bpmn-editor .bpmn-properties fluent-field.bpmn-properties__text,
+.fluent-bpmn-editor .bpmn-properties fluent-field.bpmn-properties__select {
+  padding: 0;
+}
+.fluent-bpmn-editor .bpmn-properties fluent-field > :is(fluent-text-input, fluent-textarea, fluent-number-input, fluent-dropdown) {
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  min-inline-size: 0;
+}
+.fluent-bpmn-editor .bpmn-properties fluent-dropdown > button {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fluent-bpmn-editor :is(.bpmn-properties__property, .bpmn-menu__property):has(fluent-switch) {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 0.5rem;
+}
+.fluent-bpmn-editor :is(.bpmn-properties__property, .bpmn-menu__property):has(fluent-switch) > :is(.bpmn-properties__label, .bpmn-menu__label) {
+  grid-column: 2;
+  grid-row: 1;
+}
+.fluent-bpmn-editor :is(.bpmn-properties__property, .bpmn-menu__property):has(fluent-switch) > :is(.bpmn-properties__check, .bpmn-menu__check) {
+  grid-column: 1;
+  grid-row: 1;
+}
+.fluent-bpmn-editor :is(.bpmn-properties__property, .bpmn-menu__property):has(fluent-switch) > :is(.bpmn-properties__error, .bpmn-properties__description, .bpmn-menu__error, .bpmn-menu__description) {
+  grid-column: 1 / -1;
 }
 .fluent-bpmn-editor .bpmn-properties__text--multiline {
   resize: vertical;
@@ -795,9 +828,17 @@
   flex-direction: column;
   gap: 0.25rem;
   inline-size: 100%;
+  width: 100%;
+  max-width: 100%;
   min-inline-size: 0;
   border-block-start: 0;
   padding-block-start: 0;
+}
+.fluent-bpmn-editor .bpmn-properties__accordion-item::part(content) {
+  box-sizing: border-box;
+  align-self: stretch;
+  inline-size: auto;
+  min-inline-size: 0;
 }
 .fluent-bpmn-editor .bpmn-properties__heading {
   margin: 0;
@@ -1132,8 +1173,8 @@
   gap: 0.2rem;
   min-width: 0;
 }
-.fluent-bpmn-editor td .bpmn-properties__property { grid-template-columns: minmax(0, 1fr); }
-.fluent-bpmn-editor td .bpmn-properties__property > .bpmn-properties__label {
+.fluent-bpmn-editor td .bpmn-properties__property:not(:has(fluent-switch)) { grid-template-columns: minmax(0, 1fr); }
+.fluent-bpmn-editor td .bpmn-properties__property:not(:has(fluent-switch)) > .bpmn-properties__label {
   position: absolute;
   width: 1px;
   height: 1px;

@@ -49,6 +49,58 @@ public class PropertyPanelTests(DemoAppFixture app) : PageTest, IClassFixture<De
         await Expect(Page.Locator("[data-group-id=loop-characteristics] .bpmn-properties__label")).ToHaveTextAsync(["Loop"]);
     }
 
+    [Theory]
+    [InlineData("None")]
+    [InlineData("Multi-instance (sequential)")]
+    public async Task PropertyInputsFillTheirRowsAndFluentSwitchLabelsFollowTheControl(string loop)
+    {
+        await GoToEditorAsync();
+        Assert.True(Page.Context.Browser?.IsConnected);
+        await ShowPanelAsync();
+        await SelectAsync(await TaskIdAsync());
+        await Page.PickAsync(Page.Locator("[data-group-id=loop-characteristics] [class$=__select]"), loop);
+
+        var widths = await Page.Locator(".bpmn-properties").EvaluateAsync<double[]>(
+            """
+            panel => [...panel.querySelectorAll('.bpmn-properties__property')].flatMap(row => {
+              const control = row.querySelector('input:not([type=checkbox]), textarea, select, fluent-text-input, fluent-textarea, fluent-number-input, fluent-dropdown');
+              const container = row.closest('.bpmn-properties__properties');
+              const section = row.closest('[data-group-id]');
+              const group = row.closest('fluent-accordion-item, details');
+              const content = group.shadowRoot?.querySelector('[part=content]') ?? group;
+              const style = getComputedStyle(content);
+              const availableWidth = content.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+              return control ? [
+                section.getBoundingClientRect().width - group.getBoundingClientRect().width,
+                Math.abs(availableWidth - container.getBoundingClientRect().width),
+                Math.abs(container.getBoundingClientRect().width - row.getBoundingClientRect().width),
+                Math.abs(row.getBoundingClientRect().width - control.getBoundingClientRect().width)]
+                : [];
+            })
+            """);
+        Assert.NotEmpty(widths);
+        Assert.All(widths, difference => Assert.True(difference <= 2, $"Control leaves {difference}px unused."));
+
+        var switches = await Page.Locator(".bpmn-properties fluent-switch").CountAsync();
+        if (switches > 0)
+        {
+            var aligned = await Page.Locator(".bpmn-properties fluent-switch").EvaluateAllAsync<bool>(
+                """
+                switches => switches.every(control => {
+                  const label = control.closest('.bpmn-properties__property').querySelector('.bpmn-properties__label');
+                  const field = control.getBoundingClientRect();
+                  const text = label.getBoundingClientRect();
+                  return text.left >= field.right && Math.abs((text.top + text.bottom - field.top - field.bottom) / 2) <= 2;
+                })
+                """);
+            Assert.True(aligned, "Switch labels must appear to the right, vertically centered.");
+            var compensation = Page.Locator("[data-group-id=activity] fluent-switch");
+            var checkedBefore = await compensation.EvaluateAsync<bool>("element => element.checked");
+            await Page.Locator("[data-group-id=activity] .bpmn-properties__label").ClickAsync();
+            await Expect(compensation).ToHaveJSPropertyAsync("checked", !checkedBefore);
+        }
+    }
+
     [Fact]
     public async Task PropertyControlsAndSectionSeparatorsStayInsideThePanel()
     {
