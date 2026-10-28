@@ -197,17 +197,12 @@ public class ContextMenuTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
     }
 
     [Fact]
-    public async Task FluentMenuSwitchLabelsAppearToTheRight()
+    public async Task MenuBooleanFieldLabelsAppearToTheRight()
     {
         await GoToEditorAsync();
         Assert.True(Page.Context.Browser?.IsConnected);
         await RightClickAsync(await TaskIdAsync());
-        var switches = Page.Locator(".bpmn-menu fluent-switch");
-        if (await Page.Locator(".fluent-bpmn-editor").CountAsync() == 0)
-        {
-            await Expect(switches).ToHaveCountAsync(0);
-            return;
-        }
+        var switches = Page.Locator(".bpmn-menu :is(fluent-switch, input[type=checkbox])");
 
         await Expect(switches).ToHaveCountAsync(1);
         Assert.True(await switches.EvaluateAllAsync<bool>(
@@ -220,7 +215,7 @@ public class ContextMenuTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
             })
             """), "Switch labels must appear to the right, vertically centered.");
         var checkedBefore = await switches.EvaluateAsync<bool>("element => element.checked");
-        await Page.Locator(".bpmn-menu__property:has(fluent-switch) > .bpmn-menu__label").ClickAsync();
+        await Page.Locator(".bpmn-menu__property:has(fluent-switch, input[type=checkbox]) > .bpmn-menu__label").ClickAsync();
         await Expect(switches).ToHaveJSPropertyAsync("checked", !checkedBefore);
     }
 
@@ -238,7 +233,7 @@ public class ContextMenuTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
               const rows = [...menu.querySelectorAll('.bpmn-menu__property')];
               const controls = rows.map(row => {
                 const label = row.querySelector('.bpmn-menu__label');
-                const control = row.querySelector('input, textarea, select, fluent-text-input, fluent-text-area, fluent-select');
+                const control = row.querySelector('input:not([type=checkbox]), textarea, select, fluent-text-input, fluent-text-area, fluent-select');
                 return label && control
                   ? [control.getBoundingClientRect().right - menuBounds.right,
                      label.getBoundingClientRect().bottom - control.getBoundingClientRect().top]

@@ -444,6 +444,26 @@
   opacity: 0.7;
 }
 
+:is(.bpmn-properties__property, .bpmn-menu__property):has(> input[type="checkbox"]) {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 0.5rem;
+}
+
+:is(.bpmn-properties__property, .bpmn-menu__property):has(> input[type="checkbox"]) > :is(.bpmn-properties__label, .bpmn-menu__label) {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+:is(.bpmn-properties__property, .bpmn-menu__property) > input[type="checkbox"] {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+:is(.bpmn-properties__property, .bpmn-menu__property):has(> input[type="checkbox"]) > :is(.bpmn-properties__error, .bpmn-properties__description, .bpmn-menu__error, .bpmn-menu__description) {
+  grid-column: 1 / -1;
+}
+
 .bpmn-properties__check {
   justify-self: start;
 }
@@ -903,8 +923,8 @@
   min-width: 0;
 }
 /* Inside a collection the column header already names the cell. */
-td .bpmn-properties__property { grid-template-columns: minmax(0, 1fr); }
-td .bpmn-properties__property > .bpmn-properties__label {
+td .bpmn-properties__property:not(:has(> input[type="checkbox"])) { grid-template-columns: minmax(0, 1fr); }
+td .bpmn-properties__property:not(:has(> input[type="checkbox"])) > .bpmn-properties__label {
   position: absolute;
   width: 1px;
   height: 1px;

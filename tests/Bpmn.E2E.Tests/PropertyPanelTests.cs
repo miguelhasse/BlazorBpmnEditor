@@ -81,10 +81,10 @@ public class PropertyPanelTests(DemoAppFixture app) : PageTest, IClassFixture<De
         Assert.NotEmpty(widths);
         Assert.All(widths, difference => Assert.True(difference <= 2, $"Control leaves {difference}px unused."));
 
-        var switches = await Page.Locator(".bpmn-properties fluent-switch").CountAsync();
+        var switches = await Page.Locator(".bpmn-properties :is(fluent-switch, input[type=checkbox])").CountAsync();
         if (switches > 0)
         {
-            var aligned = await Page.Locator(".bpmn-properties fluent-switch").EvaluateAllAsync<bool>(
+            var aligned = await Page.Locator(".bpmn-properties :is(fluent-switch, input[type=checkbox])").EvaluateAllAsync<bool>(
                 """
                 switches => switches.every(control => {
                   const label = control.closest('.bpmn-properties__property').querySelector('.bpmn-properties__label');
@@ -94,7 +94,7 @@ public class PropertyPanelTests(DemoAppFixture app) : PageTest, IClassFixture<De
                 })
                 """);
             Assert.True(aligned, "Switch labels must appear to the right, vertically centered.");
-            var compensation = Page.Locator("[data-group-id=activity] fluent-switch");
+            var compensation = Page.Locator("[data-group-id=activity] :is(fluent-switch, input[type=checkbox])");
             var checkedBefore = await compensation.EvaluateAsync<bool>("element => element.checked");
             await Page.Locator("[data-group-id=activity] .bpmn-properties__label").ClickAsync();
             await Expect(compensation).ToHaveJSPropertyAsync("checked", !checkedBefore);
@@ -116,7 +116,7 @@ public class PropertyPanelTests(DemoAppFixture app) : PageTest, IClassFixture<De
               const rows = [...panel.querySelectorAll('.bpmn-properties__property')];
               const controls = rows.map(row => {
                 const label = row.querySelector('.bpmn-properties__label');
-                const control = row.querySelector('input, textarea, select, fluent-text-input, fluent-text-area, fluent-select');
+                const control = row.querySelector('input:not([type=checkbox]), textarea, select, fluent-text-input, fluent-text-area, fluent-select');
                 return label && control
                   ? [control.getBoundingClientRect().right - panelBounds.right,
                      label.getBoundingClientRect().bottom - control.getBoundingClientRect().top]
