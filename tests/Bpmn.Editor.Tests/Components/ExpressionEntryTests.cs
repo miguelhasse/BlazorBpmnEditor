@@ -1,7 +1,7 @@
 using Bunit;
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
-using Hasseware.AspNetCore.Components.Bpmn.Feel;
+using Hasseware.AspNetCore.Components.Bpmn.CamundaFeel;
 using Hasseware.AspNetCore.Components.Bpmn.Serialization;
 using Hasseware.AspNetCore.Components.Bpmn.Validation;
 using Microsoft.AspNetCore.Components;
@@ -125,7 +125,7 @@ public sealed class ExpressionEntryTests : BunitContext
     [Fact]
     public async Task RichEditorReceivesServerDiagnosticsAndAccessibleAttributesOnCommit()
     {
-        var module = JSInterop.SetupModule("./_content/Hasseware.AspNetCore.Components.Bpmn.Feel/feel-editor.js");
+        var module = JSInterop.SetupModule("./_content/Hasseware.AspNetCore.Components.Bpmn.CamundaFeel/feel-editor.js");
         var handle = module.SetupModule("create", _ => true);
         foreach (var name in new[] { "setValue", "setVariables", "setReadOnly", "setAttributes", "dispose" })
             handle.SetupVoid(name, _ => true).SetVoidResult();

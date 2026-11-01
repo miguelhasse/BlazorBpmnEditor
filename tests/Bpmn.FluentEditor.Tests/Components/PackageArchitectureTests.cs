@@ -1,7 +1,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using Hasseware.AspNetCore.Components.Bpmn.Feel;
+using Hasseware.AspNetCore.Components.Bpmn.CamundaFeel;
 using Hasseware.FluentUI.AspNetCore.Components.Bpmn;
 using Microsoft.JSInterop;
 
@@ -15,7 +15,7 @@ public sealed class PackageArchitectureTests
         { typeof(BpmnCanvas), "Bpmn", [] },
         { typeof(BpmnEditor), "BpmnEditor", [Core.GetName().Name!] },
         { typeof(FluentBpmnEditor), "FluentUI.BpmnEditor", [Core.GetName().Name!] },
-        { typeof(BpmnFeelCodeEditor), "Bpmn.Feel", [Core.GetName().Name!] },
+        { typeof(BpmnFeelCodeEditor), "Bpmn.CamundaFeel", [Core.GetName().Name!] },
     };
 
     [Theory, MemberData(nameof(Packages))]

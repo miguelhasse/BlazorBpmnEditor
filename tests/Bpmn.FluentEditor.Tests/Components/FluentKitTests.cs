@@ -3,7 +3,7 @@ using System.Reflection;
 using Bunit;
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
-using Hasseware.AspNetCore.Components.Bpmn.Feel;
+using Hasseware.AspNetCore.Components.Bpmn.CamundaFeel;
 using Hasseware.AspNetCore.Components.Bpmn.Model.Extensions.Templates;
 using Hasseware.FluentUI.AspNetCore.Components.Bpmn;
 using Microsoft.AspNetCore.Components;

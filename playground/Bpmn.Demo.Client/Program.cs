@@ -1,4 +1,4 @@
-using Hasseware.AspNetCore.Components.Bpmn.Feel;
+using Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp;
 using Hasseware.AspNetCore.Components.Bpmn.Storage;
 using Hasseware.AspNetCore.Components.Bpmn.WebMcp;
 using Hasseware.FluentUI.AspNetCore.Components.Bpmn;
@@ -9,7 +9,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 
 builder.Services.AddFluentUIComponents();
-builder.Services.AddFluentBpmnEditor().AddBpmnFeelEditor();
+builder.Services.AddFluentBpmnEditor().AddFluentBpmnFeelSharpEditor();
 
 // Offers an open editor to browser agents through WebMCP, read-only, where the browser has it.
 builder.Services.AddBpmnWebMcp();

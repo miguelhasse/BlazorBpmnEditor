@@ -7,10 +7,10 @@ flowchart TB
     dist["Bpmn.Scripts/dist/<br/>Core JS + CSS + manifest"]:::data
     source["StaticWebAssetSourceId<br/>Hasseware.AspNetCore.<br/>Components.Bpmn"]:::data
     core["Bpmn<br/>Razor class library<br/>_content/Hasseware.AspNetCore.<br/>Components.Bpmn/..."]:::cs
-    fnpm["Bpmn.Feel.Scripts<br/>JavaScript SDK project<br/>npm prebuild: tsc + eslint<br/>Build: esbuild + license notices"]:::js
-    fdist["Bpmn.Feel.Scripts/dist/<br/>feel-editor.js"]:::data
-    fsource["StaticWebAssetSourceId<br/>Hasseware.AspNetCore.<br/>Components.Bpmn.Feel"]:::data
-    feel["Bpmn.Feel<br/>Razor class library<br/>_content/Hasseware.AspNetCore.<br/>Components.Bpmn.Feel/..."]:::cs
+    fnpm["Bpmn.CamundaFeel.Scripts<br/>JavaScript SDK project<br/>npm prebuild: tsc + eslint<br/>Build: esbuild + license notices"]:::js
+    fdist["Bpmn.CamundaFeel.Scripts/dist/<br/>feel-editor.js"]:::data
+    fsource["StaticWebAssetSourceId<br/>Hasseware.AspNetCore.<br/>Components.Bpmn.CamundaFeel"]:::data
+    feel["Bpmn.CamundaFeel<br/>Razor class library<br/>_content/Hasseware.AspNetCore.<br/>Components.Bpmn.CamundaFeel/..."]:::cs
     rules["rules/bpmn-rules.json<br/>AdditionalFiles + TS import"]:::data
     generator["Bpmn.RulesGenerator<br/>BpmnRulesGenerator<br/>Roslyn source generator<br/>BpmnRules.g.cs"]:::cs
     pack["dotnet build / pack<br/>RCL assemblies + assets<br/>NuGet consumption: no npm"]:::cs

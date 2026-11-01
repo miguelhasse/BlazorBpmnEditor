@@ -465,7 +465,7 @@ CI use, where no editor is listening.
 - The spec is a Community Group draft; Chrome's origin trial (149-156) ends 2026-11-17 and the API
   changed in Chrome 153, 155 and 156. Churn must not reach Core's versioning.
 - The repo already ships optional modules the same way: `Bpmn.Scripting.{Lua,JavaScript,CSharp}`
-  (`AddBpmnLuaScripting`) and `Bpmn.Feel` (`AddBpmnFeel...`, with a paired `.Scripts` esproj).
+  (`AddBpmnLuaScripting`) and `Bpmn.CamundaFeel` (`AddBpmnFeel...`, with a paired `.Scripts` esproj).
   WebMCP follows the Feel shape: a Razor class library plus a small TypeScript bundle.
 - Core's `BpmnEditorSession` deliberately holds no `IJSRuntime`. The module is therefore a
   *consumer* of the session, never part of it.
@@ -475,7 +475,7 @@ CI use, where no editor is listening.
 | Project | Role |
 |---|---|
 | `src/Bpmn.WebMcp` → `Hasseware.AspNetCore.Components.Bpmn.WebMcp` | RCL: tool catalog, host component, DI extension, interop contract |
-| `src/Bpmn.WebMcp.Scripts` → `...Bpmn.WebMcp.Scripts.esproj` | TS source for the ES module; esbuild output feeds the RCL's static web assets (copy `Bpmn.Feel.Scripts` config) |
+| `src/Bpmn.WebMcp.Scripts` → `...Bpmn.WebMcp.Scripts.esproj` | TS source for the ES module; esbuild output feeds the RCL's static web assets (copy `Bpmn.CamundaFeel.Scripts` config) |
 | `tests/Bpmn.WebMcp.Tests` | Tool handlers against a headless session (no browser) |
 | `tests/Bpmn.E2E.Tests` (extend) | One test with a polyfilled `document.modelContext` |
 

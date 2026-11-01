@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp</PackageId>
+    <AssemblyName>Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp</AssemblyName>
+    <RootNamespace>Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp</RootNamespace>
+    <Description>Fluent UI FEEL editor using managed FeelSharp diagnostics, highlighting and completion.</Description>
+    <PackageTags>bpmn;blazor;feel;feelsharp;fluentui;editor</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" />
+    <ProjectReference Include="..\Bpmn.FeelSharp\Hasseware.AspNetCore.Components.Bpmn.FeelSharp.csproj" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

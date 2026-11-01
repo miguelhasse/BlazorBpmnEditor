@@ -44,8 +44,11 @@ The sample list is declared per page rather than discovered, so adding a fixture
 - **Properties** toggles the panel. Its property and template callbacks feed the editor's command
   path, so edits participate in undo/redo instead of mutating a second document.
 - The demo opts into the optional FEEL code-editor package with
-  `AddBpmnComponents().AddBpmnFeelEditor()` in `Program.cs`. FEEL-capable property entries use that
+  `AddFluentBpmnEditor().AddFluentBpmnFeelSharpEditor()` in `Program.cs`. FEEL-capable property entries use that
   editor; this is demo configuration, not a dependency required by the core RCL.
+  Highlighting/completion are managed, with a small native-textarea DOM bridge and no JavaScript
+  editor plugins. The Fluent extension supplies FluentTextArea and Fluent chrome.
+  Server evaluation is a separate opt-in service and is not enabled by the demo.
 - `Program.cs` registers Zeebe and Camunda 7 extension schemas, disables always-offered schemas,
   sets the Camunda engine context to `8.6.0`, and loads embedded `.templates.*.json` resources.
   Template choices, defaults, conditional fields, apply/unlink actions and template stencil items

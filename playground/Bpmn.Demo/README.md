@@ -48,7 +48,7 @@ are implemented in the WebAssembly client, not duplicated in those server pages.
 On `/editor`, **Open file** is an `InputFile` picker for XML/JSON and creates an import offer before
 replacement. **Export XML** requests fidelity XML; **Export JSON** emits the versioned model
 format. Both display generated text. The optional properties panel demonstrates undoable property,
-extension and template edits. The client explicitly registers `AddBpmnFeelEditor()` and embedded
+extension and template edits. Both hosts explicitly register `AddFluentBpmnFeelSharpEditor()` and embedded
 element templates, plus Zeebe/Camunda 7 extension schemas.
 
 See [client setup and workflows](../Bpmn.Demo.Client/README.md) for opt-in details and

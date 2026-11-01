@@ -101,6 +101,16 @@ errors rather than replacing them; FEEL entries can expose both a binding error 
 warning. These warnings are **advisory**: submission remains enabled and invalid syntax can be saved into the
 model while being edited. They do not change `BpmnValidationReport.IsExportable`.
 
+The optional [FeelSharp editor](../src/Bpmn.FeelSharp/README.md) uses FeelSharp 1.3.0
+`ParseExpression` for its own advisory warnings; it does not replace the global
+`IBpmnExpressionValidator` or JUEL validation. Its tokenizer is presentation-only.
+FeelSharp parsing has its own upstream behavior; the managed default parser's
+128-level limit and diagnostic-span contract do not apply to it. The distinct
+`AddBpmnFeelSharpEvaluation()` registration enables explicit server interpretation,
+not syntax validation, automatic editor execution, or BPMN-node execution.
+The [Fluent FeelSharp extension](../src/FluentUI.Bpmn.FeelSharp/README.md) uses the
+same diagnostics and commit rules; changing UI controls does not change validation.
+
 The Camunda 7 schema provider marks expression-bearing attributes as JUEL, including
 `delegateExpression`, `expression`, `topic`, `assignee`, `candidateUsers`, `candidateGroups`,
 `dueDate`, `followUpDate`, `priority`, `formKey`, `calledElementVersion`,

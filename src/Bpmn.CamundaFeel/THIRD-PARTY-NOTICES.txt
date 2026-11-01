@@ -1,4 +1,4 @@
-Third-party software bundled in Hasseware.AspNetCore.Components.Bpmn.Feel
+Third-party software bundled in Hasseware.AspNetCore.Components.Bpmn.CamundaFeel
 
 @bpmn-io/cm-theme 0.2.2 (MIT)
 git+https://github.com/bpmn-io/cm-theme.git

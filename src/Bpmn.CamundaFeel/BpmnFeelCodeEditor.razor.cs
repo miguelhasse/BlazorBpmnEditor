@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 
-namespace Hasseware.AspNetCore.Components.Bpmn.Feel;
+namespace Hasseware.AspNetCore.Components.Bpmn.CamundaFeel;
 
 /// <summary>Optional rich FEEL expression editor with a plain-text fallback.</summary>
 public partial class BpmnFeelCodeEditor : IAsyncDisposable

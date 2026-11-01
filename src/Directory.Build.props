@@ -17,4 +17,8 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
+  <ItemGroup Condition="'$(MSBuildProjectExtension)' != '.esproj'">
+    <None Include="$(RepositoryRoot)LICENSE.txt" Link="LICENSE.txt" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
 </Project>

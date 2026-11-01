@@ -1,0 +1,15 @@
+{
+  "name": "hasseware.aspnetcore.components.bpmn.feelsharp.assets",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "build": "npm run typecheck && node esbuild.config.mjs",
+    "test": "npm run build && node --test test/editor.test.mjs",
+    "clean": "node --input-type=module -e \"import { rm } from 'node:fs/promises'; await rm('dist', { recursive: true, force: true });\""
+  },
+  "devDependencies": {
+    "esbuild": "0.28.1",
+    "typescript": "5.9.3"
+  }
+}

@@ -1,0 +1,15 @@
+flowchart LR
+    Host["Server / WebAssembly host"] --> Entry["BpmnFeelSharpCodeEditor"]
+    Host --> Fluent["FluentBpmnFeelSharpCodeEditor<br/>FluentTextArea + Fluent chrome"]
+    Fluent --> Shared["Shared managed editor lifecycle"]
+    Entry --> Shared
+    Fluent <--> Bridge
+    Fluent --> Managed
+    Fluent --> Parser
+    Entry --> Parser["FeelSharp ParseExpression<br/>No evaluation"]
+    Entry --> Managed["C# highlighting + completion<br/>Context.Variables"]
+    Entry <--> Bridge["Dependency-free DOM bridge<br/>Caret, composition, scrolling"]
+    Bridge <--> Textarea["Native textarea<br/>Clipboard, selection, undo/redo"]
+    Bridge <--> Shadow["FluentTextArea shadow-root control<br/>Focus + geometry + accessibility"]
+    Server["Optional server DI registration"] --> Evaluation["IBpmnFeelSharpEvaluation<br/>Fresh interpreter per request"]
+    Evaluation --> FeelSharp["FeelSharp EvaluateExpression"]

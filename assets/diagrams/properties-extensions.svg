@@ -54,7 +54,7 @@
     <text x="180" y="29" text-anchor="middle"><tspan class="name">Independent kit entry components</tspan><tspan x="180" dy="25">Standard HTML / Fluent UI</tspan><tspan x="180" dy="25">Text · select · list · etc.</tspan><tspan x="180" dy="25">Shared guarded context</tspan></text>
   </g>
   <g transform="translate(450 780)"><rect class="kit" width="320" height="130" rx="8"/>
-    <text x="160" y="29" text-anchor="middle"><tspan class="name">Kit FEEL entry wrapper</tspan><tspan x="160" dy="25">BpmnFeelCodeEditor</tspan><tspan x="160" dy="25">Optional Bpmn.Feel package</tspan><tspan x="160" dy="25">Expression hints and validation</tspan></text>
+    <text x="160" y="29" text-anchor="middle"><tspan class="name">Kit FEEL entry wrapper</tspan><tspan x="160" dy="25">BpmnFeelCodeEditor</tspan><tspan x="160" dy="25">Optional Bpmn.CamundaFeel package</tspan><tspan x="160" dy="25">Expression hints and validation</tspan></text>
   </g>
   <g transform="translate(860 780)"><rect class="kit" width="290" height="130" rx="8"/>
     <text x="145" y="29" text-anchor="middle"><tspan class="name">Custom Blazor editors</tspan><tspan x="145" dy="25">DynamicComponent</tspan><tspan x="145" dy="25">BpmnPropertyEntryContext</tspan><tspan x="145" dy="25">Guarded callbacks</tspan></text>

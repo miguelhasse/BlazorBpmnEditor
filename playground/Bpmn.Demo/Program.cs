@@ -1,5 +1,5 @@
 using Bpmn.Demo.Components;
-using Hasseware.AspNetCore.Components.Bpmn.Feel;
+using Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
 using Hasseware.AspNetCore.Components.Bpmn.Storage;
 using Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents;
@@ -13,7 +13,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 builder.Services.AddFluentUIComponents();
-builder.Services.AddFluentBpmnEditor().AddBpmnFeelEditor();
+builder.Services.AddFluentBpmnEditor().AddFluentBpmnFeelSharpEditor();
 builder.Services.Configure<Hasseware.AspNetCore.Components.Bpmn.Configuration.BpmnOptions>(options => options.Extensions.AddZeebe());
 
 // The live-updates page: a server-side store and change bus, and the Server-Sent Events feed over them.

@@ -1,0 +1,9 @@
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp
+
+<FluentTextArea Id="@Id" @ref="_input" Class="fluent-bpmn-feelsharp-input" Width="100%"
+                Height="@Height" Value="@InitialValue" Immediate="false"
+                ReadOnly="@IsReadOnly" Placeholder="@Placeholder"
+                Spellcheck="false" AutoComplete="off" Resize="TextAreaResize.Vertical"
+                ControlStyle="font:14px/1.5 monospace;letter-spacing:normal;tab-size:4;white-space:pre;overflow-wrap:normal;width:100%;box-sizing:border-box;"
+                AriaLabel="@Label" aria-invalid="@AriaInvalid" aria-describedby="@DescribedBy"
+                @oninput="DraftInputAsync" @onfocusout="@FocusOut" @onkeydown="@KeyDown" />

@@ -25,7 +25,7 @@ const packages = new Set(Object.keys(result.metafile.inputs)
   .filter(Boolean));
 // semver-compat bundles semver internally; include its license too.
 packages.add('semver');
-const notices = ['Third-party software bundled in Hasseware.AspNetCore.Components.Bpmn.Feel', ''];
+const notices = ['Third-party software bundled in Hasseware.AspNetCore.Components.Bpmn.CamundaFeel', ''];
 for (const name of [...packages].sort()) {
   const directory = path.join('node_modules', name);
   const pkg = JSON.parse(await readFile(path.join(directory, 'package.json'), 'utf8'));
@@ -35,4 +35,4 @@ for (const name of [...packages].sort()) {
   if (name === '@bpmn-io/semver-compat') notices.push(await readFile('licenses/semver-compat-MIT.txt', 'utf8'), '');
   for (const file of licenses) notices.push(await readFile(path.join(directory, file), 'utf8'), '');
 }
-await writeFile('../Bpmn.Feel/THIRD-PARTY-NOTICES.txt', notices.join('\n'), 'utf8');
+await writeFile('../Bpmn.CamundaFeel/THIRD-PARTY-NOTICES.txt', notices.join('\n'), 'utf8');

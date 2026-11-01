@@ -1,6 +1,6 @@
-# Bpmn.Feel.Scripts
+# Bpmn.CamundaFeel.Scripts
 
-JavaScript SDK project for the optional [rich FEEL editor RCL](../Bpmn.Feel/README.md).
+JavaScript SDK project for the optional [rich FEEL editor RCL](../Bpmn.CamundaFeel/README.md).
 `src/index.ts` wraps `@bpmn-io/feel-editor` and CodeMirror behind a `create` function and
 an editor handle for value, variables, read-only state, accessible attributes and disposal.
 It reports commits and parser lint to `BpmnFeelCodeEditor`; it does not own BPMN documents
@@ -8,7 +8,7 @@ or execute expressions. Core-only hosts do not download this bundle.
 
 ## Commands
 
-Run from `src\Bpmn.Feel.Scripts` with Node.js/npm installed:
+Run from `src\Bpmn.CamundaFeel.Scripts` with Node.js/npm installed:
 
 ```shell
 npm ci
@@ -35,28 +35,28 @@ no stylesheet tag. Imports resolve locally into the bundle, with no CDN script f
 
 ## .NET and static web asset wiring
 
-`Hasseware.AspNetCore.Components.Bpmn.Feel.Scripts.esproj` declares:
+`Hasseware.AspNetCore.Components.Bpmn.CamundaFeel.Scripts.esproj` declares:
 
 - `DebugAssetsDirectory`: `dist\`.
-- `StaticWebAssetSourceId`: `Hasseware.AspNetCore.Components.Bpmn.Feel`.
+- `StaticWebAssetSourceId`: `Hasseware.AspNetCore.Components.Bpmn.CamundaFeel`.
 - `BuildCommand`: `npm run build -- --build-mode=$(Configuration)`.
 - `CleanCommand`: `npm run clean`; the script project itself is not packable.
 
-`Hasseware.AspNetCore.Components.Bpmn.Feel.csproj` references this project with
+`Hasseware.AspNetCore.Components.Bpmn.CamundaFeel.csproj` references this project with
 `PrivateAssets="All"`. The JavaScript SDK exposes the generated assets to the RCL; the
-browser imports `_content/Hasseware.AspNetCore.Components.Bpmn.Feel/feel-editor.js`.
+browser imports `_content/Hasseware.AspNetCore.Components.Bpmn.CamundaFeel/feel-editor.js`.
 The RCL's `VerifyFeelEditorBundle` target fails its build when the output is missing.
 Source builds require Node.js/npm; NuGet consumers do not.
 
 ```mermaid
 flowchart LR
-    RCL["Bpmn.Feel project reference"] --> SDK["JavaScript SDK esproj"]
+    RCL["Bpmn.CamundaFeel project reference"] --> SDK["JavaScript SDK esproj"]
     SDK --> Gate["npm prebuild: typecheck and lint"]
     Gate --> Build["esbuild: TypeScript, CSS text and dependencies"]
     Build --> Bundle["dist/feel-editor.js"]
     Bundle --> Assets["RCL static web assets"]
     Assets --> Browser["Lazy local ES module import"]
-    Build --> Notices["Bpmn.Feel/THIRD-PARTY-NOTICES.txt"]
+    Build --> Notices["Bpmn.CamundaFeel/THIRD-PARTY-NOTICES.txt"]
 ```
 
 ## Licensing and generated notices
@@ -65,7 +65,7 @@ The package manifest declares MIT. `@bpmn-io/feel-editor` and CodeMirror are MIT
 see the generated notice file for every bundled dependency and its full license text.
 esbuild retains inline legal comments and produces a metafile. The build walks that
 metafile's bundled npm packages, adds the internally bundled `semver` license, and writes
-`..\Bpmn.Feel\THIRD-PARTY-NOTICES.txt` with package versions, repositories and license texts.
+`..\Bpmn.CamundaFeel\THIRD-PARTY-NOTICES.txt` with package versions, repositories and license texts.
 A vendored notice under `licenses/` covers `@bpmn-io/semver-compat`; missing licenses for
 other bundled packages fail generation. The RCL packs the notice file under `licenses`.
 Review notice changes after dependency updates; `npm run clean` deliberately leaves it intact.

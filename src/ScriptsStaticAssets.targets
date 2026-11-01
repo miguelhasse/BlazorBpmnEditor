@@ -1,6 +1,6 @@
 <Project>
   <!--
-    Imported by every project that ships the output of a JavaScript SDK (.esproj) project as static web assets: Bpmn, Bpmn.Feel and Bpmn.WebMcp.
+    Imported by every project that ships the output of a JavaScript SDK (.esproj) project as static web assets: Bpmn, Bpmn.CamundaFeel, Bpmn.FeelSharp and Bpmn.WebMcp.
 
     The JavaScript SDK describes the esproj's output (dist/*) as static web assets but sets each one's OriginalItemSpec from an item list that is empty at
     that point (Sdk.WebAssets.targets, GetCurrentProjectBuildStaticWebAssetItems), so MSBuild falls back to the project file itself. The compression step

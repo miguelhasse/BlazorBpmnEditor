@@ -128,7 +128,7 @@ the session's merged registry automatically; otherwise it uses parent/applicatio
 Host overrides use `AddEditor<TComponent>(kind)`, `AddEditor<TComponent>(editorKey)`,
 `AddEditor<TComponent>(predicate)` and `AddFeelEditor<TComponent>()`. Resolution is explicit key,
 last matching predicate, FEEL editor, explicit kind, kit/default kind, then Core's `BpmnReadOnlyEntry`.
-A property-panel `EntryTemplate` bypasses registry rendering. The optional Bpmn.Feel package can
+A property-panel `EntryTemplate` bypasses registry rendering. The optional Bpmn.CamundaFeel package can
 replace either kit's FEEL default without depending on either kit.
 
 ## Dialog rendering
@@ -181,7 +181,7 @@ conservative exceptions and the both-kit render-budget harness.
 - `BpmnCanvas` alone owns canvas `IJSObjectReference` / `DotNetObjectReference` handles;
   `BpmnCanvasEventBridge` alone declares canvas `[JSInvokable]` methods. Core's `BpmnDialogBase`
   separately owns native modal lifecycle interop without a canvas handle. Kits own no JS modules.
-  Bpmn.Feel is a separate optional interop owner, not a kit implementation shortcut.
+  Bpmn.CamundaFeel is a separate optional interop owner, not a kit implementation shortcut.
 - BPMN notation comes from `BpmnIconRegistry` / `BpmnIcon`, not a UI framework's generic icons.
   Framework icons are appropriate for undo, close and other non-BPMN chrome.
 - Core ships canvas/theme/label-editor styles. Kits ship their own scoped-to-root chrome CSS and

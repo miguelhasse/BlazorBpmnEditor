@@ -45,9 +45,9 @@
     <text x="210" y="29" text-anchor="middle"><tspan class="name">BpmnCanvasEventBridge (Core)</tspan><tspan x="210" dy="25">Sole Core [JSInvokable] surface</tspan><tspan x="210" dy="25">Typed event forwarding</tspan></text>
   </g>
   <g transform="translate(90 800)"><rect class="cs" width="420" height="110" rx="8"/>
-    <text x="210" y="29" text-anchor="middle"><tspan class="name">Bpmn.Feel · BpmnFeelCodeEditor</tspan><tspan x="210" dy="25">Own module / editor references</tspan><tspan x="210" dy="25">Own [JSInvokable] callbacks</tspan></text>
+    <text x="210" y="29" text-anchor="middle"><tspan class="name">Bpmn.CamundaFeel · BpmnFeelCodeEditor</tspan><tspan x="210" dy="25">Own module / editor references</tspan><tspan x="210" dy="25">Own [JSInvokable] callbacks</tspan></text>
   </g>
   <g transform="translate(610 800)"><rect class="js" width="420" height="110" rx="8"/>
-    <text x="210" y="29" text-anchor="middle"><tspan class="name">Bpmn.Feel.Scripts</tspan><tspan x="210" dy="25">Lazy feel-editor.js import</tspan><tspan x="210" dy="25">CodeMirror + @bpmn-io/feel-editor</tspan></text>
+    <text x="210" y="29" text-anchor="middle"><tspan class="name">Bpmn.CamundaFeel.Scripts</tspan><tspan x="210" dy="25">Lazy feel-editor.js import</tspan><tspan x="210" dy="25">CodeMirror + @bpmn-io/feel-editor</tspan></text>
   </g>
 </svg>

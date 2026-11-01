@@ -1,7 +1,7 @@
 using Bunit;
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
-using Hasseware.AspNetCore.Components.Bpmn.Feel;
+using Hasseware.AspNetCore.Components.Bpmn.CamundaFeel;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -11,7 +11,7 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Components;
 
 public sealed class FeelCodeEditorTests : BunitContext
 {
-    private const string ModulePath = "./_content/Hasseware.AspNetCore.Components.Bpmn.Feel/feel-editor.js";
+    private const string ModulePath = "./_content/Hasseware.AspNetCore.Components.Bpmn.CamundaFeel/feel-editor.js";
 
     [Theory]
     [InlineData(BpmnFeelMode.Required)]

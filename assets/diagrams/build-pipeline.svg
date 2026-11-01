@@ -53,7 +53,7 @@
     <text x="200" y="29" text-anchor="middle"><tspan class="name">Bpmn.Scripts</tspan><tspan x="200" dy="25">JavaScript SDK project</tspan><tspan x="200" dy="25">npm prebuild: tsc + eslint</tspan><tspan x="200" dy="25">Build: esbuild + bundle checks</tspan></text>
   </g>
   <g transform="translate(980 120)"><rect class="js" width="400" height="130" rx="8"/>
-    <text x="200" y="29" text-anchor="middle"><tspan class="name">Bpmn.Feel.Scripts</tspan><tspan x="200" dy="25">JavaScript SDK project</tspan><tspan x="200" dy="25">npm prebuild: tsc + eslint</tspan><tspan x="200" dy="25">Build: esbuild + license notices</tspan></text>
+    <text x="200" y="29" text-anchor="middle"><tspan class="name">Bpmn.CamundaFeel.Scripts</tspan><tspan x="200" dy="25">JavaScript SDK project</tspan><tspan x="200" dy="25">npm prebuild: tsc + eslint</tspan><tspan x="200" dy="25">Build: esbuild + license notices</tspan></text>
   </g>
   <g transform="translate(80 295)"><rect class="js" width="320" height="100" rx="8"/>
     <text x="160" y="29" text-anchor="middle"><tspan class="name">npm run icons:verify</tspan><tspan x="160" dy="25">Generated manifest check</tspan><tspan x="160" dy="25">Separate from normal prebuild</tspan></text>
@@ -62,7 +62,7 @@
     <text x="200" y="35" text-anchor="middle"><tspan class="name">Bpmn.Scripts/dist/</tspan><tspan x="200" dy="28">Core JS + CSS + manifest</tspan></text>
   </g>
   <g transform="translate(980 295)"><rect class="data" width="400" height="100" rx="8"/>
-    <text x="200" y="35" text-anchor="middle"><tspan class="name">Bpmn.Feel.Scripts/dist/</tspan><tspan x="200" dy="28">feel-editor.js</tspan></text>
+    <text x="200" y="35" text-anchor="middle"><tspan class="name">Bpmn.CamundaFeel.Scripts/dist/</tspan><tspan x="200" dy="28">feel-editor.js</tspan></text>
   </g>
   <g transform="translate(80 440)"><rect class="data" width="320" height="110" rx="8"/>
     <text x="160" y="35" text-anchor="middle"><tspan class="name">rules/bpmn-rules.json</tspan><tspan x="160" dy="28">AdditionalFiles + TS import</tspan></text>
@@ -71,7 +71,7 @@
     <text x="200" y="29" text-anchor="middle"><tspan class="name">StaticWebAssetSourceId</tspan><tspan x="200" dy="25">Hasseware.AspNetCore.</tspan><tspan x="200" dy="25">Components.Bpmn</tspan></text>
   </g>
   <g transform="translate(980 440)"><rect class="data" width="400" height="110" rx="8"/>
-    <text x="200" y="29" text-anchor="middle"><tspan class="name">StaticWebAssetSourceId</tspan><tspan x="200" dy="25">Hasseware.AspNetCore.</tspan><tspan x="200" dy="25">Components.Bpmn.Feel</tspan></text>
+    <text x="200" y="29" text-anchor="middle"><tspan class="name">StaticWebAssetSourceId</tspan><tspan x="200" dy="25">Hasseware.AspNetCore.</tspan><tspan x="200" dy="25">Components.Bpmn.CamundaFeel</tspan></text>
   </g>
   <g transform="translate(80 610)"><rect class="cs" width="320" height="110" rx="8"/>
     <text x="160" y="29" text-anchor="middle"><tspan class="name">Bpmn.RulesGenerator</tspan><tspan x="160" dy="25">Roslyn source generator</tspan><tspan x="160" dy="25">BpmnRules.g.cs</tspan></text>
@@ -80,7 +80,7 @@
     <text x="200" y="29" text-anchor="middle"><tspan class="name">Bpmn Razor class library</tspan><tspan x="200" dy="25">_content/Hasseware.AspNetCore.</tspan><tspan x="200" dy="25">Components.Bpmn/...</tspan></text>
   </g>
   <g transform="translate(980 610)"><rect class="cs" width="400" height="110" rx="8"/>
-    <text x="200" y="29" text-anchor="middle"><tspan class="name">Bpmn.Feel Razor class library</tspan><tspan x="200" dy="25">_content/Hasseware.AspNetCore.</tspan><tspan x="200" dy="25">Components.Bpmn.Feel/...</tspan></text>
+    <text x="200" y="29" text-anchor="middle"><tspan class="name">Bpmn.CamundaFeel Razor class library</tspan><tspan x="200" dy="25">_content/Hasseware.AspNetCore.</tspan><tspan x="200" dy="25">Components.Bpmn.CamundaFeel/...</tspan></text>
   </g>
   <g transform="translate(80 825)"><rect class="data" width="320" height="120" rx="8"/>
     <text x="160" y="29" text-anchor="middle"><tspan class="name">RESX + XLIFF resources</tspan><tspan x="160" dy="25">Microsoft.DotNet.XliffTasks</tspan><tspan x="160" dy="25">Core + both UI kits</tspan></text>

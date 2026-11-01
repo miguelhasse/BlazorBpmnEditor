@@ -1,7 +1,7 @@
 %% Interop boundaries
-%% Canvas-only ownership rule applies to core Bpmn, not optional Bpmn.Feel.
+%% Canvas-only ownership rule applies to core Bpmn, not optional Bpmn.CamundaFeel.
 %% Core import: _content/Hasseware.AspNetCore.Components.Bpmn/Hasseware.AspNetCore.Components.Bpmn.lib.module.js
-%% FEEL import: _content/Hasseware.AspNetCore.Components.Bpmn.Feel/feel-editor.js
+%% FEEL import: _content/Hasseware.AspNetCore.Components.Bpmn.CamundaFeel/feel-editor.js
 flowchart TB
     editor["Standard / Fluent / custom kit<br/>BpmnEditorScope + session<br/>No canvas JavaScript interop"]:::cs
     adapter["Core: BpmnEditorCanvas<br/>Binds session state + callbacks<br/>Attaches one canvas per session"]:::cs
@@ -9,8 +9,8 @@ flowchart TB
     module["Bpmn.Scripts<br/>Core TypeScript module<br/>.lib.module.js"]:::js
     paper["JointJS dia.Paper<br/>SVG view + live gestures"]:::js
     bridge["Bpmn · BpmnCanvasEventBridge<br/>Sole core [JSInvokable]<br/>Typed event forwarding"]:::cs
-    feel["Bpmn.Feel · BpmnFeelCodeEditor<br/>Own module/editor references<br/>Own [JSInvokable] callbacks"]:::cs
-    fmodule["Bpmn.Feel.Scripts<br/>Optional feel-editor.js<br/>Lazy import<br/>CodeMirror + @bpmn-io/feel-editor"]:::js
+    feel["Bpmn.CamundaFeel · BpmnFeelCodeEditor<br/>Own module/editor references<br/>Own [JSInvokable] callbacks"]:::cs
+    fmodule["Bpmn.CamundaFeel.Scripts<br/>Optional feel-editor.js<br/>Lazy import<br/>CodeMirror + @bpmn-io/feel-editor"]:::js
     editor --> adapter
     adapter --> canvas
     canvas -->|"calls"| module

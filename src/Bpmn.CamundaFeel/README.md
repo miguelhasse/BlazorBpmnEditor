@@ -1,10 +1,10 @@
 # Rich FEEL editor (optional)
 
-Install `Hasseware.AspNetCore.Components.Bpmn.Feel` alongside the core BPMN package:
+Install `Hasseware.AspNetCore.Components.Bpmn.CamundaFeel` alongside the core BPMN package:
 
 ```csharp
 using Hasseware.AspNetCore.Components.Bpmn;
-using Hasseware.AspNetCore.Components.Bpmn.Feel;
+using Hasseware.AspNetCore.Components.Bpmn.CamundaFeel;
 
 builder.Services.AddBpmnComponents().AddBpmnFeelEditor();
 ```
@@ -43,7 +43,7 @@ respect read-only/revision state; see the [core integration guide](../Bpmn/READM
 
 `BpmnFeelCodeEditor` initializes after rendering only when an editable FEEL expression is
 active. It imports the module through `BpmnFeelInteropContract.ModulePath`:
-`./_content/Hasseware.AspNetCore.Components.Bpmn.Feel/feel-editor.js`. Module evaluation
+`./_content/Hasseware.AspNetCore.Components.Bpmn.CamundaFeel/feel-editor.js`. Module evaluation
 injects the bundled CSS; `create` returns the editor handle. Literal/read-only states need
 no rich instance. A failed import leaves the textarea fallback available.
 
@@ -76,23 +76,23 @@ upstream lint and remain advisory.
 
 ## Build
 
-`Hasseware.AspNetCore.Components.Bpmn.Feel.csproj` references the sibling JavaScript SDK `.esproj` in `Bpmn.Feel.Scripts`.
+`Hasseware.AspNetCore.Components.Bpmn.CamundaFeel.csproj` references the sibling JavaScript SDK `.esproj` in `Bpmn.CamundaFeel.Scripts`.
 `dotnet build` runs its npm build (strict typecheck and zero-warning lint) and ships
-`dist\feel-editor.js` as `_content/Hasseware.AspNetCore.Components.Bpmn.Feel/feel-editor.js`.
+`dist\feel-editor.js` as `_content/Hasseware.AspNetCore.Components.Bpmn.CamundaFeel/feel-editor.js`.
 Debug builds include source maps; Release builds minify. Build requires Node.js/npm;
 consuming the NuGet package does not. For a standalone bundle build, run `npm ci`, then
-`npm run build -- --build-mode=Debug` in `src\Bpmn.Feel.Scripts` (or use `Release`).
+`npm run build -- --build-mode=Debug` in `src\Bpmn.CamundaFeel.Scripts` (or use `Release`).
 `npm run clean` removes `dist`. Root `.gitignore` excludes that generated directory.
 The ESM bundle includes upstream FEEL tooling and CodeMirror. No CDN or remote script is used.
 
-The [script project README](../Bpmn.Feel.Scripts/README.md) documents build commands, static web
+The [script project README](../Bpmn.CamundaFeel.Scripts/README.md) documents build commands, static web
 asset wiring and notice generation.
 
 ## Third-party notices
 
 `@bpmn-io/feel-editor` 2.8.0 and CodeMirror 6 are MIT licensed. Bundled dependencies retain
 inline legal comments; full third-party license texts are included in `THIRD-PARTY-NOTICES.txt`
-and packaged under `licenses`. The npm build regenerates this committed file in `Bpmn.Feel`;
+and packaged under `licenses`. The npm build regenerates this committed file in `Bpmn.CamundaFeel`;
 cleaning script output does not remove it. See that file for bpmn.io, Camunda, CodeMirror and Lezer notices.
 
 ## Guides

@@ -2,9 +2,13 @@
 %% Solid arrows: dependent → referenced project. Dashed arrows: shared input / produced assets.
 %% Bpmn references Scripts privately and RulesGenerator as Analyzer (ReferenceOutputAssembly=false).
 %% WebMcp references Bpmn + Tools + WebMcp.Scripts privately.
-%% Feel references Bpmn + Feel.Scripts privately. Icons manifest is embedded in Bpmn and imported by TypeScript.
+%% Optional FEEL editors reference Bpmn + their private script build projects.
 flowchart TB
-    feel["Bpmn.Feel<br/>src/Bpmn.Feel<br/>Optional FEEL component"]:::cs
+    feel["Bpmn.CamundaFeel<br/>src/Bpmn.CamundaFeel<br/>Optional FEEL component"]:::cs
+    feelsharp["Bpmn.FeelSharp<br/>Managed editor + opt-in evaluation<br/>NuGet FeelSharp"]:::cs
+    fluentfeelsharp["FluentUI.Bpmn.FeelSharp<br/>Fluent FEEL editor"]:::cs
+    fluentcomponents["NuGet Fluent UI Components"]:::data
+    feelsharpscripts["Bpmn.FeelSharp.Scripts<br/>Minimal DOM bridge<br/>No runtime npm dependencies"]:::js
     tools["Bpmn.Tools<br/>src/Bpmn.Tools<br/>Agent tool handlers (preview)"]:::cs
     webmcp["Bpmn.WebMcp<br/>src/Bpmn.WebMcp<br/>Browser agent tools (preview)"]:::cs
     wscripts["Bpmn.WebMcp.Scripts<br/>src/Bpmn.WebMcp.Scripts<br/>JavaScript SDK .esproj"]:::js
@@ -14,7 +18,7 @@ flowchart TB
     fluent["FluentUI.BpmnEditor<br/>Fluent UI composition<br/>Components + Icons packages"]:::cs
     scripts["Bpmn.Scripts<br/>src/Bpmn.Scripts<br/>JavaScript SDK .esproj"]:::js
     assets["Static web assets<br/>Core + optional FEEL and WebMCP bundles"]:::data
-    fscripts["Bpmn.Feel.Scripts<br/>src/Bpmn.Feel.Scripts<br/>JavaScript SDK .esproj"]:::js
+    fscripts["Bpmn.CamundaFeel.Scripts<br/>src/Bpmn.CamundaFeel.Scripts<br/>JavaScript SDK .esproj"]:::js
     generator["Bpmn.RulesGenerator<br/>src/Bpmn.RulesGenerator<br/>Roslyn analyzer only"]:::cs
     rules["rules/bpmn-rules.json<br/>Shared C# / TypeScript rules"]:::data
     icons["icons/<br/>Shared glyph manifest"]:::data
@@ -43,7 +47,12 @@ flowchart TB
     rules -.->|"embedded"| core
     rules -.->|"input"| scripts
     icons -.->|"input"| scripts
-    client --> feel
+    feelsharp --> core
+    feelsharp --> feelsharpscripts
+    feelsharpscripts -.->|"assets"| assets
+    fluentfeelsharp --> feelsharp
+    fluentfeelsharp --> fluentcomponents
+    client --> fluentfeelsharp
     client --> webmcp
     client --> core
     client --> standard
@@ -51,6 +60,8 @@ flowchart TB
     demo --> client
     tests --> core
     tests --> feel
+    tests --> feelsharp
+    tests --> fluentfeelsharp
     tests --> standard
     tests --> fluent
     bench --> core

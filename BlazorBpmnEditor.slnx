@@ -1,10 +1,16 @@
 <Solution>
   <Folder Name="/Components/">
-    <Project Path="src/Bpmn.Feel.Scripts/Hasseware.AspNetCore.Components.Bpmn.Feel.Scripts.esproj">
+    <Project Path="src/FluentUI.Bpmn.FeelSharp/Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp.csproj" />
+    <Project Path="src/Bpmn.FeelSharp/Hasseware.AspNetCore.Components.Bpmn.FeelSharp.csproj" />
+    <Project Path="src/Bpmn.FeelSharp.Scripts/Hasseware.AspNetCore.Components.Bpmn.FeelSharp.Scripts.esproj">
       <Build />
       <Deploy />
     </Project>
-    <Project Path="src/Bpmn.Feel/Hasseware.AspNetCore.Components.Bpmn.Feel.csproj" />
+    <Project Path="src/Bpmn.CamundaFeel.Scripts/Hasseware.AspNetCore.Components.Bpmn.CamundaFeel.Scripts.esproj">
+      <Build />
+      <Deploy />
+    </Project>
+    <Project Path="src/Bpmn.CamundaFeel/Hasseware.AspNetCore.Components.Bpmn.CamundaFeel.csproj" />
     <Project Path="src/Bpmn.RulesGenerator/Hasseware.AspNetCore.Components.Bpmn.RulesGenerator.csproj" />
     <Project Path="src/Bpmn.Scripts/Hasseware.AspNetCore.Components.Bpmn.Scripts.esproj">
       <Build />
@@ -43,6 +49,8 @@
     <Project Path="samples/SqlServerChangeIngress/SqlServerChangeIngress.csproj" />
   </Folder>
   <Folder Name="/Testing/">
+    <Project Path="tests/FluentUI.Bpmn.FeelSharp.Tests/Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp.Tests.csproj" />
+    <Project Path="tests/Bpmn.FeelSharp.Tests/Hasseware.AspNetCore.Components.Bpmn.FeelSharp.Tests.csproj" />
     <Project Path="tests/Bpmn.Benchmarks/Hasseware.AspNetCore.Components.Bpmn.Benchmarks.csproj" />
     <Project Path="tests/Bpmn.E2E.Tests/Hasseware.AspNetCore.Components.Bpmn.E2E.Tests.csproj" />
     <Project Path="tests/Bpmn.Editor.Tests/Hasseware.AspNetCore.Components.BpmnEditor.Tests.csproj" />

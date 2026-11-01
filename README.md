@@ -8,6 +8,19 @@ Built against two documents in `assets/`: a 1389-line notation and behaviour
 [implementation plan](assets/BPMN-2.0-Editor-Implementation-Plan.md) that sequences it into
 milestones M0–M7.
 
+## License
+
+Repository-owned code is licensed under the [MIT License](LICENSE.txt).
+Shipping NuGet packages include `LICENSE.txt`; third-party code, assets and
+dependencies retain their own licenses and notices.
+
+In particular, FeelSharp 1.3.0 uses Apache 2.0 **with Commons Clause**.
+The MIT license for these editor extensions does not remove FeelSharp's restrictions,
+including its restriction on selling the upstream software as defined by that clause.
+Review its license before commercial distribution or hosted use. JointJS retains
+MPL-2.0, and vendored BPMN icons retain SIL Open Font License 1.1.
+Existing third-party license files and attribution remain applicable.
+
 ## Packages
 
 | NuGet package | Purpose | BPMN dependency |
@@ -15,7 +28,9 @@ milestones M0–M7.
 | [`Hasseware.AspNetCore.Components.Bpmn`](src/Bpmn/README.md) | Core model, session/state, canvas, base contracts and intrinsic overlays; no Fluent dependency | None |
 | [`Hasseware.AspNetCore.Components.BpmnEditor`](src/BpmnEditor/README.md) | Standard HTML editor composition and chrome | Core only |
 | [`Hasseware.FluentUI.AspNetCore.Components.BpmnEditor`](src/FluentUI.BpmnEditor/README.md) | Fluent UI v5 editor composition and chrome | Core only; also Fluent UI and Icons |
-| [`Hasseware.AspNetCore.Components.Bpmn.Feel`](src/Bpmn.Feel/README.md) | Optional rich FEEL expression editor | Core only |
+| [`Hasseware.AspNetCore.Components.Bpmn.CamundaFeel`](src/Bpmn.CamundaFeel/README.md) | Optional rich FEEL expression editor | Core only |
+| [`Hasseware.AspNetCore.Components.Bpmn.FeelSharp`](src/Bpmn.FeelSharp/README.md) | Managed rich FEEL editor and opt-in server evaluation | Core + FeelSharp |
+| [`Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp`](src/FluentUI.Bpmn.FeelSharp/README.md) | Fluent UI rendering of the managed FEEL editor | FeelSharp extension + Fluent UI |
 | [`Hasseware.AspNetCore.Components.Bpmn.Tools`](src/Bpmn.Tools/README.md) | Preview: agent tool handlers shared by the WebMCP and MCP packages | Core only |
 | [`Hasseware.AspNetCore.Components.Bpmn.WebMcp`](src/Bpmn.WebMcp/README.md) | Preview: offers an open editor to browser agents through WebMCP; read-only unless the host allows editing | Core and Tools |
 | [`Hasseware.AspNetCore.Components.Bpmn.Mcp`](src/Bpmn.Mcp/README.md) | Preview: an MCP server over stored documents, read-only unless writing is enabled; plain library | Core, Tools and `ModelContextProtocol` |
@@ -39,7 +54,10 @@ flowchart LR
     Standard["BpmnEditor: standard kit"] --> Core["Bpmn: Core"]
     Fluent["FluentUI.BpmnEditor: Fluent kit"] --> Core
     Fluent --> FluentUI["Fluent UI + Icons"]
-    Feel["Bpmn.Feel: optional rich editor"] --> Core
+    Feel["Bpmn.CamundaFeel: optional rich editor"] --> Core
+    FeelSharp["Bpmn.FeelSharp: managed editor and opt-in evaluation"] --> Core
+    FluentFeelSharp["FluentUI.Bpmn.FeelSharp: Fluent FEEL editor"] --> FeelSharp
+    FluentFeelSharp --> FluentUI
     Tools["Bpmn.Tools: agent tools (preview)"] --> Core
     WebMcp["Bpmn.WebMcp: browser agent tools (preview)"] --> Core
     WebMcp --> Tools
@@ -66,8 +84,11 @@ its own defaults, with host overrides taking precedence.
 | [`src/BpmnEditor`](src/BpmnEditor/README.md) | `Hasseware.AspNetCore.Components.BpmnEditor`: standard HTML composition and chrome; depends only on Core |
 | [`src/FluentUI.BpmnEditor`](src/FluentUI.BpmnEditor/README.md) | Fluent UI v5 composition and chrome; independent of Standard |
 | [`src/Bpmn.Scripts`](src/Bpmn.Scripts/README.md) | The TypeScript canvas, bundled by esbuild into the library's static web assets |
-| [`src/Bpmn.Feel`](src/Bpmn.Feel/README.md) | Optional rich FEEL editor Razor class library |
-| [`src/Bpmn.Feel.Scripts`](src/Bpmn.Feel.Scripts/README.md) | esbuild bundle of `@bpmn-io/feel-editor` and CodeMirror for the optional package |
+| [`src/Bpmn.CamundaFeel`](src/Bpmn.CamundaFeel/README.md) | Optional rich FEEL editor Razor class library |
+| [`src/Bpmn.CamundaFeel.Scripts`](src/Bpmn.CamundaFeel.Scripts/README.md) | esbuild bundle of `@bpmn-io/feel-editor` and CodeMirror for the optional package |
+| [`src/Bpmn.FeelSharp`](src/Bpmn.FeelSharp/README.md) | Managed highlighting/completion, FeelSharp syntax diagnostics, optional server interpretation |
+| [`src/Bpmn.FeelSharp.Scripts`](src/Bpmn.FeelSharp.Scripts/README.md) | Minimal caret/composition DOM bridge; no runtime npm dependencies |
+| [`src/FluentUI.Bpmn.FeelSharp`](src/FluentUI.Bpmn.FeelSharp/README.md) | FluentTextArea and Fluent controls sharing FeelSharp language/editor behavior |
 | [`src/Bpmn.RulesGenerator`](src/Bpmn.RulesGenerator/README.md) | A Roslyn generator emitting the C# half of the shared connection-rule table |
 | [`src/Bpmn.Tools`](src/Bpmn.Tools/README.md) | Preview: the agent tool handlers, results and catalog the WebMCP and MCP surfaces share |
 | [`src/Bpmn.WebMcp`](src/Bpmn.WebMcp/README.md) | Preview: the `BpmnWebMcp` component and bridge that register the read-only tools with the browser |
@@ -114,8 +135,10 @@ vendored font it derives from.
   unknown vendor extensions remain preserved rather than silently discarded.
 - **Properties and templates:** opt-in Camunda 7 and Zeebe schemas/templates, grouped properties,
   template icons, and templated Blazor groups/entries with a plug-in editor registry.
-- **FEEL editing:** JavaScript-free standard expression control plus an optional, lazily loaded
-  rich editor with highlighting, parser lint and variable completion.
+- **FEEL editing:** JavaScript-free standard control, optional Camunda/CodeMirror editor, or
+  FeelSharp editor with managed highlighting/completion and minimal DOM interop (no editor plugins).
+  A separate Fluent FeelSharp extension supplies Fluent controls and is used by both demos.
+  FeelSharp server evaluation is separately opt-in; editing never evaluates expressions.
 - **Accessibility:** configurable keyboard navigation, accessible graph/names and live summaries,
   associated property errors, and forced-colors support.
 
@@ -139,14 +162,21 @@ flowchart LR
     Core --> Validation["Document and profile validation"]
     Shared["Shared rule table and icon manifest"] --> Core
     Shared --> Canvas
-    Host --> Feel["Optional Bpmn.Feel editor"]
+    Host --> Feel["Optional Bpmn.CamundaFeel editor"]
     Feel --> Core
     Feel --> Rich["Lazy FEEL and CodeMirror module"]
+    Host --> ManagedFeel["Optional Bpmn.FeelSharp editor"]
+    ManagedFeel --> Core
+    ManagedFeel --> Parser["FeelSharp parse-only diagnostics"]
+    ManagedFeel --> Dom["Small native-textarea DOM bridge"]
 ```
 
 ![System overview](assets/diagrams/system-overview.svg)
 
 ![Project dependencies](assets/diagrams/project-dependencies.svg)
+
+FeelSharp's [interop view](assets/diagrams/feelsharp-interop.mmd) separates managed editor
+services from the small DOM bridge and independently registered server evaluation.
 
 Diagram sources and focused views:
 
@@ -177,14 +207,16 @@ Source builds require .NET 10 and Node.js/npm. C# stays at version 14 even when 
 is installed, so analyzer fixes cannot introduce syntax unsupported by the .NET 10 SDK.
 XML documentation output is enabled for C# projects because build-time unused-import
 analysis requires it; tests and playground projects remain exempt from missing-comment warnings.
-Both JavaScript SDK projects need npm
-packages: `Bpmn.Scripts` for the canvas, `Bpmn.Feel.Scripts` for the optional rich editor.
+JavaScript SDK projects need npm packages: `Bpmn.Scripts` for the canvas,
+`Bpmn.CamundaFeel.Scripts` for the optional Camunda editor, and `Bpmn.FeelSharp.Scripts`
+for the managed editor's DOM bridge (build-time dependencies only).
 Their `.esproj` builds pass the .NET configuration to npm; Debug includes source maps,
 Release minifies. Package consumers do not need Node.js/npm.
 
 ```shell
 cd src\Bpmn.Scripts && npm ci && npm run check && npm run build
-cd ..\Bpmn.Feel.Scripts && npm ci && npm run build
+cd ..\Bpmn.CamundaFeel.Scripts && npm ci && npm run build
+cd ..\Bpmn.FeelSharp.Scripts && npm ci && npm test
 cd ..\.. && dotnet build BlazorBpmnEditor.slnx -c Release
 & tests\Bpmn.Tests\bin\Release\net10.0\Hasseware.AspNetCore.Components.Bpmn.Tests.exe
 & tests\Bpmn.Editor.Tests\bin\Release\net10.0\Hasseware.AspNetCore.Components.BpmnEditor.Tests.exe

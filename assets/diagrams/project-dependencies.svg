@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1740 1330" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1740 1770" role="img" aria-labelledby="title desc">
   <title id="title">Project dependencies</title>
   <desc id="desc">Solid arrows point from dependent projects to referenced projects. The standard and Fluent editor kits independently reference Core, and the agent tool packages (Tools, WebMcp) build on it. Dashed arrows describe shared inputs and produced assets.</desc>
   <defs>
@@ -15,13 +15,13 @@
       .input { stroke-dasharray: 5 3; } .heading { font-size: 24px; font-weight: 700; } .name { font-weight: 600; }
     </style>
   </defs>
-  <rect width="1740" height="1330" fill="#f8fafc"/>
+  <rect width="1740" height="1770" fill="#f8fafc"/>
   <text x="870" y="38" text-anchor="middle" class="heading">Project dependencies</text>
   <text x="870" y="64" text-anchor="middle" fill="#64748b">Solid: dependent → referenced project. Dashed: shared input / produced assets.</text>
   <line x1="40" y1="84" x2="1700" y2="84" stroke="#e2e8f0" stroke-width="1.5"/>
   <path class="edge" d="M990 230V285"/>
   <path class="edge" d="M990 385V440"/>
-  <path class="edge" d="M990 540V565H270V610"/>
+  <path class="edge" d="M990 540V555H15V1675H110"/>
   <path class="edge" d="M990 540V580H630V610"/>
   <path class="edge" d="M990 540V610"/>
   <path class="edge" d="M1150 490H1195V935H805V865H790"/>
@@ -71,7 +71,7 @@
     <text x="160" y="29" text-anchor="middle"><tspan class="name">Bpmn.Demo.Client</tspan><tspan x="160" dy="25">Standard + Fluent pages</tspan><tspan x="160" dy="25">References both kits, Core, FEEL, WebMCP</tspan></text>
   </g>
   <g transform="translate(110 610)"><rect class="cs" width="320" height="120" rx="8"/>
-    <text x="160" y="29" text-anchor="middle"><tspan class="name">Bpmn.Feel</tspan><tspan x="160" dy="25">Optional FEEL component</tspan><tspan x="160" dy="25">References Core + FEEL scripts</tspan><tspan x="160" dy="25">Independent interop boundary</tspan></text>
+    <text x="160" y="29" text-anchor="middle"><tspan class="name">Bpmn.CamundaFeel</tspan><tspan x="160" dy="25">Optional FEEL component</tspan><tspan x="160" dy="25">References Core + FEEL scripts</tspan><tspan x="160" dy="25">Independent interop boundary</tspan></text>
   </g>
   <g transform="translate(470 610)"><rect class="kit" width="320" height="120" rx="8"/>
     <text x="160" y="29" text-anchor="middle"><tspan class="name">BpmnEditor</tspan><tspan x="160" dy="25">Standard Blazor UI kit</tspan><tspan x="160" dy="25">References Core only</tspan><tspan x="160" dy="25">No Fluent UI dependency</tspan></text>
@@ -83,7 +83,7 @@
     <text x="160" y="27" text-anchor="middle"><tspan class="name">Bpmn (Core)</tspan><tspan x="160" dy="24">Canvas, model and behavior</tspan><tspan x="160" dy="24">Serialization and validation</tspan><tspan x="160" dy="24">No Fluent UI dependency</tspan></text>
   </g>
   <g transform="translate(830 810)"><rect class="js" width="320" height="110" rx="8"/>
-    <text x="160" y="31" text-anchor="middle"><tspan class="name">Bpmn.Feel.Scripts</tspan><tspan x="160" dy="26">JavaScript SDK .esproj</tspan><tspan x="160" dy="26">Private build dependency</tspan></text>
+    <text x="160" y="31" text-anchor="middle"><tspan class="name">Bpmn.CamundaFeel.Scripts</tspan><tspan x="160" dy="26">JavaScript SDK .esproj</tspan><tspan x="160" dy="26">Private build dependency</tspan></text>
   </g>
   <g transform="translate(110 990)"><rect class="js" width="320" height="110" rx="8"/>
     <text x="160" y="31" text-anchor="middle"><tspan class="name">Bpmn.Scripts</tspan><tspan x="160" dy="26">JavaScript SDK .esproj</tspan><tspan x="160" dy="26">Private build dependency</tspan></text>
@@ -105,5 +105,23 @@
   </g>
   <g transform="translate(1290 810)"><rect class="js" width="320" height="110" rx="8"/>
     <text x="160" y="31" text-anchor="middle"><tspan class="name">Bpmn.WebMcp.Scripts</tspan><tspan x="160" dy="26">JavaScript SDK .esproj</tspan><tspan x="160" dy="26">Private build dependency</tspan></text>
+  </g>
+  <path class="edge" d="M350 230V260H10V1420H110"/>
+  <path class="edge" d="M270 1390V1350H600V920"/>
+  <path class="edge" d="M430 1445H470"/>
+  <path class="edge input" d="M790 1445H900V1290"/>
+  <path class="edge" d="M270 1500V1540H990V1500"/>
+  <g transform="translate(110 1390)"><rect class="cs" width="320" height="110" rx="8"/>
+    <text x="160" y="28" text-anchor="middle"><tspan class="name">Bpmn.FeelSharp</tspan><tspan x="160" dy="25">Managed editor + opt-in evaluation</tspan><tspan x="160" dy="25">Shared editor / language behavior</tspan></text>
+  </g>
+  <g transform="translate(470 1390)"><rect class="js" width="320" height="110" rx="8"/>
+    <text x="160" y="28" text-anchor="middle"><tspan class="name">Bpmn.FeelSharp.Scripts</tspan><tspan x="160" dy="25">Minimal native-textarea bridge</tspan><tspan x="160" dy="25">No runtime npm dependencies</tspan></text>
+  </g>
+  <g transform="translate(830 1390)"><rect class="data" width="320" height="110" rx="8"/>
+    <text x="160" y="28" text-anchor="middle"><tspan class="name">NuGet FeelSharp 1.3.0</tspan><tspan x="160" dy="25">Managed parser / interpreter</tspan><tspan x="160" dy="25">Apache 2.0 + Commons Clause</tspan></text>
+  </g>
+  <path class="edge" d="M270 1620V1500"/>
+  <g transform="translate(110 1620)"><rect class="cs" width="320" height="110" rx="8"/>
+    <text x="160" y="28" text-anchor="middle"><tspan class="name">FluentUI.Bpmn.FeelSharp</tspan><tspan x="160" dy="25">FluentTextArea + Fluent controls</tspan><tspan x="160" dy="25">Current demo FEEL extension</tspan></text>
   </g>
 </svg>

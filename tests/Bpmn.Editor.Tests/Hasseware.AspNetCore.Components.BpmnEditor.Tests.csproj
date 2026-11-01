@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Bpmn\Hasseware.AspNetCore.Components.Bpmn.csproj" />
-    <ProjectReference Include="..\..\src\Bpmn.Feel\Hasseware.AspNetCore.Components.Bpmn.Feel.csproj" />
+    <ProjectReference Include="..\..\src\Bpmn.CamundaFeel\Hasseware.AspNetCore.Components.Bpmn.CamundaFeel.csproj" />
     <ProjectReference Include="..\..\src\BpmnEditor\Hasseware.AspNetCore.Components.BpmnEditor.csproj" />
   </ItemGroup>
 

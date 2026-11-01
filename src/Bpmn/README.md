@@ -121,7 +121,7 @@ For a standalone bundle build:
 cd ../Bpmn.Scripts && npm ci && npm run build -- --build-mode=Debug
 ```
 
-The optional `Bpmn.Feel` package follows the same pattern with `Bpmn.Feel.Scripts`;
+The optional `Bpmn.CamundaFeel` package follows the same pattern with `Bpmn.CamundaFeel.Scripts`;
 see its README for FEEL bundle and license output.
 
 Warnings are errors in this project and XML documentation is required on every public member.
@@ -289,7 +289,7 @@ editor applies those commands through history. See the
 ### Built-in FEEL editor
 
 For syntax highlighting, parser diagnostics and variable completion, opt into the separate
-[Hasseware.AspNetCore.Components.Bpmn.Feel package](../Bpmn.Feel/README.md) with
+[Hasseware.AspNetCore.Components.Bpmn.CamundaFeel package](../Bpmn.CamundaFeel/README.md) with
 `services.AddBpmnComponents().AddBpmnFeelEditor()`. Its bundle loads lazily; the core has no dependency on the rich FEEL bundle.
 
 `BpmnFeelEntry` handles required and optional FEEL properties without JavaScript dependencies.

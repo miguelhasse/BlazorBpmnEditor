@@ -1,0 +1,72 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn.FeelSharp
+@using Hasseware.AspNetCore.Components.Bpmn.Editing
+@inherits BpmnFeelSharpEditorBase
+@{
+    var generation = _generation;
+}
+<div class="bpmn-feelsharp @(Block + "__feel-entry")">
+    @if (Entry.Feel == BpmnFeelMode.Optional)
+    {
+        <button type="button" class="@(Block + "__feel-toggle")" aria-label="@Text("PropertyEntry.ToggleFeel")"
+                aria-pressed="@(FeelActive ? "true" : "false")" disabled="@ReadOnly" @onclick="ToggleAsync">@Text("Expression.Function")</button>
+    }
+    @if (FeelActive || ReadOnly)
+    {
+        <label for="@InputId" class="@(Block + "__label")" title="@Entry.Tooltip">@Entry.Label</label>
+        <div class="bpmn-feelsharp-control">
+            @if (FeelActive)
+            {
+                <span class="@(Block + "__feel-badge")">@Text("Expression.Feel")</span>
+            }
+            <div class="bpmn-feelsharp-surface" @ref="_surface" data-enhanced="@(_enhanced ? "true" : "false")"
+                 data-generation="@_generation" data-completion="@(_completions.Count > 0 ? "true" : "false")">
+                <pre class="bpmn-feelsharp-highlight" aria-hidden="true">@foreach (var token in FeelSharpLanguage.Tokenize(DisplayValue))
+                    {<span class="@("feel-" + token.Kind)">@token.Text</span>}@("\n")</pre>
+                <textarea id="@InputId" class="@(Block + "__text bpmn-feelsharp-input")" rows="@MultilineRows"
+                          readonly="@ReadOnly" value="@_initialText" placeholder="@Entry.Placeholder" wrap="off"
+                          aria-label="@Entry.Label" aria-invalid="@(Entry.Error is not null || Warning is not null ? "true" : null)"
+                          aria-describedby="@DescribedBy" aria-autocomplete="list" aria-controls="@CompletionId"
+                          aria-expanded="@(_completions.Count > 0 ? "true" : "false")"
+                          aria-activedescendant="@(_completions.Count > 0 ? OptionId(_selected) : null)"
+                          spellcheck="false" @ref="_input" @key="_generation"
+                          @oninput="args => Input(args, generation)" @onchange="args => ChangeAsync(args, generation)"
+                          @onkeydown="args => KeyDownAsync(args, generation)"></textarea>
+            </div>
+            @if (_completions.Count > 0 && !ReadOnly)
+            {
+                <ul id="@CompletionId" class="bpmn-feelsharp-completions" role="listbox" aria-label="@Entry.Label"
+                    @onmousedown:preventDefault>
+                    @for (var index = 0; index < _completions.Count; index++)
+                    {
+                        var option = index;
+                        var completion = _completions[index];
+                        <li id="@OptionId(index)" role="option" aria-selected="@(index == _selected ? "true" : "false")"
+                            @onclick="() => ApplyCompletionAsync(option)">
+                            <span>@completion.Label</span>
+                            @if (completion.Detail is not null)
+                            {
+                                <small>@completion.Detail</small>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+            @if (Warning is { } warning)
+            {
+                <span id="@WarningId" class="@(Block + "__feel-warning")" role="status">@warning</span>
+            }
+        </div>
+        @if (Entry.Description is { Length: > 0 })
+        {
+            <span class="@(Block + "__description")">@Entry.Description</span>
+        }
+        @if (Entry.Error is { Length: > 0 })
+        {
+            <span id="@ErrorId" class="@(Block + "__error")" role="alert">@Entry.Error</span>
+        }
+    }
+    else
+    {
+        <DynamicComponent Type="@DefaultEditor" Parameters="@EditorParameters" @key="Context.Revision" />
+    }
+</div>

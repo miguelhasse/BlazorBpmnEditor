@@ -1,7 +1,7 @@
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Hasseware.AspNetCore.Components.Bpmn.Feel;
+namespace Hasseware.AspNetCore.Components.Bpmn.CamundaFeel;
 
 /// <summary>Opt-in registration for the rich FEEL editor.</summary>
 public static class BpmnFeelServiceCollectionExtensions

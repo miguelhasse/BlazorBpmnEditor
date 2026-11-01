@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="bunit" />
+    <PackageReference Include="AngleSharp" />
+    <Using Include="Xunit" />
+    <ProjectReference Include="..\..\src\Bpmn.FeelSharp\Hasseware.AspNetCore.Components.Bpmn.FeelSharp.csproj" />
+    <ProjectReference Include="..\..\src\BpmnEditor\Hasseware.AspNetCore.Components.BpmnEditor.csproj" />
+    <ProjectReference Include="..\..\src\FluentUI.BpmnEditor\Hasseware.FluentUI.AspNetCore.Components.BpmnEditor.csproj" />
+    <ProjectReference Include="..\..\src\Bpmn.CamundaFeel\Hasseware.AspNetCore.Components.Bpmn.CamundaFeel.csproj" />
+  </ItemGroup>
+</Project>

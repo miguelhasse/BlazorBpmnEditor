@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Hasseware.AspNetCore.Components.Bpmn.FeelSharp</AssemblyName>
+    <RootNamespace>Hasseware.AspNetCore.Components.Bpmn.FeelSharp</RootNamespace>
+    <PackageId>Hasseware.AspNetCore.Components.Bpmn.FeelSharp</PackageId>
+    <Description>Managed FEEL editor and optional evaluation using FeelSharp, without JavaScript editor plugins.</Description>
+    <PackageTags>bpmn;blazor;feel;feelsharp;editor</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="FeelSharp" />
+    <ProjectReference Include="..\Bpmn\Hasseware.AspNetCore.Components.Bpmn.csproj" />
+    <ProjectReference Include="..\Bpmn.FeelSharp.Scripts\Hasseware.AspNetCore.Components.Bpmn.FeelSharp.Scripts.esproj" PrivateAssets="All" />
+    <InternalsVisibleTo Include="Hasseware.AspNetCore.Components.Bpmn.FeelSharp.Tests" />
+    <InternalsVisibleTo Include="Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <Import Project="..\ScriptsStaticAssets.targets" />
+</Project>
