@@ -150,6 +150,69 @@ public sealed class BpmnDisplayLocalizationTests
         Assert.Equal("Name", node.Label);
     }
 
+    [Theory]
+    [InlineData("en")]
+    [InlineData("de")]
+    [InlineData("pt")]
+    [InlineData("ja")]
+    public void RenderLocalDescriptionsMatchIndependentFormatting(string cultureName)
+    {
+        var previousCulture = CultureInfo.CurrentCulture;
+        var previousUiCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(cultureName);
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(cultureName);
+            var display = new BpmnDisplayLocalizer(new BpmnResourceStringLocalizer());
+            BpmnGraphNode[] nodes =
+            [
+                new("Task", "task", "Name", "Process", null, 1, ["A", "B"], ["C"]),
+                new("Task2", "task", "", "Process", null, 1, [], []),
+                new("Sub", "subProcess", "Nested", "Process", null, 1, [], []) { IsExpanded = true },
+                new("Pool", "pool", "Pool name", "Process", null, 1, [], []),
+                new("Note", "textAnnotation", "Text", "Process", null, 1, [], [])
+                {
+                    Attached = ["Task", "Unknown target"], AttachedTypes = ["task", "unknownKind"],
+                },
+                new("Unknown", "unknownKind", "Untranslated", "Process", null, 1, [], []),
+            ];
+            var render = display.ForAccessibleRender();
+
+            Assert.Equal(nodes.Select(display.AccessibleName), nodes.Select(render.AccessibleName));
+            Assert.Equal(display.ElementType("unknownKind"), render.ElementType("unknownKind"));
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = previousCulture;
+            CultureInfo.CurrentUICulture = previousUiCulture;
+        }
+    }
+
+    [Fact]
+    public void RenderLocalDescriptionsRefreshMutableHostResourcesBetweenRenders()
+    {
+        var values = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["AccessibleType.task"] = "First type",
+            ["AccessibleTree.Incoming"] = "First {0} incoming",
+            ["AccessibleTree.Outgoing"] = "First {0} outgoing",
+        };
+        var display = new BpmnDisplayLocalizer(new TestStrings(values));
+        var node = new BpmnGraphNode("Task", "task", "Name", "Process", null, 1, ["A"], ["B"]);
+        var first = display.ForAccessibleRender().AccessibleName(node);
+        values["AccessibleType.task"] = "Second type";
+        values["AccessibleTree.Incoming"] = "Second {0} incoming";
+        values["AccessibleTree.Outgoing"] = "Second {0} outgoing";
+
+        var second = display.ForAccessibleRender().AccessibleName(node);
+
+        Assert.Contains("First type", first, StringComparison.Ordinal);
+        Assert.Contains("Second type", second, StringComparison.Ordinal);
+        Assert.Contains("Second 1 incoming", second, StringComparison.Ordinal);
+        Assert.Contains("Second 1 outgoing", second, StringComparison.Ordinal);
+        Assert.Equal(display.AccessibleName(node), second);
+    }
+
     [Fact]
     public void MissingTranslationsFallBackAndEveryIconAndTypeHasANeutralResource()
     {

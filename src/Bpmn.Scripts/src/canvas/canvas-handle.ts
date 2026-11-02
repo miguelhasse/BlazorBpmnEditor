@@ -8,6 +8,7 @@ import type {
   ViewportCommand,
 } from '../interop/contracts.js';
 import type { BpmnDocumentContract } from '../model/contracts.js';
+import type { CanvasDocumentPatch } from '../model/document-patch.js';
 import type { BpmnCanvasInstance } from './bpmn-canvas-instance.js';
 
 /**
@@ -45,12 +46,16 @@ export class CanvasHandle {
     return this.#initResult;
   }
 
-  public loadDocument(document: BpmnDocumentContract, diagramId: string | null): DocumentLoadedPayload | null {
-    return this.#instance?.loadDocument(document, diagramId) ?? null;
+  public loadDocument(document: BpmnDocumentContract, diagramId: string | null, revision = 0): DocumentLoadedPayload | null {
+    return this.#instance?.loadDocument(document, diagramId, revision) ?? null;
   }
 
-  public deleteElements(elementIds: readonly string[]): boolean {
-    return this.#instance?.deleteElements(elementIds) ?? false;
+  public patchDocument(patch: CanvasDocumentPatch): DocumentLoadedPayload | null {
+    return this.#instance?.patchDocument(patch) ?? null;
+  }
+
+  public deleteElements(elementIds: readonly string[], revision?: number): boolean {
+    return this.#instance?.deleteElements(elementIds, revision) ?? false;
   }
 
   public setActiveDiagram(diagramId: string): DocumentLoadedPayload | null {

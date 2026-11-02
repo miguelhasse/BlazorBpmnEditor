@@ -1,3 +1,5 @@
+using System.Collections;
+
 using Hasseware.AspNetCore.Components.Bpmn.Accessibility;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
 using Hasseware.AspNetCore.Components.Bpmn.Model.Di;
@@ -81,6 +83,50 @@ public sealed class AccessibleGraphTests
         Assert.Equal(2, nodes.Single(node => node.ElementId == "Inner_Task").Depth);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void DepthsMatchDistinctAncestorTraversalIncludingCycles(bool reverse)
+    {
+        var builder = new BpmnDocumentBuilder();
+        for (var index = 0; index < 40; index++)
+            builder.Node($"Node_{index}", BpmnFlowNodeType.SubProcess,
+                new Bounds(0, 0, 100, 80), containerId: index == 39 ? "Node_30" : $"Node_{index + 1}");
+        builder.Node("Self", BpmnFlowNodeType.SubProcess, new Bounds(0, 0, 100, 80), containerId: "Self");
+        var document = builder.Build();
+        if (reverse) document = document with { FlowNodes = [.. document.FlowNodes.Reverse()] };
+        var owners = document.FlowNodes.ToDictionary(node => node.Id, node => node.ContainerId, StringComparer.Ordinal);
+
+        var graph = BpmnAccessibleGraph.For(document, null);
+
+        foreach (var node in graph)
+        {
+            var seen = new HashSet<string>(StringComparer.Ordinal) { node.ElementId };
+            var current = owners[node.ElementId];
+            var expected = 1;
+            while (owners.TryGetValue(current, out var parent) && seen.Add(current))
+            {
+                expected++;
+                current = parent;
+            }
+            Assert.Equal(expected, node.Depth);
+        }
+    }
+
+    [Fact]
+    public void DepthsShareLongAcyclicAncestorsWithoutChangingDocumentOrder()
+    {
+        var builder = new BpmnDocumentBuilder();
+        for (var index = 0; index < 2000; index++)
+            builder.Node($"Node_{index}", BpmnFlowNodeType.SubProcess,
+                new Bounds(0, 0, 100, 80), containerId: index == 1999 ? "Process_1" : $"Node_{index + 1}");
+
+        var graph = BpmnAccessibleGraph.For(builder.Build(), null);
+
+        Assert.Equal(Enumerable.Range(0, 2000).Select(index => $"Node_{index}"), graph.Select(node => node.ElementId));
+        Assert.Equal(Enumerable.Range(1, 2000).Reverse(), graph.Select(node => node.Depth));
+    }
+
     [Fact]
     public void PoolsAndLanesAreStopsToo()
     {
@@ -160,6 +206,125 @@ public sealed class AccessibleGraphTests
         // Everything after a container and before the next one at the same level is inside it.
         var deeper = nodes.Skip(1).TakeWhile(node => node.Depth > 1).ToList();
         Assert.NotEmpty(deeper);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void OverlappingAndUndrawnLaneMembershipsPreserveFirstDrawnOwnerAndOrder(bool reverseLanes)
+    {
+        var builder = new BpmnDocumentBuilder()
+            .Pool("Pool_A", "A", new Bounds(0, 0, 600, 400))
+            .Pool("Pool_B", "B", new Bounds(0, 500, 600, 400))
+            .BlackBoxPool("Pool_BlackBox", "External", new Bounds(0, 1000, 600, 100))
+            .Lane("Lane_A", "A", new Bounds(30, 0, 570, 100), ["Shared", "Task_A"])
+            .Lane("Lane_B", "B", new Bounds(30, 100, 570, 100), ["Task_B"])
+            .Lane("Lane_Hidden", "Hidden", new Bounds(30, 200, 570, 100), ["Hidden_Member"])
+            .Node("Task_B", BpmnFlowNodeType.Task, new Bounds(100, 120, 100, 80))
+            .Node("Shared", BpmnFlowNodeType.Task, new Bounds(100, 20, 100, 80))
+            .Node("Task_A", BpmnFlowNodeType.Task, new Bounds(300, 20, 100, 80))
+            .Node("Unlaned", BpmnFlowNodeType.Task, new Bounds(100, 300, 100, 80))
+            .Node("Hidden_Member", BpmnFlowNodeType.Task, new Bounds(300, 220, 100, 80))
+            .Node("Sub", BpmnFlowNodeType.SubProcess, new Bounds(700, 0, 200, 200), isExpanded: true)
+            .Node("Nested", BpmnFlowNodeType.Task, new Bounds(720, 20, 100, 80), containerId: "Sub")
+            .Node("Outside", BpmnFlowNodeType.Task, new Bounds(1000, 0, 100, 80), containerId: "Other_Process")
+            .TextAnnotation("Note", "Note", new Bounds(100, 400, 100, 40));
+        var document = builder.Build();
+        document = document with
+        {
+            Lanes =
+            [
+                document.Lanes[0] with { FlowNodeRefs = ["Shared", "Shared", "Task_A"] },
+                document.Lanes[1] with { FlowNodeRefs = ["Shared", "Task_B"] },
+                document.Lanes[2],
+            ],
+            LaneSets = [document.LaneSets[0] with
+            {
+                LaneIds = reverseLanes ? ["Lane_B", "Lane_A", "Lane_Hidden"] : ["Lane_A", "Lane_B", "Lane_Hidden"],
+            }],
+            Diagrams = [document.Diagrams[0] with
+            {
+                Plane = document.Diagrams[0].Plane with
+                {
+                    Shapes = [.. document.Diagrams[0].Plane.Shapes.Where(shape => shape.BpmnElement != "Lane_Hidden")],
+                },
+            }],
+        };
+
+        var graph = BpmnAccessibleGraph.For(document, null);
+
+        string[] expected = reverseLanes
+            ? ["Pool_A", "Unlaned", "Sub", "Note", "Lane_B", "Task_B", "Shared", "Lane_A", "Task_A",
+                "Pool_B", "Pool_BlackBox", "Hidden_Member", "Nested", "Outside"]
+            : ["Pool_A", "Unlaned", "Sub", "Note", "Lane_A", "Shared", "Task_A", "Lane_B", "Task_B",
+                "Pool_B", "Pool_BlackBox", "Hidden_Member", "Nested", "Outside"];
+        Assert.Equal(expected, graph.Select(node => node.ElementId));
+        Assert.Equal(3, graph.Single(node => node.ElementId == "Shared").Depth);
+        Assert.Equal(1, graph.Single(node => node.ElementId == "Hidden_Member").Depth);
+        Assert.Equal(2, graph.Single(node => node.ElementId == "Nested").Depth);
+        Assert.Equal(2, graph.Single(node => node.ElementId == "Note").Depth);
+    }
+
+    [Fact]
+    public void ShippedFixturesMatchFullScanReadingOrder()
+    {
+        var files = Directory.GetFiles(SampleDirectory(), "*.bpmn");
+        Assert.NotEmpty(files);
+        foreach (var file in files)
+        {
+            var document = BpmnXmlReader.Read(File.ReadAllText(file)).Document;
+            foreach (var diagram in document.Diagrams)
+            {
+                var graph = BpmnAccessibleGraph.For(document, diagram.Id);
+                var swimlanes = graph.Where(node => node.TypeName is "pool" or "lane").ToArray();
+                var stops = BpmnAccessibleGraph.For(document with { Collaboration = null }, diagram.Id);
+                var memberships = document.Lanes
+                    .SelectMany(lane => lane.FlowNodeRefs.Select(id => (Id: id, Lane: lane.Id)))
+                    .ToLookup(pair => pair.Id, pair => pair.Lane, StringComparer.Ordinal);
+                var placed = new HashSet<string>(StringComparer.Ordinal);
+                var expected = new List<BpmnGraphNode>();
+                foreach (var swimlane in swimlanes)
+                {
+                    expected.Add(swimlane);
+                    foreach (var node in stops.Where(node => swimlane.TypeName == "lane"
+                        ? memberships[node.ElementId].Contains(swimlane.ElementId, StringComparer.Ordinal)
+                        : swimlane.ContainerId is not null && node.ContainerId == swimlane.ContainerId
+                            && !memberships[node.ElementId].Any()))
+                    {
+                        if (placed.Add(node.ElementId))
+                            expected.Add(node with { Depth = node.Depth + swimlane.Depth });
+                    }
+                }
+                expected.AddRange(stops.Where(node => !placed.Contains(node.ElementId)));
+                Assert.Equal(expected.Count, graph.Count);
+                Assert.All(expected.Zip(graph), pair => Assert.True(BpmnGraphNode.SameContent(pair.First, pair.Second),
+                    $"{Path.GetFileName(file)} / {diagram.Id}: {pair.First.ElementId}"));
+            }
+        }
+    }
+
+    [Theory]
+    [InlineData(false, 0)]
+    [InlineData(true, 1)]
+    public void LaneMembershipIsReadOnceOnlyWhenSwimlanesAreDrawn(bool drawnPool, int expectedReads)
+    {
+        var document = new BpmnDocumentBuilder()
+            .Pool("Pool", "Pool", new Bounds(0, 0, 400, 120))
+            .Lane("Lane", "Lane", new Bounds(30, 0, 370, 120), ["Task"])
+            .Node("Task", BpmnFlowNodeType.Task, new Bounds(100, 20, 100, 80))
+            .Build();
+        var members = new CountingMembers(document.Lanes[0].FlowNodeRefs);
+        document = document with
+        {
+            Collaboration = drawnPool ? document.Collaboration : null,
+            Lanes = [document.Lanes[0] with { FlowNodeRefs = members }],
+        };
+
+        var graph = BpmnAccessibleGraph.For(document, null);
+
+        Assert.Equal(expectedReads, members.Reads);
+        string[] expected = drawnPool ? ["Pool", "Lane", "Task"] : ["Task"];
+        Assert.Equal(expected, graph.Select(node => node.ElementId));
     }
 
     [Fact]
@@ -328,7 +493,10 @@ public sealed class AccessibleGraphTests
     // --- fixtures ----------------------------------------------------------------------
 
     /// <summary>A shipped fixture, because a Collaboration with Lanes is tedious to build by hand.</summary>
-    private static BpmnDocument Read(string fileName)
+    private static BpmnDocument Read(string fileName) =>
+        BpmnXmlReader.Read(File.ReadAllText(Path.Combine(SampleDirectory(), fileName))).Document;
+
+    private static string SampleDirectory()
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
 
@@ -338,9 +506,22 @@ public sealed class AccessibleGraphTests
         }
 
         var root = directory?.FullName ?? throw new InvalidOperationException("the repository root was not found");
-        var path = Path.Combine(root, "playground", "Bpmn.Demo", "wwwroot", "samples", fileName);
+        return Path.Combine(root, "playground", "Bpmn.Demo", "wwwroot", "samples");
+    }
 
-        return BpmnXmlReader.Read(File.ReadAllText(path)).Document;
+    private sealed class CountingMembers(IReadOnlyList<string> members) : IReadOnlyList<string>
+    {
+        public int Reads { get; private set; }
+        public int Count { get { Reads++; return members.Count; } }
+        public string this[int index] { get { Reads++; return members[index]; } }
+
+        public IEnumerator<string> GetEnumerator()
+        {
+            Reads++;
+            return members.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     private static BpmnDocument Linear() => new BpmnDocumentBuilder()

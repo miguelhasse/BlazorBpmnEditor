@@ -25,6 +25,36 @@ export interface RenderResult {
   readonly unrenderedElementIds: readonly string[];
 }
 
+interface ProjectionEntry {
+  readonly inputs: readonly unknown[];
+  readonly cell: dia.Cell;
+}
+
+interface ProjectionCache {
+  entries: Map<string, ProjectionEntry>;
+  readonly dirty: Set<string>;
+  rendering: boolean;
+}
+
+const projections = new WeakMap<dia.Graph, ProjectionCache>();
+
+function projectionCache(graph: dia.Graph): ProjectionCache {
+  const known = projections.get(graph);
+  if (known !== undefined) return known;
+  const cache: ProjectionCache = { entries: new Map(), dirty: new Set(), rendering: false };
+  graph.on('change add remove', (cell: dia.Cell) => {
+    if (!cache.rendering) cache.dirty.add(String(cell.id));
+  });
+  graph.on('reset', () => {
+    if (!cache.rendering) {
+      cache.entries.clear();
+      cache.dirty.clear();
+    }
+  });
+  projections.set(graph, cache);
+  return cache;
+}
+
 /**
  * Removes a deletion closure from the resident document and its graph without rebuilding every
  * cell. Lane, Pool, and Process deletion still require the full renderer because they change the
@@ -63,6 +93,11 @@ export function removeDocumentElements(
     graph.removeCells(cells);
   } finally {
     graph.stopBatch('render');
+  }
+  const cache = projections.get(graph);
+  for (const id of removed) {
+    cache?.entries.delete(id);
+    cache?.dirty.delete(id);
   }
 
   const retain = <T extends { readonly id: string }>(items: readonly T[]): readonly T[] =>
@@ -111,15 +146,46 @@ export function renderDocument(
   document: BpmnDocumentContract,
   diagramId: string | null,
   metrics: FontMetricsProvider,
+  incremental = false,
 ): RenderResult {
   const diagram = resolveDiagram(document, diagramId);
   if (diagram === undefined) {
     graph.clear();
+    const cache = projections.get(graph);
+    cache?.entries.clear();
+    cache?.dirty.clear();
     return { diagramId: '', shapeCount: 0, edgeCount: 0, unrenderedElementIds: [] };
   }
 
   const index = new BpmnDocumentIndex(document);
   const plane = new BpmnPlaneIndex(diagram);
+  const cache = projectionCache(graph);
+  const nextEntries = new Map<string, ProjectionEntry>();
+  const project = (
+    id: string, inputs: readonly unknown[], dependencies: readonly string[],
+    build: () => dia.Cell | null, di: BpmnShapeContract | BpmnEdgeContract | undefined,
+  ): dia.Cell | null => {
+    const previous = cache.entries.get(id);
+    if (previous !== undefined) {
+      if (incremental && graph.getCell(id) === previous.cell
+        && !cache.dirty.has(id) && !dependencies.some((dependency) => cache.dirty.has(dependency))
+        && inputs.length === previous.inputs.length && inputs.every((input, position) => input === previous.inputs[position])) {
+        nextEntries.set(id, previous);
+        return previous.cell;
+      }
+    }
+    const cell = build();
+    if (cell !== null) {
+      if (di !== undefined) applyDiColors(cell, di);
+      nextEntries.set(id, { inputs, cell });
+    }
+    return cell;
+  };
+  const linkInputs = (source: string, target: string): readonly unknown[] => [
+    plane.shapeFor(source), plane.shapeFor(target),
+    index.flowNode(source)?.type, index.flowNode(target)?.type,
+    plane.edgeFor(source), plane.edgeFor(target),
+  ];
   /*
    * A lookup rather than the plane itself: only a Boundary Event needs another element's geometry,
    * and only to keep its label off the Activity it is attached to.
@@ -152,7 +218,12 @@ export function renderDocument(
       continue;
     }
 
-    const cell = createCellForShape(index, shape, context);
+    const element = index.find(shape.bpmnElement);
+    const host = element?.kind === 'flowNode' ? element.value.attachedToRef : null;
+    const cell = project(shape.bpmnElement,
+      [element?.value, shape, host === null ? undefined : plane.shapeFor(host), metrics],
+      host === null ? [] : [host],
+      () => createCellForShape(index, shape, context), shape);
     if (cell === null) {
       unrendered.push(shape.bpmnElement);
       continue;
@@ -176,43 +247,50 @@ export function renderDocument(
   for (const flow of document.sequenceFlows) {
     if (!renderedIds.has(flow.sourceRef) || !renderedIds.has(flow.targetRef)) continue;
     const edge = plane.edgeFor(flow.id);
-    cells.push(factory.createSequenceFlowLink(
+    const cell = project(flow.id, [flow, edge, ...linkInputs(flow.sourceRef, flow.targetRef), metrics],
+      [flow.sourceRef, flow.targetRef], () => factory.createSequenceFlowLink(
       flow,
       edge?.waypoints ?? [],
       endpointsOf(outlines, edge, flow.sourceRef, flow.targetRef),
       flow.name,
       context,
       edge?.label?.bounds ?? null,
-    ));
+    ), edge);
+    if (cell !== null) cells.push(cell);
   }
 
   for (const flow of document.messageFlows) {
     if (!renderedIds.has(flow.sourceRef) || !renderedIds.has(flow.targetRef)) continue;
     const edge = plane.edgeFor(flow.id);
-    cells.push(factory.createMessageFlowLink(
+    const cell = project(flow.id, [flow, edge, ...linkInputs(flow.sourceRef, flow.targetRef), metrics],
+      [flow.sourceRef, flow.targetRef], () => factory.createMessageFlowLink(
       flow,
       edge?.waypoints ?? [],
       endpointsOf(outlines, edge, flow.sourceRef, flow.targetRef),
       flow.name,
       context,
       edge?.label?.bounds ?? null,
-    ));
+    ), edge);
+    if (cell !== null) cells.push(cell);
   }
 
   const drawn = new Set(cells.map((cell) => String(cell.id)));
+  const cellsById = new Map(cells.map((cell) => [String(cell.id), cell]));
   for (const association of document.associations) {
     if (!drawn.has(association.sourceRef) || !drawn.has(association.targetRef)) continue;
     const edge = plane.edgeFor(association.id);
     const endpoints = endpointsOf(outlines, edge, association.sourceRef, association.targetRef);
     const lineRatio = (id: string, point: PointContract | undefined): number | undefined => {
-      const flow = cells.find((cell) => String(cell.id) === id);
+      const flow = cellsById.get(id);
       const waypoints = plane.edgeFor(id)?.waypoints;
       if (flow?.isLink() !== true || waypoints === undefined || waypoints.length < 2 || point === undefined) return undefined;
       return new g.Path(roundedPath(waypoints, CONNECTOR_CORNER_RADIUS)).closestPointNormalizedLength(point);
     };
-    const sourceLinkRatio = lineRatio(association.sourceRef, edge?.waypoints[0]);
-    const targetLinkRatio = lineRatio(association.targetRef, edge?.waypoints.at(-1));
-    cells.push(factory.createAssociationLink(
+    const cell = project(association.id, [association, edge, ...linkInputs(association.sourceRef, association.targetRef)],
+      [association.sourceRef, association.targetRef], () => {
+        const sourceLinkRatio = lineRatio(association.sourceRef, edge?.waypoints[0]);
+        const targetLinkRatio = lineRatio(association.targetRef, edge?.waypoints.at(-1));
+        return factory.createAssociationLink(
       association,
       edge?.waypoints ?? [],
       {
@@ -221,7 +299,9 @@ export function renderDocument(
         ...(targetLinkRatio === undefined ? {} : { targetLinkRatio }),
       },
       association.direction !== 'none',
-    ));
+        );
+      }, edge);
+    if (cell !== null) cells.push(cell);
   }
 
   for (const association of document.dataAssociations) {
@@ -229,32 +309,37 @@ export function renderDocument(
     if (source === undefined || !renderedIds.has(source) || !renderedIds.has(association.targetRef)) continue;
     const edge = plane.edgeFor(association.id);
     // Data Associations are always directed (section 2.9).
-    cells.push(factory.createAssociationLink(
+    const cell = project(association.id, [association, edge, ...linkInputs(source, association.targetRef)],
+      [source, association.targetRef], () => factory.createAssociationLink(
       association,
       edge?.waypoints ?? [],
       endpointsOf(outlines, edge, source, association.targetRef),
       true,
-    ));
+    ), edge);
+    if (cell !== null) cells.push(cell);
   }
 
   // --- commit --------------------------------------------------------------
-  const colorShapes = new Map(plane.shapes.map((shape) => [shape.bpmnElement, shape]));
-  for (const cell of cells) {
-    const di = cell.isLink() ? plane.edgeFor(String(cell.id))
-      : colorShapes.get(String(cell.id));
-    if (di !== undefined) applyDiColors(cell, di);
-  }
   // Paint order is the order of the list: shapes first, then connectors over them. It is written down, with gaps, so that a cell added
   // later can take a place between two neighbours without renumbering the rest.
-  cells.forEach((cell, position) => cell.set('z', (position + 1) * Z_STEP));
+  cells.forEach((cell, position) => {
+    if (graph.getCell(String(cell.id)) !== cell) cell.set('z', (position + 1) * Z_STEP);
+  });
 
-  graph.startBatch('render');
+  cache.rendering = true;
   try {
-    reconcileCells(graph, cells);
-    reconcileEmbedding(graph, buildEmbeddingTree(index, plane, renderedIds));
+    graph.startBatch('render');
+    try {
+      reconcileCells(graph, cells);
+      reconcileEmbedding(graph, buildEmbeddingTree(index, plane, renderedIds));
+    } finally {
+      graph.stopBatch('render');
+    }
   } finally {
-    graph.stopBatch('render');
+    cache.rendering = false;
   }
+  cache.entries = new Map([...nextEntries].map(([id, entry]) => [id, { inputs: entry.inputs, cell: graph.getCell(id) }]));
+  cache.dirty.clear();
 
   return {
     diagramId: diagram.id,
@@ -344,6 +429,7 @@ function reconcileCells(graph: dia.Graph, cells: readonly dia.Cell[]): void {
   const additions: dia.Cell[] = [];
   const updates: { readonly drawn: dia.Cell; readonly next: dia.Cell }[] = [];
   const removals: dia.Cell[] = [];
+  let retained = 0;
 
   for (const cell of current) {
     if (!wanted.has(String(cell.id))) removals.push(cell);
@@ -357,26 +443,44 @@ function reconcileCells(graph: dia.Graph, cells: readonly dia.Cell[]): void {
       removals.push(existing);
       additions.push(next);
     } else {
-      updates.push({ drawn: existing, next });
+      retained++;
+      if (existing !== next) updates.push({ drawn: existing, next });
     }
   }
 
   // A different diagram, or an unrelated document, has nothing in common with what is drawn: one reset is cheaper than removing and adding cell by cell.
-  if (updates.length === 0) {
+  if (retained === 0) {
     graph.resetCells(cells as dia.Cell[]);
     return;
   }
 
-  // Removing an element removes the connectors attached to it, so one that is kept has to be put back.
+  // JointJS removes connected links transitively, including associations attached to another link.
   const removedIds = new Set(removals.map((cell) => String(cell.id)));
-  const attached = (link: dia.Cell): boolean => ['source', 'target'].some((end) => {
-    const id = (link.get(end) as { readonly id?: string } | undefined)?.id;
-    return id !== undefined && removedIds.has(id);
-  });
-  const surviving = updates.filter(({ next }) => !(next.isLink() && attached(next)));
-  for (const { next } of updates) {
-    if (next.isLink() && attached(next)) additions.push(next);
+  if (removals.length > 0) {
+    const dependents = new Map<string, dia.Cell[]>();
+    for (const cell of current) {
+      if (!cell.isLink()) continue;
+      for (const end of ['source', 'target']) {
+        const id = (cell.get(end) as { readonly id?: string } | undefined)?.id;
+        if (id === undefined) continue;
+        const links = dependents.get(id);
+        if (links === undefined) dependents.set(id, [cell]);
+        else links.push(cell);
+      }
+    }
+    for (const removed of removals) {
+      for (const link of dependents.get(String(removed.id)) ?? []) {
+        if (removedIds.has(String(link.id))) continue;
+        removedIds.add(String(link.id));
+        removals.push(link);
+      }
+    }
+    const addedIds = new Set(additions.map((cell) => String(cell.id)));
+    for (const next of cells) {
+      if (next.isLink() && removedIds.has(String(next.id)) && !addedIds.has(String(next.id))) additions.push(next);
+    }
   }
+  const surviving = removals.length === 0 ? updates : updates.filter(({ drawn: cell }) => !removedIds.has(String(cell.id)));
 
   if (removals.length > 0) {
     // Joint removes whatever is embedded in a cell it removes, and has no option to spare it. A child the document keeps (the tasks of a deleted
@@ -467,6 +571,7 @@ function placeAdditions(cells: readonly dia.Cell[], added: ReadonlySet<string>, 
 
 /** Brings one drawn cell to the attributes of the cell the document now describes, writing only what changed. */
 function updateCell(existing: dia.Cell, next: dia.Cell): void {
+  if (existing === next) return;
   const changes: Record<string, unknown> = {};
   const nextAttributes = next.attributes as Record<string, unknown>;
   const existingAttributes = existing.attributes as Record<string, unknown>;

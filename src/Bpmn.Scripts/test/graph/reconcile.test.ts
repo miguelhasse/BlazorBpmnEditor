@@ -1,10 +1,11 @@
 import { dia } from '@joint/core';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { renderDocument } from '../../src/graph/document-renderer.js';
 import { TableFontMetrics } from '../../src/labels/font-metrics.js';
 import type { BpmnDocumentContract } from '../../src/model/contracts.js';
 import { bpmnCellNamespace } from '../../src/shapes/index.js';
+import * as factory from '../../src/shapes/registry.js';
 import { emptyDocument, flowNode, linearProcess, pooledProcess, shape } from '../fixtures/documents.js';
 
 /**
@@ -30,14 +31,18 @@ function describeGraph(graph: dia.Graph): Record<string, unknown> {
 }
 
 function expectReconciledEqualsFresh(before: BpmnDocumentContract, after: BpmnDocumentContract): dia.Graph {
-  const reconciled = newGraph();
-  renderDocument(reconciled, before, null, metrics);
-  renderDocument(reconciled, after, null, metrics);
-
   const fresh = newGraph();
   renderDocument(fresh, after, null, metrics);
 
-  expect(describeGraph(reconciled)).toEqual(describeGraph(fresh));
+  let reconciled = newGraph();
+  for (const incremental of [false, true]) {
+    reconciled = newGraph();
+    renderDocument(reconciled, before, null, metrics);
+    renderDocument(reconciled, after, null, metrics, incremental);
+    expect(describeGraph(reconciled)).toEqual(describeGraph(fresh));
+    const paintOrder = (graph: dia.Graph): string[] => graph.getCells().map((cell) => String(cell.id));
+    expect(paintOrder(reconciled)).toEqual(paintOrder(fresh));
+  }
   return reconciled;
 }
 
@@ -60,6 +65,91 @@ describe('renderDocument over an existing render', () => {
 
   beforeEach(() => {
     graph = newGraph();
+  });
+
+  afterEach(() => { vi.restoreAllMocks(); });
+
+  it('constructs one changed cell, not the diagram, for a rename', () => {
+    const shapeFactory = vi.spyOn(factory, 'createFlowNodeCell');
+    const linkFactory = vi.spyOn(factory, 'createSequenceFlowLink');
+    const before = linearProcess();
+    renderDocument(graph, before, null, metrics);
+    expect(shapeFactory).toHaveBeenCalledTimes(3);
+    expect(linkFactory).toHaveBeenCalledTimes(2);
+    shapeFactory.mockClear();
+    linkFactory.mockClear();
+    const after = { ...before, flowNodes: before.flowNodes.map((node) => node.id === 'Task_1' ? { ...node, name: 'Renamed' } : node) };
+
+    renderDocument(graph, after, null, metrics, true);
+
+    expect(shapeFactory).toHaveBeenCalledTimes(1);
+    expect(linkFactory).not.toHaveBeenCalled();
+  });
+
+  it('does no label measurement for a patch with identical projection inputs', () => {
+    const localMetrics = new TableFontMetrics();
+    const measure = vi.spyOn(localMetrics, 'measure');
+    const document = linearProcess();
+    renderDocument(graph, document, null, localMetrics);
+    expect(measure).toHaveBeenCalled();
+    measure.mockClear();
+
+    renderDocument(graph, document, null, localMetrics, true);
+
+    expect(measure).not.toHaveBeenCalled();
+  });
+
+  it('retains the graph when every projected cell is reused', () => {
+    const document = linearProcess();
+    renderDocument(graph, document, null, metrics);
+    const original = graph.getCells();
+    const reset = vi.spyOn(graph, 'resetCells');
+
+    renderDocument(graph, document, null, metrics, true);
+
+    expect(reset).not.toHaveBeenCalled();
+    expect(graph.getCells()).toEqual(original);
+  });
+
+  it('rebuilds changed labels but not unrelated labels', () => {
+    const localMetrics = new TableFontMetrics();
+    const measure = vi.spyOn(localMetrics, 'measure');
+    const before = linearProcess();
+    renderDocument(graph, before, null, localMetrics);
+    measure.mockClear();
+    const after = { ...before, flowNodes: before.flowNodes.map((node) => node.id === 'Task_1' ? { ...node, name: 'New label' } : node) };
+
+    renderDocument(graph, after, null, localMetrics, true);
+
+    expect(measure).toHaveBeenCalled();
+    expect(measure.mock.calls.every(([text]) => !text.includes('Order'))).toBe(true);
+    expect(graph.getCell('Task_1').attr('label/text')).toBe('New label');
+  });
+
+  it('restores dirty live previews on an incremental patch and a full resync', () => {
+    const document = linearProcess();
+    renderDocument(graph, document, null, metrics);
+    const task = graph.getCell('Task_1') as dia.Element;
+    task.position(999, 999);
+    renderDocument(graph, document, null, metrics, true);
+    expect(task.position()).toEqual({ x: 200, y: 80 });
+    task.attr('label/text', 'Uncommitted');
+    renderDocument(graph, document, null, metrics);
+    expect(task.attr('label/text')).toBe('Check stock');
+  });
+
+  it('does not share cached projections across graphs or font metric providers', () => {
+    const document = linearProcess();
+    renderDocument(graph, document, null, metrics);
+    const other = newGraph();
+    const localMetrics = new TableFontMetrics();
+    const measure = vi.spyOn(localMetrics, 'measure');
+    renderDocument(other, document, null, localMetrics, true);
+    expect(measure).toHaveBeenCalled();
+    measure.mockClear();
+    renderDocument(graph, document, null, localMetrics, true);
+    expect(measure).toHaveBeenCalled();
+    expect(other.getCell('Task_1')).not.toBe(graph.getCell('Task_1'));
   });
 
   it('keeps the view of a cell that did not change', () => {
@@ -98,6 +188,111 @@ describe('renderDocument over an existing render', () => {
     };
 
     expectReconciledEqualsFresh(before, after);
+  });
+
+  it('clears explicit DI colors back to theme defaults', () => {
+    const original = linearProcess();
+    const before = {
+      ...original,
+      diagrams: original.diagrams.map((diagram) => ({
+        ...diagram, plane: { ...diagram.plane, shapes: diagram.plane.shapes.map((item) =>
+          item.bpmnElement === 'Task_1' ? { ...item, backgroundColor: '#112233', borderColor: '#445566' } : item) },
+      })),
+    };
+    expectReconciledEqualsFresh(before, original);
+  });
+
+  it('recomputes boundary labels when only host geometry changes', () => {
+    const original = linearProcess();
+    const before = {
+      ...original,
+      flowNodes: [...original.flowNodes, flowNode('Boundary', 'boundaryEvent', { attachedToRef: 'Task_1', name: 'Timeout' })],
+      diagrams: original.diagrams.map((diagram) => ({
+        ...diagram, plane: { ...diagram.plane, shapes: [...diagram.plane.shapes, shape('Boundary', 250, 140, 36, 36)] },
+      })),
+    };
+    const after = {
+      ...before, diagrams: before.diagrams.map((diagram) => ({
+        ...diagram, plane: { ...diagram.plane, shapes: diagram.plane.shapes.map((item) =>
+          item.bpmnElement === 'Task_1' ? { ...item, bounds: { ...item.bounds, y: 180 } } : item) },
+      })),
+    };
+    expectReconciledEqualsFresh(before, after);
+  });
+
+  it('recomputes flow-attached associations when their flow DI changes', () => {
+    const original = linearProcess();
+    const before: BpmnDocumentContract = {
+      ...original,
+      textAnnotations: [{ id: 'Note', text: 'Review', containerId: 'Process_1' }],
+      associations: [{ id: 'Association', sourceRef: 'Flow_1', targetRef: 'Note', direction: 'none', containerId: 'Process_1' }],
+      diagrams: original.diagrams.map((diagram) => ({
+        ...diagram, plane: {
+          ...diagram.plane, shapes: [...diagram.plane.shapes, shape('Note', 150, 200, 80, 40)],
+          edges: [...diagram.plane.edges, {
+            id: 'Association_di', bpmnElement: 'Association', label: null,
+            waypoints: [{ x: 170, y: 118 }, { x: 170, y: 200 }],
+          }],
+        },
+      })),
+    };
+    const after = {
+      ...before, diagrams: before.diagrams.map((diagram) => ({
+        ...diagram, plane: { ...diagram.plane, edges: diagram.plane.edges.map((edge) =>
+          edge.bpmnElement === 'Flow_1' ? { ...edge, waypoints: [{ x: 136, y: 118 }, { x: 170, y: 160 }, { x: 200, y: 118 }] } : edge) },
+      })),
+    };
+    expectReconciledEqualsFresh(before, after);
+  });
+
+  it.each([false, true])('restores flow-attached associations after endpoint replacement or reconnection (remove=%s)', (remove) => {
+    const original = linearProcess();
+    const before: BpmnDocumentContract = {
+      ...original,
+      textAnnotations: [{ id: 'Note', text: 'Review', containerId: 'Process_1' }],
+      associations: [{ id: 'Association', sourceRef: 'Flow_1', targetRef: 'Note', direction: 'none', containerId: 'Process_1' }],
+      diagrams: original.diagrams.map((diagram) => ({
+        ...diagram, plane: {
+          ...diagram.plane, shapes: [...diagram.plane.shapes, shape('Note', 150, 200, 80, 40)],
+          edges: [...diagram.plane.edges, {
+            id: 'Association_di', bpmnElement: 'Association', label: null,
+            waypoints: [{ x: 170, y: 118 }, { x: 170, y: 200 }],
+          }],
+        },
+      })),
+    };
+    const after: BpmnDocumentContract = {
+      ...before,
+      flowNodes: remove ? before.flowNodes.filter((node) => node.id !== 'Task_1')
+        : before.flowNodes.map((node) => node.id === 'Task_1' ? { ...node, type: 'exclusiveGateway' } : node),
+      sequenceFlows: remove ? before.sequenceFlows.filter((flow) => flow.id === 'Flow_1')
+        .map((flow) => ({ ...flow, targetRef: 'EndEvent_1' })) : before.sequenceFlows,
+      diagrams: remove ? before.diagrams.map((diagram) => ({
+        ...diagram, plane: { ...diagram.plane, shapes: diagram.plane.shapes.filter((item) => item.bpmnElement !== 'Task_1') },
+      })) : before.diagrams,
+    };
+
+    expectReconciledEqualsFresh(before, after);
+  });
+
+  it('hides and restores cached children when a sub-process collapses and expands', () => {
+    const before = emptyDocument({
+      flowNodes: [flowNode('Sub', 'subProcess'), flowNode('Child', 'task', { containerId: 'Sub' })],
+      diagrams: [{
+        id: 'D', name: null, plane: {
+          id: 'P', bpmnElement: 'Process_1', edges: [],
+          shapes: [shape('Sub', 0, 0, 400, 200, { isExpanded: true }), shape('Child', 40, 40, 100, 80)],
+        },
+      }],
+    });
+    const collapsed = {
+      ...before, diagrams: before.diagrams.map((diagram) => ({
+        ...diagram, plane: { ...diagram.plane, shapes: diagram.plane.shapes.map((item) =>
+          item.bpmnElement === 'Sub' ? { ...item, isExpanded: false } : item) },
+      })),
+    };
+    expectReconciledEqualsFresh(before, collapsed);
+    expectReconciledEqualsFresh(collapsed, before);
   });
 
   it('equals a fresh render after a delete, including the connectors it took with it', () => {

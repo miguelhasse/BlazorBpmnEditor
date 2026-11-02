@@ -61,10 +61,14 @@ public abstract class BpmnToolbarBase : BpmnEditorComponentBase
     {
         var plane = ColorPlane;
 
-        if (plane is null)
+        var selection = State.Selection;
+        if (plane is null || selection.IsEmpty)
             yield break;
 
-        foreach (var shape in plane.Shapes.Where(shape => State.Selection.Contains(shape.BpmnElement)))
+        // Multi-selection membership is reused across DI items, never cached across state updates.
+        var selected = selection.Length > 1 ? selection.ToHashSet(StringComparer.Ordinal) : null;
+
+        foreach (var shape in plane.Shapes.Where(shape => IsSelected(shape.BpmnElement)))
         {
             yield return channel switch
             {
@@ -77,8 +81,10 @@ public abstract class BpmnToolbarBase : BpmnEditorComponentBase
         if (channel == BpmnColorChannel.Background)
             yield break;
 
-        foreach (var edge in plane.Edges.Where(edge => State.Selection.Contains(edge.BpmnElement)))
+        foreach (var edge in plane.Edges.Where(edge => IsSelected(edge.BpmnElement)))
             yield return channel == BpmnColorChannel.Border ? edge.BorderColor : edge.Label?.Color;
+
+        bool IsSelected(string elementId) => selected?.Contains(elementId) ?? selection.Contains(elementId);
     }
 
     /// <summary>Whether the selected DI items support this color channel.</summary>

@@ -12,7 +12,7 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Interop;
 public static class BpmnInteropContract
 {
     /// <summary>The interop contract version this assembly implements.</summary>
-    public const string Version = "2.3";
+    public const string Version = "2.4";
 
     /// <summary>Static web asset path of the canvas module, as imported by <c>BpmnCanvas</c>.</summary>
     public const string ModulePath =

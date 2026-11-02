@@ -24,20 +24,25 @@ function fakeInstance(): {
   deleteElements: ReturnType<typeof vi.fn>;
   dispose: ReturnType<typeof vi.fn>;
   setViewport: ReturnType<typeof vi.fn>;
+  loadDocument: ReturnType<typeof vi.fn>;
+  patchDocument: ReturnType<typeof vi.fn>;
 } {
   const deleteElements = vi.fn(() => true);
   const dispose = vi.fn();
   const setViewport = vi.fn();
+  const loadDocument = vi.fn(() => ({ diagramId: 'd', shapeCount: 1, edgeCount: 0, unrenderedElementIds: [] }));
+  const patchDocument = vi.fn(() => ({ diagramId: 'd', shapeCount: 1, edgeCount: 0, unrenderedElementIds: [] }));
 
   const instance = {
     dispose,
     deleteElements,
     setViewport,
     editLabel: vi.fn(() => true),
-    loadDocument: vi.fn(() => ({ diagramId: 'd', shapeCount: 1, edgeCount: 0, unrenderedElementIds: [] })),
+    loadDocument,
+    patchDocument,
   } as unknown as BpmnCanvasInstance;
 
-  return { instance, deleteElements, dispose, setViewport };
+  return { instance, deleteElements, dispose, setViewport, loadDocument, patchDocument };
 }
 
 describe('CanvasHandle', () => {
@@ -48,7 +53,7 @@ describe('CanvasHandle', () => {
   });
 
   it('forwards calls to its canvas', () => {
-    const { instance, deleteElements, setViewport } = fakeInstance();
+    const { instance, deleteElements, setViewport, loadDocument, patchDocument } = fakeInstance();
     const handle = new CanvasHandle(instance, initResult(true));
 
     handle.setViewport({ kind: 'zoomIn' });
@@ -57,7 +62,12 @@ describe('CanvasHandle', () => {
     expect(handle.editLabel('Task_1')).toBe(true);
     expect(handle.loadDocument({} as never, null)?.shapeCount).toBe(1);
     expect(handle.deleteElements(['Task_1', 'Flow_1'])).toBe(true);
-    expect(deleteElements).toHaveBeenCalledWith(['Task_1', 'Flow_1']);
+    expect(deleteElements).toHaveBeenCalledWith(['Task_1', 'Flow_1'], undefined);
+    const patch = { baseRevision: 0, revision: 1, diagramId: null, collections: [], planes: [] };
+    expect(handle.patchDocument(patch)?.shapeCount).toBe(1);
+    expect(patchDocument).toHaveBeenCalledWith(patch);
+    handle.loadDocument({} as never, 'd', 7);
+    expect(loadDocument).toHaveBeenCalledWith({}, 'd', 7);
   });
 
   it('answers neutrally when the configuration was rejected and nothing was built', () => {
@@ -65,6 +75,7 @@ describe('CanvasHandle', () => {
 
     expect(handle.getInitResult().accepted).toBe(false);
     expect(handle.loadDocument({} as never, null)).toBeNull();
+    expect(handle.patchDocument({} as never)).toBeNull();
     expect(handle.deleteElements(['Task_1'])).toBe(false);
     expect(handle.editLabel('Task_1')).toBe(false);
     expect(handle.resolveDrop(0, 0, 'task')).toBeNull();

@@ -7,4 +7,4 @@
  *
  * Bump it whenever a payload shape in `contracts.ts` changes incompatibly.
  */
-export const INTEROP_CONTRACT_VERSION = '2.3';
+export const INTEROP_CONTRACT_VERSION = '2.4';

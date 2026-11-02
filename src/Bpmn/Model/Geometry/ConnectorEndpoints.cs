@@ -48,36 +48,30 @@ internal static partial class ConnectorEndpoints
     {
         ArgumentNullException.ThrowIfNull(document);
 
-        var changed = false;
-        var diagrams = new List<BpmnDiagram>(document.Diagrams.Count);
-
-        foreach (var diagram in document.Diagrams)
+        BpmnDiagram[]? diagrams = null;
+        for (var diagramIndex = 0; diagramIndex < document.Diagrams.Count; diagramIndex++)
         {
-            var shapes = diagram.Plane.Shapes
-                .GroupBy(shape => shape.BpmnElement, StringComparer.Ordinal)
-                .ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
+            var diagram = document.Diagrams[diagramIndex];
+            if (diagram.Plane.Edges.Count == 0) continue;
+            var shapes = new Dictionary<string, BpmnShape>(diagram.Plane.Shapes.Count, StringComparer.Ordinal);
+            foreach (var shape in diagram.Plane.Shapes) shapes.TryAdd(shape.BpmnElement, shape);
 
-            var edges = new List<BpmnEdge>(diagram.Plane.Edges.Count);
-            var planeChanged = false;
-
-            foreach (var edge in diagram.Plane.Edges)
+            BpmnEdge[]? edges = null;
+            for (var edgeIndex = 0; edgeIndex < diagram.Plane.Edges.Count; edgeIndex++)
             {
+                var edge = diagram.Plane.Edges[edgeIndex];
                 var normalised = NormalizeEdge(document, shapes, edge, moved);
-                planeChanged |= !ReferenceEquals(normalised, edge);
-                edges.Add(normalised);
+                if (ReferenceEquals(normalised, edge)) continue;
+                edges ??= [.. diagram.Plane.Edges];
+                edges[edgeIndex] = normalised;
             }
 
-            if (!planeChanged)
-            {
-                diagrams.Add(diagram);
-                continue;
-            }
-
-            changed = true;
-            diagrams.Add(diagram with { Plane = diagram.Plane with { Edges = edges } });
+            if (edges is null) continue;
+            diagrams ??= [.. document.Diagrams];
+            diagrams[diagramIndex] = diagram with { Plane = diagram.Plane with { Edges = edges } };
         }
 
-        return FollowFlowAttachments(changed ? document with { Diagrams = diagrams } : document, moved: moved);
+        return FollowFlowAttachments(diagrams is null ? document : document with { Diagrams = diagrams }, moved: moved);
     }
 
     /// <summary>
@@ -119,49 +113,49 @@ internal static partial class ConnectorEndpoints
         ArgumentNullException.ThrowIfNull(before);
         ArgumentNullException.ThrowIfNull(after);
 
-        var oldBounds = before.Diagrams
-            .SelectMany(diagram => diagram.Plane.Shapes)
-            .GroupBy(shape => shape.Id, StringComparer.Ordinal)
-            .ToDictionary(group => group.Key, group => group.First().Bounds, StringComparer.Ordinal);
+        if (ReferenceEquals(before.Diagrams, after.Diagrams)) return after;
+        var shapeCount = 0;
+        foreach (var diagram in before.Diagrams) shapeCount += diagram.Plane.Shapes.Count;
+        var oldBounds = new Dictionary<string, Bounds>(shapeCount, StringComparer.Ordinal);
+        foreach (var diagram in before.Diagrams)
+            foreach (var shape in diagram.Plane.Shapes)
+                oldBounds.TryAdd(shape.Id, shape.Bounds);
 
-        var changed = false;
-        var diagrams = new List<BpmnDiagram>(after.Diagrams.Count);
-
-        foreach (var diagram in after.Diagrams)
+        BpmnDiagram[]? diagrams = null;
+        for (var diagramIndex = 0; diagramIndex < after.Diagrams.Count; diagramIndex++)
         {
-            var resized = new Dictionary<string, (Bounds Old, Bounds New)>(StringComparer.Ordinal);
+            var diagram = after.Diagrams[diagramIndex];
+            Dictionary<string, (Bounds Old, Bounds New)>? resized = null;
 
             foreach (var shape in diagram.Plane.Shapes)
             {
                 if (oldBounds.TryGetValue(shape.Id, out var old) && SizeChanged(old, shape.Bounds))
                 {
+                    resized ??= new(StringComparer.Ordinal);
                     resized[shape.BpmnElement] = (old, shape.Bounds);
                 }
             }
 
-            if (resized.Count == 0)
-            {
-                diagrams.Add(diagram);
-                continue;
-            }
+            if (resized is null) continue;
 
-            var edges = new List<BpmnEdge>(diagram.Plane.Edges.Count);
-            var planeChanged = false;
-
-            foreach (var edge in diagram.Plane.Edges)
+            BpmnEdge[]? edges = null;
+            for (var edgeIndex = 0; edgeIndex < diagram.Plane.Edges.Count; edgeIndex++)
             {
+                var edge = diagram.Plane.Edges[edgeIndex];
                 var followed = alreadyRouted?.Contains(edge.BpmnElement) == true
                     ? edge
                     : FollowEdge(after, resized, edge);
-                planeChanged |= !ReferenceEquals(followed, edge);
-                edges.Add(followed);
+                if (ReferenceEquals(followed, edge)) continue;
+                edges ??= [.. diagram.Plane.Edges];
+                edges[edgeIndex] = followed;
             }
 
-            changed |= planeChanged;
-            diagrams.Add(planeChanged ? diagram with { Plane = diagram.Plane with { Edges = edges } } : diagram);
+            if (edges is null) continue;
+            diagrams ??= [.. after.Diagrams];
+            diagrams[diagramIndex] = diagram with { Plane = diagram.Plane with { Edges = edges } };
         }
 
-        return changed ? after with { Diagrams = diagrams } : after;
+        return diagrams is null ? after : after with { Diagrams = diagrams };
     }
 
     private static BpmnEdge FollowEdge(
@@ -172,12 +166,12 @@ internal static partial class ConnectorEndpoints
         if (edge.Waypoints.Count < 2) return edge;
         if (Ends(document.Find(edge.BpmnElement)) is not var (sourceRef, targetRef, orthogonal)) return edge;
 
+        var newFirst = Followed(edge.Waypoints[0], sourceRef, resized);
+        var newLast = Followed(edge.Waypoints[^1], targetRef, resized);
+
+        if (Near(edge.Waypoints[0], newFirst) && Near(edge.Waypoints[^1], newLast)) return edge;
+
         var route = edge.Waypoints.ToList();
-        var newFirst = Followed(route[0], sourceRef, resized);
-        var newLast = Followed(route[^1], targetRef, resized);
-
-        if (Near(route[0], newFirst) && Near(route[^1], newLast)) return edge;
-
         if (orthogonal) Square(route, newFirst, newLast);
 
         route[0] = newFirst;
@@ -220,15 +214,16 @@ internal static partial class ConnectorEndpoints
         var source = OutlineOf(document, sourceShape);
         var target = OutlineOf(document, targetShape);
 
-        var route = edge.Waypoints.ToList();
-        var first = route[0];
-        var last = route[^1];
+        var first = edge.Waypoints[0];
+        var last = edge.Waypoints[^1];
 
         var newFirst = BpmnOutline.Normalize(first, source, BpmnOutline.Centre(target.Bounds));
         var newLast = BpmnOutline.Normalize(last, target, BpmnOutline.Centre(source.Bounds));
 
         var endsMoved = !(Near(first, newFirst) && Near(last, newLast));
+        if (!endsMoved && (!orthogonal || AllAxial(edge.Waypoints))) return edge;
 
+        var route = edge.Waypoints.ToList();
         if (endsMoved)
         {
             if (orthogonal) Square(route, newFirst, newLast);
@@ -262,7 +257,7 @@ internal static partial class ConnectorEndpoints
         return edge with { Waypoints = route };
     }
 
-    private static bool AllAxial(List<DiPoint> route)
+    private static bool AllAxial(IReadOnlyList<DiPoint> route)
     {
         for (var index = 1; index < route.Count; index++)
         {

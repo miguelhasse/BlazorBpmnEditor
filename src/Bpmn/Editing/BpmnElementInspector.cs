@@ -43,15 +43,21 @@ public static class BpmnElementInspector
     /// <returns>The snapshot, or <see langword="null"/>.</returns>
     public static BpmnElementSnapshot? Describe(BpmnDocument document, string elementId, bool isReadOnly = false,
         BpmnExtensionOptions? extensionOptions = null, BpmnTemplateOptions? templateOptions = null,
-        BpmnDisplayLocalizer? display = null)
+        BpmnDisplayLocalizer? display = null) =>
+        Describe(document, elementId, isReadOnly, extensionOptions, templateOptions, display, null);
+
+    internal static BpmnElementSnapshot? Describe(BpmnDocument document, string elementId, bool isReadOnly,
+        BpmnExtensionOptions? extensionOptions, BpmnTemplateOptions? templateOptions,
+        BpmnDisplayLocalizer? display, Func<BpmnDocument, IReadOnlyList<BpmnInvariantViolation>>? invariants,
+        BpmnInspectionGeometry? geometry = null)
     {
         ArgumentNullException.ThrowIfNull(document);
         ArgumentException.ThrowIfNullOrEmpty(elementId);
 
         if (document.Find(elementId) is not { } element) return null;
 
-        var shape = ShapeOf(document, elementId);
-        var edge = EdgeOf(document, elementId);
+        var (shape, edge) = geometry?.Global(document, elementId)
+            ?? (ShapeOf(document, elementId), EdgeOf(document, elementId));
         var category = CategoryOf(element);
 
         var properties = Properties(document, element);
@@ -84,7 +90,7 @@ public static class BpmnElementInspector
             Capabilities = isReadOnly
                 ? BpmnElementCapabilities.None
                 : CapabilitiesOf(document, element, category, switchable.Count > 1),
-            Diagnostics = DiagnosticsFor(document, elementId),
+            Diagnostics = DiagnosticsFor(invariants?.Invoke(document) ?? BpmnDocumentInvariants.Check(document), elementId),
             SwitchableTypes = switchable.Count > 1 ? switchable : [],
         };
 
@@ -172,7 +178,7 @@ public static class BpmnElementInspector
 
     // --- identity ---------------------------------------------------------------
 
-    private static string TypeNameOf(object element) => element switch
+    internal static string TypeNameOf(object element) => element switch
     {
         BpmnFlowNode node => WireNameOf(node.Type),
         BpmnSequenceFlow => "sequenceFlow",
@@ -306,9 +312,9 @@ public static class BpmnElementInspector
     /// Model invariants only for now, which is what the document can answer today; the full
     /// section 5 validator arrives in M6 and plugs in here rather than into every surface.
     /// </remarks>
-    private static IReadOnlyList<BpmnEditDiagnostic> DiagnosticsFor(BpmnDocument document, string elementId) =>
+    private static IReadOnlyList<BpmnEditDiagnostic> DiagnosticsFor(IReadOnlyList<BpmnInvariantViolation> violations, string elementId) =>
     [
-        .. BpmnDocumentInvariants.Check(document)
+        .. violations
             .Where(violation => violation.ElementId == elementId)
             .Select(violation => new BpmnEditDiagnostic(
                 BpmnEditSeverity.Info,

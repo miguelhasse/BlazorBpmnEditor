@@ -3,6 +3,7 @@ using Bunit;
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Interop;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
+using Hasseware.AspNetCore.Components.Bpmn.Model.Di;
 using Hasseware.AspNetCore.Components.Bpmn.Resources;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -303,6 +304,141 @@ public sealed class BpmnCanvasTests : BunitContext
     }
 
     [Fact]
+    public void InitializesAnExplicitDiagramThroughTheAuthoritativeLoadPath()
+    {
+        SetupInitialize(Accepted());
+        var load = SetupLoadDocument();
+
+        Render<BpmnCanvas>(parameters => parameters
+            .Add(p => p.Document, DiagramDocument())
+            .Add(p => p.DiagramId, "Diagram_1"));
+
+        Assert.Equal("Diagram_1", Assert.Single(load.Invocations).Arguments[1]);
+    }
+
+    [Fact]
+    public async Task PureDeletionRetainsTheCompactFastPathAndAcknowledgesItsRevision()
+    {
+        SetupInitialize(Accepted());
+        var delete = _canvas.Setup<bool>("deleteElements", _ => true).SetResult(true);
+        var before = DiagramDocument();
+        var diagram = before.Diagrams[0];
+        var after = before with { FlowNodes = [], Diagrams = [diagram with { Plane = diagram.Plane with { Shapes = [] } }] };
+        var component = Render<BpmnCanvas>(parameters => parameters.Add(p => p.Document, before));
+
+        var applied = await component.Instance.DeleteElementsAsync(before, after, ["Task_1"]);
+        component.Render(parameters => parameters.Add(p => p.Document, after));
+
+        Assert.True(applied);
+        Assert.Equal(1L, Assert.Single(delete.Invocations).Arguments[1]);
+        Assert.Empty(JSInterop.Invocations["patchDocument"]);
+        Assert.Empty(JSInterop.Invocations["loadDocument"]);
+    }
+
+    [Fact]
+    public async Task DeletionWithSurvivorGeometryUsesTheCompletePatchInsteadOfPruning()
+    {
+        SetupInitialize(Accepted());
+        var patch = _canvas.Setup<DocumentLoaded?>("patchDocument", _ => true)
+            .SetResult(new DocumentLoaded("Diagram_1", 1, 0, []));
+        var original = DiagramDocument();
+        var diagram = original.Diagrams[0];
+        var survivor = new BpmnFlowNode("Task_2", BpmnFlowNodeType.Task, "Process_1");
+        var survivorShape = new BpmnShape("Task_2_di", "Task_2", new Bounds(200, 0, 100, 80));
+        var before = original with
+        {
+            FlowNodes = [.. original.FlowNodes, survivor],
+            Diagrams = [diagram with { Plane = diagram.Plane with { Shapes = [.. diagram.Plane.Shapes, survivorShape] } }],
+        };
+        var after = before with
+        {
+            FlowNodes = [survivor],
+            Diagrams = [diagram with { Plane = diagram.Plane with { Shapes = [survivorShape with { Bounds = survivorShape.Bounds with { X = 300 } }] } }],
+        };
+        var component = Render<BpmnCanvas>(parameters => parameters.Add(p => p.Document, before));
+
+        Assert.True(await component.Instance.DeleteElementsAsync(before, after, ["Task_1"]));
+
+        Assert.Single(patch.Invocations);
+        Assert.Empty(JSInterop.Invocations["deleteElements"]);
+    }
+
+    [Fact]
+    public async Task InFlightPatchCannotAdvanceTheBaseOfANewerEditPrematurely()
+    {
+        SetupInitialize(Accepted());
+        var patch = _canvas.Setup<DocumentLoaded?>("patchDocument", _ => true);
+        var before = DiagramDocument();
+        var component = Render<BpmnCanvas>(parameters => parameters.Add(p => p.Document, before));
+        var first = before with { FlowNodes = [before.FlowNodes[0] with { Name = "First" }] };
+        var second = before with { FlowNodes = [before.FlowNodes[0] with { Name = "Second" }] };
+        component.Render(parameters => parameters.Add(p => p.Document, first));
+        component.Render(parameters => parameters.Add(p => p.Document, second));
+
+        patch.SetResult(new DocumentLoaded("Diagram_1", 1, 0, []));
+        await component.WaitForStateAsync(() => patch.Invocations.Count == 2);
+
+        var requests = patch.Invocations.Select(call => Assert.IsType<CanvasDocumentPatch>(call.Arguments[0])).ToArray();
+        Assert.Equal(0, requests[0].BaseRevision);
+        Assert.Equal(1, requests[1].BaseRevision);
+        Assert.Equal("Second", Assert.Single(Assert.Single(requests[1].Collections).Delta.Upserts).GetProperty("name").GetString());
+    }
+
+    [Fact]
+    public void SendsProjectedPatchesFromTheLastAcknowledgedResidentDocument()
+    {
+        SetupInitialize(Accepted());
+        var patchCall = _canvas.Setup<DocumentLoaded?>("patchDocument", _ => true)
+            .SetResult(new DocumentLoaded("Diagram_1", 1, 0, []));
+        var document = DiagramDocument();
+        var component = Render<BpmnCanvas>(parameters => parameters.Add(p => p.Document, document));
+        var moved = document with { FlowNodes = [document.FlowNodes[0] with { Name = "Moved" }] };
+        component.Instance.AcceptRenderedDocument(moved);
+
+        component.Render(parameters => parameters.Add(p => p.Document, moved));
+        component.Render();
+
+        var first = Assert.IsType<CanvasDocumentPatch>(Assert.Single(patchCall.Invocations).Arguments[0]);
+        Assert.Equal(0, first.BaseRevision);
+        Assert.Equal(1, first.Revision);
+        Assert.Equal("Moved", Assert.Single(Assert.Single(first.Collections).Delta.Upserts).GetProperty("name").GetString());
+        var renamed = moved with { FlowNodes = [moved.FlowNodes[0] with { Name = "Again" }] };
+        component.Render(parameters => parameters.Add(p => p.Document, renamed));
+        Assert.Equal(2, patchCall.Invocations.Count);
+        Assert.Equal(1, Assert.IsType<CanvasDocumentPatch>(patchCall.Invocations.Last().Arguments[0]).BaseRevision);
+    }
+
+    [Fact]
+    public void RejectedPatchFallsBackToFullLoadAndAdvancesItsBase()
+    {
+        SetupInitialize(Accepted());
+        var patchCall = _canvas.Setup<DocumentLoaded?>("patchDocument", _ => true).SetResult(null);
+        var load = SetupLoadDocument();
+        var document = DiagramDocument();
+        var component = Render<BpmnCanvas>(parameters => parameters.Add(p => p.Document, document));
+        var changed = document with { FlowNodes = [document.FlowNodes[0] with { Name = "Updated" }] };
+
+        component.Render(parameters => parameters.Add(p => p.Document, changed));
+        component.Render();
+
+        Assert.Single(patchCall.Invocations);
+        Assert.Equal(1L, Assert.Single(load.Invocations).Arguments[2]);
+    }
+
+    [Fact]
+    public async Task ResyncBypassesPatchesEvenWhenTheirBaseMatches()
+    {
+        SetupInitialize(Accepted());
+        var load = SetupLoadDocument();
+        var component = Render<BpmnCanvas>(parameters => parameters.Add(p => p.Document, DiagramDocument()));
+
+        await component.InvokeAsync(component.Instance.ResyncAsync);
+
+        Assert.Single(load.Invocations);
+        Assert.Empty(JSInterop.Invocations["patchDocument"]);
+    }
+
+    [Fact]
     public async Task LogsAHostHandlerThatThrowsInsteadOfLeavingAFaultedTaskNobodyObserves()
     {
         var logs = new CapturingLoggerProvider();
@@ -357,6 +493,12 @@ public sealed class BpmnCanvasTests : BunitContext
     private static BpmnDocument Document() => new()
     {
         Definitions = new BpmnDefinitions("Definitions_1", "http://example.test/bpmn"),
+    };
+
+    private static BpmnDocument DiagramDocument() => Document() with
+    {
+        FlowNodes = [new("Task_1", BpmnFlowNodeType.Task, "Process_1", "Original")],
+        Diagrams = [new("Diagram_1", new BpmnPlane("Plane_1", "Process_1", [new("Task_1_di", "Task_1", new Bounds(0, 0, 100, 80))], []))],
     };
 
     private sealed class TranslatedCanvasStrings : IStringLocalizer<BpmnCanvasStrings>

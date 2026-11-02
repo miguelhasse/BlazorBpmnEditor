@@ -4,6 +4,7 @@ using Hasseware.AspNetCore.Components.Bpmn.Accessibility;
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
+using Hasseware.AspNetCore.Components.Bpmn.Model.Di;
 using Hasseware.AspNetCore.Components.Bpmn.Model.Extensions.Schema;
 using Hasseware.AspNetCore.Components.Bpmn.Model.Extensions.Templates;
 using Hasseware.AspNetCore.Components.Bpmn.Resources;
@@ -41,21 +42,60 @@ public sealed partial class BpmnEditorSession
     private BpmnDocument? _parameterDocument;
     private bool _parameterValidation;
     private bool _parametersInitialized;
+    private BpmnDocument? _accessibleGraphDocument;
+    private IReadOnlyList<BpmnShape>? _accessibleGraphShapes;
 
     private IReadOnlyList<BpmnGraphNode> CachedAccessibleGraph()
     {
         if (!_graphCache.Matches(DrawnDocument, AccessibleGraphOverride, text: ActiveDiagramId)
             || (AccessibleGraphOverride is { } graph && !_graphCache.Items.SequenceEqual(graph)))
         {
-            var rebuilt = AccessibleGraphOverride ?? (DrawnDocument is { } document
-                ? BpmnAccessibleGraph.For(document, ActiveDiagramId) : []);
+            var document = DrawnDocument;
+            var shapes = document is null ? null : (ActiveDiagramId is null
+                ? document.Diagrams.Count > 0 ? document.Diagrams[0] : null
+                : document.Diagrams.FirstOrDefault(diagram => diagram.Id == ActiveDiagramId))?.Plane.Shapes;
+            if (AccessibleGraphOverride is null && AccessibleGraphInputsUnchanged(document, shapes))
+            {
+                _graphCache.Keep(document, text: ActiveDiagramId);
+            }
+            else
+            {
+                var rebuilt = AccessibleGraphOverride ?? (document is not null
+                    ? BpmnAccessibleGraph.For(document, ActiveDiagramId) : []);
 
-            // A move, a resize or a style change leaves the graph as it was. Keeping the old list lets the tree see "nothing changed"
-            // by reference and skip rebuilding a thousand items for an edit that did not touch one.
-            if (_graphCache.IsEquivalentTo(rebuilt)) _graphCache.Keep(DrawnDocument, AccessibleGraphOverride, text: ActiveDiagramId);
-            else _graphCache.Store(rebuilt, DrawnDocument, AccessibleGraphOverride, text: ActiveDiagramId);
+                if (_graphCache.IsEquivalentTo(rebuilt)) _graphCache.Keep(document, AccessibleGraphOverride, text: ActiveDiagramId);
+                else _graphCache.Store(rebuilt, document, AccessibleGraphOverride, text: ActiveDiagramId);
+            }
+            _accessibleGraphDocument = AccessibleGraphOverride is null ? document : null;
+            _accessibleGraphShapes = AccessibleGraphOverride is null ? shapes : null;
         }
         return _graphCache.Value;
+    }
+
+    private bool AccessibleGraphInputsUnchanged(BpmnDocument? document, IReadOnlyList<BpmnShape>? shapes)
+    {
+        var previous = _accessibleGraphDocument;
+        if (document is null || previous is null
+            || !ReferenceEquals(previous.FlowNodes, document.FlowNodes)
+            || !ReferenceEquals(previous.SequenceFlows, document.SequenceFlows)
+            || !ReferenceEquals(previous.Collaboration, document.Collaboration)
+            || !ReferenceEquals(previous.LaneSets, document.LaneSets)
+            || !ReferenceEquals(previous.Lanes, document.Lanes)
+            || !ReferenceEquals(previous.Associations, document.Associations)
+            || !ReferenceEquals(previous.DataAssociations, document.DataAssociations)
+            || !ReferenceEquals(previous.TextAnnotations, document.TextAnnotations)
+            || !ReferenceEquals(previous.Groups, document.Groups)
+            || !ReferenceEquals(previous.DataObjectReferences, document.DataObjectReferences)
+            || !ReferenceEquals(previous.DataStoreReferences, document.DataStoreReferences)) return false;
+
+        if (ReferenceEquals(_accessibleGraphShapes, shapes)) return true;
+        if (_accessibleGraphShapes is null || shapes is null || _accessibleGraphShapes.Count != shapes.Count) return false;
+        // Graph construction reads shape membership and expansion only, never geometry or labels.
+        // Keep order and duplicates conservative so malformed planes still reach normal validation.
+        for (var index = 0; index < shapes.Count; index++)
+            if (_accessibleGraphShapes[index].BpmnElement != shapes[index].BpmnElement
+                || _accessibleGraphShapes[index].IsExpanded != shapes[index].IsExpanded) return false;
+        return true;
     }
 
     private IReadOnlyList<BpmnDiagramTarget> CachedDiagrams()
@@ -127,22 +167,61 @@ public sealed partial class BpmnEditorSession
         }
     }
 
-    private BpmnElementSnapshot? CachedDescribe(string elementId)
+    private IReadOnlyList<BpmnElementSnapshot> DescribeSelection() => _selection.Count < 2
+        ? [.. _selection.Select(Describe).OfType<BpmnElementSnapshot>()]
+        : DescribeSelectionBatch();
+
+    private IReadOnlyList<BpmnElementSnapshot> DescribeSelectionBatch()
+    {
+        // Share model-wide checks only within this read; descriptor hooks and cache invalidation still run per element.
+        BpmnDocument? inspected = null;
+        string? culture = null;
+        CultureInfo? formattingCulture = null;
+        IReadOnlyList<BpmnInvariantViolation> violations = [];
+        Func<BpmnDocument, IReadOnlyList<BpmnInvariantViolation>> invariants = Invariants;
+        var geometry = new BpmnInspectionGeometry();
+        return [.. _selection.Select(id => CachedDescribe(id, invariants, geometry)).OfType<BpmnElementSnapshot>()];
+
+        IReadOnlyList<BpmnInvariantViolation> Invariants(BpmnDocument document)
+        {
+            var currentCulture = CultureInfo.CurrentUICulture.Name;
+            if (!ReferenceEquals(inspected, document) || culture != currentCulture
+                || !ReferenceEquals(formattingCulture, CultureInfo.CurrentCulture))
+            {
+                violations = BpmnDocumentInvariants.Check(document);
+                inspected = document;
+                culture = currentCulture;
+                formattingCulture = CultureInfo.CurrentCulture;
+            }
+            return violations;
+        }
+    }
+
+    private BpmnElementSnapshot? CachedDescribe(string elementId,
+        Func<BpmnDocument, IReadOnlyList<BpmnInvariantViolation>>? invariants = null,
+        BpmnInspectionGeometry? geometry = null)
     {
         EnsureDescriptionInputs();
         if (_descriptions.TryGetValue(elementId, out var cached)) return cached.Snapshot;
         var snapshot = DescribeOverride is { } describe ? describe(elementId) : EditedDocument is { } document
-            ? BpmnElementInspector.Describe(document, elementId, IsReadOnly, _options.Value.Extensions, _options.Value.Templates, DisplayText) : null;
+            ? BpmnElementInspector.Describe(document, elementId, IsReadOnly, _options.Value.Extensions, _options.Value.Templates, DisplayText, invariants, geometry) : null;
         if (snapshot is not null && DescribeOverride is null && ActiveDiagramId is { } diagramId)
         {
-            var plane = EditedDocument?.Diagrams.FirstOrDefault(diagram => diagram.Id == diagramId)?.Plane;
-            var shape = plane?.Shapes.FirstOrDefault(candidate => candidate.BpmnElement == elementId);
-            var edge = plane?.Edges.FirstOrDefault(candidate => candidate.BpmnElement == elementId);
+            var (shape, edge) = geometry is not null && EditedDocument is { } sourceDocument
+                ? geometry.Active(sourceDocument, diagramId, elementId)
+                : ActiveGeometry();
             // Elements the open diagram does not draw keep the inspector's geometry rather than losing it.
             if (shape is not null)
                 snapshot = snapshot with { Bounds = shape.Bounds, LabelBounds = shape.Label?.Bounds, Waypoints = [] };
             else if (edge is not null)
                 snapshot = snapshot with { Bounds = null, LabelBounds = edge.Label?.Bounds, Waypoints = edge.Waypoints };
+
+            (BpmnShape? Shape, BpmnEdge? Edge) ActiveGeometry()
+            {
+                var plane = EditedDocument?.Diagrams.FirstOrDefault(diagram => diagram.Id == diagramId)?.Plane;
+                return (plane?.Shapes.FirstOrDefault(candidate => candidate.BpmnElement == elementId),
+                    plane?.Edges.FirstOrDefault(candidate => candidate.BpmnElement == elementId));
+            }
         }
         var template = snapshot?.TemplateId is not null && EditedDocument is { } source && DescribeOverride is null
             ? BpmnAppliedTemplate.Resolve(source, elementId, _options.Value.Templates.Registry).Template : null;

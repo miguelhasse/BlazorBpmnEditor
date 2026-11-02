@@ -155,12 +155,637 @@ Embedding is reconciled the same way (a child already in the right parent is lef
   embedding to be equal, for no change, rename, move and resize, delete (with the connectors it takes), create, change of kind, a lane's contents changing and an unrelated document; breaking the embedding step fails it.
   Paint order is written down with gaps (`z` in steps of 1000) so that a new cell takes its place between its neighbours as a full render would, without renumbering the rest.
 - **What still costs at the default zoom** is on the .NET side: an edit serializes the (now 44% smaller) document, builds the state and the accessible tree in the WebAssembly interpreter. A patch that names the
-  changed cells would remove the serialization; it needs a diff in C#, a new interop call and a contract version, and is the next step if this matters.
+  changed cells removes the full-document serialization for eligible edits; the next round implements that path.
+
+### Round 3: resident-document patches and incremental projection
+
+Interop contract **2.4** adds an internal `patchDocument` call; public component APIs and persisted JSON/XML are unchanged.
+The host diffs the trimmed canvas projection against the **last acknowledged resident document**, not the optimistic on-screen
+document. A patch carries base/target revisions, semantic and DI upserts/removals, and array order only when survivor order plus
+appended new ids cannot reproduce it. Nulls remain explicit. Lane and lane-set changes are included so ordinary edits do not
+fall back merely because cleanup recreated those collections.
+
+TypeScript stages all array changes before touching the graph. Stale revisions, invalid membership/order and a mismatched
+active plane return a resync-required `null`; C# then sends the authoritative full document. Root/diagram structural changes
+also retain the full-load path. A refused optimistic gesture always forces a full projection. Pure deletion retains its compact
+`deleteElements` path only after the diff proves there are no survivor updates; otherwise the complete patch carries them.
+
+Each graph now caches projection inputs per cell. Unchanged records retain their JS identity through patch application, so a
+rename constructs and measures one changed shape rather than all shapes and connectors. Inputs include DI, font metrics,
+boundary-host geometry and connector endpoint/flow DI. Live graph changes dirty the corresponding entries. Full loads bypass
+reuse, while incremental renders still reconcile embedding and paint order. Cache entries are replaced rather than accumulating
+document history, and direct deletion releases removed entries.
+
+Paired model-only measurements from `npm --prefix src\Bpmn.Scripts run bench`, on synthetic connected diagrams with named
+tasks and one connector between neighbours:
+
+| Shapes / connectors | Full rename projection, mean | Incremental rename projection, mean |
+|---|---:|---:|
+| 602 / 601 | 294.3 ms | 12.0 ms |
+| 2,000 / 1,999 | 592.3 ms | 27.7 ms |
+| 5,000 / 4,999 | 1,155.8 ms | 113.6 ms |
+
+These are V8/JointJS **model work**, not SVG paint, browser load times or statistically portable speed guarantees. The scaling
+cases use short runs; compare paired operations, not these absolute numbers with the older shape-only cold-graph benchmark.
+Whole-collection diffing, indexes, embedding, paint-order checks and reconciliation still scan O(n); only changed-record payload
+and factory/label work are reduced. Tests pin a rename payload below 1,024 characters at all three sizes. The real 602-shape XML
+fixture's first-node deletion diff is **443 characters** versus **504,778** for a full trimmed canvas document; the proven
+removal-only fast path sends just the deletion ids and revision.
+
+Managed edit passes also avoid eager replacement arrays/routes and repeated lookup construction. Both flow-attachment passes
+remain: normalizing arbitrary input and following before/after attachment geometry are different operations. Accessible-graph
+reuse keys include semantic collections plus active-plane membership/expansion, so geometry-only edits reuse the existing graph
+without treating semantic or collapse changes as geometry.
+
+| Connected shapes | Normalize unchanged, KB allocated before -> after | Follow translation, KB before -> after | Geometry-only accessible graph, KB before -> after |
+|---|---:|---:|---:|
+| 602 | 171.52 -> 17.42 | 159.95 -> 37.52 | 852.84 -> 4.92 |
+| 2,000 | 607.27 -> 69.16 | 599.59 -> 123.62 | 2,939.73 -> 5.20 |
+| 5,000 | 1,472.91 -> 165.03 | 1,381.63 -> 301.70 | 7,140.04 -> 4.27 |
+
+Reproduce with `ManagedRenderingBenchmarks` (see `tests\Bpmn.Benchmarks\README.md`). These allocation measurements use synthetic
+normalized connected documents and a warmed graph cache, not XML import or a semantic edit.
+
+The browser harness was repaired to use the current Files/sample dialog, wait for the full accessible-tree count, acknowledge
+canvas completion through its summary, and await a bounded quiet SVG period plus two animation frames. It now includes inline
+rename/undo; tree-update latency alone is not treated as rendering completion.
+
+Three fresh headless Edge browsers per build, 1440x900, .NET 10 Release demo served in Development, same 602-shape XML fixture.
+The original build was built separately from unchanged source; both used the repaired harness:
+
+| Browser observation | Before median (range), ms | After median (range), ms |
+|---|---:|---:|
+| Inline rename, canvas completion | 2,599 (2,324-2,624) | 1,047 (826-1,059) |
+| Rename main-thread long-task time | 2,420 (2,118-2,421) | 839 (640-854) |
+| Undo rename, canvas completion | 1,615 (1,464-1,747) | 1,003 (796-1,031) |
+| Delete main-thread long-task time | 1,093 (1,010-1,358) | 1,009 (970-1,155) |
+| Undo delete main-thread long-task time | 1,383 (1,316-1,632) | 934 (689-1,063) |
+
+Rename is the clear improvement; the smaller deletion difference is noisy and the compact delete path already existed.
+These are local sequential runs, not interleaved controlled trials. Completion includes the harness's 100 ms quiet window,
+not a GPU/compositor fence or a promise that every property-panel task finished. Cold load and pan/zoom have no claimed speedup:
+pan's median frame remained 16.7 ms, zoom still had mounting spikes, and selection publication can affect gesture samples.
+The load DOM stayed at **2,092 SVG nodes / 104 mounted shapes**, with **602 accessible items**. Post-sweep collected JS heap was
+14.8 MB before and 15.1 MB after; this short workload does not establish a long-session heap plateau. No browser errors occurred.
+The current Release bundle is 683,981 bytes of JavaScript and 13,135 bytes of CSS, below the existing 700,000 / 16,000-byte budgets.
+
+Drop-target/owner scans measured below 0.13 ms at 600 shapes in the model harness, so no speculative spatial index or overlay
+rewrite was added. Remaining large-edit costs include managed semantic state/validation and full accessible-graph rebuilds,
+O(n) reconciliation scans, and SVG mounting during large zoom changes.
+
+### Round 4: semantic derivation and validation scans
+
+This pass starts from the completed Round 3 worktree, not the pre-patch renderer. It keeps synchronous full validation,
+the complete accessible tree, public APIs and the full-render fallback.
+
+Accessible-graph construction now builds artifact attachment names only when a drawn artifact needs them, and avoids the
+flow-node name table entirely when no associations exist. Depth construction shares resolved ancestor depths instead of
+allocating a visited set for each node. Root/cached-parent cases are direct; unresolved chains are iterative and preserve
+the previous distinct-ancestor result for cycles, including self-cycles. A 2,000-level chain requires no recursive stack.
+
+Validation reuses ordered nodes-by-container groups for reachability and event subprocesses. Annotation connection counts
+are built in one association pass rather than scanning all associations per annotation. A self-association counts once,
+duplicate annotation entries retain their diagnostics, and findings remain in source order. Complete ordered diagnostic
+JSON, including presentation metadata, matched the baseline on all 27 shipped BPMN samples.
+
+`SemanticRenderingBenchmarks` adds flat, nested and annotation-heavy cases at 602, 2,000 and 5,000 **tasks**. The annotation
+case adds one annotation and association per task, so 5,000 tasks means 10,000 shapes, not 5,000. Setup and the warmed
+document element index are outside measurement; validation here is core-only, not host profiles or browser rendering.
+
+Matched Release assemblies, BenchmarkDotNet in-process short jobs, three warmups, five measurement iterations and a 100 ms
+iteration target, with no simultaneous browser/build workload. The final comparison ran the optimized assembly first,
+then the baseline; an earlier opposite-order series also showed the large annotation-validation benefit. Short jobs still
+have wide timing intervals and substantial GC/scheduler variation. Allocation differences are more repeatable than timing
+for flat graphs; no general graph-construction throughput or browser-paint speedup follows from these tables.
+In the final short pair, 5,000-task flat and annotation graph means actually rose from 13.48 to 24.74 ms and from 14.01 to
+30.86 ms. Large-graph timing varied across runs; reduced allocations do not establish a throughput improvement there.
+
+| Flat tasks | Accessible graph allocated before, KB/op | After, KB/op |
+|---|---:|---:|
+| 602 | 816.08 | 605.52 |
+| 2,000 | 2,892.93 | 2,184.17 |
+| 5,000 | 7,065.61 | 5,268.65 |
+
+| Annotation-heavy tasks | Core validation mean before, ms | After, ms |
+|---|---:|---:|
+| 2,000 (+2,000 annotations) | 53.40 | 7.53 |
+| 5,000 (+5,000 annotations) | 389.34 | 80.89 |
+
+The grouping index has a cost: flat 5,000-task validation allocation rose from 6,013 to 6,143 KB/op (about 2%). This trades
+a small linear index for removal of repeated container/annotation scans, rather than skipping validation.
+
+Browser reconciliation also avoids allocating update wrappers and running attachment checks for unchanged reused cells.
+Retained membership is tracked separately, so an all-reused render does not reset the graph; reused links still recover
+when JointJS removes a replaced endpoint. Removal recovery follows the live graph's transitive connector closure:
+changing a task's cell class also restores associations attached to its flows, including reused association cells.
+Fresh-render parity covers this case in both full and incremental rendering.
+Embedding and paint-order reconciliation remain authoritative on every render.
+Model-only rename measurements were noisy (5,000 shapes: 32.6 ms before versus 27.3 ms after in one short series, with
+control full-render timings also moving substantially); this is not a robust percentage speedup claim.
+
+Isolated preparation at 5,000 connected shapes measured about 0.57 ms for the document index, 0.96 ms for the plane index,
+and 0.27 ms for embedding construction. Those results do not justify a persistent index/dependency-cache rewrite.
+A separate Release Chromium rename CPU profile placed 454 of 525 non-idle samples in WebAssembly and 28 in canvas JS.
+Native/interpreter frames were not managed-symbol-resolved, so they cannot distinguish validation from Blazor tree rendering.
+Tree-row components, accessible-tree virtualization, validation scheduling and speculative routing/overlay caches remain
+deferred. The harness supports optional rename CPU profiles and selection-free pan diagnostics; profiled runs are not
+mixed into ordinary latency samples.
+
+#### End-to-end browser check
+
+Five fresh Edge runs per version, 1440 x 900, the same 602-shape fixture and Release build served in Development.
+The before version already includes Round 3. Values are median (min-max), in milliseconds; CPU-profile and isolated-pan
+runs are excluded from this table.
+
+| Operation | Before | After |
+|---|---:|---:|
+| Rename commit | 1,095 (1,045-1,143) | 913 (797-1,061) |
+| Rename long-task time | 883 (841-919) | 734 (639-886) |
+| Undo rename | 1,043 (991-1,147) | 815 (799-981) |
+| Undo rename long-task time | 859 (828-960) | 637 (619-811) |
+| Delete long-task time | 998 (965-1,276) | 800 (748-804) |
+| Undo delete long-task time | 919 (880-1,016) | 777 (716-878) |
+| Zoomed-out delete long-task time | 916 (733-1,293) | 966 (784-1,341) |
+
+Rename commit improved about 17% and undo rename about 22% in this local sample. The zoomed-out edit cases did not show a
+consistent gain, and overlapping ranges/load variability preclude a universal latency claim. Both versions mounted
+104 cells / 2,092 SVG nodes at load, reached 24-602 mounted cells during the sweep and ended at 9,466 SVG nodes. End JS heap
+was essentially unchanged: 15.2 MB before versus 15.1 MB after. Both five-run series recorded zero browser errors.
+
+Default pan includes a selection transition: median frame time stayed 16.7 ms, while p95 was 16.9 ms before and 16.8 ms
+after. A separate single-run `--isolate-pan` diagnostic verifies a blank hit target and clears selection before sampling;
+it measured 16.7 ms median, 16.8 ms p95, 33.3 ms maximum and no long tasks. This is diagnostic evidence, not a paired pan
+speedup. No speculative gesture, routing or overlay-cache rewrite was made.
+
+Final Release canvas assets are 684,089 B JS / 13,135 B CSS, within the unchanged Round 3 limits of 700,000 / 16,000 B.
+
+### Round 5: swimlane reading-order scaling
+
+The next measured bottleneck was accessible-graph interleaving: every drawn pool/lane scanned every stop again.
+This made semantic edits on many-lane diagrams pay roughly `swimlanes * stops`, even though the canvas reused most cells.
+
+Interleaving now maps each membership to its earliest drawn lane and each process to its earliest drawn pool, then buckets
+stops in document order. Owner selection and output are linear in memberships, swimlanes and stops; no persistent cache or
+stale-document retention is added. A membership in an undrawn lane still prevents pool placement. Overlapping memberships
+choose the first drawn lane in reading order, not lane-record order. Shared-process pools, artifacts, duplicate suppression,
+nesting depths and unplaced suffix order retain the original behavior. With no drawn swimlanes, lane membership is not read.
+
+`SwimlaneGraphBenchmarks` covers 602/2,000/5,000 tasks, each with 1/10/100 lanes and one pool. Total shapes include the
+lanes and pool; consecutive tasks have sequence flows. The baseline already contains Round 4. Release BenchmarkDotNet
+in-process jobs used four warmups, seven measurement iterations and a 250 ms target, without simultaneous builds/browser
+work. The final series ran optimized, baseline, optimized again. Values below are mean milliseconds per complete managed
+graph build, not browser edit or SVG-paint latency.
+
+| Tasks | Lanes | Before | After | After repeat |
+|---|---:|---:|---:|---:|
+| 602 | 1 | 0.560 | 0.648 | 0.553 |
+| 602 | 10 | 0.787 | 0.545 | 0.567 |
+| 602 | 100 | 2.963 | 0.549 | 0.539 |
+| 2,000 | 1 | 2.944 | 3.324 | 2.743 |
+| 2,000 | 10 | 3.929 | 2.650 | 2.815 |
+| 2,000 | 100 | 12.819 | 3.728 | 3.044 |
+| 5,000 | 1 | 13.515 | 11.354 | 16.210 |
+| 5,000 | 10 | 15.430 | 11.057 | 12.386 |
+| 5,000 | 100 | 43.297 | 11.125 | 12.315 |
+
+The 100-lane cases improved about 3.4-5.5x in this local comparison; single-lane timing remains noisy and is not uniformly
+faster. Allocations are roughly flat, not a general memory win: 5,000 tasks/100 lanes fell from 6,721 to 6,688-6,692 KB/op,
+while 2,000 tasks/100 lanes rose from 2,798 to 2,849 KB/op (about 1.8%). Ordered buckets replace the old per-member lookup
+groups, rather than adding a second index on top.
+
+Regression coverage compares all graph fields/lists and exact order against the original full-scan algorithm on every
+plane in all 27 shipped samples. Additional cases cover duplicate/overlapping memberships, reversed drawn lane order,
+undrawn lanes, shared-process pools, black-box pools, nested/unowned stops and artifacts. An enumeration budget guards the
+no-swimlane fast path. Both kits retain the existing composition render budgets. Public APIs, localization and complete
+accessible-tree output are unchanged; no browser-wide improvement is inferred from this isolated managed benchmark.
+
+### Round 6: render-local accessible descriptions
+
+Stage attribution found repeated localization work in the complete accessible tree. Ten selection renders of 602 items
+performed 30,110 resource lookups. The tree now shares type captions and incoming/outgoing count text within one render,
+reducing those lookups to 12,080 (about 60%). The scope is discarded after enumeration: a host can change translations
+without changing culture, and the next render reads them again. Argument-sensitive named/connection formatting still
+reaches the host localizer for every node. Humanized type fallback and element-type enum searches are now lazy, used only
+when both host and neutral-English resources miss.
+
+No persistent translation cache, per-row components, tree virtualization or deferred validation was added. Reading order,
+complete offscreen accessibility, keys, focus refs, roving tabindex and both editor kits retain their existing behavior.
+Public localization calls remain fresh. Regression coverage compares scoped/unscoped descriptions in English, German,
+Portuguese and Japanese, including missing resources, attached artifacts and mutable same-culture host translations.
+
+#### Managed attribution and isolated text work
+
+Release .NET 10.0.14, BenchmarkDotNet in-process short jobs, four warmups, seven measurements and 250 ms iteration targets.
+The synthetic connected diagrams contain 602/2,000/5,000 named tasks; setup and initial graph construction are outside
+the name measurements. Baseline already includes Round 5. Initial stage attribution, milliseconds / allocated KB per call:
+
+| Stage | 602 tasks | 2,000 tasks | 5,000 tasks |
+|---|---:|---:|---:|
+| Independent localized names | 0.472 / 714 | 1.520 / 2,382 | 4.247 / 5,968 |
+| Accessible graph | 0.380 / 605 | 2.726 / 2,184 | 7.692 / 5,255 |
+| Core validation | 0.690 / 724 | 2.655 / 2,163 | 10.707 / 6,123 |
+| Core + empty template profile | 0.841 / 1,098 | 3.251 / 3,314 | 11.717 / 9,284 |
+
+These are separate calls, not additive browser stage timings. The profile uses default empty template options, not applied
+templates or arbitrary host validators. Warmed headless-session selection/publication costs were much smaller than edit
+derivation; no new publication optimization was justified.
+
+Matched name benchmarks ran optimized then baseline, sequentially without concurrent build/browser work, using the same
+benchmark executable and a preserved core assembly. `RenderNames` selects the new render scope once per enumeration:
+
+| Method | Tasks | Before ms / KB | After ms / KB |
+|---|---:|---:|---:|
+| RenderNames | 602 | 0.492 / 714 | 0.254 / 391 |
+| RenderNames | 2,000 | 1.552 / 2,382 | 0.860 / 1,305 |
+| RenderNames | 5,000 | 4.271 / 5,968 | 2.135 / 3,274 |
+| TypeNames | 602 | 0.495 / 569 | 0.059 / 118 |
+| TypeNames | 2,000 | 1.493 / 1,891 | 0.214 / 391 |
+| TypeNames | 5,000 | 3.789 / 4,727 | 0.535 / 977 |
+
+The actual tree text path allocated about 45% less. This is not a full native Blazor-render timing claim: ten bUnit selection
+renders remained around 114-121 ms versus 118 ms before. The mixed benchmark's unscoped `LocalizedNames` control allocated
+about 9% more after the change (780 versus 714 KB at 602 tasks; 6,515 versus 5,968 KB at 5,000). An isolated-only control
+instead allocated less (639 and 5,343 KB), but overlapped other workloads, invalidating its timing. JIT/call-shape sensitivity
+is a hypothesis, not an established cause; no general public single-name throughput improvement is claimed.
+
+#### Five-run browser comparison
+
+Fresh Edge browsers, 1440 x 900, the default 602-shape stress fixture, Release demo served in Development.
+The before series completed first, then the after series; this was not interleaved. Values are median (min-max) milliseconds:
+
+| Observation | Before | After |
+|---|---:|---:|
+| Rename commit | 805 (758-874) | 638 (601-754) |
+| Rename long-task time | 606 (583-711) | 452 (450-578) |
+| Undo rename | 757 (734-814) | 621 (591-703) |
+| Undo rename long-task time | 584 (565-661) | 442 (434-543) |
+| Delete long-task time | 726 (677-870) | 560 (546-568) |
+| Undo delete long-task time | 689 (624-802) | 495 (486-616) |
+| Zoomed-out delete long-task time | 711 (686-877) | 563 (556-569) |
+| Cold start | 3,834 (3,110-4,549) | 3,451 (3,167-3,768) |
+| Warm start | 2,756 (2,506-3,354) | 2,545 (2,495-2,724) |
+| Switch to stress diagram | 3,648 (3,436-3,932) | 3,278 (3,190-3,347) |
+
+Rename improved about 21% and undo rename about 18% in this local sample, not a universal latency guarantee.
+Both series recorded zero browser errors and identical counts: 104 mounted cells / 2,092 SVG nodes at load,
+24-602 mounted cells during the sweep and 9,466 final SVG nodes. Median JS heap after load was 14.3 versus 14.2 MB;
+end heap was 15.2 MB in both. The served canvas module remained 684,089 bytes.
+Pan/zoom cadence varied around 16.7-33 ms in both series; no gesture-speed or stable-60-fps improvement is claimed.
+
+### Round 7: template-heavy edit validation
+
+The next attribution pass separated managed patch construction/serialization from validation with actual applied templates.
+Patch work was not the main target: a native 602-task rename patch took about 0.095 ms to construct and 0.0012 ms to
+serialize, versus 1.62 ms for uncached full projection. At 5,000 tasks those costs were 0.84 ms, 0.0012 ms and 12.06 ms.
+A 5,000-task deletion patch cost 3.46 ms to construct. These are native isolated costs, not WebAssembly or browser timings.
+No new patch fast path, serializer replacement or JS index/accessibility cache was justified by that comparison.
+
+Applied-template validation exposed a larger issue. For each templated element, the profile built a complete
+`BpmnElementInspector.Describe` snapshot solely to check whether a compatible newer template exists. That snapshot searches
+DI, builds/localizes property-panel descriptors and scans whole-document invariants. Repeating it for every templated
+element introduces collection-wide work inside the element loop. The standalone inspection loop measured about
+1.25-1.31 seconds and 38.9 MB allocated at 5,000 templated tasks.
+
+Upgrade checks now use the same element wire-type mapping and ordered event definitions directly, sharing the existing
+compatibility/version-selection logic with the public snapshot-based API. Full property-panel inspection remains unchanged
+for callers that need it. Core/profile validation stays synchronous and complete; no registry, template or diagnostic
+cache was introduced. Scope flattening and binding evaluation were deliberately left alone for this round.
+
+Regression coverage compares complete ordered reports, including localization metadata, with the original full-inspection
+profile. It covers plain/scoped properties, conditions, FEEL, missing/flavor-mismatched/deprecated templates, upgrades,
+engine/registry mutation, unknown binding errors and document changes. Upgrade selection is also compared across every
+flow-node/event-definition combination and every extended element ID in all shipped samples. A deterministic budget on
+12 shapes fell from **234 reads to 12**: the single extension-marker pass remains, per-element panel scans do not.
+The budget fails against the preserved baseline assembly.
+
+#### Matched managed results
+
+Release .NET 10.0.14, BenchmarkDotNet in-process short jobs, three warmups, five measurement iterations and a 100 ms target.
+Runs were sequential, without simultaneous builds/browser work, in optimized/baseline/optimized order using one benchmark
+executable and compatible core-assembly swaps. Synthetic connected diagrams apply one shared template to every task.
+Plain templates have three properties: a stored name, missing required FEEL and a conditional required value. Scoped
+templates add a required connector input. Both register a newer version; these cases produce real validation findings.
+Baseline includes Round 6.
+
+| Tasks | Template | Profile before ms | After ms | After repeat ms |
+|---|---|---:|---:|---:|
+| 602 | Plain | 61.73 | 7.78 | 15.41 |
+| 602 | Scoped | 33.92 | 8.62 | 11.59 |
+| 2,000 | Plain | 290.99 | 43.87 | 40.32 |
+| 2,000 | Scoped | 283.58 | 48.27 | 50.17 |
+| 5,000 | Plain | 1,670.02 | 197.67 | 197.66 |
+| 5,000 | Scoped | 1,712.45 | 221.70 | 228.46 |
+
+At 5,000 tasks, profile-only validation improved about 7.5-8.5x locally. Allocations fell from 75,037 to 35,600 KB/op
+for plain templates (about 53%) and 109,373 to 69,936 KB/op for scoped templates (about 36%).
+Combined core+profile validation at that size measured 1,652 ms before versus 206/210 ms after for plain templates,
+and 2,301 ms versus 276/242 ms for scoped templates. The scoped baseline had high timing variance.
+
+Controls matter: without applied markers, 5,000-task profile validation was 2.54 ms before versus 2.73/2.50 ms after,
+with unchanged allocations around 3,158 KB. Combined validation without markers was 11.09 versus 11.14/10.51 ms.
+Small-case timings and JIT allocation shapes varied between series; these short local jobs do not establish stable
+latency ratios for every size. This is a template-workload improvement, not a general core-validator speedup.
+
+#### Browser edit results and controls
+
+Five unprofiled runs per build/workload used Release WebAssembly in Edge at 1440 x 900. The baseline includes Round 6.
+The template case changes the stress fixture's 600 user tasks to service tasks and applies the demo's already-registered
+`demo.camunda7.mail` version 1 template to each one using Camunda namespace attributes. IDs, names, DI and connectivity
+stay unchanged. The template includes a hidden name and four scoped connector properties; absent required recipient
+values produce real findings. The local fixture is supplied through the harness's `--fixture-file` response override,
+not a new demo sample.
+
+| Template workload metric | Before median ms (range) | After median ms (range) |
+|---|---:|---:|
+| Rename through acknowledged canvas update | 3,570 (3,341-3,706) | 2,208 (2,058-2,276) |
+| Undo rename through acknowledged canvas update | 3,364 (3,312-4,279) | 2,222 (2,095-2,337) |
+| Rename long-task time | 3,339 (3,155-3,524) | 1,997 (1,857-2,060) |
+| Undo rename long-task time | 3,171 (3,133-4,096) | 2,040 (1,917-2,156) |
+| Delete long-task time | 3,257 (3,219-3,395) | 2,170 (1,978-2,545) |
+| Undo delete long-task time | 3,421 (3,156-3,546) | 2,077 (1,917-2,523) |
+| Zoomed-out delete long-task time | 3,394 (3,280-4,121) | 2,252 (2,007-2,650) |
+| Switch to template fixture | 7,471 (7,212-9,223) | 6,349 (5,887-7,015) |
+
+Template-heavy rename and undo medians fell about 38% and 34%. The unmodified, no-template fixture is a negative control:
+rename was 621 (608-682) versus 630 (613-689) ms and undo was 611 (593-697) versus 600 (596-632) ms.
+Rename long-task time was 454 versus 467 ms, and undo 445 versus 440 ms. There is no established default-edit gain.
+Default cold/reload controls were 3,662 (3,157-4,344) / 2,700 (2,632-3,512) ms before and
+3,125 (3,091-4,495) / 2,519 (2,507-3,495) ms after; startup was not the selected optimization.
+
+Within the template workload both builds had 91 mounted cells / 2,493 SVG nodes after switching, 24-602 mounted cells
+during the sweep and 10,066 final SVG nodes. Median post-load heap stayed 16.0 MB and final heap was 17.5 versus 17.4 MB.
+Within the default workload both builds had 104 mounted cells / 2,092 SVG nodes, the same 24-602 sweep and 9,466 final
+SVG nodes; final heap stayed 15.2 MB. Every run reported zero browser errors. Both builds served a 684,089-byte canvas module.
+These controls compare each workload with itself; template icons and scoped validation intentionally change its DOM/heap
+relative to the default sample.
+
+Series were consecutive, not interleaved: baseline default then template, optimized template then default.
+Playwright routing disables HTTP caching, so overridden-case reloads are not cache-warm-start evidence; initial page loads
+also precede selection of the template fixture. Separate rename CPU profiles were excluded from latency samples.
+Release profiles expose mostly unnamed WebAssembly frames, so native attribution and exact-work tests support the diagnosis,
+not method-level browser sample names. Pan/zoom remains variable: template pan long-task medians were 468 versus 469 ms,
+and zoom long-task time was 522 (472-940) versus 655 (438-1,526) ms. No pan/zoom improvement is claimed.
+
+### Round 8: cold multi-selection inspection
+
+The next attribution pass kept the default edit workload as a control and added actual select-all with Properties open.
+Before this change, selecting the default fixture's 602 shapes took a five-run median 4,925 ms cold versus 2,680 ms warm.
+After edit/undo invalidated descriptions, the cold/warm medians were 4,768/2,896 ms. Warm snapshots already existed in the
+session cache; these were not repeated full-inspector calls in every state refresh.
+
+Cold snapshots did repeat model-wide work: each `BpmnElementInspector.Describe` independently checked every flow node and
+every diagram's geometry before filtering invariants down to the requested element. Selection inspection now shares one
+lazy invariant result within that one multi-selection read. Single-element inspection keeps its original path; warmed
+snapshots do not force a new check. The scope is discarded after the read and restarts if the document or culture changes.
+Per-element descriptor construction, DI precedence, extension/template builders and existing mutable-registry/cache checks
+remain in their original order. There is no persistent invariant cache or replacement of full validator reports.
+
+Complete snapshot comparisons cover shipped diagrams in editable/read-only mode, missing/duplicate IDs, multiple planes,
+invalid geometry/attachments, remote changes, selection changes, edits/undo/redo/rename/delete, templates/schema options,
+cultures, custom descriptor/builder calls and exceptions. A counting shape list proves that a cold 12-element selection
+completes one geometry-invariant enumeration instead of twelve; a warm repeat adds none. The same test fails against the
+preserved baseline assembly with 12 enumerations.
+
+#### Managed attribution and controls
+
+Release .NET 10.0.14, BenchmarkDotNet in-process short jobs, three warmups, five measurement iterations and a 100 ms target.
+Runs were sequential, without simultaneous browser/build workloads, using the same executable and compatible core-assembly
+swaps. Initial baseline/optimized runs were followed by baseline/optimized repeats and a final optimized run after tightening
+delegate allocation and culture handling. `ColdSnapshots` clears only the description dictionary; fixture setup, graph
+building, validation and selection publication are excluded. Both versions include the same dictionary-clear cost.
+
+| Tasks | Selected tasks | Plain cold before ms | Optimized repeat ms | Final optimized ms |
+|---|---:|---:|---:|---:|
+| 602 | 100 | 3.01 | 1.99 | 2.01 |
+| 2,000 | 100 | 8.60 | 4.74 | 5.12 |
+| 5,000 | 100 | 18.70 | 9.82 | 10.01 |
+
+These repeated plain-case means improve about 33-48%. Allocations change much less: 5,000 tasks / 100 selected tasks
+allocate about 1,048,018 bytes before versus 1,026,569 bytes after (about 2% lower). The final warm read adds only 128 bytes
+of operation-local scope/delegate overhead: 5,617 versus 5,745 bytes; its mean was 22.11 versus 22.40 microseconds.
+Single-selection warm allocation remains 344 bytes without templates and 792 bytes with the scoped template.
+
+Templated cold means for 100 selected tasks were 5.59/10.71/21.84 ms before at 602/2,000/5,000 tasks; the final optimized
+run measured 4.55/8.57/12.77 ms. Timings were more variable across optimized series (for example 17.77 ms in the earlier
+5,000-task optimized repeat). Warm template reads still perform the existing per-element mutable-template checks and
+can allocate about 4.49 MB for 100 selected elements. The 5,000-task warm mean varied from 2.57 ms before to 4.05/3.86 ms
+in optimized repeats despite essentially unchanged work/allocations. Do not treat these short mixed-call/JIT-sensitive
+jobs as proof of a template warm-read gain, or of stable ratios at every size. Registry checking was not changed this round.
+
+Accessible-tree attribution also identified remaining rendering work, but did not justify a separate rewrite.
+Ten complete selection renders at 602/2,000/5,000 items measured 93/299/733 ms and about 30.7/99.5/257.4 MB total process
+allocations in the final diagnostic run. Ten text-only enumerations measured 5/49/100 ms and about 3.2/10.6/26.7 MB.
+These include bUnit/DOM simulation and dispatcher overhead, not browser DOM/heap allocations; earlier complete-render
+samples were 83/287/430 ms. No new tree optimization, row component or persistent text cache was selected.
+
+#### Browser results: no established end-to-end gain
+
+Five unprofiled runs per build used Release WebAssembly in Edge at 1440 x 900 with the unmodified 602-shape sample.
+`--selection` opens Properties and selects all shapes through Ctrl+A, waits for the exact panel count and canvas settling,
+clears through Escape and repeats with warmed descriptions. It repeats after delete/undo and rename/undo invalidate the
+document snapshots. This includes panel composition, state publication, JS selection outlines, DOM work and a fixed
+settling interval, not just the managed inspector. Sequence flows are not part of this canvas select-all command.
+
+| Metric | Before median ms (range) | After median ms (range) |
+|---|---:|---:|
+| Cold select-all | 4,925 (4,577-6,894) | 4,916 (4,379-6,359) |
+| Cold select-all long-task time | 4,763 (4,418-6,678) | 4,765 (4,220-6,168) |
+| Warm select-all | 2,680 (2,626-3,713) | 2,824 (2,661-3,179) |
+| Warm select-all long-task time | 2,517 (2,427-3,546) | 2,633 (2,470-3,013) |
+| Cold select-all after edits/undo | 4,768 (4,408-6,632) | 4,604 (4,275-5,383) |
+| Warm select-all after edits/undo | 2,896 (2,665-3,815) | 2,893 (2,696-3,568) |
+| Rename through canvas acknowledgement | 692 (658-970) | 662 (644-873) |
+| Undo rename through canvas acknowledgement | 641 (622-795) | 624 (621-845) |
+
+These overlapping, variable series do not establish an end-to-end selection or default-edit improvement. The retained win
+is lower native cold-inspection work, not faster browser BPMN rendering. Warm selection still costs seconds in this
+workload; batching invariant checks alone does not solve the broader property/composition cost.
+No pan/zoom or startup gain is claimed. Cold/reload controls were 3,903 (3,604-5,287) / 3,221 (2,870-3,642) ms before
+and 4,045 (3,751-4,986) / 3,172 (3,082-3,433) ms after. Zoom long-task time was
+567 (436-1,068) versus 509 (446-2,324) ms. Panel toggling and selection-cache warming make these runs different from the
+earlier harness sequence without `--selection`; compare within this round, not against Round 7 absolute latencies.
+
+Both builds had 104 mounted cells / 2,092 SVG nodes at load, a 24-602 mounting sweep, 9,466 final SVG nodes and 16.0 MB
+median final heap. Median heap immediately after load was 14.0 versus 13.8 MB. Every run reported zero browser errors,
+and both served a 684,089-byte canvas module. Series were consecutive baseline then optimized, not interleaved, without
+competing builds/tests. No sample-response override was used, so normal HTTP caching remained enabled.
+Separate CPU-profile runs expose mostly unnamed WebAssembly interpreter frames; they were excluded from latency samples
+and cannot explain the remaining managed work at method granularity.
+
+### Round 9: browser-visible multi-selection color readouts
+
+The next pass required a browser-visible gain rather than another native-only improvement. Temporary phase timings and
+diagnostic-only tree/panel removal isolated a surprising cost: the toolbar's color readouts, including children of its
+closed color popover. `SelectedColors` scanned the immutable selection for **every shape and edge**, repeatedly for each
+channel and on host-driven rerenders. With 602 selected shapes, full Background enumerations took about 70-90 ms and
+Border/Text enumerations about 200-250 ms each in the instrumented browser. Repeated reads accounted for roughly two
+seconds per selection. State publication was about 0.1 ms, JS selection tools about 46-75 ms, and panel snapshots about
+1.5-1.7 seconds cold / 85-93 ms warm. These are diagnostic phase observations, not additive exclusive timings.
+
+Removing the tree barely changed selection latency; removing the panel removed cold inspection but left multi-second
+warm selection. Those altered compositions were diagnostic controls only, never production fixes or comparison baselines.
+The host callback also produces a parent status render in addition to the session cascade. That lifecycle remains intact:
+this change does not suppress host callbacks, parameter processing or legitimate rerenders.
+
+`BpmnToolbarBase.SelectedColors` now builds an **operation-local ordinal membership set only for multi-selection**.
+Membership work changes from O(DI items x selected IDs) to expected O(DI items + selected IDs) per enumeration. Single
+selection avoids the set, empty selection avoids DI enumeration, and every new read observes the current state. Shape
+order, edge order, channel support, mixed/default values, case-insensitive color comparison and case-sensitive element
+IDs are unchanged. No persistent cache, renderer/markup rewrite, deferred validation or accessibility reduction was added.
+
+#### Browser comparison and order control
+
+Release WebAssembly, Edge at 1440 x 900, the normal 602-shape / 601-connector sample, full accessible tree, toolbar color
+controls enabled and no sample routing override. Five fresh unprofiled browsers per version first ran baseline then
+optimized with `--selection`. A second five-per-version comparison reversed the build order, optimized then baseline,
+using the identical `--selection --selection-controls` workload on both builds. Builds, tests and diagnostic instrumentation
+were absent during timing. This is reversed-order replication, not per-run interleaving or a universal timing guarantee.
+
+| Metric | Initial baseline median ms (range) | Initial optimized median ms (range) |
+|---|---:|---:|
+| Cold select-all, Properties open | 4,255 (4,165-4,521) | 2,389 (2,225-2,440) |
+| Warm select-all, Properties open | 2,591 (2,486-2,821) | 657 (623-694) |
+| Cold select-all after edits/undo | 4,131 (3,915-4,372) | 2,069 (2,048-2,208) |
+| Warm select-all after edits/undo | 2,547 (2,543-2,569) | 604 (603-727) |
+
+| Metric | Repeated baseline median ms (range) | Repeated optimized median ms (range) |
+|---|---:|---:|
+| Cold select-all, Properties open | 4,332 (4,097-4,395) | 2,381 (2,221-2,510) |
+| Cold select-all long-task time | 4,177 (3,949-4,243) | 2,236 (2,063-2,341) |
+| Warm select-all, Properties open | 2,559 (2,447-2,922) | 618 (603-636) |
+| Warm select-all long-task time | 2,375 (2,255-2,768) | 422 (418-445) |
+| Cold select-all after edits/undo | 3,987 (3,953-4,071) | 2,076 (2,041-2,165) |
+| Warm select-all after edits/undo | 2,574 (2,486-2,649) | 618 (601-692) |
+| Warm select-all, Properties hidden | 2,384 (2,372-2,760) | 499 (496-514) |
+| Single selection, Properties open | 494 (479-499) | 514 (482-568) |
+| Single selection, Properties hidden | 425 (409-497) | 426 (408-427) |
+| Rename through canvas acknowledgement | 613 (603-670) | 615 (608-630) |
+| Undo rename through canvas acknowledgement | 594 (579-734) | 580 (577-629) |
+
+The retained browser gain is **44-45% lower cold select-all latency, 75-76% lower warm latency, and 79% lower warm
+select-all latency with Properties hidden**. Single-selection and rename controls overlap; no gain is claimed there.
+Substantial cold snapshot preparation remains. This is faster selection/render-adjacent readout work, not faster XML
+loading or a claim that JointJS geometry projection changed.
+
+Cold start/reload controls in the repeated series were 3,213 (3,056-4,534) / 2,614 (2,521-3,270) ms before and
+3,122 (3,085-4,092) / 2,628 (2,503-2,910) ms after. Diagram switch was 3,243 (3,218-3,511) versus
+3,371 (3,198-3,491) ms. Zoom long tasks were 370 (286-473) versus 278 (221-497) ms; ranges overlap, so no startup,
+switch, pan or zoom win is claimed. Both builds mounted 104 cells / 2,092 SVG nodes at load, swept 24-602 mounted cells
+and ended with 9,466 SVG nodes. Final median JS heap was 16.1 MB on both; load heap was 14.1 versus 14.0 MB. Every
+successful run reported zero browser errors. Both served the identical 684,089-byte canvas module, SHA-256
+`8e9ab2e5bd2f7b405c98c1134cd42d56ddb09ceb395e8cd47124bef687f0ad6f`; the optimization is managed code.
+
+The new warm controls run **after** the original selection/edit sequence, so earlier metrics keep their workload.
+They use a real pointer on a task away from connector overlap, wait for the host's selection status and canvas settling,
+and keep the accessible tree enabled. An initial center click was intercepted by a connector; that failed harness run
+was discarded, then both control series used the corrected click position. Timings include the settling interval and
+are not pure method times.
+
+The full-scan readout oracle covers empty/single/bulk/mixed/link selections, duplicate/missing/case-mismatched IDs, changing
+documents/planes, read-only and color defaults/mixing. An empty-selection work counter fails on the preserved baseline
+(16 shape-list enumerations versus zero). Both-kit host regressions preserve one parent callback/render and all 602
+accessible items; editor-component budgets are 28 for single selection, 24 for all selection/edit and 18 for an unchanged
+parent render. Existing state-only budgets are unchanged. Targeted results: 45 core cases, 23 color/render cases per kit
+and 51 browser color/keyboard/label/virtualization/template/bulk cases passed. Broader kit-parity caption and Fluent
+context-menu failures reproduced on the preserved baseline and were left unchanged.
+
+### Round 10: batch-local selection geometry
+
+Cold selection inspection still dominated after the color-readout fix. Separate temporary browser timings attributed
+about 339 ms to document-wide DI lookup and 258 ms to active-plane DI lookup, out of 1,711 ms preparing 602 cold
+snapshots. Together those searches accounted for about 35% of preparation. Input checks were about 71 ms,
+properties 247 ms, snapshot remainder 266 ms, and template/localization finishing 510 ms. Warm preparation was
+90-117 ms. These diagnostic observations are separate from the uninstrumented latency samples below.
+
+Each cold descriptor previously searched all planes for the first shape and first edge, then searched the active
+plane again. `BpmnInspectionGeometry` now lazily builds ordinal, first-match shape/edge dictionaries **within one
+multi-selection read**. Global shape and edge matches remain independent; active shape precedence, null shape labels,
+edge waypoints and missing-plane fallback are unchanged. Replacing the document resets the local dictionaries, and
+changing the active diagram rebuilds the active-plane dictionaries. Session documents and DI collections remain immutable.
+No context survives the read. Warm descriptors build no dictionaries; zero/single selection and public inspection retain
+their original paths. Per-element hooks, mutable input checks, full snapshots, ordered synchronous diagnostics and the
+complete accessible tree remain intact. No TypeScript, scheduler or public API change was needed.
+
+#### Browser comparison and order control
+
+Release WebAssembly, Edge at 1440 x 900, the normal 602-shape / 601-connector sample, full accessible tree and toolbar
+color controls. All six series used `--selection --selection-controls --runs=5`, fresh browsers, no fixture routing
+override, and no concurrent builds/tests or phase instrumentation. The first pair ran baseline then optimized;
+the last pair ran optimized then baseline.
+
+| Metric | Initial baseline median ms (range) | Initial optimized median ms (range) |
+|---|---:|---:|
+| Cold select-all, Properties open | 2,414 (2,361-2,609) | 1,845 (1,825-1,879) |
+| Cold select-all long-task time | 2,248 (2,205-2,427) | 1,683 (1,678-1,712) |
+| Warm select-all, Properties open | 645 (643-662) | 663 (611-693) |
+| Cold select-all after edits/undo | 2,409 (2,207-2,477) | 1,642 (1,593-2,129) |
+
+| Metric | Reversed baseline median ms (range) | Reversed optimized median ms (range) |
+|---|---:|---:|
+| Cold select-all, Properties open | 2,428 (2,394-2,482) | 1,809 (1,794-1,982) |
+| Cold select-all long-task time | 2,251 (2,231-2,310) | 1,661 (1,637-1,813) |
+| Warm select-all, Properties open | 662 (629-806) | 648 (642-747) |
+| Cold select-all after edits/undo | 2,245 (2,175-2,546) | 1,639 (1,626-1,874) |
+| Warm select-all after edits/undo | 663 (645-791) | 693 (643-862) |
+| Warm select-all, Properties hidden | 566 (550-607) | 567 (534-818) |
+| Single selection, Properties open | 516 (499-564) | 514 (501-518) |
+| Single selection, Properties hidden | 431 (418-448) | 433 (431-435) |
+| Rename through canvas acknowledgement | 642 (641-713) | 659 (644-829) |
+| Undo rename through canvas acknowledgement | 627 (626-758) | 627 (621-800) |
+
+The retained result is **24-25% lower cold select-all latency** and **27-32% lower cold latency after edits/undo**.
+Warm/single selection and rename controls overlap; no improvement is claimed there. This reduces managed inspection
+work required to render the selected-property surface, not JointJS projection or XML loading.
+
+One intervening optimized series was slower across unrelated controls: cold selection 2,917 (2,147-3,310) ms, warm
+994 (713-1,080), single-open 714 (669-796), rename 940 (661-1,056), and diagram switch 5,040 (3,496-5,421).
+Its following baseline returned to cold 2,548 (2,376-2,847), warm 647 (626-811), single-open 516 (514-532), and
+rename 658 (656-777). That pair does not establish a speedup; it prompted the final reversed-order repeat rather
+than normalization or pooling incompatible timings. All series remain in the session evidence.
+
+Final reversed cold start/reload controls were 3,654 (3,563-5,037) / 2,886 (2,835-3,695) ms before and
+3,853 (3,671-5,232) / 2,968 (2,854-3,351) after. Diagram switch was 3,613 (3,411-3,815) versus
+3,447 (3,222-3,750), and zoom long-task time 438 (389-969) versus 446 (414-1,103) ms. No startup, switch,
+pan or zoom win is claimed. Both builds mounted 104 cells / 2,092 SVG nodes at load, swept 24-602 cells, ended with
+9,466 SVG nodes, and reported zero browser errors. Final median JS heap was 16.1 versus 16.2 MB, not a memory
+improvement. The served canvas module remained 684,089 bytes with SHA-256
+`8e9ab2e5bd2f7b405c98c1134cd42d56ddb09ceb395e8cd47124bef687f0ad6f`.
+
+#### Work budgets, allocation tradeoff and correctness
+
+A 12-element regression counts **visited shape and edge items**, not just completed enumerations. Including the
+invariant pass, each collection drops from 90 to 24 visits without an active plane, and from 168 to 36 with one.
+Warm reads add zero visits. Singleton reads retain two first-item matches plus one invariant pass (14 visits).
+The new batch budgets fail against the preserved baseline; the singleton control passes on both versions.
+
+Existing native cold-snapshot benchmarks provide explanatory scale controls, not browser latency estimates.
+Short in-process runs (two warmups, three measurements, 100 ms iterations) for 100 untemplated selected tasks gave:
+
+| Document tasks | Baseline mean ms | Optimized mean ms | Baseline allocated KiB | Optimized allocated KiB |
+|---|---:|---:|---:|---:|
+| 602 | 2.11 | 1.39 | 1,001 | 1,064 |
+| 2,000 | 4.94 | 3.20 | 1,002 | 1,393 |
+| 5,000 | 9.94 | 6.44 | 1,003 | 1,854 |
+
+The dictionaries exchange temporary allocation for fewer scans; they are not an unconditional native win.
+Some short templated controls regressed, including 602 tasks / 100 selected (4.56 to 5.66 ms) and 2,000 / 20
+(1.23 to 1.48 ms), with broad timing uncertainty. No general allocation reduction or templated/small-selection
+speedup is claimed. The default complete browser workload and deterministic visit budgets are the acceptance evidence.
+
+Serialized snapshot parity covers shipped diagrams plus duplicate DI/selection IDs, independent global shape/edge
+matches, active shape/edge/null-label precedence, missing elements/planes, read-only, remote edits, undo/redo and
+builder-driven document/diagram changes. Deliberately malformed DI tests isolate inspection from graph/document-validator
+key rejection; those systems are not relaxed in production. Existing custom-hook order/errors, mutable registries/options
+and culture-sensitive invariant tests remain in force. Targeted results: 71 core cases, both-kit property/render/color
+checks (26 shared integration cases per kit), and 51 browser color/keyboard/label/virtualization/template/bulk cases passed.
+An exploratory broader property-panel browser run encountered missing message-catalog Delete buttons; both plain
+Send/Receive cases reproduced on the preserved baseline at `PropertyPanelTests.cs:515` and were left unchanged.
 
 ### Where the time goes
 
-From the code and the measurements above: the document crosses interop as 833,459 characters of JSON (about 0.8 MB, about 80 ms to serialize on first use), and every
-edit that is not a plain move sends it again and resets the graph. Pan holds its budget because it touches no document.
+Initial loads and structural fallbacks send the trimmed full document (504,778 characters on the fixture). Eligible edits send
+revisioned projection patches and preserve unchanged cells; they no longer serialize the entire document or recreate every model.
+Pan touches no document, but selection publication and zoom-induced mounting still contribute main-thread work.
 
 ### Published size
 
@@ -208,8 +833,7 @@ respectively in that run. The canonical tree and diagnostics are still built, so
 
 ### Not done, and why
 
-Each needs a decision or touches a contract: a per-cell patch that names the changed cells instead of sending the whole document (the canvas now reconciles instead of resetting, so a patch would save the
-serialization and the state rebuild on the .NET side); a history byte budget or a lower default depth (100 steps retain 6.7 MB, so it is not urgent); a document-size cap on the stores; esbuild code splitting
+Each needs a decision or touches a contract: a history byte budget or a lower default depth (100 steps retain 6.7 MB, so it is not urgent); a document-size cap on the stores; esbuild code splitting
 (changes the module path); virtualizing the accessible tree (roving tabindex, `aria-setsize`); AOT; and folding `getInitResult` into `initialize` (see "Round 2: input, labels and mount").
 
 ## Virtualization

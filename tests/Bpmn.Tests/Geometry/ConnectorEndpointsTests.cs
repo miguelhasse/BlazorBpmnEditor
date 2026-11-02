@@ -86,6 +86,49 @@ public sealed class ConnectorEndpointsTests
     }
 
     [Fact]
+    public void NormalizingMalformedEndsKeepsUnchangedPlanesAndEdges()
+    {
+        var document = Elbow(firstEnd: new DiPoint(105, 140));
+        var diagram = document.Diagrams[0];
+        var untouched = diagram with { Id = "Untouched", Plane = diagram.Plane with { Edges = [] } };
+        var unrelated = new BpmnEdge("Unknown_di", "Unknown", [new DiPoint(0, 0), new DiPoint(1, 1)]);
+        document = document with
+        {
+            Diagrams = [diagram with { Plane = diagram.Plane with { Edges = [.. diagram.Plane.Edges, unrelated] } }, untouched],
+        };
+        var moved = new List<MovedConnector>();
+
+        var normalized = ConnectorEndpoints.Normalize(document, moved);
+
+        Assert.NotSame(document, normalized);
+        Assert.Same(untouched, normalized.Diagrams[1]);
+        Assert.Same(unrelated, normalized.Diagrams[0].Plane.Edges[1]);
+        Assert.Same(diagram.Plane.Shapes, normalized.Diagrams[0].Plane.Shapes);
+        Assert.Equal("Flow", Assert.Single(moved).ConnectorId);
+        Assert.Same(normalized, ConnectorEndpoints.Normalize(normalized));
+    }
+
+    [Fact]
+    public void NormalizingDuplicateSemanticShapesStillUsesFirstShape()
+    {
+        var document = Elbow(firstEnd: new DiPoint(100, 140));
+        var diagram = document.Diagrams[0];
+        document = document with
+        {
+            Diagrams = [diagram with
+            {
+                Plane = diagram.Plane with
+                {
+                    Shapes = [.. diagram.Plane.Shapes,
+                        new BpmnShape("Duplicate", "A", new Bounds(800, 800, 100, 80))],
+                },
+            }],
+        };
+
+        Assert.Same(document, ConnectorEndpoints.Normalize(document));
+    }
+
+    [Fact]
     public void IsStableOnItsOwnOutput()
     {
         var once = ConnectorEndpoints.Normalize(Elbow(firstEnd: new DiPoint(120, 150)));

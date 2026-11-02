@@ -2,8 +2,10 @@ using Bunit;
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.AspNetCore.Components.Bpmn.Interop;
+using Hasseware.AspNetCore.Components.Bpmn.Model;
 using Hasseware.AspNetCore.Components.Bpmn.Serialization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -43,6 +45,8 @@ public sealed class RenderCountTests : BunitContext
             "large-virtualization-stress.bpmn"))).Document;
         var diagram = document.Diagrams[0];
         _canvas.Setup<DocumentLoaded?>("loadDocument", _ => true)
+            .SetResult(new(diagram.Id, diagram.Plane.Shapes.Count, diagram.Plane.Edges.Count, []));
+        _canvas.Setup<DocumentLoaded?>("patchDocument", _ => true)
             .SetResult(new(diagram.Id, diagram.Plane.Shapes.Count, diagram.Plane.Edges.Count, []));
         RenderFragment footer = builder =>
         {
@@ -103,7 +107,13 @@ public sealed class RenderCountTests : BunitContext
                 .ToDictionary(group => group.Key, group => group.Sum(component => component.Value - before.GetValueOrDefault(component.Key)));
             var budget = scenario switch { "Viewport" => 6, "Selection" => showColorPicker ? 12 : 11, "SingleEdit" => 21, _ => 21 };
             Assert.InRange(deltas.Values.Sum(), 1, budget);
-            Assert.Equal(scenario == "UnchangedParameters" ? 0 : scenario == "SingleEdit" ? 2 : 1, notifications);
+            // A rename's acknowledgement preserves loaded counts, so it must not publish a second state change.
+            Assert.Equal(scenario == "UnchangedParameters" ? 0 : 1, notifications);
+            if (scenario == "SingleEdit")
+            {
+                Assert.Single(_canvas.Invocations["patchDocument"]);
+                Assert.Single(_canvas.Invocations["loadDocument"]);
+            }
             Assert.Equal(0, deltas.GetValueOrDefault(nameof(BpmnPart)));
             if (scenario is "Viewport" or "Selection")
             {
@@ -113,6 +123,106 @@ public sealed class RenderCountTests : BunitContext
             }
         }
         finally { session.StateChanged -= Changed; }
+    }
+
+    [Theory]
+    [InlineData("SingleSelection")]
+    [InlineData("AllSelection")]
+    [InlineData("SingleEdit")]
+    [InlineData("UnchangedParent")]
+    public async Task HostCallbacksRetainStatusAndCompositionBudgets(string scenario)
+    {
+        var document = BpmnXmlReader.Read(File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
+            "large-virtualization-stress.bpmn"))).Document;
+        var diagram = document.Diagrams[0];
+        _canvas.Setup<DocumentLoaded?>("loadDocument", _ => true)
+            .SetResult(new(diagram.Id, diagram.Plane.Shapes.Count, diagram.Plane.Edges.Count, []));
+        _canvas.Setup<DocumentLoaded?>("patchDocument", _ => true)
+            .SetResult(new(diagram.Id, diagram.Plane.Shapes.Count, diagram.Plane.Edges.Count, []));
+        var host = Render<CallbackHost>(p => p.Add(c => c.Document, document));
+        var editor = host.FindComponent<DynamicComponent>();
+        var session = host.FindComponent<BpmnEditorScope>().Instance.Session;
+        var ids = document.Diagrams[0].Plane.Shapes.Select(shape => shape.BpmnElement).ToArray();
+        await host.InvokeAsync(() => session.HandleSelectionChangedAsync(new([ids[0]], null)));
+        await SettleAsync(editor);
+        var before = _renders.Total;
+        var beforeComponents = _renders.Snapshot();
+        var beforeHost = host.Instance.Renders;
+        var beforeSelection = host.Instance.SelectionCallbacks;
+        var beforeDocument = host.Instance.DocumentCallbacks;
+
+        switch (scenario)
+        {
+            case "SingleSelection":
+                await host.InvokeAsync(() => session.HandleSelectionChangedAsync(new([ids[1]], null)));
+                break;
+            case "AllSelection":
+                await host.InvokeAsync(() => session.HandleSelectionChangedAsync(new(ids, null)));
+                break;
+            case "SingleEdit":
+                await host.InvokeAsync(async () =>
+                    Assert.True((await session.ApplyAsync(new UpdatePropertiesCommand(ids[0], "name", "Host edit"))).IsApplied));
+                break;
+            default:
+                await host.InvokeAsync(host.Instance.RenderAgain);
+                break;
+        }
+        await SettleAsync(editor);
+
+        var selection = scenario is "SingleSelection" or "AllSelection";
+        Assert.Equal(selection ? 1 : 0, host.Instance.SelectionCallbacks - beforeSelection);
+        Assert.Equal(scenario == "SingleEdit" ? 1 : 0, host.Instance.DocumentCallbacks - beforeDocument);
+        Assert.Equal(1, host.Instance.Renders - beforeHost);
+        Assert.Equal(scenario == "AllSelection" ? ids.Length : 1, session.State.Selection.Length);
+        Assert.Equal($"{session.State.Selection.Length} selected", host.Find("[data-host-status]").TextContent);
+        Assert.Equal(diagram.Plane.Shapes.Count, host.FindAll(".bpmn-a11y-tree__item").Count);
+        Assert.Single(host.FindAll("[aria-label='Colors'][aria-haspopup='dialog']"));
+        var renders = _renders.Total - before;
+        var componentRenders = _renders.Snapshot().Sum(component => component.Value - beforeComponents.GetValueOrDefault(component.Key));
+        _output.WriteLine($"Kit={KitFixture.Composition.Name}; HostScenario={scenario}; AllComponentRenders={renders}; EditorComponentRenders={componentRenders}");
+        var budget = scenario switch { "SingleSelection" => 28, "AllSelection" or "SingleEdit" => 24, _ => 18 };
+        Assert.InRange(componentRenders, 1, budget);
+    }
+
+    public sealed class CallbackHost : ComponentBase
+    {
+        private BpmnDocument? _edited;
+        private string _status = "0 selected";
+        public int Renders { get; private set; }
+        public int SelectionCallbacks { get; private set; }
+        public int DocumentCallbacks { get; private set; }
+
+        [Parameter]
+        public BpmnDocument Document { get; set; } = default!;
+
+        public void RenderAgain() => StateHasChanged();
+
+        protected override void BuildRenderTree(RenderTreeBuilder builder)
+        {
+            Renders++;
+            builder.OpenElement(0, "span");
+            builder.AddAttribute(1, "data-host-status", true);
+            builder.AddContent(2, _status);
+            builder.CloseElement();
+            builder.OpenComponent<DynamicComponent>(3);
+            builder.AddComponentParameter(4, nameof(DynamicComponent.Type), KitFixture.Composition);
+            builder.AddComponentParameter(5, nameof(DynamicComponent.Parameters), new Dictionary<string, object>
+            {
+                ["Document"] = _edited ?? Document,
+                ["ShowColorPicker"] = true,
+                ["OnSelectionChanged"] = EventCallback.Factory.Create<SelectionChanged>(this, payload =>
+                {
+                    SelectionCallbacks++;
+                    _status = $"{payload.ElementIds.Count} selected";
+                }),
+                ["OnDocumentChanged"] = EventCallback.Factory.Create<BpmnDocument>(this, document =>
+                {
+                    DocumentCallbacks++;
+                    _edited = document;
+                }),
+            });
+            builder.CloseComponent();
+        }
     }
 
     private async Task SettleAsync(IRenderedComponent<DynamicComponent> editor)

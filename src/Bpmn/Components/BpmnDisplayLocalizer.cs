@@ -32,7 +32,7 @@ public sealed class BpmnDisplayLocalizer(IStringLocalizer<BpmnStrings> localizer
     }
 
     /// <summary>The display name of a BPMN wire type.</summary>
-    public string ElementType(string wireType) => Keyed($"ElementType.{wireType}", TypeFallback(wireType));
+    public string ElementType(string wireType) => Translation($"ElementType.{wireType}") ?? TypeFallback(wireType);
 
     /// <summary>The display name of a type-switch option.</summary>
     public string TypeOption(BpmnTypeOption option)
@@ -179,7 +179,7 @@ public sealed class BpmnDisplayLocalizer(IStringLocalizer<BpmnStrings> localizer
     /// <summary>The localized accessible description of a graph node.</summary>
     public string AccessibleName(BpmnGraphNode node)
     {
-        var type = Keyed($"AccessibleType.{node.TypeName}", BpmnGraphNode.Humanise(node.TypeName));
+        var type = Translation($"AccessibleType.{node.TypeName}") ?? BpmnGraphNode.Humanise(node.TypeName);
         var named = node.Label.Length == 0 ? type : Text("AccessibleTree.Named", type, node.Label);
         if (node.IsExpanded is { } expanded)
             return Text(expanded ? "AccessibleTree.Expanded" : "AccessibleTree.Collapsed", named);
@@ -194,6 +194,47 @@ public sealed class BpmnDisplayLocalizer(IStringLocalizer<BpmnStrings> localizer
         var outgoing = node.Outgoing.Count == 0 ? Text("AccessibleTree.NoOutgoing")
             : Text("AccessibleTree.Outgoing", node.Outgoing.Count);
         return Text("AccessibleTree.Connections", named, incoming, outgoing);
+    }
+
+    // Shared type/count text lasts one tree render, so mutable host translations refresh on the next render.
+    internal BpmnDisplayLocalizer ForAccessibleRender() => new(new AccessibleRenderStrings(localizer));
+
+    private sealed class AccessibleRenderStrings(IStringLocalizer<BpmnStrings> source) : IStringLocalizer<BpmnStrings>
+    {
+        private readonly Dictionary<string, LocalizedString> _plain = new(StringComparer.Ordinal);
+        private readonly Dictionary<int, LocalizedString> _incoming = [];
+        private readonly Dictionary<int, LocalizedString> _outgoing = [];
+
+        public LocalizedString this[string name]
+        {
+            get
+            {
+                if (_plain.TryGetValue(name, out var value)) return value;
+                value = source[name];
+                _plain.Add(name, value);
+                return value;
+            }
+        }
+
+        public LocalizedString this[string name, params object[] arguments]
+        {
+            get
+            {
+                var counts = name switch
+                {
+                    "AccessibleTree.Incoming" => _incoming,
+                    "AccessibleTree.Outgoing" => _outgoing,
+                    _ => null,
+                };
+                if (counts is null || arguments is not [int count]) return source[name, arguments];
+                if (counts.TryGetValue(count, out var value)) return value;
+                value = source[name, arguments];
+                counts.Add(count, value);
+                return value;
+            }
+        }
+
+        public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => source.GetAllStrings(includeParentCultures);
     }
 
     private string PropertyLabel(string name, string fallback)
@@ -229,10 +270,13 @@ public sealed class BpmnDisplayLocalizer(IStringLocalizer<BpmnStrings> localizer
 
     /// <summary>Reads a built-in caption by its resource key, falling back when the key is unknown.</summary>
     private string Keyed(string key, string fallback)
+        => Translation(key) ?? fallback;
+
+    private string? Translation(string key)
     {
         var value = localizer[key];
         if (!value.ResourceNotFound) return value.Value;
-        return English.GetString(key, CultureInfo.InvariantCulture) ?? fallback;
+        return English.GetString(key, CultureInfo.InvariantCulture);
     }
 
     private string Text(string key, params object[] arguments)

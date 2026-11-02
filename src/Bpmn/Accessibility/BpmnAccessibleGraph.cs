@@ -203,10 +203,6 @@ public static class BpmnAccessibleGraph
          * reads as two unrelated lists; document order puts a Sub-Process immediately before the
          * things inside it, which is the order a tree is walked in.
          */
-        var laneOf = document.Lanes
-            .SelectMany(lane => lane.FlowNodeRefs.Select(node => (node, lane.Id)))
-            .ToLookup(pair => pair.node, pair => pair.Id, StringComparer.Ordinal);
-
         var expansion = diagram.Plane.Shapes.ToDictionary(
             shape => shape.BpmnElement,
             shape => shape.IsExpanded,
@@ -242,7 +238,7 @@ public static class BpmnAccessibleGraph
          */
         var stops = flowNodes.Concat(Artifacts(document, drawn, depths)).ToList();
 
-        return swimlanes.Count == 0 ? stops : Interleave(swimlanes, stops, laneOf);
+        return swimlanes.Count == 0 ? stops : Interleave(swimlanes, stops, document.Lanes);
     }
 
     /// <summary>The artifacts and data elements drawn on this plane.</summary>
@@ -251,13 +247,13 @@ public static class BpmnAccessibleGraph
         HashSet<string> drawn,
         Dictionary<string, int> depths)
     {
-        var attachments = Attachments(document);
+        ILookup<string, (string Name, string? Type)>? attachments = null;
 
         foreach (var reference in document.DataObjectReferences)
         {
             if (drawn.Contains(reference.Id))
             {
-                yield return Artifact(reference.Id, "dataObjectReference", reference.Name, reference.ContainerId, depths, attachments);
+                yield return Artifact(reference.Id, "dataObjectReference", reference.Name, reference.ContainerId, depths, attachments ??= Attachments(document));
             }
         }
 
@@ -265,7 +261,7 @@ public static class BpmnAccessibleGraph
         {
             if (drawn.Contains(reference.Id))
             {
-                yield return Artifact(reference.Id, "dataStoreReference", reference.Name, reference.ContainerId, depths, attachments);
+                yield return Artifact(reference.Id, "dataStoreReference", reference.Name, reference.ContainerId, depths, attachments ??= Attachments(document));
             }
         }
 
@@ -275,7 +271,7 @@ public static class BpmnAccessibleGraph
             {
                 // The text is the annotation: it has no name, and reading out its id instead would
                 // tell a reader nothing about what the note says.
-                yield return Artifact(annotation.Id, "textAnnotation", annotation.Text, annotation.ContainerId, depths, attachments);
+                yield return Artifact(annotation.Id, "textAnnotation", annotation.Text, annotation.ContainerId, depths, attachments ??= Attachments(document));
             }
         }
 
@@ -283,7 +279,7 @@ public static class BpmnAccessibleGraph
         {
             if (drawn.Contains(group.Id))
             {
-                yield return Artifact(group.Id, "group", group.Name, group.ContainerId, depths, attachments);
+                yield return Artifact(group.Id, "group", group.Name, group.ContainerId, depths, attachments ??= Attachments(document));
             }
         }
     }
@@ -321,6 +317,10 @@ public static class BpmnAccessibleGraph
     /// </remarks>
     private static ILookup<string, (string Name, string? Type)> Attachments(BpmnDocument document)
     {
+        if (document.Associations.Count == 0 && document.DataAssociations.Count == 0)
+            return Enumerable.Empty<(string Artifact, (string Name, string? Type) Other)>()
+                .ToLookup(pair => pair.Artifact, pair => pair.Other, StringComparer.Ordinal);
+
         var names = document.FlowNodes
             .ToDictionary(node => node.Id, node => Collapse(node.Name) is { Length: > 0 } name
                 ? (Name: name, Type: (string?)null)
@@ -415,19 +415,43 @@ public static class BpmnAccessibleGraph
     private static List<BpmnGraphNode> Interleave(
         List<BpmnGraphNode> swimlanes,
         List<BpmnGraphNode> flowNodes,
-        ILookup<string, string> laneOf)
+        IReadOnlyList<BpmnLane> lanes)
     {
+        var pools = new Dictionary<string, int>(StringComparer.Ordinal);
+        var lanePositions = new Dictionary<string, int>(StringComparer.Ordinal);
+        for (var index = 0; index < swimlanes.Count; index++)
+        {
+            var swimlane = swimlanes[index];
+            if (swimlane.TypeName == "lane") lanePositions.TryAdd(swimlane.ElementId, index);
+            else if (swimlane.ContainerId is { } process) pools.TryAdd(process, index);
+        }
+
+        var laneOwners = new Dictionary<string, int>(StringComparer.Ordinal);
+        foreach (var lane in lanes)
+        {
+            var position = lanePositions.GetValueOrDefault(lane.Id, int.MaxValue);
+            foreach (var member in lane.FlowNodeRefs)
+                if (!laneOwners.TryGetValue(member, out var previous) || position < previous)
+                    laneOwners[member] = position;
+        }
+
+        var contents = new List<BpmnGraphNode>?[swimlanes.Count];
+        foreach (var node in flowNodes)
+        {
+            // Any lane membership excludes pool placement, even when that lane is not drawn.
+            if (!laneOwners.TryGetValue(node.ElementId, out var owner))
+                owner = node.ContainerId is { } process ? pools.GetValueOrDefault(process, int.MaxValue) : int.MaxValue;
+            if (owner != int.MaxValue) (contents[owner] ??= []).Add(node);
+        }
+
         var placed = new HashSet<string>(StringComparer.Ordinal);
         var result = new List<BpmnGraphNode>(swimlanes.Count + flowNodes.Count);
 
-        foreach (var swimlane in swimlanes)
+        for (var index = 0; index < swimlanes.Count; index++)
         {
+            var swimlane = swimlanes[index];
             result.Add(swimlane);
-
-            var inside = flowNodes.Where(node => swimlane.TypeName == "lane"
-                ? laneOf[node.ElementId].Contains(swimlane.ElementId, StringComparer.Ordinal)
-                : Owns(swimlane, node) && !laneOf[node.ElementId].Any());
-
+            if (contents[index] is not { } inside) continue;
             foreach (var node in inside)
             {
                 if (!placed.Add(node.ElementId)) continue;
@@ -440,10 +464,6 @@ public static class BpmnAccessibleGraph
 
         return result;
     }
-
-    /// <summary>Whether a node belongs to the Process a Pool references.</summary>
-    private static bool Owns(BpmnGraphNode pool, BpmnGraphNode node) =>
-        pool.ContainerId is not null && string.Equals(node.ContainerId, pool.ContainerId, StringComparison.Ordinal);
 
     /// <summary>
     /// How deeply each node is nested, counted through owning containers.
@@ -458,25 +478,43 @@ public static class BpmnAccessibleGraph
     {
         var owners = nodes.ToDictionary(node => node.Id, node => node.ContainerId, StringComparer.Ordinal);
         var depths = new Dictionary<string, int>(StringComparer.Ordinal);
-
-        foreach (var node in nodes) depths[node.Id] = DepthOf(node.Id);
-
-        return depths;
-
-        int DepthOf(string id)
+        var path = new List<string>();
+        var positions = new Dictionary<string, int>(StringComparer.Ordinal);
+        foreach (var node in nodes)
         {
-            var depth = 1;
-            var seen = new HashSet<string>(StringComparer.Ordinal) { id };
-            var current = owners[id];
-
-            // A container that is itself drawn adds a level; anything else is the plane's own root.
-            while (current is not null && owners.ContainsKey(current) && seen.Add(current))
+            if (depths.ContainsKey(node.Id)) continue;
+            if (node.ContainerId is null || !owners.ContainsKey(node.ContainerId))
             {
-                depth++;
-                current = owners[current];
+                depths[node.Id] = 1;
+                continue;
+            }
+            if (depths.TryGetValue(node.ContainerId, out var parentDepth))
+            {
+                depths[node.Id] = parentDepth + 1;
+                continue;
             }
 
-            return depth;
+            path.Clear();
+            positions.Clear();
+            string? current = node.Id;
+            var depth = 0;
+            while (current is not null && owners.TryGetValue(current, out var owner))
+            {
+                if (depths.TryGetValue(current, out depth)) break;
+                if (positions.TryGetValue(current, out var cycleStart))
+                {
+                    // Every member of a cycle has the same number of distinct ancestors.
+                    depth = path.Count - cycleStart;
+                    for (var index = cycleStart; index < path.Count; index++) depths[path[index]] = depth;
+                    path.RemoveRange(cycleStart, path.Count - cycleStart);
+                    break;
+                }
+                positions.Add(current, path.Count);
+                path.Add(current);
+                current = owner;
+            }
+            for (var index = path.Count - 1; index >= 0; index--) depths[path[index]] = ++depth;
         }
+        return depths;
     }
 }

@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 using Bunit;
 
 using Hasseware.AspNetCore.Components.Bpmn.Accessibility;
@@ -5,6 +7,9 @@ using Hasseware.AspNetCore.Components.Bpmn.Model;
 using Hasseware.AspNetCore.Components.Bpmn.Model.Di;
 
 using Microsoft.AspNetCore.Components.Web;
+using Hasseware.AspNetCore.Components.Bpmn.Resources;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Components;
 
@@ -19,6 +24,84 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Components;
 /// </remarks>
 public sealed class AccessibleTreeTests : BunitContext
 {
+    private readonly ITestOutputHelper _output;
+
+    public AccessibleTreeTests(ITestOutputHelper output) => _output = output;
+
+    [Theory]
+    [InlineData(602)]
+    [InlineData(2000)]
+    [InlineData(5000)]
+    public async Task SelectionRenderAttributionCountsLocalizedWork(int itemCount)
+    {
+        var strings = new CountingStrings();
+        Services.AddSingleton<IStringLocalizer<BpmnStrings>>(strings);
+        var nodes = Enumerable.Range(0, itemCount)
+            .Select(index => new BpmnGraphNode($"Task_{index}", "task", $"Task {index}", "Process_1", null, 1, [], []))
+            .ToArray();
+        BpmnEditorSession? session = null;
+        var tree = this.RenderSeeded<BpmnAccessibleTree>(seed => seed.Graph(nodes).Session(value => session = value), canvas: true);
+        var before = strings.Lookups;
+        var allocated = GC.GetTotalAllocatedBytes(true);
+        var timer = Stopwatch.StartNew();
+
+        for (var index = 0; index < 10; index++)
+            await tree.InvokeAsync(() => session!.GoToAccessibleAsync($"Task_{index}"));
+
+        timer.Stop();
+        _output.WriteLine($"Selection tree renders: items={itemCount}; elapsed={timer.Elapsed.TotalMilliseconds:F2} ms; allocated={GC.GetTotalAllocatedBytes(true) - allocated}; lookups={strings.Lookups - before}");
+        Assert.Equal(itemCount, tree.FindAll("[role=treeitem]").Count);
+        Assert.Single(tree.FindAll("[role=treeitem][tabindex='0']"));
+        Assert.InRange(strings.Lookups - before, 1, (20 * itemCount) + 40);
+
+        var display = Services.GetRequiredService<BpmnDisplayLocalizer>();
+        allocated = GC.GetTotalAllocatedBytes(true);
+        timer.Restart();
+        var length = 0;
+        for (var index = 0; index < 10; index++)
+        {
+            var scope = display.ForAccessibleRender();
+            foreach (var node in nodes) length += scope.AccessibleName(node).Length;
+        }
+        timer.Stop();
+        _output.WriteLine($"Names only: items={itemCount}; elapsed={timer.Elapsed.TotalMilliseconds:F2} ms; allocated={GC.GetTotalAllocatedBytes(true) - allocated}");
+        Assert.True(length > 0);
+    }
+
+    [Fact]
+    public void TreeRenderRefreshesHostTypeTextWithoutCultureChanges()
+    {
+        var strings = new CountingStrings();
+        Services.AddSingleton<IStringLocalizer<BpmnStrings>>(strings);
+        var tree = this.RenderSeeded<BpmnAccessibleTree>(seed => seed.Graph(Graph()), canvas: true);
+        var before = tree.Find("[role=treeitem]").TextContent;
+        strings.TypePrefix = "Updated ";
+
+        tree.Render();
+
+        Assert.NotEqual(before, tree.Find("[role=treeitem]").TextContent);
+        Assert.StartsWith("Updated ", tree.Find("[role=treeitem]").TextContent.Trim(), StringComparison.Ordinal);
+    }
+
+    private sealed class CountingStrings : IStringLocalizer<BpmnStrings>
+    {
+        private readonly BpmnResourceStringLocalizer _inner = new();
+        public int Lookups { get; private set; }
+        public string TypePrefix { get; set; } = string.Empty;
+        public LocalizedString this[string name]
+        {
+            get
+            {
+                Lookups++;
+                var value = _inner[name];
+                return name.StartsWith("AccessibleType.", StringComparison.Ordinal)
+                    ? new(name, TypePrefix + value.Value, value.ResourceNotFound) : value;
+            }
+        }
+        public LocalizedString this[string name, params object[] arguments] { get { Lookups++; return _inner[name, arguments]; } }
+        public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => _inner.GetAllStrings(includeParentCultures);
+    }
+
     /// <summary>Start → Task → Gateway, with the Gateway branching to two Ends.</summary>
     private static IReadOnlyList<BpmnGraphNode> Graph() =>
     [

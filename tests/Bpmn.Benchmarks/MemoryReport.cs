@@ -41,6 +41,16 @@ internal static class MemoryReport
         var canvasPayload = Interop.CanvasDocumentPayload.Serialize(document);
         Console.WriteLine($"canvas payload (what loadDocument sends now): {canvasPayload.Length:N0} characters, {timer.Elapsed.TotalMilliseconds:F1} ms");
 
+        var deleted = BpmnDocumentEditor.Apply(document, new DeleteElementsCommand([document.FlowNodes[0].Id]));
+        if (!deleted.IsApplied) throw new InvalidOperationException("The benchmark fixture must allow deleting its first node.");
+        Allocation("canvas delete patch", () =>
+            Interop.CanvasDocumentPatch.Create(document, deleted.Document, null, 0, 1)
+            ?? throw new InvalidOperationException("The benchmark fixture must support incremental node deletion."));
+        var deletePatch = Interop.CanvasDocumentPatch.Create(document, deleted.Document, null, 0, 1)!;
+        Console.WriteLine($"canvas delete patch: {JsonSerializer.Serialize(deletePatch, Web).Length:N0} characters, "
+            + $"{deletePatch.Collections.Sum(change => change.Delta.Upserts.Count)} semantic upserts, "
+            + $"{deletePatch.Planes.Sum(change => (change.Shapes?.Upserts.Count ?? 0) + (change.Edges?.Upserts.Count ?? 0))} DI upserts");
+
         // Where the interop payload goes, by top-level property of the document and by the biggest element collections.
         using (var json = JsonDocument.Parse(payload))
         {

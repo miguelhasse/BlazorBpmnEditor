@@ -212,8 +212,7 @@ public sealed partial class BpmnEditorSession
     /// edit anywhere can change what a snapshot says, and a panel showing a snapshot taken when the
     /// element was selected is the stale standard field section 7 forbids.
     /// </remarks>
-    public IReadOnlyList<BpmnElementSnapshot> SelectionSnapshots =>
-        [.. _selection.Select(Describe).OfType<BpmnElementSnapshot>()];
+    public IReadOnlyList<BpmnElementSnapshot> SelectionSnapshots => DescribeSelection();
 
     /// <summary>
     /// Every place the document names the selected element.

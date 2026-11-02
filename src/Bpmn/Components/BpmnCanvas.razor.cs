@@ -99,6 +99,8 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
     /// <summary>The last selection it reported, for the same reason.</summary>
     private IReadOnlyList<string> _selected = [];
     private BpmnDocument? _renderedDocument;
+    private BpmnDocument? _residentDocument;
+    private long _residentRevision;
 
     /// <summary>
     /// The <see cref="DiagramId"/> value the canvas last rendered for.
@@ -396,7 +398,6 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
 
         // What is sent is what is recorded as drawn: the parameters may change while the browser works, and the next pass has to see that.
         var sentDocument = Document;
-        var sentDiagramId = DiagramId;
 
         var instance = await _module
             .InvokeAsync<IJSObjectReference>(
@@ -447,7 +448,10 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
         _instance = instance;
         _appliedConfig = config;
         _renderedDocument = sentDocument;
-        _renderedDiagramId = sentDiagramId;
+        _residentDocument = sentDocument;
+        _residentRevision = 0;
+        // initialize always loads the first diagram; an explicit DiagramId is synchronized next.
+        _renderedDiagramId = null;
 
         if (_pendingInitialized is { } pending)
         {
@@ -574,10 +578,23 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
                 return false;
             }
 
-            if (!await instance.InvokeAsync<bool>("deleteElements", _disposalCts.Token, elementIds).ConfigureAwait(true))
+            var revision = _residentRevision + 1;
+            if (!ReferenceEquals(_residentDocument, expectedDocument)
+                || CanvasDocumentPatch.Create(expectedDocument, document, DiagramId, _residentRevision, revision) is not { } patch)
+                return false;
+
+            var removalOnly = patch.Collections.All(change => change.Delta.Upserts.Count == 0 && change.Delta.Order is null)
+                && patch.Planes.All(change =>
+                    (change.Shapes is null || change.Shapes.Upserts.Count == 0 && change.Shapes.Order is null)
+                    && (change.Edges is null || change.Edges.Upserts.Count == 0 && change.Edges.Order is null));
+            var deleted = removalOnly
+                && await instance.InvokeAsync<bool>("deleteElements", _disposalCts.Token, elementIds, revision).ConfigureAwait(true);
+            if (!deleted && await instance.InvokeAsync<DocumentLoaded?>("patchDocument", _disposalCts.Token, patch).ConfigureAwait(true) is null)
                 return false;
 
             _renderedDocument = document;
+            _residentDocument = document;
+            _residentRevision = revision;
             _renderedDiagramId = DiagramId;
             return true;
         }
@@ -625,17 +642,36 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
     private async Task SynchronizeDocumentAsync()
     {
         if (_instance is null || _disposed) return;
-        if (ReferenceEquals(_renderedDocument, Document) && _renderedDiagramId == DiagramId) return;
+        if (ReferenceEquals(_renderedDocument, Document) && ReferenceEquals(_residentDocument, Document)
+            && _renderedDiagramId == DiagramId) return;
         if (Document is null) return;
 
         var sentDocument = Document;
         var sentDiagramId = DiagramId;
+        var revision = _residentRevision + 1;
+        if (_renderedDocument is not null && _residentDocument is { } resident
+            && _renderedDiagramId == sentDiagramId
+            && CanvasDocumentPatch.Create(resident, sentDocument, sentDiagramId, _residentRevision, revision) is { } patch)
+        {
+            var patched = await _instance.InvokeAsync<DocumentLoaded?>(
+                "patchDocument", _disposalCts.Token, patch).ConfigureAwait(true);
+            if (patched is not null)
+            {
+                _renderedDocument = sentDocument;
+                _residentDocument = sentDocument;
+                _residentRevision = revision;
+                await OnDocumentLoaded.InvokeAsync(patched).ConfigureAwait(true);
+                return;
+            }
+        }
         var loaded = await _instance
-            .InvokeAsync<DocumentLoaded?>("loadDocument", _disposalCts.Token, CanvasDocumentPayload.For(sentDocument), sentDiagramId)
+            .InvokeAsync<DocumentLoaded?>("loadDocument", _disposalCts.Token, CanvasDocumentPayload.For(sentDocument), sentDiagramId, revision)
             .ConfigureAwait(true);
 
         // Recorded as what was sent, not as whatever the parameters are by now: a host that moved on while the browser worked is loaded again by the next pass.
         _renderedDocument = sentDocument;
+        _residentDocument = sentDocument;
+        _residentRevision = revision;
         _renderedDiagramId = sentDiagramId;
 
         if (loaded is not null)

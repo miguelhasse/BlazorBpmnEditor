@@ -69,6 +69,8 @@ internal static class CanvasDocumentPayload
     /// <returns>The JSON the canvas is sent.</returns>
     internal static string Serialize(BpmnDocument document) => JsonSerializer.Serialize(document, Options);
 
+    internal static JsonElement Project<T>(T value) => JsonSerializer.SerializeToElement(value, Options);
+
     private static void Trim(JsonTypeInfo type)
     {
         if (type.Kind != JsonTypeInfoKind.Object) return;

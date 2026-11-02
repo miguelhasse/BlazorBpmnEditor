@@ -504,8 +504,8 @@ public static partial class BpmnValidator
                     detail: BpmnDiagnosticText.Create("D010.Detail", "{0} has {1} Sequence Flow crossing its boundary.", Name(sub), crossing)));
             }
 
-            var starts = index.Document.FlowNodes
-                .Where(node => node.ContainerId == sub.Id && node.Type == BpmnFlowNodeType.StartEvent)
+            var starts = index.NodesByContainer[sub.Id]
+                .Where(node => node.Type == BpmnFlowNodeType.StartEvent)
                 .ToList();
 
             if (starts.Count != 1)
@@ -596,12 +596,10 @@ public static partial class BpmnValidator
     /// </remarks>
     private static void CheckReachability(DocumentIndex index, List<BpmnDiagnostic> found)
     {
-        foreach (var container in index.Document.FlowNodes
-            .Select(node => node.ContainerId)
-            .Distinct(StringComparer.Ordinal))
+        foreach (var container in index.NodesByContainer)
         {
-            var nodes = index.Document.FlowNodes
-                .Where(node => node.ContainerId == container && node.Type != BpmnFlowNodeType.BoundaryEvent)
+            var nodes = container
+                .Where(node => node.Type != BpmnFlowNodeType.BoundaryEvent)
                 .ToList();
 
             var starts = nodes.Where(node => node.Type == BpmnFlowNodeType.StartEvent).ToList();

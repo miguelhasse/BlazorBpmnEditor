@@ -13,17 +13,48 @@ internal static partial class ConnectorEndpoints
     {
         if (document.Associations.Count == 0) return document;
 
-        var changed = false;
-        var diagrams = document.Diagrams.Select(diagram =>
+        BpmnDiagram[]? diagrams = null;
+        for (var diagramIndex = 0; diagramIndex < document.Diagrams.Count; diagramIndex++)
         {
+            var diagram = document.Diagrams[diagramIndex];
             var oldPlane = before?.Diagrams.FirstOrDefault(candidate => candidate.Id == diagram.Id)?.Plane;
-            var flows = diagram.Plane.Edges
-                .Where(edge => document.Find(edge.BpmnElement) is BpmnSequenceFlow or BpmnMessageFlow)
-                .GroupBy(edge => edge.BpmnElement, StringComparer.Ordinal)
-                .ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
-            var planeChanged = false;
-            var movedAnnotations = new Dictionary<string, BpmnShape>(StringComparer.Ordinal);
-            var edges = diagram.Plane.Edges.Select(edge =>
+            var flows = new Dictionary<string, BpmnEdge>(StringComparer.Ordinal);
+            foreach (var edge in diagram.Plane.Edges)
+                if (document.Find(edge.BpmnElement) is BpmnSequenceFlow or BpmnMessageFlow)
+                    flows.TryAdd(edge.BpmnElement, edge);
+            if (flows.Count == 0) continue;
+            var shapes = new Dictionary<string, BpmnShape>(StringComparer.Ordinal);
+            foreach (var shape in diagram.Plane.Shapes) shapes.TryAdd(shape.BpmnElement, shape);
+            var oldEdges = new Dictionary<string, BpmnEdge>(StringComparer.Ordinal);
+            var oldShapes = new Dictionary<string, BpmnShape>(StringComparer.Ordinal);
+            if (oldPlane is not null)
+            {
+                foreach (var edge in oldPlane.Edges) oldEdges.TryAdd(edge.BpmnElement, edge);
+                foreach (var shape in oldPlane.Shapes) oldShapes.TryAdd(shape.Id, shape);
+            }
+            Dictionary<string, BpmnShape>? movedAnnotations = null;
+            BpmnEdge[]? edges = null;
+            for (var edgeIndex = 0; edgeIndex < diagram.Plane.Edges.Count; edgeIndex++)
+            {
+                var edge = diagram.Plane.Edges[edgeIndex];
+                var followed = FollowEdge(edge);
+                if (ReferenceEquals(followed, edge)) continue;
+                edges ??= [.. diagram.Plane.Edges];
+                edges[edgeIndex] = followed;
+            }
+            if (edges is null && movedAnnotations is null) continue;
+            diagrams ??= [.. document.Diagrams];
+            diagrams[diagramIndex] = diagram with
+            {
+                Plane = diagram.Plane with
+                {
+                    Edges = edges ?? diagram.Plane.Edges,
+                    Shapes = movedAnnotations is null ? diagram.Plane.Shapes : [.. diagram.Plane.Shapes.Select(shape =>
+                        movedAnnotations.TryGetValue(shape.BpmnElement, out var movedShape) ? movedShape : shape)],
+                },
+            };
+
+            BpmnEdge FollowEdge(BpmnEdge edge)
             {
                 if (document.Find(edge.BpmnElement) is not BpmnAssociation association || edge.Waypoints.Count < 2) return edge;
                 var sourceIsFlow = flows.TryGetValue(association.SourceRef, out var sourceFlow);
@@ -33,14 +64,13 @@ internal static partial class ConnectorEndpoints
                 var flow = sourceIsFlow ? sourceFlow! : targetFlow!;
                 var annotationId = sourceIsFlow ? association.TargetRef : association.SourceRef;
                 if (document.Find(annotationId) is not BpmnTextAnnotation) return edge;
-                var annotationShape = diagram.Plane.Shapes.FirstOrDefault(shape => shape.BpmnElement == annotationId);
+                var annotationShape = shapes.GetValueOrDefault(annotationId);
                 if (annotationShape is null || flow.Waypoints.Count < 2) return edge;
 
-                var route = edge.Waypoints.ToArray();
-                var flowEnd = sourceIsFlow ? 0 : route.Length - 1;
-                var annotationEnd = sourceIsFlow ? route.Length - 1 : 0;
-                var oldEdge = oldPlane?.Edges.FirstOrDefault(candidate => candidate.BpmnElement == edge.BpmnElement);
-                var oldFlow = oldPlane?.Edges.FirstOrDefault(candidate => candidate.BpmnElement == flow.BpmnElement);
+                var flowPoint = sourceIsFlow ? edge.Waypoints[0] : edge.Waypoints[^1];
+                var annotationPoint = sourceIsFlow ? edge.Waypoints[^1] : edge.Waypoints[0];
+                var oldEdge = oldEdges.GetValueOrDefault(edge.BpmnElement);
+                var oldFlow = oldEdges.GetValueOrDefault(flow.BpmnElement);
                 var oldAssociation = before?.Find(association.Id) as BpmnAssociation;
                 var follows = oldEdge is { Waypoints.Count: >= 2 } && oldFlow is { Waypoints.Count: >= 2 }
                     && oldAssociation?.SourceRef == association.SourceRef && oldAssociation.TargetRef == association.TargetRef
@@ -49,9 +79,9 @@ internal static partial class ConnectorEndpoints
                 var oldPath = follows ? RoundedFlowPath.Flatten(oldFlow!.Waypoints) : null;
                 var ratio = follows
                     ? ClosestRatio(oldPath!, sourceIsFlow ? oldEdge!.Waypoints[0] : oldEdge!.Waypoints[^1])
-                    : ClosestRatio(path, route[flowEnd]);
+                    : ClosestRatio(path, flowPoint);
                 var point = PointAtRatio(path, ratio);
-                var oldAnnotation = oldPlane?.Shapes.FirstOrDefault(shape => shape.Id == annotationShape.Id);
+                var oldAnnotation = oldShapes.GetValueOrDefault(annotationShape.Id);
                 if (follows && oldAnnotation?.Bounds == annotationShape.Bounds
                     && positionedAnnotations?.Contains(annotationShape.Id) != true
                     && BpmnAnnotationAttachments.UniqueConnection(document, annotationId)?.Id == association.Id)
@@ -61,33 +91,28 @@ internal static partial class ConnectorEndpoints
                     if (Math.Abs(delta.X) > 0.01 || Math.Abs(delta.Y) > 0.01)
                     {
                         annotationShape = TranslateAnnotation(annotationShape, delta);
+                        movedAnnotations ??= new(StringComparer.Ordinal);
                         movedAnnotations[annotationId] = annotationShape;
-                        route[annotationEnd] = TranslatePoint(route[annotationEnd], delta);
-                        planeChanged = true;
+                        annotationPoint = TranslatePoint(annotationPoint, delta);
                     }
                 }
-                if (Distance(point, route[flowEnd]) > 0.01) route[flowEnd] = point;
-                route[annotationEnd] = BpmnOutline.Normalize(
-                    route[annotationEnd], BpmnOutline.Rectangle(annotationShape.Bounds), route[flowEnd]);
-                if (route.SequenceEqual(edge.Waypoints)) return edge;
+                if (Distance(point, flowPoint) > 0.01) flowPoint = point;
+                annotationPoint = BpmnOutline.Normalize(
+                    annotationPoint, BpmnOutline.Rectangle(annotationShape.Bounds), flowPoint);
+                var first = sourceIsFlow ? flowPoint : annotationPoint;
+                var last = sourceIsFlow ? annotationPoint : flowPoint;
+                if (first == edge.Waypoints[0] && last == edge.Waypoints[^1]) return edge;
 
                 moved?.Add(new MovedConnector(edge.BpmnElement,
-                    Math.Max(Distance(route[0], edge.Waypoints[0]), Distance(route[^1], edge.Waypoints[^1]))));
-                planeChanged = true;
-                return edge with { Waypoints = follows ? [route[0], route[^1]] : route };
-            }).ToArray();
-            changed |= planeChanged;
-            return planeChanged ? diagram with
-            {
-                Plane = diagram.Plane with
-                {
-                    Edges = edges,
-                    Shapes = [.. diagram.Plane.Shapes.Select(shape =>
-                        movedAnnotations.TryGetValue(shape.BpmnElement, out var movedShape) ? movedShape : shape)],
-                },
-            } : diagram;
-        }).ToArray();
-        return changed ? document with { Diagrams = diagrams } : document;
+                    Math.Max(Distance(first, edge.Waypoints[0]), Distance(last, edge.Waypoints[^1]))));
+                if (follows) return edge with { Waypoints = [first, last] };
+                var route = edge.Waypoints.ToArray();
+                route[0] = first;
+                route[^1] = last;
+                return edge with { Waypoints = route };
+            }
+        }
+        return diagrams is null ? document : document with { Diagrams = diagrams };
     }
 
     private static double ClosestRatio(IReadOnlyList<DiPoint> route, DiPoint point)
@@ -118,7 +143,8 @@ internal static partial class ConnectorEndpoints
 
     private static DiPoint PointAtRatio(IReadOnlyList<DiPoint> route, double ratio)
     {
-        var total = route.Zip(route.Skip(1), Distance).Sum();
+        double total = 0;
+        for (var index = 1; index < route.Count; index++) total += Distance(route[index - 1], route[index]);
         var remaining = total * ratio;
         for (var index = 1; index < route.Count; index++)
         {

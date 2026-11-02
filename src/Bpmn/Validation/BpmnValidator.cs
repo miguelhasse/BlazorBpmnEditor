@@ -71,7 +71,7 @@ public static partial class BpmnValidator
         CheckExpansion(index, found);
         foreach (var annotation in document.TextAnnotations)
         {
-            if (BpmnAnnotationAttachments.Connections(document, annotation.Id).Skip(1).Any())
+            if (index.AnnotationConnections.GetValueOrDefault(annotation.Id) > 1)
             {
                 found.Add(new BpmnDiagnostic("AN-001", BpmnSeverity.Warning,
                     "Editor policy allows one target per Text Annotation. Multiple bindings have no lifecycle owner.", annotation.Id));
@@ -106,6 +106,11 @@ public static partial class BpmnValidator
     {
         public BpmnDocument Document { get; } = document;
 
+        public ILookup<string, BpmnFlowNode> NodesByContainer { get; } =
+            document.FlowNodes.ToLookup(node => node.ContainerId, StringComparer.Ordinal);
+
+        public IReadOnlyDictionary<string, int> AnnotationConnections { get; } = CountAnnotationConnections(document);
+
         /// <summary>Sequence Flows arriving at each node.</summary>
         public ILookup<string, BpmnSequenceFlow> Incoming { get; } =
             document.SequenceFlows.ToLookup(flow => flow.TargetRef, StringComparer.Ordinal);
@@ -134,6 +139,22 @@ public static partial class BpmnValidator
 
         /// <summary>Finds a flow node, or null.</summary>
         public BpmnFlowNode? Node(string? id) => id is null ? null : Document.FindFlowNode(id);
+
+        private static Dictionary<string, int> CountAnnotationConnections(BpmnDocument document)
+        {
+            var counts = new Dictionary<string, int>(StringComparer.Ordinal);
+            if (document.TextAnnotations.Count == 0) return counts;
+
+            var annotations = document.TextAnnotations.Select(annotation => annotation.Id).ToHashSet(StringComparer.Ordinal);
+            foreach (var association in document.Associations)
+            {
+                if (annotations.Contains(association.SourceRef))
+                    counts[association.SourceRef] = counts.GetValueOrDefault(association.SourceRef) + 1;
+                if (association.TargetRef != association.SourceRef && annotations.Contains(association.TargetRef))
+                    counts[association.TargetRef] = counts.GetValueOrDefault(association.TargetRef) + 1;
+            }
+            return counts;
+        }
     }
 
     /// <summary>The Pool a node belongs to, which is what SF-006 and MF-002 compare.</summary>

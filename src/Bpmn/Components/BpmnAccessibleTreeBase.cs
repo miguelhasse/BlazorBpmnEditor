@@ -50,6 +50,12 @@ public abstract class BpmnAccessibleTreeBase : BpmnCanvasWidgetBase<BpmnAccessib
     /// <summary>The diagram, in reading order.</summary>
     protected IReadOnlyList<BpmnGraphNode> Items => WidgetState?.Nodes ?? [];
 
+    internal IEnumerable<(BpmnGraphNode Node, string Name)> NamedItems()
+    {
+        var display = Display.ForAccessibleRender();
+        foreach (var node in Items) yield return (node, display.AccessibleName(node));
+    }
+
     /// <summary>The element the reader is on.</summary>
     protected string? Here => WidgetState?.Current;
 

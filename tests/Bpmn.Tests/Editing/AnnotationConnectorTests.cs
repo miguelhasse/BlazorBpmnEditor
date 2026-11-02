@@ -12,6 +12,22 @@ public sealed class AnnotationConnectorTests
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
+    public void FollowingAnUnchangedFlowAttachmentPreservesDocumentAndReportsNothing(bool message)
+    {
+        var document = Connect(Document(message)).Document;
+        var moved = new List<MovedConnector>();
+
+        var followed = ConnectorEndpoints.FollowFlowAttachments(document, document, moved);
+
+        Assert.Same(document, followed);
+        Assert.Empty(moved);
+        Assert.Same(document, ConnectorEndpoints.Normalize(document, moved));
+        Assert.Empty(moved);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
     public void CreatesAnUndirectedAssociationWithInferredAnnotationOwnership(bool message)
     {
         var result = Connect(Document(message));

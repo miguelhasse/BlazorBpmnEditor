@@ -19,7 +19,7 @@
         </li>
     }
 
-    @foreach (var node in Items)
+    @foreach (var (node, name) in NamedItems())
     {
         @*
             Roving tabindex: exactly one item is reachable by Tab and the arrow keys move between
@@ -38,13 +38,13 @@
             role="treeitem"
             id="@ItemId(node.ElementId)"
             aria-level="@node.Depth"
-            aria-selected="@((node.ElementId == Here).ToString().ToLowerInvariant())"
+            aria-selected="@(node.ElementId == Here ? "true" : "false")"
             aria-expanded="@Expanded(node)"
             tabindex="@(IsTabStop(node) ? 0 : -1)"
             @key="node.ElementId"
             @ref="ItemRefs[node.ElementId]"
             @onfocus="@(() => FocusAsync(node.ElementId))">
-            @Display.AccessibleName(node)
+            @name
         </li>
     }
 </ul>

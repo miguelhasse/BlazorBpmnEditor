@@ -35,6 +35,8 @@ import type {
 import { ShortcutController } from '../input/shortcuts.js';
 import { CanvasFontMetrics, type FontMetricsProvider } from '../labels/font-metrics.js';
 import type { BpmnDocumentContract } from '../model/contracts.js';
+import { resolveDiagram } from '../model/document.js';
+import { applyDocumentPatch, type CanvasDocumentPatch } from '../model/document-patch.js';
 import { SnapController } from '../snapping/snap-controller.js';
 import { ViewportController } from '../viewport/viewport.js';
 
@@ -88,6 +90,8 @@ export class BpmnCanvasInstance {
 
   #document: BpmnDocumentContract | null = null;
   #activeDiagramId: string | null = null;
+  #revision = 0;
+  #loaded: DocumentLoadedPayload | null = null;
   #disposed = false;
 
   /** Keeps the quick-action strip beside the selected element; null until built and after disposal. */
@@ -503,11 +507,37 @@ export class BpmnCanvasInstance {
   }
 
   /** Replaces the rendered document and reports what was drawn. */
-  public loadDocument(document: BpmnDocumentContract, diagramId: string | null): DocumentLoadedPayload {
+  public loadDocument(document: BpmnDocumentContract, diagramId: string | null, revision = 0): DocumentLoadedPayload {
     this.#assertUsable();
     this.#document = document;
+    this.#revision = revision;
 
-    const result = renderDocument(this.#paperHost.graph, document, diagramId, this.#metrics);
+    return this.#render(document, diagramId, false);
+  }
+
+  /** Null means the base is no longer resident: the caller must send a full document. */
+  public patchDocument(patch: CanvasDocumentPatch): DocumentLoadedPayload | null {
+    this.#assertUsable();
+    const document = this.#document;
+    if (document === null || patch.baseRevision !== this.#revision
+      || !Number.isSafeInteger(patch.revision) || patch.revision <= patch.baseRevision
+      || resolveDiagram(document, patch.diagramId)?.id !== this.#activeDiagramId) return null;
+    const next = applyDocumentPatch(document, patch);
+    if (next === null) return null;
+    this.#document = next;
+    this.#revision = patch.revision;
+    try {
+      if (patch.collections.length === 0 && patch.planes.length === 0) return this.#loaded;
+      return this.#render(next, patch.diagramId, true);
+    } catch (error) {
+      // A partially reconciled graph cannot acknowledge another patch based on this document.
+      this.#document = null;
+      throw error;
+    }
+  }
+
+  #render(document: BpmnDocumentContract, diagramId: string | null, incremental: boolean): DocumentLoadedPayload {
+    const result = renderDocument(this.#paperHost.graph, document, diagramId, this.#metrics, incremental);
     this.#activeDiagramId = result.diagramId;
     this.#accessibility.describe(result.diagramId, result.shapeCount, result.edgeCount);
 
@@ -524,7 +554,7 @@ export class BpmnCanvasInstance {
     // plane and back rather than being something the host has to push again.
     this.#execution.draw();
 
-    return {
+    return this.#loaded = {
       diagramId: result.diagramId,
       shapeCount: result.shapeCount,
       edgeCount: result.edgeCount,
@@ -533,7 +563,7 @@ export class BpmnCanvasInstance {
   }
 
   /** Applies a host-confirmed deletion without rebuilding unaffected cells. */
-  public deleteElements(elementIds: readonly string[]): boolean {
+  public deleteElements(elementIds: readonly string[], revision = this.#revision + 1): boolean {
     this.#assertUsable();
     const document = this.#document;
     if (document === null || this.#activeDiagramId === null) return false;
@@ -542,6 +572,14 @@ export class BpmnCanvasInstance {
     if (updated === null) return false;
 
     this.#document = updated;
+    this.#revision = revision;
+    const removed = new Set(elementIds);
+    this.#loaded = {
+      diagramId: this.#activeDiagramId,
+      shapeCount: this.#paperHost.graph.getElements().length,
+      edgeCount: this.#paperHost.graph.getLinks().length,
+      unrenderedElementIds: this.#loaded?.unrenderedElementIds.filter((id) => !removed.has(id)) ?? [],
+    };
     this.#accessibility.describe(
       this.#activeDiagramId,
       this.#paperHost.graph.getElements().length,
@@ -557,7 +595,7 @@ export class BpmnCanvasInstance {
   public setActiveDiagram(diagramId: string): DocumentLoadedPayload | null {
     this.#assertUsable();
     if (this.#document === null) return null;
-    return this.loadDocument(this.#document, diagramId);
+    return this.loadDocument(this.#document, diagramId, this.#revision);
   }
 
   public setViewport(command: ViewportCommand): void {

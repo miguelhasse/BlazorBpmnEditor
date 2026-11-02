@@ -30,8 +30,7 @@ public sealed class BpmnElementTemplateValidator(BpmnTemplateOptions options) : 
                     deprecated.Message is { } custom
                         ? BpmnDiagnosticText.Create("PROF-104.Detail.Custom", "{0}", custom)
                         : BpmnDiagnosticText.Create("PROF-104", "Template '{0}' is deprecated.", template.Name), id);
-            var snapshot = BpmnElementInspector.Describe(document, id);
-            if (snapshot is not null && BpmnTemplateSelection.Upgrade(snapshot, template, options) is { } newer)
+            if (BpmnTemplateSelection.Upgrade(document, id, template, options) is { } newer)
                 yield return FromText("PROF-105", BpmnSeverity.Info,
                     BpmnDiagnosticText.Create("PROF-105", "Template '{0}' version {1} is available.", template.Name, newer.Version), id);
             var values = BpmnTemplateValues.Read(document, id, template);
