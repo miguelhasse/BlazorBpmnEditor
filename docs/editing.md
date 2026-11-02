@@ -274,6 +274,29 @@ directly in a Collaboration. Host palette curation and read-only behavior are un
 Explicit active containers and selected specialized containers retain their rules: an Event
 Sub-Process disables its untyped Start Event, and a selected black-box Pool offers nothing.
 
+`BpmnStencilPanelBase.ShowLabels` defaults to `true`. Set `ShowLabels="false"` on
+`BpmnStencilPanel` or `FluentBpmnStencilPanel` for compact, wrapping icon grids with no visible tool
+labels or group headings, including templates. Tool names remain available to assistive technology
+and tooltips retain descriptions and disabled reasons. Template search is hidden in icon-only mode;
+its value is preserved when labels return. The icon-only, keyboard-accessible Templates disclosure
+remains available. Creation and drop rules do not change.
+This changes the panel layout, not the enclosing editor's sidebar width.
+
+Use the existing stencil slot to choose the layout in a composite editor:
+
+```razor
+<BpmnEditor ShowStencil="true">
+    <StencilContent>
+        <BpmnStencilPanel ShowLabels="false" />
+    </StencilContent>
+</BpmnEditor>
+```
+
+For the Fluent kit, use `FluentBpmnEditor` and `FluentBpmnStencilPanel` in the same pattern.
+The playground demonstrates either kit's icon layout with `/editor?stencilLabels=false`
+(add `&plain=true` for the standard kit). Its Settings popover also includes a **Show stencil labels**
+switch to change the layout immediately.
+
 Template stencil entries require a creatable Flow Node matching the template's `appliesTo`.
 `elementType.value` takes precedence; otherwise the first concrete `appliesTo` target is used.
 Task, Activity and FlowNode targets may resolve to a plain Task only when that Task is applicable.

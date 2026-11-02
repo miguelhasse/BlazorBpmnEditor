@@ -8,6 +8,9 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Components;
 
 internal static class KitFixture
 {
+    public static Task SearchStencilAsync(IRenderedComponent<Microsoft.AspNetCore.Components.DynamicComponent> panel, string value) =>
+        panel.InvokeAsync(() => panel.FindComponent<FluentTextInput>().Instance.ValueChanged.InvokeAsync(value));
+
     public static Task ChangeColorAsync(IRenderedComponent<Microsoft.AspNetCore.Components.DynamicComponent> editor,
         string channel, string color)
     {

@@ -29,6 +29,16 @@ public abstract class BpmnStencilPanelBase : BpmnEditorComponentBase
     [Parameter]
     public string? EmptyMessage { get; set; }
 
+    /// <summary>
+    /// Whether tool and group labels are visible. Defaults to true; false shows wrapping icon
+    /// grids and hides template search while retaining accessible names and tooltips.
+    /// </summary>
+    [Parameter]
+    public bool ShowLabels { get; set; } = true;
+
+    /// <summary>The root classes for the selected layout and host styling.</summary>
+    protected string StencilClass => CssClass(ShowLabels ? "bpmn-stencil" : "bpmn-stencil bpmn-stencil--icons");
+
     /// <summary>The search text of the template list; bind it to the search box.</summary>
     protected string TemplateSearch { get; set; } = string.Empty;
 

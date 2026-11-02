@@ -162,6 +162,11 @@
         <target state="translated">서비스가 제때 응답하지 않았습니다.</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.ShowStencilLabels">
+        <source>Show stencil labels</source>
+        <target state="new">Show stencil labels</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.SimulateExternalChange">
         <source>Simulate external change</source>
         <target state="translated">외부 변경 시뮬레이션</target>

@@ -25,6 +25,159 @@ namespace Hasseware.AspNetCore.Components.Bpmn.E2E.Tests;
 /// </remarks>
 public class StencilTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFixture>
 {
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task SettingsSwitchChangesStencilLabelsAndPersistsAcrossReopening(bool showLabels)
+    {
+        await GoToEditorAsync(showLabels);
+        var settings = Page.GetByRole(AriaRole.Button, new() { Name = "Settings", Exact = true });
+        await settings.ClickAsync();
+        var toggle = Page.GetByRole(AriaRole.Switch, new() { Name = "Show stencil labels", Exact = true });
+        await Expect(toggle).ToBeCheckedAsync(new() { Checked = showLabels });
+        await toggle.SetCheckedAsync(!showLabels);
+        await Page.Keyboard.PressAsync("Escape");
+
+        var stencil = Page.Locator(".bpmn-stencil");
+        await Expect(stencil.Locator(".bpmn-stencil__label").First)
+            .ToHaveCSSAsync("position", showLabels ? "absolute" : "static");
+        var search = stencil.Locator("input.bpmn-stencil__search, .bpmn-stencil__search input");
+        if (showLabels)
+            await Expect(search).ToBeHiddenAsync();
+        else
+            await Expect(search).ToBeVisibleAsync();
+
+        await settings.ClickAsync();
+        await Expect(toggle).ToBeCheckedAsync(new() { Checked = !showLabels });
+        await toggle.SetCheckedAsync(showLabels);
+        await Page.Keyboard.PressAsync("Escape");
+        await Expect(stencil.Locator(".bpmn-stencil__label").First)
+            .ToHaveCSSAsync("position", showLabels ? "static" : "absolute");
+    }
+
+    [Fact]
+    public async Task IconOnlyStencilKeepsAccessibleNamesAndWrapsToolsWithoutLabels()
+    {
+        await GoToEditorAsync(showLabels: false);
+        var stencil = Page.Locator(".bpmn-stencil");
+        await Expect(stencil).ToHaveClassAsync(new System.Text.RegularExpressions.Regex("bpmn-stencil--icons"));
+        await Expect(stencil.GetByRole(AriaRole.Option, new() { Name = "Task", Exact = true })).ToHaveCountAsync(1);
+        await Expect(stencil.GetByRole(AriaRole.Option, new() { Name = "HTTP request", Exact = true })).ToHaveCountAsync(1);
+        await Expect(stencil.Locator("summary")).ToHaveAccessibleNameAsync("Templates");
+        await Expect(stencil.Locator("summary")).ToBeVisibleAsync();
+        await Expect(stencil.GetByRole(AriaRole.Group, new() { Name = "Events", Exact = true })).ToHaveCountAsync(1);
+
+        var layout = await stencil.EvaluateAsync<bool[]>(
+            """
+            stencil => {
+              const groups = [...stencil.querySelectorAll('.bpmn-stencil__group')];
+              const tools = [...stencil.querySelectorAll('.bpmn-stencil__tool')];
+              const labels = [...stencil.querySelectorAll('.bpmn-stencil__label, .bpmn-stencil__summary-label')];
+              const grid = groups[0];
+              const first = grid.querySelectorAll('.bpmn-stencil__tool');
+              stencil.style.inlineSize = '240px';
+              const before = [...first].map(tool => tool.getBoundingClientRect());
+              stencil.style.inlineSize = '96px';
+              const wrapped = [...first].map(tool => tool.getBoundingClientRect());
+              stencil.style.removeProperty('inline-size');
+              return [
+                groups.every(group => getComputedStyle(group).display === 'grid'),
+                [...stencil.querySelectorAll('h3')].every(title => getComputedStyle(title).display === 'none'),
+                labels.every(label => getComputedStyle(label).clipPath === 'inset(50%)'),
+                tools.every(tool => Math.abs(tool.getBoundingClientRect().width - 40) < 1
+                  && Math.abs(tool.getBoundingClientRect().height - 40) < 1),
+                before[1].left > before[0].left && Math.abs(before[1].top - before[0].top) < 1,
+                wrapped[1].top > wrapped[0].top && Math.abs(wrapped[1].left - wrapped[0].left) < 1
+              ];
+            }
+            """);
+        Assert.All(layout, Assert.True);
+
+        var disclosure = stencil.Locator("summary");
+        await disclosure.FocusAsync();
+        await Page.Keyboard.PressAsync("Enter");
+        await Expect(stencil.Locator("details")).Not.ToHaveAttributeAsync("open", "");
+        await Page.Keyboard.PressAsync("Space");
+        await Expect(stencil.Locator("details")).ToHaveAttributeAsync("open", "");
+        var search = stencil.Locator("input.bpmn-stencil__search, .bpmn-stencil__search input");
+        await Expect(search).ToBeHiddenAsync();
+        await Expect(stencil.Locator(".bpmn-stencil__search")).ToHaveCSSAsync("display", "none");
+        await Expect(stencil.Locator(".bpmn-stencil__template-tool")).ToHaveCountAsync(3);
+        await Expect(stencil.GetByRole(AriaRole.Option, new() { Name = "HTTP request", Exact = true })).ToBeVisibleAsync();
+    }
+
+    [Fact]
+    public async Task StencilLabelSwitchPreservesSearchDisclosureAndDomIdentity()
+    {
+        await GoToEditorAsync();
+        var stencil = Page.Locator(".bpmn-stencil");
+        await Expect(stencil.Locator(".bpmn-stencil__label").First).ToHaveCSSAsync("position", "static");
+        await stencil.Locator("input.bpmn-stencil__search, .bpmn-stencil__search input").FillAsync("HTTP");
+        await stencil.Locator("summary").ClickAsync();
+        await Page.EvaluateAsync(
+            """
+            () => {
+              window.stencilLayoutNodes = [...document.querySelectorAll('.bpmn-stencil__tool')];
+              window.stencilLayoutDisclosure = document.querySelector('.bpmn-stencil details');
+            }
+            """);
+
+        foreach (var showLabels in new[] { false, true })
+        {
+            await Page.EvaluateAsync(
+                """
+                url => {
+                  const link = document.createElement('a');
+                  link.href = url;
+                  document.body.appendChild(link);
+                  link.click();
+                  link.remove();
+                }
+                """, EditorUrl(showLabels));
+            await Expect(stencil.Locator(".bpmn-stencil__label").First)
+                .ToHaveCSSAsync("position", showLabels ? "static" : "absolute");
+            if (showLabels)
+                await Expect(stencil.Locator(".bpmn-stencil__search")).Not.ToHaveCSSAsync("display", "none");
+            else
+                await Expect(stencil.Locator(".bpmn-stencil__search")).ToHaveCSSAsync("display", "none");
+            Assert.True(await Page.EvaluateAsync<bool>(
+                """
+                () => window.stencilLayoutNodes.every((node, index) =>
+                  node === document.querySelectorAll('.bpmn-stencil__tool')[index])
+                  && window.stencilLayoutDisclosure === document.querySelector('.bpmn-stencil details')
+                """));
+            await Expect(stencil.Locator("details")).Not.ToHaveAttributeAsync("open", "");
+            await Expect(stencil.Locator("input.bpmn-stencil__search, .bpmn-stencil__search input")).ToHaveValueAsync("HTTP");
+            await Expect(stencil.Locator(".bpmn-stencil__template-tool")).ToHaveCountAsync(1);
+        }
+
+        await stencil.Locator("summary").ClickAsync();
+        var search = stencil.Locator("input.bpmn-stencil__search, .bpmn-stencil__search input");
+        await Expect(search).ToBeVisibleAsync();
+        await search.FillAsync("no match");
+        await Expect(stencil.GetByRole(AriaRole.Status)).ToHaveTextAsync("No matching templates.");
+    }
+
+    [Fact]
+    public async Task IconOnlyStencilSupportsDraggingKeyboardCreationAndCollisionRejection()
+    {
+        await GoToEditorAsync(showLabels: false);
+        var before = await CellCountAsync();
+        var (x, y) = await FreeSpotAsync();
+        await DropToolAsync("Task", x, y);
+        await Expect(Page.Locator(".bpmn-canvas .joint-cell")).ToHaveCountAsync(before + 1);
+        var victim = await Page.Locator(".joint-cell[model-id^='Task_']").First.BoundingBoxAsync();
+        await DropToolAsync("Task", victim!.X + victim.Width / 2, victim.Y + victim.Height / 2);
+        await Expect(Page.Locator(".demo-edit-status")).ToContainTextAsync("DI-011");
+        await Expect(Page.Locator(".bpmn-canvas .joint-cell")).ToHaveCountAsync(before + 1);
+        await Page.Locator(".bpmn-stencil").GetByRole(AriaRole.Option, new() { Name = "Gateway", Exact = true }).FocusAsync();
+        await Page.Keyboard.PressAsync("Enter");
+        await Expect(Page.Locator(".bpmn-canvas .joint-cell")).ToHaveCountAsync(before + 2);
+        await Page.Locator(".bpmn-stencil").GetByRole(AriaRole.Option, new() { Name = "HTTP request", Exact = true }).FocusAsync();
+        await Page.Keyboard.PressAsync("Enter");
+        await Expect(Page.Locator(".bpmn-canvas .joint-cell")).ToHaveCountAsync(before + 3);
+    }
+
     [Fact]
     public async Task SubProcessStencilShowsACollapsedMarkerInsteadOfAnExpandedBorder()
     {
@@ -720,9 +873,13 @@ public class StencilTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppF
             .First.BoundingBoxAsync()
         ?? throw new InvalidOperationException($"no drawn body for '{modelId}'");
 
-    private async Task GoToEditorAsync()
+    private string EditorUrl(bool? showLabels = null) => showLabels is { } value
+        ? $"{app.Url(this)}{(KitRoute.For(this).Contains('?', StringComparison.Ordinal) ? "&" : "?")}stencilLabels={value.ToString().ToLowerInvariant()}"
+        : app.Url(this);
+
+    private async Task GoToEditorAsync(bool? showLabels = null)
     {
-        await Page.GotoAsync(app.Url(this));
+        await Page.GotoAsync(EditorUrl(showLabels));
 
         await Expect(Page.Locator(".bpmn-canvas__paper > svg")).ToBeVisibleAsync(new() { Timeout = 30_000 });
         await Expect(Page.Locator(".bpmn-canvas .joint-cell").First).ToBeVisibleAsync();

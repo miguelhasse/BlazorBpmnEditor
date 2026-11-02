@@ -79,6 +79,19 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
     [SupplyParameterFromQuery(Name = "plain")]
     public bool Plain { get; set; }
 
+    /// <summary>Demonstrates the stencil panel's label-free layout with <c>?stencilLabels=false</c>.</summary>
+    [SupplyParameterFromQuery(Name = "stencilLabels")]
+    public bool? StencilLabels { get; set; }
+
+    private void OnStencilLabelsChanged(bool enabled) => StencilLabels = enabled;
+
+    private RenderFragment? DemoStencilContent => _readOnly ? null : builder =>
+    {
+        builder.OpenComponent(0, Plain ? typeof(BpmnStencilPanel) : typeof(FluentBpmnStencilPanel));
+        builder.AddAttribute(1, nameof(BpmnStencilPanel.ShowLabels), StencilLabels ?? true);
+        builder.CloseComponent();
+    };
+
     private bool HasEditor => _fluentEditor is not null || _plainEditor is not null;
 
     private BpmnDocument? _document;

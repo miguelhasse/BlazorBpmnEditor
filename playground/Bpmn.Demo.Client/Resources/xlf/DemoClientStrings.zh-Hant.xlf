@@ -162,6 +162,11 @@
         <target state="translated">服務未在時限內回應。</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.ShowStencilLabels">
+        <source>Show stencil labels</source>
+        <target state="new">Show stencil labels</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.SimulateExternalChange">
         <source>Simulate external change</source>
         <target state="translated">模擬外部變更</target>

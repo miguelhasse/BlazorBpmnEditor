@@ -53,8 +53,8 @@ public class DemoControlsTests(DemoAppFixture app) : PageTest, IClassFixture<Dem
     {
         await GoToEditorAsync();
         await SettingsButton.ClickAsync();
-        await Expect(SettingsPopover.GetByRole(AriaRole.Switch)).ToHaveCountAsync(6);
-        await Expect(SettingsPopover.Locator("fluent-switch[checked]")).ToHaveCountAsync(0);
+        await Expect(SettingsPopover.GetByRole(AriaRole.Switch)).ToHaveCountAsync(7);
+        await Expect(SettingsPopover.Locator("fluent-switch[checked]")).ToHaveCountAsync(1);
 
         var contrast = SettingsPopover.GetByRole(AriaRole.Switch, new() { Name = "High contrast", Exact = true });
         await contrast.CheckAsync();
@@ -82,7 +82,7 @@ public class DemoControlsTests(DemoAppFixture app) : PageTest, IClassFixture<Dem
 
         await SettingsButton.ClickAsync();
         await SettingsPopover.GetByRole(AriaRole.Switch, new() { Name = "Offer to browser agents (WebMCP)", Exact = true }).CheckAsync();
-        await Expect(SettingsPopover.GetByRole(AriaRole.Switch)).ToHaveCountAsync(7);
+        await Expect(SettingsPopover.GetByRole(AriaRole.Switch)).ToHaveCountAsync(8);
 
         var after = await canvas.BoundingBoxAsync();
         Assert.NotNull(after);

@@ -162,6 +162,11 @@
         <target state="translated">Il servizio non ha risposto in tempo.</target>
         <note />
       </trans-unit>
+      <trans-unit id="Editor.ShowStencilLabels">
+        <source>Show stencil labels</source>
+        <target state="new">Show stencil labels</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Editor.SimulateExternalChange">
         <source>Simulate external change</source>
         <target state="translated">Simula modifica esterna</target>

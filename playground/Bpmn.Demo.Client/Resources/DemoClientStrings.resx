@@ -33,6 +33,7 @@
   <data name="Editor.ExportJson" xml:space="preserve"><value>Export JSON</value></data>
   <data name="Editor.OpenFile" xml:space="preserve"><value>Open file</value></data>
   <data name="Editor.SnapToGrid" xml:space="preserve"><value>Snap to grid</value></data>
+  <data name="Editor.ShowStencilLabels" xml:space="preserve"><value>Show stencil labels</value></data>
   <data name="Editor.Properties" xml:space="preserve"><value>Properties</value></data>
   <data name="Editor.HighContrast" xml:space="preserve"><value>High contrast</value></data>
   <data name="Live.Title" xml:space="preserve"><value>Live updates</value></data>

@@ -8,7 +8,7 @@
     Gateway and a dozen Tasks, and the icons come from the same manifest the canvas draws from, so
     a tool always looks like what it creates.
 *@
-<div class="@CssClass("bpmn-stencil")" role="listbox" aria-label="@EffectiveAriaLabel" aria-orientation="vertical" @attributes="AdditionalAttributes">
+<div class="@StencilClass" role="listbox" aria-label="@EffectiveAriaLabel" aria-orientation="vertical" @attributes="AdditionalAttributes">
     @if (Groups.Count == 0)
     {
         <p class="bpmn-stencil__empty">@EffectiveEmptyMessage</p>
@@ -66,7 +66,7 @@
     @if (TemplateGroups.Count > 0)
     {
         <details class="bpmn-stencil__templates" open>
-            <summary class="bpmn-stencil__title">@EditorText("StencilPanel.Templates")</summary>
+            <summary class="bpmn-stencil__title"><span class="bpmn-stencil__summary-label">@EditorText("StencilPanel.Templates")</span></summary>
             <input class="bpmn-stencil__search" type="search" aria-label="@EditorText("StencilPanel.SearchTemplates")"
                    placeholder="@EditorText("StencilPanel.SearchTemplates")" @bind="TemplateSearch" @bind:event="oninput" />
             @foreach (var group in TemplateGroups)

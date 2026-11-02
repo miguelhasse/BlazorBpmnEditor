@@ -103,6 +103,10 @@
                     <FluentSwitch role="switch" aria-checked="@(_snapToGrid ? "true" : "false")"
                                   Value="@_snapToGrid" ValueChanged="@ToggleSnap"
                                   Label="@Localizer["Editor.SnapToGrid"]" />
+                    <FluentSwitch Class="demo-stencil-labels"
+                                  role="switch" aria-checked="@((StencilLabels ?? true) ? "true" : "false")"
+                                  Value="@(StencilLabels ?? true)" ValueChanged="@OnStencilLabelsChanged"
+                                  Label="@Localizer["Editor.ShowStencilLabels"]" />
                 </div>
                 <div data-controls="settings-group">
                     <FluentSwitch Class="demo-webmcp"
@@ -166,6 +170,7 @@
                 DocumentBinding="@_binding"
                 IsReadOnly="@_readOnly"
                 ShowStencil="true"
+                StencilContent="@DemoStencilContent"
                 ShowPanel="@_showProperties"
                 Theming="@_theme"
                 ExecutionAnimation="@(_animateTokens ? BpmnExecutionAnimation.Enabled : BpmnExecutionAnimation.Disabled)"
@@ -209,6 +214,7 @@
                 DocumentBinding="@_binding"
                 IsReadOnly="@_readOnly"
                 ShowStencil="true"
+                StencilContent="@DemoStencilContent"
                 ShowPanel="@_showProperties"
                 Theming="@_theme"
                 ExecutionAnimation="@(_animateTokens ? BpmnExecutionAnimation.Enabled : BpmnExecutionAnimation.Disabled)"

@@ -5,6 +5,12 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Components;
 
 internal static class KitFixture
 {
+    public static Task SearchStencilAsync(IRenderedComponent<Microsoft.AspNetCore.Components.DynamicComponent> panel, string value)
+    {
+        panel.Find(".bpmn-stencil__search").Input(value);
+        return Task.CompletedTask;
+    }
+
     public static Task ChangeColorAsync(IRenderedComponent<Microsoft.AspNetCore.Components.DynamicComponent> editor,
         string channel, string color)
     {
