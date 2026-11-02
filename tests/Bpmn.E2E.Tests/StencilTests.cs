@@ -472,24 +472,25 @@ public class StencilTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppF
     }
 
     [Fact]
-    public async Task TheCollaborationPlaneOffersNoFlowNodesUntilAPoolIsChosen()
+    public async Task UnfocusedCollaborationKeepsTheFullPaletteAfterClearingSelection()
     {
         await GoToEditorAsync();
         await SelectSampleAsync("collaboration.bpmn");
 
-        // The Collaboration plane offers Pool/Lane, Text Annotation and Group; flow nodes belong to a Process.
-        await Expect(Page.Locator(".bpmn-stencil > .bpmn-stencil__group")).ToHaveCountAsync(2);
-        await Expect(Page.Locator(".bpmn-stencil > .bpmn-stencil__group .bpmn-stencil__title")).ToHaveTextAsync(["Swimlanes", "Artifacts"]);
-        await Expect(Page.Locator(".bpmn-stencil > .bpmn-stencil__group .bpmn-stencil__tool")).ToHaveCountAsync(3);
+        var tools = Page.Locator(".bpmn-stencil > .bpmn-stencil__group .bpmn-stencil__tool");
+        await Expect(tools).ToHaveCountAsync(12);
+        await Expect(tools.Locator(".bpmn-stencil__label")).ToHaveTextAsync(
+            ["Start Event", "Intermediate / Boundary Event", "End Event", "Task", "Sub-Process", "Call Activity",
+                "Gateway", "Data Object Reference", "Data Store Reference", "Pool / Lane", "Text Annotation", "Group"]);
+        await Expect(Page.Locator(".bpmn-stencil > .bpmn-stencil__group .bpmn-stencil__tool[draggable='true']")).ToHaveCountAsync(12);
 
         var pool = await Page.Locator(".joint-cell[model-id^='Pool_']").First.GetAttributeAsync("model-id");
         await SelectPoolHeaderAsync(pool!);
 
-        // Choosing a Pool is what makes its Process the container being created into. Without
-        // this the palette on every collaboration diagram would be permanently empty.
-        Assert.True(
-            await Page.Locator(".bpmn-stencil > .bpmn-stencil__group .bpmn-stencil__tool:not(.bpmn-stencil__tool--disabled)").CountAsync() == 12,
-            "selecting a Pool did not open the palette");
+        await Expect(tools).ToHaveCountAsync(12);
+        await Page.Locator(".bpmn-canvas").ClickAsync(new() { Position = new() { X = 5, Y = 5 } });
+        await Expect(Page.Locator(".demo-edit-status")).ToHaveTextAsync("Nothing selected.");
+        await Expect(tools).ToHaveCountAsync(12);
     }
 
     [Fact]
@@ -499,8 +500,7 @@ public class StencilTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppF
         await SelectSampleAsync("collaboration.bpmn");
 
         var pool = await Page.Locator(".joint-cell[model-id^='Pool_']").First.GetAttributeAsync("model-id");
-        await SelectPoolHeaderAsync(pool!);
-
+        await Expect(Page.Locator(".demo-edit-status")).ToHaveTextAsync("Nothing selected.");
         var before = await CellCountAsync();
         var box = await Page.Locator($".joint-cell[model-id='{pool}']").BoundingBoxAsync();
 
@@ -544,6 +544,47 @@ public class StencilTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppF
         Assert.True(
             await Page.Locator(".bpmn-stencil > .bpmn-stencil__group .bpmn-stencil__tool").CountAsync() == 12,
             "selecting a Lane did not open the palette");
+    }
+
+    [Fact]
+    public async Task UnfocusedSwimlaneToolsCreateOnlyInsideValidPools()
+    {
+        await GoToEditorAsync();
+        await Page.SetViewportSizeAsync(1600, 1100);
+        await SelectSampleAsync("gdpr-data-request.bpmn");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Fit" }).ClickAsync();
+        await Expect(Page.Locator(".demo-edit-status")).ToHaveTextAsync("Nothing selected.");
+        await Expect(Page.Locator(".bpmn-stencil > .bpmn-stencil__group .bpmn-stencil__tool[draggable='true']")).ToHaveCountAsync(12);
+        var templates = await Page.Locator(".bpmn-stencil__template-tool").CountAsync();
+        var before = await CellCountAsync();
+        var ids = await Page.Locator(".joint-element").EvaluateAllAsync<string[]>(
+            "elements => elements.map(element => element.getAttribute('model-id'))");
+        var body = await Page.Locator("[model-id='lane_dsar_owners'] .bpmn-swimlane-body").BoundingBoxAsync();
+        await DropToolAsync("Task", body!.X + body.Width * 0.8f, body.Y + body.Height / 2);
+        await Expect(Page.Locator(".bpmn-canvas .joint-cell")).ToHaveCountAsync(before + 1);
+        var afterIds = await Page.Locator(".joint-element").EvaluateAllAsync<string[]>(
+            "elements => elements.map(element => element.getAttribute('model-id'))");
+        var createdId = Assert.Single(afterIds.Except(ids));
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Undo", Exact = true }).ClickAsync();
+        await Expect(Page.Locator(".bpmn-canvas .joint-cell")).ToHaveCountAsync(before);
+        await Page.Locator(".bpmn-canvas").ClickAsync(new() { Position = new() { X = 5, Y = 5 } });
+        await Expect(Page.Locator(".bpmn-a11y-tree__item[aria-selected='true']")).ToHaveCountAsync(0);
+        var canvas = await Page.Locator(".bpmn-canvas").BoundingBoxAsync();
+        await DropToolAsync("Task", canvas!.X + 5, canvas.Y + 5);
+        await Expect(Page.Locator(".demo-edit-status")).ToContainTextAsync("CT-001");
+        await Expect(Page.Locator(".bpmn-canvas .joint-cell")).ToHaveCountAsync(before);
+        await Expect(Page.Locator(".bpmn-stencil__template-tool")).ToHaveCountAsync(templates);
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Redo", Exact = true })).Not.ToBeDisabledAsync();
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Redo", Exact = true }).ClickAsync();
+        await Expect(Page.Locator($".joint-cell[model-id='{createdId}']")).ToBeVisibleAsync();
+
+        await Page.OpenDemoFilesAsync();
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Export XML", Exact = true }).ClickAsync();
+        var xml = XDocument.Parse(await Page.Locator(".demo-export-xml").InnerTextAsync());
+        XNamespace model = "http://www.omg.org/spec/BPMN/20100524/MODEL";
+        var node = Assert.Single(xml.Descendants(model + "task"), element => (string?)element.Attribute("id") == createdId);
+        var pool = Assert.Single(xml.Descendants(model + "participant"), element => (string?)element.Attribute("id") == "pool_dsar");
+        Assert.Equal((string?)pool.Attribute("processRef"), (string?)node.Parent!.Attribute("id"));
     }
 
     [Fact]

@@ -740,14 +740,35 @@ public sealed partial class BpmnEditorSession
     }
 
     /// <summary>
-    /// The stencil for the container the user is creating into.
+    /// The displayed stencil, with host curation applied.
     /// </summary>
     /// <remarks>
-    /// Recomputed on every render rather than cached: the available tools change the moment a
-    /// Process is assigned to a Participant or the active container changes, and a stale palette
-    /// offers creations the editor would then refuse.
+    /// An unfocused collaboration keeps tools available for drops into its process-backed Pools.
+    /// This does not choose a semantic owner: creation still resolves and validates the drop target.
     /// </remarks>
-    public IReadOnlyList<BpmnStencilGroup> StencilGroups => BpmnStencilCuration.Apply(RuleStencilGroups, Stencil);
+    public IReadOnlyList<BpmnStencilGroup> StencilGroups => BpmnStencilCuration.Apply(DisplayStencilGroups(), Stencil);
+
+    private IReadOnlyList<BpmnStencilGroup> DisplayStencilGroups()
+    {
+        if (EditedDocument is not { Collaboration: { } collaboration } document
+            || EffectiveContainerId is not null)
+        {
+            return RuleStencilGroups;
+        }
+
+        var diagram = ActiveDiagramId is { } diagramId
+            ? document.Diagrams.FirstOrDefault(candidate => candidate.Id == diagramId)
+            : document.Diagrams.Count > 0 ? document.Diagrams[0] : null;
+        if (diagram?.Plane.BpmnElement == collaboration.Id
+            && collaboration.Participants.Any(participant => participant.ProcessRef is { } processId
+                && document.Processes.Any(process => process.Id == processId)
+                && diagram.Plane.Shapes.Any(shape => shape.BpmnElement == participant.Id)))
+        {
+            return BpmnStencil.GroupsFor(BpmnStencilContext.PoolWithProcess);
+        }
+
+        return RuleStencilGroups;
+    }
 
     /// <summary>
     /// How the editor is coloured.

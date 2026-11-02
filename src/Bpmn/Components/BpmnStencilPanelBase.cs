@@ -11,9 +11,8 @@ namespace Hasseware.AspNetCore.Components.Bpmn;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Entries come from <see cref="BpmnStencil"/>, which computes them from the active container
-/// rather than showing one fixed palette: a stencil that offered a creation the editor would then
-/// refuse is worse than one that shows it greyed out with a reason.
+/// Entries follow the active container's rules. An unfocused collaboration keeps the Pool-compatible
+/// palette visible for drops into process-backed Pools; each creation still validates its target.
 /// </para>
 /// <para>
 /// It holds no canvas reference. A tool is armed on the session and the canvas turns the drop into
@@ -39,7 +38,7 @@ public abstract class BpmnStencilPanelBase : BpmnEditorComponentBase
     /// <summary>The empty-state text in force.</summary>
     protected string EffectiveEmptyMessage => string.IsNullOrWhiteSpace(EmptyMessage) ? Text("StencilPanel.Empty") : EmptyMessage;
 
-    /// <summary>The groups to show, curated for the active container.</summary>
+    /// <summary>The displayed groups, including host curation and unfocused collaboration availability.</summary>
     protected IReadOnlyList<BpmnStencilGroup> Groups => Session.StencilGroups;
 
     /// <summary>The template groups, enabled against the container's uncurated rules.</summary>

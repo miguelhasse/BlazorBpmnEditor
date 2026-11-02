@@ -22,6 +22,136 @@ public sealed class DiagramStencilCreationTests : BunitContext
             .SetResult(new("creation", BpmnInteropContract.Version, 1, true, null));
     }
 
+    [Fact]
+    public async Task UnfocusedCollaborationKeepsCuratedToolsWithoutChoosingAnOwner()
+    {
+        var editor = RenderEditor(PooledDocument(), new()
+        {
+            ["Stencil"] = new BpmnStencilOptions(
+                new Dictionary<string, BpmnStencilEntryOptions> { ["flowNode/task"] = new(Label: "Work") },
+                HiddenGroups: ["Data"]),
+        });
+        var session = editor.FindComponent<BpmnEditorScope>().Instance.Session;
+        var expected = session.StencilGroups.SelectMany(group => group.Entries).Select(entry => entry.Key).ToArray();
+        Assert.Equal(10, expected.Length);
+        Assert.Contains("Work", editor.Find(".bpmn-stencil").TextContent);
+        Assert.DoesNotContain(session.StencilGroups, group => group.Title == "Data");
+        Assert.Null(session.EffectiveContainerId);
+        Assert.Equal(["Swimlanes", "Artifacts"], session.RuleStencilGroups.Select(group => group.Title));
+
+        foreach (var selection in new string[][] { ["Pool"], ["Lane"], ["Task"], [], ["Pool", "Task"], [] })
+        {
+            await editor.InvokeAsync(() => session.SetSelectionAsync(selection));
+            Assert.Equal(expected, session.StencilGroups.SelectMany(group => group.Entries).Select(entry => entry.Key));
+            Assert.All(session.StencilGroups.SelectMany(group => group.Entries), entry => Assert.True(entry.IsEnabled));
+            Assert.Equal(10, editor.FindAll(".bpmn-stencil > .bpmn-stencil__group .bpmn-stencil__tool[draggable='true']").Count);
+        }
+        Assert.Null(session.EffectiveContainerId);
+
+        var parameters = new Dictionary<string, object>(editor.Instance.Parameters!) { ["IsReadOnly"] = true };
+        editor.Render(p => p.Add(component => component.Parameters, parameters));
+        Assert.Empty(editor.FindAll(".bpmn-editor__stencil [role='option']"));
+    }
+
+    [Theory]
+    [InlineData("BlackBox", 0)]
+    [InlineData("EventSub", 11)]
+    public void ExplicitContainerKeepsItsOwnPaletteRules(string container, int count)
+    {
+        var document = PooledDocument();
+        var editor = RenderEditor(document, new() { ["ActiveContainerId"] = container });
+        var session = editor.FindComponent<BpmnEditorScope>().Instance.Session;
+        Assert.Equal(count, session.StencilGroups.SelectMany(group => group.Entries).Count());
+        Assert.Equal(session.RuleStencilGroups.SelectMany(group => group.Entries),
+            session.StencilGroups.SelectMany(group => group.Entries));
+        if (container == "EventSub")
+            Assert.False(session.StencilGroups.SelectMany(group => group.Entries)
+                .Single(entry => entry.Type == BpmnFlowNodeType.StartEvent).IsEnabled);
+    }
+
+    [Fact]
+    public async Task SelectedSpecializedContainersAndOtherPlanesKeepTheirOwnRules()
+    {
+        var document = PooledDocument();
+        var collaboration = document.Diagrams[0];
+        document = document with
+        {
+            Diagrams =
+            [
+                collaboration,
+                new BpmnDiagram("BlackBoxView", collaboration.Plane with
+                {
+                    Id = "BlackBoxPlane",
+                    Shapes = [collaboration.Plane.Shapes.Single(shape => shape.BpmnElement == "BlackBox")],
+                }),
+                new BpmnDiagram("SubView", new BpmnPlane("SubPlane", "EventSub", [], [])),
+            ],
+        };
+        var editor = RenderEditor(document);
+        var session = editor.FindComponent<BpmnEditorScope>().Instance.Session;
+        await editor.InvokeAsync(() => session.SetSelectionAsync(["BlackBox"]));
+        Assert.Empty(session.StencilGroups);
+        await editor.InvokeAsync(() => session.SetSelectionAsync(["EventSub"]));
+        Assert.False(session.StencilGroups.SelectMany(group => group.Entries)
+            .Single(entry => entry.Type == BpmnFlowNodeType.StartEvent).IsEnabled);
+        await editor.InvokeAsync(() => session.SetSelectionAsync([]));
+        Assert.Equal(12, session.StencilGroups.SelectMany(group => group.Entries).Count());
+        await NavigateAsync(editor, session, "BlackBoxView");
+        Assert.Equal(["Swimlanes", "Artifacts"], session.StencilGroups.Select(group => group.Title));
+        await NavigateAsync(editor, session, "SubView");
+        Assert.Equal("EventSub", session.EffectiveContainerId);
+        Assert.Equal(session.RuleStencilGroups.SelectMany(group => group.Entries),
+            session.StencilGroups.SelectMany(group => group.Entries));
+        await NavigateAsync(editor, session, "Diagram_1");
+        Assert.Equal(12, session.StencilGroups.SelectMany(group => group.Entries).Count());
+    }
+
+    [Theory]
+    [InlineData("Pool", true)]
+    [InlineData("OtherPool", true)]
+    [InlineData("BlackBox", false)]
+    [InlineData(null, false)]
+    public async Task UnfocusedToolUsesDropOwnerAndRejectsInvalidTargets(string? poolId, bool allowed)
+    {
+        var document = PooledDocument();
+        var editor = RenderEditor(document);
+        var session = editor.FindComponent<BpmnEditorScope>().Instance.Session;
+        Assert.Null(session.EffectiveContainerId);
+        var entry = session.StencilGroups.SelectMany(group => group.Entries).Single(candidate => candidate.Key == "flowNode/task");
+        _canvas.Setup<DropTarget?>("resolveDrop", _ => true)
+            .SetResult(new(new Bounds(450, 200, 100, 80), null, poolId));
+
+        var result = await editor.InvokeAsync(() => session.CreateAtAsync(entry, 500, 300));
+
+        Assert.NotNull(result);
+        Assert.Equal(allowed, result.IsApplied);
+        if (!allowed)
+        {
+            Assert.Contains(result.Rejections, rejection => rejection.Code == "CT-001");
+            Assert.Same(document, session.EditedDocument);
+            Assert.False(session.CanUndo);
+            return;
+        }
+        var created = Assert.Single(result.Document.FlowNodes, node => document.Find(node.Id) is null);
+        Assert.Equal(poolId == "OtherPool" ? "Process_2" : "Process_1", created.ContainerId);
+        Assert.Equal(poolId, created.PoolId);
+        Assert.Single(result.Document.Diagrams[0].Plane.Shapes, shape => shape.BpmnElement == created.Id);
+        await editor.InvokeAsync(session.UndoAsync);
+        Assert.Equal(document, session.EditedDocument);
+        await editor.InvokeAsync(session.RedoAsync);
+        Assert.NotNull(session.EditedDocument!.FindFlowNode(created.Id));
+    }
+
+    private static BpmnDocument PooledDocument() => new BpmnDocumentBuilder()
+        .Pool("Pool", "Pool", new Bounds(0, 0, 600, 400))
+        .Lane("Lane", "Lane", new Bounds(30, 0, 570, 400), ["Task", "EventSub"])
+        .Node("Task", BpmnFlowNodeType.Task, new Bounds(100, 100, 100, 80))
+        .Node("EventSub", BpmnFlowNodeType.EventSubProcess, new Bounds(220, 100, 200, 100), isExpanded: true)
+        .Process("Process_2")
+        .Pool("OtherPool", "Other", new Bounds(0, 500, 600, 400), processRef: "Process_2")
+        .BlackBoxPool("BlackBox", "Black box", new Bounds(0, 1000, 600, 100))
+        .Build();
+
     [Theory]
     [InlineData("flow", false)]
     [InlineData("flow", true)]
@@ -213,12 +343,15 @@ public sealed class DiagramStencilCreationTests : BunitContext
         return editor.InvokeAsync(() => session.GoToDiagramAsync(diagramId));
     }
 
-    private IRenderedComponent<DynamicComponent> RenderEditor(BpmnDocument document)
+    private IRenderedComponent<DynamicComponent> RenderEditor(BpmnDocument document, Dictionary<string, object>? options = null)
     {
         _canvas.Setup<DocumentLoaded?>("loadDocument", _ => true).SetResult(new("Diagram_1", 1, 0, []));
+        var values = options ?? [];
+        values["Document"] = document;
+        values["ShowStencil"] = true;
         return Render<DynamicComponent>(parameters => parameters
             .Add(component => component.Type, KitFixture.Composition)
-            .Add(component => component.Parameters, new Dictionary<string, object> { ["Document"] = document }));
+            .Add(component => component.Parameters, values));
     }
 
     private static BpmnStencilEntry Entry(string kind) => kind switch

@@ -267,9 +267,12 @@ not an element with nothing to draw it.
 
 The stencil (`BpmnStencilPanel`) offers twelve tools: Start Event, Intermediate/Boundary Event, End
 Event, Gateway, Task, Sub-Process, Call Activity, Data Object Reference, Data Store Reference,
-Pool/Lane, Text Annotation, and Group. It is still computed from the active container, so an Event Sub-Process
-disables its untyped Start Event, a black-box Pool offers nothing, and Flow Nodes stay out of the
-Collaboration plane.
+Pool/Lane, Text Annotation, and Group. An unfocused Collaboration diagram with a drawn process-backed
+Pool keeps these tools visible and draggable, including after clearing a selection. The drop target
+still determines ownership and validity; showing Flow Node tools does not allow creating Flow Nodes
+directly in a Collaboration. Host palette curation and read-only behavior are unchanged.
+Explicit active containers and selected specialized containers retain their rules: an Event
+Sub-Process disables its untyped Start Event, and a selected black-box Pool offers nothing.
 
 Template stencil entries require a creatable Flow Node matching the template's `appliesTo`.
 `elementType.value` takes precedence; otherwise the first concrete `appliesTo` target is used.
