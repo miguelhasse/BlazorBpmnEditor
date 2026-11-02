@@ -1,6 +1,6 @@
-import type { dia } from '@joint/core';
-import { highlighters } from '@joint/core';
+import { dia, highlighters } from '@joint/core';
 
+import { STROKE_THIN } from '../geometry/constants.js';
 import { findCell, findView } from '../graph/cells.js';
 import { outlineSelectorOf } from '../shapes/elements.js';
 import { connectTool } from './connect-tool.js';
@@ -20,7 +20,8 @@ import type { Selection } from './selection.js';
  * group's geometry is the box around everything in it — the label sitting outside an Event, the
  * markers along the bottom of a Task — so every selection came out as a rectangle substantially
  * larger than the shape. It is pointed at the node that draws the silhouette instead, which each
- * shape family names for itself.
+ * shape family names for itself. Swimlanes use a single stroke on that silhouette instead:
+ * masking an unfilled lane draws an additional inner contour through its header.
  */
 export class SelectionView {
   /** One highlighter id, so adding a second time replaces rather than stacks. */
@@ -84,10 +85,12 @@ export class SelectionView {
         view.addTools(this.#linkEdit.toolsFor());
       }
 
-      highlighters.mask.add(view, outlineSelectorOf(cell), SelectionView.#Id, {
+      const swimlane = cell.get('type') === 'bpmn.Swimlane';
+      const options = {
         // Far enough out to read as a halo around the border rather than a repaint of it, and
         // close enough not to collide with the connect handle sitting 12px off the outline.
-        padding: 4,
+        // Stroke padding expands the whole width/height; match the mask's outer band center.
+        padding: swimlane ? 2 * 4 + STROKE_THIN + 2 : 4,
         attrs: {
           stroke: 'var(--bpmn-selection-color)',
           'stroke-width': 2,
@@ -98,7 +101,16 @@ export class SelectionView {
           // drawing attention to.
           fill: 'none',
         },
-      });
+      };
+      if (swimlane) {
+        highlighters.stroke.add(view, outlineSelectorOf(cell), SelectionView.#Id, {
+          ...options,
+          // A sibling lane's header must not paint over the selection halo.
+          layer: dia.Paper.Layers.FRONT,
+        });
+      } else {
+        highlighters.mask.add(view, outlineSelectorOf(cell), SelectionView.#Id, options);
+      }
     }
 
     this.#shown = selection.ids;
@@ -110,7 +122,7 @@ export class SelectionView {
       const view = cell === undefined ? undefined : findView(this.#paper, cell);
       if (view === undefined) continue;
 
-      highlighters.mask.remove(view, SelectionView.#Id);
+      dia.HighlighterView.remove(view, SelectionView.#Id);
       view.removeTools();
     }
 

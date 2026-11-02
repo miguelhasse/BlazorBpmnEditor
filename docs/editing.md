@@ -746,6 +746,10 @@ owns it because it is driven by the pointer, and reports it so the chrome can fo
 Outlines are drawn with JointJS's own `mask` highlighter, which traces rendered geometry — an Event
 comes out round, a Gateway diamond-shaped, a connector follows its route. Re-deriving each
 silhouette would mean a second source of truth for every shape.
+Swimlanes use a single `stroke` highlighter on their full body rectangle, including the header.
+Unlike a mask on an unfilled lane, this draws only the outer outline, with no inner contour through
+the header. The outline sits in the paper's front layer so neighboring lane headers cannot cover
+it. Selection behavior and execution styling are unchanged.
 
 One rule worth knowing: a plain press on an element that is **already** selected keeps the whole
 selection rather than collapsing to that one element. Otherwise pressing down on a member of a

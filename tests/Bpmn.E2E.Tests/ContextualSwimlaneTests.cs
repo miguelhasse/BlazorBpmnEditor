@@ -11,6 +11,116 @@ namespace Hasseware.AspNetCore.Components.Bpmn.E2E.Tests;
 public class ContextualSwimlaneTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFixture>
 {
     [Theory]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    public async Task SelectionOutlineEnclosesSwimlaneHeaderWithoutInnerContour(bool horizontal, bool keyboard)
+    {
+        await OpenAsync(new BpmnDocumentBuilder()
+            .Pool("Pool", "Pool", new Bounds(30, 40, 600, 300), isHorizontal: horizontal)
+            .Lane("Lane", "Lane", horizontal ? new Bounds(60, 40, 570, 150) : new Bounds(30, 70, 300, 270),
+                ["Task"], isHorizontal: horizontal)
+            .Lane("Neighbor", "Neighbor", horizontal ? new Bounds(60, 190, 570, 150) : new Bounds(330, 70, 300, 270),
+                [], isHorizontal: horizontal)
+            .Node("Task", BpmnFlowNodeType.Task, new Bounds(180, 100, 100, 80), "Task")
+            .Build());
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Reset zoom" }).ClickAsync();
+        await Expect(Page.Locator(".bpmn-toolbar__zoom")).ToHaveTextAsync("100%");
+
+        foreach (var id in new[] { "Pool", "Lane" })
+        {
+            if (keyboard)
+            {
+                await Page.Locator(".bpmn-canvas").FocusAsync();
+                await Page.Keyboard.PressAsync("Tab");
+                await Page.Keyboard.PressAsync("Home");
+                if (id == "Lane")
+                    await Page.Keyboard.PressAsync("ArrowDown");
+            }
+            else
+            {
+                await Page.Locator($".joint-element[model-id='{id}'] .bpmn-swimlane-header")
+                    .ClickAsync(new() { Position = new() { X = 10, Y = 10 } });
+            }
+
+            await Expect(Page.Locator($"#bpmn-a11y-{id}")).ToHaveAttributeAsync("aria-selected", "true");
+            await Expect(Page.Locator(".joint-highlight-stroke")).ToHaveCountAsync(1);
+            await Expect(Page.Locator(".joint-highlight-mask")).ToHaveCountAsync(0);
+            await AssertSwimlaneOutlineAsync(id);
+
+            foreach (var zoom in new[] { "91%", "83%", "75%" })
+            {
+                await Page.GetByRole(AriaRole.Button, new() { Name = "Zoom out" }).ClickAsync();
+                await Expect(Page.Locator(".bpmn-toolbar__zoom")).ToHaveTextAsync(zoom);
+            }
+            await AssertSwimlaneOutlineAsync(id);
+            await Page.GetByRole(AriaRole.Button, new() { Name = "Reset zoom" }).ClickAsync();
+            await Expect(Page.Locator(".bpmn-toolbar__zoom")).ToHaveTextAsync("100%");
+        }
+
+        await Page.Locator(".joint-element[model-id='Task'] [joint-selector='body']").ClickAsync();
+        await Expect(Page.Locator(".joint-highlight-stroke")).ToHaveCountAsync(0);
+        await Expect(Page.Locator(".joint-highlight-mask")).ToHaveCountAsync(1);
+        await Expect(Page.Locator("#bpmn-a11y-Task")).ToHaveAttributeAsync("aria-selected", "true");
+        await Page.Locator(".bpmn-canvas").ClickAsync(new() { Position = new() { X = 5, Y = 5 } });
+        await Expect(Page.Locator(".joint-highlight-stroke, .joint-highlight-mask")).ToHaveCountAsync(0);
+    }
+
+    private async Task AssertSwimlaneOutlineAsync(string id)
+    {
+        var geometry = await Page.Locator($".joint-element[model-id='{id}']").EvaluateAsync<bool[]>(
+            """
+            cell => {
+              const bodyNode = cell.querySelector('.bpmn-swimlane-body');
+              const body = bodyNode.getBoundingClientRect();
+              const header = cell.querySelector('.bpmn-swimlane-header').getBoundingClientRect();
+              const outline = document.querySelector('.joint-highlight-stroke');
+              const box = outline.getBoundingClientRect();
+              const matrix = outline.getScreenCTM();
+              const bodyMatrix = bodyNode.getScreenCTM();
+              const scale = Math.hypot(bodyMatrix.a, bodyMatrix.b);
+              const offset = 5.75 * scale;
+              const inverse = matrix.inverse();
+              const onStroke = (x, y) => outline.isPointInStroke(new DOMPoint(x, y).matrixTransform(inverse));
+              const x = header.left + header.width / 2;
+              const y = header.top + header.height / 2;
+              let overlaysNeighbor = true;
+              if (cell.getAttribute('model-id') === 'Lane') {
+                const neighbor = document.querySelector(".joint-element[model-id='Neighbor'] .bpmn-swimlane-header")
+                  .getBoundingClientRect();
+                const horizontal = neighbor.top >= body.bottom - 0.1;
+                const point = horizontal
+                  ? { x, y: body.bottom + offset }
+                  : { x: body.right + offset, y };
+                const insideNeighbor = point.x > neighbor.left && point.x < neighbor.right
+                  && point.y > neighbor.top && point.y < neighbor.bottom;
+                outline.style.pointerEvents = 'stroke';
+                try {
+                  overlaysNeighbor = insideNeighbor && document.elementFromPoint(point.x, point.y) === outline;
+                } finally {
+                  outline.style.removeProperty('pointer-events');
+                }
+              }
+              return [
+                outline.tagName.toLowerCase() === 'path' && /z\s*$/i.test(outline.getAttribute('d')),
+                getComputedStyle(outline).fill === 'none' && getComputedStyle(outline).pointerEvents === 'none',
+                Math.abs(box.left - (body.left - offset)) < 0.1,
+                Math.abs(box.top - (body.top - offset)) < 0.1,
+                Math.abs(box.right - (body.right + offset)) < 0.1,
+                Math.abs(box.bottom - (body.bottom + offset)) < 0.1,
+                onStroke(body.left - offset, y) && onStroke(body.right + offset, y),
+                onStroke(x, body.top - offset) && onStroke(x, body.bottom + offset),
+                !onStroke(body.left + offset, y) && !onStroke(body.right - offset, y),
+                !onStroke(x, body.top + offset) && !onStroke(x, body.bottom - offset),
+                overlaysNeighbor
+              ];
+            }
+            """);
+        Assert.All(geometry, Assert.True);
+    }
+
+    [Theory]
     [InlineData("Task")]
     [InlineData("End")]
     [InlineData("Data")]
