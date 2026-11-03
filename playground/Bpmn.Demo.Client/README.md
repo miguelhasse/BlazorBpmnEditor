@@ -18,6 +18,7 @@ this library is verified as the test projects are.
 |---|---|
 | `/` | Home page and entry point to the playground |
 | `/editor` | XML/JSON file preview, semantic model → interop → JointJS paper → command edits; sample chooser, zoom/pan/fit, properties, templates and export text |
+| `/feel-authoring` | Managed FEEL property editor, toolbar manager and standalone workspace; Fluent by default, standard HTML with `?plain=true` |
 | `/gallery` | The §4 notation matrix across five sheets — spec-valid event trigger/context cells, every gateway, every activity marker combination, connectors, swimlanes. Unsupported event cells are blank; non-interrupting starts belong to Event Sub-Processes, Boundary Events sit on real hosts, and white-box Pools own distinct Processes |
 | `/icons` | Every glyph in the shared manifest, rendered through the **C#** registry. The review surface for a font bump or a regenerated manifest, and proof both languages read the same file |
 | `/interchange` | Import → export → import in both modes, with per-measure comparison, export diagnostics and the XML each mode produced |
@@ -48,7 +49,15 @@ The sample list is declared per page rather than discovered, so adding a fixture
   editor; this is demo configuration, not a dependency required by the core RCL.
   Highlighting/completion are managed, with a small native-textarea DOM bridge and no JavaScript
   editor plugins. The Fluent extension supplies FluentTextArea and Fluent chrome.
-  Server evaluation is a separate opt-in service and is not enabled by the demo.
+  Expanded editing requires `FluentDialogProvider`, rendered in each editor page's
+  interactive WebAssembly scope rather than the host's static layout.
+  Evaluation remains separately authorized: property editors do not receive an evaluator;
+  `/feel-authoring` enables Run only after explicit sample-interpreter authorization.
+  Both authoring hosts defer initial/reset syntax diagnostics until after DOM attachment
+  and a 200 ms idle interval. This keeps first parser initialization off the initial
+  field render; commits still flush diagnostics. Compare cold and cached startup
+  separately, and use a trimmed Release publish rather than development asset sizes
+  when investigating WebAssembly download costs.
 - `Program.cs` registers Zeebe and Camunda 7 extension schemas, disables always-offered schemas,
   sets the Camunda engine context to `8.6.0`, and loads embedded `.templates.*.json` resources.
   Template choices, defaults, conditional fields, apply/unlink actions and template stencil items

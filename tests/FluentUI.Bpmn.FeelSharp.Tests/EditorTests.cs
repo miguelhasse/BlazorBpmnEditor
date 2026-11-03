@@ -16,6 +16,53 @@ public sealed class EditorTests : BunitContext
     private const string ModulePath = "./_content/Hasseware.AspNetCore.Components.Bpmn.FeelSharp/feelsharp-editor.js";
 
     [Fact]
+    public async Task PropertyPresentationUsesExistingFluentInputAndNoInlineButtons()
+    {
+        var module = JSInterop.SetupModule(ModulePath);
+        module.SetupModule("attachProperty", _ => true);
+        var values = new List<string?>();
+        var editor = RenderEditor(Context(Entry(BpmnFeelMode.Required, "=amount"), values.Add), propertyInput: true);
+        Assert.Single(editor.FindComponents<FluentBpmnTextEntry>());
+        Assert.Single(editor.FindComponents<FluentTextInput>());
+        Assert.Empty(editor.FindComponents<FluentTextArea>());
+        Assert.Empty(editor.FindAll("button, fluent-button, pre, textarea"));
+        await editor.Instance.PropertySnapshotAsync("amount + 1", 10, 10, 1, 1, false, true);
+        await editor.Instance.PropertyKeyAsync("commit", 1, 1);
+        Assert.Equal(["=amount + 1"], values);
+    }
+
+    [Theory]
+    [InlineData(BpmnPropertyEntryKind.Text)]
+    [InlineData(BpmnPropertyEntryKind.TextArea)]
+    public async Task EnhancedPropertyControlDoesNotReapplyValueOnItsOwnFocusEvents(BpmnPropertyEntryKind kind)
+    {
+        var module = JSInterop.SetupModule(ModulePath);
+        module.SetupModule("attachProperty", _ => true);
+        var editor = RenderEditor(Context(Entry(BpmnFeelMode.Required, "=amount") with { Kind = kind }),
+            propertyInput: true);
+        IRenderedComponent<ComponentBase> control = kind == BpmnPropertyEntryKind.Text
+            ? editor.FindComponent<FluentTextInput>()
+            : editor.FindComponent<FluentTextArea>();
+        var renders = control.RenderCount;
+
+        await editor.InvokeAsync(() => ((IHandleEvent)control.Instance).HandleEventAsync(
+            new EventCallbackWorkItem((Action)(() => { })), null));
+
+        Assert.Equal(renders, control.RenderCount);
+    }
+
+    [Fact]
+    public void PropertyTextareaRetainsExistingMultilineRendererAndReadOnlyValue()
+    {
+        var entry = Entry(BpmnFeelMode.Required, "=amount") with { Kind = BpmnPropertyEntryKind.TextArea };
+        var editor = RenderEditor(Context(entry) with { IsReadOnly = true }, propertyInput: true);
+        Assert.Single(editor.FindComponents<FluentBpmnTextAreaEntry>());
+        Assert.Equal("=amount", editor.FindComponent<FluentTextArea>().Instance.Value);
+        Assert.Empty(editor.FindAll("button, fluent-button, pre"));
+        Assert.DoesNotContain(JSInterop.Invocations, invocation => invocation.Identifier == "attachProperty");
+    }
+
+    [Fact]
     public void FluentRegistrationIsOptionalAndEvaluationRemainsSeparate()
     {
         var services = new ServiceCollection().AddFluentBpmnEditor().AddBpmnFeelSharpEditor()
@@ -197,21 +244,127 @@ public sealed class EditorTests : BunitContext
         Assert.Null(submitted);
     }
 
+    [Fact]
+    public async Task FluentExplicitCompletionRendersFunctionHelpAndUsesBridge()
+    {
+        SetupBridge();
+        var editor = RenderEditor(Context(Entry(BpmnFeelMode.Required, "=")));
+        editor.Find("[aria-keyshortcuts]").Click();
+        Assert.Contains(JSInterop.Invocations, invocation => invocation.Identifier == "complete");
+        await editor.Instance.SnapshotAsync("", 0, 0, 1, 1, false, true);
+        await editor.Instance.NativeKeyAsync("complete", 1, 1);
+        Assert.NotEmpty(editor.FindAll("[role=option]"));
+        Assert.Equal("abs(-3)", editor.Find(".bpmn-feelsharp-help code").TextContent);
+        Assert.Contains("Absolute value", editor.Find(".bpmn-feelsharp-help").TextContent, StringComparison.Ordinal);
+        var helpId = editor.Find(".bpmn-feelsharp-help").Id;
+        Assert.NotNull(helpId);
+        Assert.Contains(helpId, editor.Find(".fluent-bpmn-feelsharp-surface")
+            .GetAttribute("data-input-describedby"), StringComparison.Ordinal);
+        await editor.Instance.NativeKeyAsync("Escape", 1, 1);
+        Assert.Empty(editor.FindAll(".bpmn-feelsharp-help"));
+        Assert.Equal("", editor.Find(".bpmn-feelsharp-announcement").TextContent);
+    }
+
+    [Fact]
+    public async Task FluentRegistrationObserverReceivesAdvisoryUpdatesWithoutEvaluation()
+    {
+        var updates = new List<BpmnFeelSharpDiagnosticsUpdate>();
+        Services.AddFluentBpmnFeelSharpEditor(options => options.DiagnosticsObserver = update =>
+        {
+            updates.Add(update);
+            return Task.CompletedTask;
+        });
+        SetupBridge();
+        string? submitted = null;
+        var editor = RenderEditor(Context(Entry(BpmnFeelMode.Required, "=1"), value => submitted = value));
+        Assert.Single(updates);
+        Assert.Null(Services.GetService<IBpmnFeelSharpEvaluation>());
+        await editor.Instance.SnapshotAsync("1 + )", 5, 5, 1, 1, false, true);
+        Assert.Single(updates[1].Diagnostics);
+        Assert.Single(editor.FindComponents<FluentMessageBar>());
+        await editor.Instance.NativeKeyAsync("commit", 1, 1);
+        Assert.Equal("=1 + )", submitted);
+        Assert.Equal(2, updates.Count);
+        await editor.Instance.SnapshotAsync("1", 1, 1, 2, 1, false, true);
+        Assert.Empty(updates[2].Diagnostics);
+    }
+
     private void SetupBridge()
     {
         var module = JSInterop.SetupModule(ModulePath);
         var bridge = module.SetupModule("attachFluent", _ => true);
         bridge.SetupVoid("dispose", _ => true).SetVoidResult();
+        bridge.SetupVoid("complete", _ => true).SetVoidResult();
     }
 
-    private IRenderedComponent<FluentBpmnFeelSharpCodeEditor> RenderEditor(BpmnPropertyEntryContext context)
+    [Fact]
+    public async Task FluentStandardModalAppliesOnceAndSurvivesParentReentry()
+    {
+        SetupBridge();
+        var hide = JSInterop.SetupVoid("Microsoft.FluentUI.Blazor.Components.Dialog.Hide", _ => true);
+        var module = JSInterop.SetupModule(ModulePath);
+        var bridge = module.SetupModule("attachFluent", _ => true);
+        bridge.Setup<BpmnFeelSharpDraft>("read", _ => true).SetResult(new("42", 2, 2));
+        Services.AddFluentBpmnFeelSharpEditor(options => options.ExpandedEditor = true);
+        IRenderedComponent<FluentBpmnFeelSharpCodeEditor>? editor = null;
+        var values = new List<string?>();
+        void Commit(string? value)
+        {
+            values.Add(value);
+            editor!.Render(parameters => parameters.Add(component => component.Context, Context(Entry(BpmnFeelMode.Required, value), Commit)));
+        }
+        editor = RenderEditor(Context(Entry(BpmnFeelMode.Required, "=1"), Commit));
+        var button = Assert.Single(editor.FindComponents<FluentButton>(), component =>
+            component.Markup.Contains("Expand FEEL", StringComparison.Ordinal));
+        var expanded = editor.InvokeAsync(() => button.Instance.OnClick.InvokeAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs()));
+        editor.WaitForAssertion(() => Assert.Single(editor.FindComponents<FluentFeelSharpManager>()));
+        Assert.True(editor.FindComponent<FluentFeelSharpManager>().Instance.Closed.HasDelegate);
+        var manager = editor.FindComponent<FluentFeelSharpManager>();
+        Assert.Single(manager.FindAll("textarea, fluent-textarea"));
+        Assert.Empty(manager.FindAll("fluent-label, .bpmn-properties__feel-badge, [aria-keyshortcuts]"));
+        Assert.Empty(manager.FindAll("[role=tabpanel][id$='-Editor-panel'] button, [role=tabpanel][id$='-Editor-panel'] fluent-button"));
+        Assert.Equal(4, manager.FindAll("fluent-button[role=tab]").Count);
+        manager.Find("[role=tab][id$='-Evaluation']").Click();
+        var run = manager.Find("[data-action=run]");
+        Assert.True(run.HasAttribute("disabled"));
+        Assert.Equal("button", run.GetAttribute("role"));
+        Assert.Equal("true", run.GetAttribute("aria-disabled"));
+        Assert.Empty(manager.FindAll("output"));
+        manager.Find("[role=tab][id$='-Editor']").Click();
+        Assert.Equal("true", editor.Find(".fluent-bpmn-feelsharp-surface").GetAttribute("data-input-readonly"));
+        var workspace = editor.FindComponent<BpmnFeelSharpWorkspace>();
+        await workspace.InvokeAsync(() => workspace.Instance.Applied.InvokeAsync("42"));
+        await expanded;
+        Assert.Equal(["=42"], values);
+        Assert.False(editor.FindComponent<FluentFeelSharpManager>().Instance.Visible);
+        Assert.Single(editor.FindAll("fluent-dialog"));
+        hide.SetVoidResult();
+        editor.WaitForAssertion(() => Assert.Empty(editor.FindComponents<FluentFeelSharpManager>()));
+    }
+
+    [Fact]
+    public void FluentStandaloneWorkspaceUsesFluentFieldWithoutImplicitEvaluation()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        Services.AddFluentBpmnEditor();
+        Services.AddFluentBpmnFeelSharpEditor();
+        Services.AddFluentUIComponents();
+        var workspace = Render<FluentBpmnFeelSharpWorkspace>(parameters => parameters.Add(component => component.Value, "false"));
+        workspace.Find("[role=tab][id$='-Evaluation']").Click();
+        Assert.Single(workspace.FindComponents<FluentTextArea>());
+        Assert.Contains("Evaluation unavailable", workspace.Markup, StringComparison.Ordinal);
+        Assert.Empty(workspace.FindAll("output"));
+    }
+
+    private IRenderedComponent<FluentBpmnFeelSharpCodeEditor> RenderEditor(BpmnPropertyEntryContext context, bool propertyInput = false)
     {
         JSInterop.Mode = JSRuntimeMode.Loose;
         Services.AddFluentUIComponents();
         Services.AddFluentBpmnEditor();
         var registry = Services.GetRequiredService<IOptions<BpmnOptions>>().Value.Properties.Editors;
         var scope = Render<BpmnPropertyScopeProvider>(parameters => parameters.Add(component => component.Editors, registry)
-            .AddChildContent<FluentBpmnFeelSharpCodeEditor>(child => child.Add(component => component.Context, context)));
+            .AddChildContent<FluentBpmnFeelSharpCodeEditor>(child => child.Add(component => component.Context, context)
+                .Add(component => component.PropertyInput, propertyInput)));
         return scope.FindComponent<FluentBpmnFeelSharpCodeEditor>();
     }
 

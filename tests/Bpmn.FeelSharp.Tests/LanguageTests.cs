@@ -4,6 +4,17 @@ namespace Hasseware.AspNetCore.Components.Bpmn.FeelSharp.Tests;
 
 public sealed class LanguageTests
 {
+    [Fact]
+    public void ParserEngineIsCreatedOnlyForNonemptyValidation()
+    {
+        var syntax = new FeelSharpSyntax();
+        Assert.False(syntax.IsInitialized);
+        Assert.Null(syntax.Validate(" \r\n"));
+        Assert.False(syntax.IsInitialized);
+        Assert.Null(syntax.Validate("1 + 2"));
+        Assert.True(syntax.IsInitialized);
+    }
+
     [Theory]
     [InlineData("unknownVariable + 3")]
     [InlineData("if amount > 10 then \"yes\" else \"no\"")]
@@ -139,5 +150,160 @@ public sealed class LanguageTests
                 Assert.Null(syntax.Validate(candidate.Text));
             }
         }
+
+    }
+
+    [Theory]
+    [InlineData("abs", "number")]
+    [InlineData("append", "list")]
+    [InlineData("ceiling", "number")]
+    [InlineData("concatenate", "list")]
+    [InlineData("contains", "boolean")]
+    [InlineData("count", "number")]
+    [InlineData("date", "temporal")]
+    [InlineData("date and time", "temporal")]
+    [InlineData("day of week", "string")]
+    [InlineData("day of year", "number")]
+    [InlineData("distinct values", "list")]
+    [InlineData("duration", "temporal")]
+    [InlineData("ends with", "boolean")]
+    [InlineData("floor", "number")]
+    [InlineData("get entries", "list")]
+    [InlineData("get value", "number")]
+    [InlineData("index of", "list")]
+    [InlineData("insert before", "list")]
+    [InlineData("list contains", "boolean")]
+    [InlineData("lower case", "string")]
+    [InlineData("max", "number")]
+    [InlineData("mean", "number")]
+    [InlineData("min", "number")]
+    [InlineData("now", "temporal")]
+    [InlineData("number", "number")]
+    [InlineData("reverse", "list")]
+    [InlineData("round", "number")]
+    [InlineData("sort", "list")]
+    [InlineData("split", "list")]
+    [InlineData("starts with", "boolean")]
+    [InlineData("string", "string")]
+    [InlineData("string join", "string")]
+    [InlineData("string length", "number")]
+    [InlineData("substring", "string")]
+    [InlineData("sum", "number")]
+    [InlineData("time", "temporal")]
+    [InlineData("today", "temporal")]
+    [InlineData("upper case", "string")]
+    public void DocumentedFunctionExamplesEvaluateWithRestrictedEngine(string name, string kind)
+    {
+        var function = Assert.Single(FeelSharpFunctionCatalog.Functions, function => function.Name == name);
+        Assert.Null(new FeelSharpSyntax().Validate(function.Example));
+        var result = new BpmnFeelSharpEvaluation().Evaluate(function.Example,
+            cancellationToken: TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess, result.Error);
+        Assert.NotNull(result.Value);
+        Assert.IsNotType<global::FeelSharp.NullValue>(result.Value);
+        switch (kind)
+        {
+            case "number": Assert.IsType<global::FeelSharp.NumberValue>(result.Value); break;
+            case "list": Assert.IsType<global::FeelSharp.ListValue>(result.Value); break;
+            case "boolean": Assert.IsType<global::FeelSharp.BooleanValue>(result.Value); break;
+            case "string": Assert.IsType<global::FeelSharp.StringValue>(result.Value); break;
+            case "temporal":
+                var temporal = Assert.IsType<global::FeelSharp.StringValue>(result.Value).Value;
+                Assert.Equal("Feel.TemporalResult", function.Note);
+                switch (name)
+                {
+                    case "date":
+                        Assert.Equal("ValDate 2025-01-01 00:00:00", temporal);
+                        break;
+                    case "date and time":
+                        Assert.Equal("ValLocalDateTime 2025-01-01 12:00:00", temporal);
+                        break;
+                    case "duration":
+                        Assert.Equal("ValDayTimeDuration 1.00:00:00", temporal);
+                        break;
+                    case "time":
+                        Assert.StartsWith("ValTime", temporal, StringComparison.Ordinal);
+                        Assert.Contains("Hour = 12", temporal, StringComparison.Ordinal);
+                        Assert.Contains("Minute = 0", temporal, StringComparison.Ordinal);
+                        break;
+                    case "today": Assert.StartsWith("ValDate ", temporal, StringComparison.Ordinal); break;
+                    case "now": Assert.StartsWith("ValDateTime ", temporal, StringComparison.Ordinal); break;
+                }
+                break;
+        }
+        var expected = name switch
+        {
+            "abs" => 3m,
+            "ceiling" => 2m,
+            "count" => 2m,
+            "day of year" => 1m,
+            "floor" => 1m,
+            "get value" => 1m,
+            "max" => 3m,
+            "mean" => 2m,
+            "min" => 1m,
+            "number" => 12m,
+            "round" => 1.23m,
+            "string length" => 5m,
+            "sum" => 6m,
+            _ => (decimal?)null,
+        };
+        if (expected is { } number)
+        {
+            Assert.Equal(number, Assert.IsType<global::FeelSharp.NumberValue>(result.Value).Value);
+        }
+        if (kind == "boolean")
+        {
+            Assert.True(Assert.IsType<global::FeelSharp.BooleanValue>(result.Value).Value);
+        }
+        var text = name switch
+        {
+            "day of week" => "Wednesday",
+            "lower case" => "hello",
+            "string" => "12",
+            "string join" => "a,b",
+            "substring" => "ell",
+            "upper case" => "HELLO",
+            _ => null,
+        };
+        if (text is not null)
+        {
+            Assert.Equal(text, Assert.IsType<global::FeelSharp.StringValue>(result.Value).Value);
+        }
+        decimal[]? numbers = name switch
+        {
+            "append" or "insert before" or "sort" => [1m, 2m, 3m],
+            "concatenate" or "distinct values" => [1m, 2m],
+            "index of" => [1m, 3m],
+            "reverse" => [2m, 1m],
+            _ => null,
+        };
+        if (numbers is not null)
+        {
+            Assert.Equal(numbers, Assert.IsType<global::FeelSharp.ListValue>(result.Value).Items
+                .Select(value => Assert.IsType<global::FeelSharp.NumberValue>(value).Value));
+        }
+        if (name == "split")
+        {
+            Assert.Equal(["a", "b"], Assert.IsType<global::FeelSharp.ListValue>(result.Value).Items
+                .Select(value => Assert.IsType<global::FeelSharp.StringValue>(value).Value));
+        }
+    }
+
+    [Fact]
+    public void ExplicitCompletionAndDocumentationPreserveVariablePrecedence()
+    {
+        Assert.Empty(FeelSharpLanguage.Complete("", 0, 0, []));
+        var completion = Assert.Single(FeelSharpLanguage.Complete("", 0, 0,
+            [new("abs", "Business value", "<script>documentation</script>")], true), item => item.Label == "abs");
+        Assert.Equal("abs", completion.Text);
+        Assert.Equal("Business value", completion.Detail);
+        Assert.Equal("<script>documentation</script>", completion.Info);
+        Assert.Null(completion.Example);
+        Assert.Empty(FeelSharpLanguage.Complete("\"abc", 4, 4, [], true));
+        Assert.Empty(FeelSharpLanguage.Complete("// abc", 6, 6, [], true));
+        var builtin = Assert.Single(FeelSharpLanguage.Complete("su", 2, 2, []), item => item.Label == "sum");
+        Assert.Equal("sum(list)", builtin.Detail);
+        Assert.Equal("sum([1, 2, 3])", builtin.Example);
     }
 }

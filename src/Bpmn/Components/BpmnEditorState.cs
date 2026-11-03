@@ -77,6 +77,9 @@ public sealed record BpmnEditorState
 {
     internal BpmnEditorState() { }
 
+    /// <summary>Revision of the last-focused property's optional toolbar action.</summary>
+    public int PropertyActionRevision { get; init; }
+
     /// <summary>The document of record.</summary>
     public BpmnDocument? Document { get; init; }
 

@@ -97,5 +97,11 @@
                 disabled="@(!CanManageMessages)" @onclick="OpenMessageCatalog">@Text("MessageCatalog.Title")</button>
     }
 
+    @if (PropertyAction is { } propertyAction)
+    {
+        <button @ref="PropertyActionButton" type="button" class="bpmn-toolbar__button" data-property-action="manage"
+                disabled="@(!propertyAction.Enabled)"
+                @onclick="OpenPropertyManagerAsync">@propertyAction.Label</button>
+    }
     @ChildContent
 </div>

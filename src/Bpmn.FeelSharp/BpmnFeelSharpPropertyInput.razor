@@ -1,0 +1,39 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn.FeelSharp
+<div class="bpmn-feelsharp-property" @ref="Editor._surface" data-generation="@Editor._generation"
+     data-property-input data-prefix-input="@(Editor.PrefixInput ? "true" : "false")"
+     data-enhanced="@(Editor._enhanced ? "true" : "false")"
+     data-input-readonly="@(Editor.IsPropertyReadOnly ? "true" : "false")"
+     data-completion="@(Editor._completions.Count > 0 ? "true" : "false")"
+     data-accept-enter="@(Editor.AcceptEnter ? "true" : "false")" data-accept-tab="@(Editor.AcceptTab ? "true" : "false")"
+     data-input-controls="@Editor.CompletionId" data-input-describedby="@Editor.PropertyDescribedBy"
+     data-input-invalid="@(Editor.Warning is not null ? "true" : null)"
+     data-input-expanded="@(Editor._completions.Count > 0 ? "true" : "false")"
+     data-input-activedescendant="@(Editor._completions.Count > 0 ? Editor.OptionId(Editor._selected) : null)"
+     @onfocusin="Editor.ActivatePropertyAsync">
+    <CascadingValue Value="@Editor.PropertyEnhancement">
+        <DynamicComponent Type="@Editor.DefaultEditor" Parameters="@Editor.PropertyParameters" @key="Editor._generation" />
+    </CascadingValue>
+    @if (Editor._completions.Count > 0)
+    {
+        <div class="bpmn-feelsharp-property-popup" data-feel-completions popover="manual" @onmousedown:preventDefault>
+            <ul id="@Editor.CompletionId" role="listbox" aria-label="@Editor.ManagerTitle">
+                @for (var index = 0; index < Editor._completions.Count; index++)
+                {
+                    var option = index;
+                    var completion = Editor._completions[index];
+                    <li id="@Editor.OptionId(index)" role="option" aria-selected="@(index == Editor._selected ? "true" : "false")"
+                        @onclick="() => Editor.ApplyCompletionAsync(option)">@completion.Label <small>@completion.Detail</small></li>
+                }
+            </ul>
+            @if (Editor.CompletionInfo is { } info)
+            {
+                <small id="@Editor.HelpId">@info</small>
+            }
+        </div>
+    }
+    <span class="bpmn-feelsharp-property-announcement" role="status" aria-live="polite">@Editor.CompletionAnnouncement</span>
+    @if (Editor.Warning is { } warning)
+    {
+        <small id="@Editor.WarningId" class="bpmn-feelsharp-property-warning" role="status">@warning</small>
+    }
+</div>

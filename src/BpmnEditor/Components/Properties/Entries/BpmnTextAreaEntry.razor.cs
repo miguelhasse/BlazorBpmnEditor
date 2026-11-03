@@ -17,10 +17,15 @@ public partial class BpmnTextAreaEntry
         _source = source;
         _value = Entry.Value;
     }
-    private void Input(ChangeEventArgs args) { if (!ReadOnly) _value = args.Value as string; }
+    private Task Input(ChangeEventArgs args)
+    {
+        if (ReadOnly || InputEnhancement?.IsEnhanced == true) return Task.CompletedTask;
+        _value = args.Value as string;
+        return InputEnhancement?.DraftChanged?.Invoke(_value) ?? Task.CompletedTask;
+    }
     private Task ChangeAsync(ChangeEventArgs args)
     {
-        if (ReadOnly) return Task.CompletedTask;
+        if (ReadOnly || InputEnhancement?.IsEnhanced == true) return Task.CompletedTask;
         _value = args.Value as string;
         return SubmitAsync(_value);
     }

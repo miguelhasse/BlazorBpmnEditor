@@ -727,6 +727,431 @@
         <target state="translated">Akci se nepodařilo provést a nic se nezměnilo. Zkuste to znovu nebo uložte kopii.</target>
         <note />
       </trans-unit>
+      <trans-unit id="Feel.AcceptProposal">
+        <source>Accept proposed edit</source>
+        <target state="new">Accept proposed edit</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Apply">
+        <source>Apply</source>
+        <target state="new">Apply</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Cancel">
+        <source>Cancel</source>
+        <target state="new">Cancel</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Capabilities">
+        <source>Capability limitations</source>
+        <target state="new">Capability limitations</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.CapabilityLimits">
+        <source>Parse-only unary tests, semantic formatting, and hard interpreter timeouts are unavailable. FeelSharp 1.3.0 unary wildcard '-' fails; range '[1..10]' with input 3 returns false. Local bindings are conservative lexical hints, not a full FEEL syntax tree.</source>
+        <target state="new">Parse-only unary tests, semantic formatting, and hard interpreter timeouts are unavailable. FeelSharp 1.3.0 unary wildcard '-' fails; range '[1..10]' with input 3 returns false. Local bindings are conservative lexical hints, not a full FEEL syntax tree.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Category">
+        <source>Function category</source>
+        <target state="new">Function category</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Category.all">
+        <source>All functions</source>
+        <target state="new">All functions</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Category.context">
+        <source>Contexts</source>
+        <target state="new">Contexts</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Category.host">
+        <source>Host functions</source>
+        <target state="new">Host functions</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Category.list">
+        <source>Lists</source>
+        <target state="new">Lists</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Category.number">
+        <source>Numbers</source>
+        <target state="new">Numbers</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Category.string">
+        <source>Strings</source>
+        <target state="new">Strings</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Category.temporal">
+        <source>Temporal values</source>
+        <target state="new">Temporal values</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Collaborate">
+        <source>Request collaboration revision</source>
+        <target state="new">Request collaboration revision</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Complete">
+        <source>Show FEEL suggestions</source>
+        <target state="new">Show FEEL suggestions</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.CompletionCount">
+        <source>{0} FEEL suggestions available.</source>
+        <target state="new">{0} FEEL suggestions available.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.CopyFailed">
+        <source>Could not copy the result. Check browser clipboard permissions or select and copy the displayed text.</source>
+        <target state="new">Could not copy the result. Check browser clipboard permissions or select and copy the displayed text.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.CopyResult">
+        <source>Copy result</source>
+        <target state="new">Copy result</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Delimiter">
+        <source>Complete unmatched delimiters</source>
+        <target state="new">Complete unmatched delimiters</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Editor">
+        <source>Editor</source>
+        <target state="new">Editor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Evaluation">
+        <source>Evaluation</source>
+        <target state="new">Evaluation</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.ExecutionNotice">
+        <source>Run uses the explicitly authorized sample evaluator shown below, not BPMN execution. Authorization is not a sandbox. Cancellation may not interrupt synchronous interpretation.</source>
+        <target state="new">Run uses the explicitly authorized sample evaluator shown below, not BPMN execution. Authorization is not a sandbox. Cancellation may not interrupt synchronous interpretation.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Expand">
+        <source>Expand FEEL editor</source>
+        <target state="new">Expand FEEL editor</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.abs">
+        <source>Absolute value of a number.</source>
+        <target state="new">Absolute value of a number.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.append">
+        <source>Append an item to a list.</source>
+        <target state="new">Append an item to a list.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.ceiling">
+        <source>Smallest integer greater than or equal to a number.</source>
+        <target state="new">Smallest integer greater than or equal to a number.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.concatenate">
+        <source>Combine lists in order.</source>
+        <target state="new">Combine lists in order.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.contains">
+        <source>Check whether a string contains a substring.</source>
+        <target state="new">Check whether a string contains a substring.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.count">
+        <source>Number of items in a list.</source>
+        <target state="new">Number of items in a list.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.date">
+        <source>Convert an ISO date string to a date.</source>
+        <target state="new">Convert an ISO date string to a date.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.date and time">
+        <source>Convert an ISO date-time string.</source>
+        <target state="new">Convert an ISO date-time string.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.day of week">
+        <source>Weekday name for a date.</source>
+        <target state="new">Weekday name for a date.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.day of year">
+        <source>Day number within the year.</source>
+        <target state="new">Day number within the year.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.distinct values">
+        <source>Remove duplicate list items.</source>
+        <target state="new">Remove duplicate list items.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.duration">
+        <source>Convert an ISO duration string.</source>
+        <target state="new">Convert an ISO duration string.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.ends with">
+        <source>Check a string suffix.</source>
+        <target state="new">Check a string suffix.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.floor">
+        <source>Largest integer less than or equal to a number.</source>
+        <target state="new">Largest integer less than or equal to a number.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.get entries">
+        <source>List the keys and values of a context.</source>
+        <target state="new">List the keys and values of a context.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.get value">
+        <source>Read a context entry by its key.</source>
+        <target state="new">Read a context entry by its key.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.index of">
+        <source>One-based positions of matching list items.</source>
+        <target state="new">One-based positions of matching list items.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.insert before">
+        <source>Insert an item at a one-based list position.</source>
+        <target state="new">Insert an item at a one-based list position.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.list contains">
+        <source>Check whether a list contains an item.</source>
+        <target state="new">Check whether a list contains an item.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.lower case">
+        <source>Convert text to lower case.</source>
+        <target state="new">Convert text to lower case.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.max">
+        <source>Maximum value in a list.</source>
+        <target state="new">Maximum value in a list.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.mean">
+        <source>Arithmetic mean of a list of numbers.</source>
+        <target state="new">Arithmetic mean of a list of numbers.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.min">
+        <source>Minimum value in a list.</source>
+        <target state="new">Minimum value in a list.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.now">
+        <source>Current date and time from the engine clock.</source>
+        <target state="new">Current date and time from the engine clock.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.number">
+        <source>Convert a numeric string to a number.</source>
+        <target state="new">Convert a numeric string to a number.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.reverse">
+        <source>Reverse the order of list items.</source>
+        <target state="new">Reverse the order of list items.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.round">
+        <source>Round a number to a decimal scale.</source>
+        <target state="new">Round a number to a decimal scale.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.sort">
+        <source>Sort items using a comparison function.</source>
+        <target state="new">Sort items using a comparison function.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.split">
+        <source>Split text using a delimiter pattern.</source>
+        <target state="new">Split text using a delimiter pattern.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.starts with">
+        <source>Check a string prefix.</source>
+        <target state="new">Check a string prefix.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.string">
+        <source>Convert a value to its string representation.</source>
+        <target state="new">Convert a value to its string representation.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.string join">
+        <source>Join strings with a delimiter.</source>
+        <target state="new">Join strings with a delimiter.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.string length">
+        <source>Number of characters in a string.</source>
+        <target state="new">Number of characters in a string.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.substring">
+        <source>Extract text using a one-based start position.</source>
+        <target state="new">Extract text using a one-based start position.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.sum">
+        <source>Sum a list of numbers.</source>
+        <target state="new">Sum a list of numbers.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.time">
+        <source>Convert an ISO time string.</source>
+        <target state="new">Convert an ISO time string.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.today">
+        <source>Current date from the engine clock.</source>
+        <target state="new">Current date from the engine clock.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Function.upper case">
+        <source>Convert text to upper case.</source>
+        <target state="new">Convert text to upper case.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.HostFunction">
+        <source>Requires a separately authorized host function provider; metadata alone does not enable execution.</source>
+        <target state="new">Requires a separately authorized host function provider; metadata alone does not enable execution.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Indent">
+        <source>Indent selection</source>
+        <target state="new">Indent selection</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Infer">
+        <source>Infer sample variables</source>
+        <target state="new">Infer sample variables</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Manager">
+        <source>Manage FEEL expression</source>
+        <target state="new">Manage FEEL expression</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.ManagerProperty">
+        <source>Manage FEEL expression: {0}</source>
+        <target state="new">Manage FEEL expression: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.NoSafeFix">
+        <source>No safe delimiter correction is available.</source>
+        <target state="new">No safe delimiter correction is available.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Parameter">
+        <source>Parameter</source>
+        <target state="new">Parameter</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Playground">
+        <source>Explicit evaluation playground</source>
+        <target state="new">Explicit evaluation playground</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Reference">
+        <source>Function reference</source>
+        <target state="new">Function reference</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Run">
+        <source>Run</source>
+        <target state="new">Run</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Sample">
+        <source>Sample context JSON (local, ephemeral)</source>
+        <target state="new">Sample context JSON (local, ephemeral)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Search">
+        <source>Search functions</source>
+        <target state="new">Search functions</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Share">
+        <source>Share with host</source>
+        <target state="new">Share with host</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Shortcuts">
+        <source>Ctrl+Space: suggestions. Up/Down: select. Enter/Tab: accept. Escape: dismiss. Ctrl/Cmd+Enter: commit.</source>
+        <target state="new">Ctrl+Space: suggestions. Up/Down: select. Enter/Tab: accept. Escape: dismiss. Ctrl/Cmd+Enter: commit.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Snippet.Conditional">
+        <source>Conditional expression snippet.</source>
+        <target state="new">Conditional expression snippet.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Snippet.Existential">
+        <source>Existential expression snippet.</source>
+        <target state="new">Existential expression snippet.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Snippet.Iteration">
+        <source>Iteration expression snippet.</source>
+        <target state="new">Iteration expression snippet.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.StaleProposal">
+        <source>Proposal rejected: the draft changed or native editing is no longer available. Request a new proposal.</source>
+        <target state="new">Proposal rejected: the draft changed or native editing is no longer available. Request a new proposal.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.StaleResult">
+        <source>Result no longer matches the current draft. Run the expression again before copying.</source>
+        <target state="new">Result no longer matches the current draft. Run the expression again before copying.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Suggest">
+        <source>Request host suggestion</source>
+        <target state="new">Request host suggestion</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.TemporalResult">
+        <source>FeelSharp 1.3.0 exposes this temporal result as internal text (StringValue), not a typed temporal value.</source>
+        <target state="new">FeelSharp 1.3.0 exposes this temporal result as internal text (StringValue), not a typed temporal value.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Tools">
+        <source>Tools</source>
+        <target state="new">Tools</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Unavailable">
+        <source>Evaluation unavailable until the host explicitly supplies an evaluator.</source>
+        <target state="new">Evaluation unavailable until the host explicitly supplies an evaluator.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Feel.Variables">
+        <source>Variables and sample context</source>
+        <target state="new">Variables and sample context</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Icon.ad-hoc-marker">
         <source>Ad hoc marker</source>
         <target state="translated">Značka ad hoc</target>

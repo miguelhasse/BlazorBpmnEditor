@@ -1,0 +1,6 @@
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp
+@using Hasseware.AspNetCore.Components.Bpmn.FeelSharp
+<BpmnFeelSharpField @ref="_field" Value="@Value" ValueChanged="@ValueChanged" DraftChanged="@DraftChanged"
+                   DiagnosticsChanged="@DiagnosticsChanged" Variables="@Variables" Label="@Label"
+                   ReadOnly="@ReadOnly" PersistencePrefix="@PersistencePrefix" Revision="@Revision" Rows="@Rows"
+                   EditorType="@typeof(FluentBpmnFeelSharpCodeEditor)" />

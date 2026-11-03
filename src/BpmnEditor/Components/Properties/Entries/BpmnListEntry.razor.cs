@@ -14,18 +14,29 @@ public partial class BpmnListEntry
     private IReadOnlyList<IReadOnlyDictionary<string, string?>>? _source;
     private int _revision = -1;
     private string? _entryId;
+    private object _rowIdentity = new();
 
     /// <inheritdoc />
     protected override void OnParametersSet()
     {
         if (!ReferenceEquals(_source, Entry.Rows) || _revision != Context.Revision || _entryId != Entry.Id)
         {
+            if (_revision != Context.Revision || _entryId != Entry.Id || !SameRows(Entry.Rows))
+            {
+                _rowIdentity = new();
+            }
             _source = Entry.Rows;
             _revision = Context.Revision;
             _entryId = Entry.Id;
             _rows = (Entry.Rows ?? []).Select(row => new Dictionary<string, string?>(row)).ToList();
         }
+
     }
+
+    private bool SameRows(IReadOnlyList<IReadOnlyDictionary<string, string?>>? rows) =>
+        rows is not null && rows.Count == _rows.Count && rows.Select((row, index) =>
+            row.Count == _rows[index].Count && row.All(pair =>
+                _rows[index].TryGetValue(pair.Key, out var value) && value == pair.Value)).All(equal => equal);
 
     private BpmnPropertyEntryContext CellContext(int index, BpmnPropertyColumn column) => Context with
     {
@@ -58,6 +69,7 @@ public partial class BpmnListEntry
     {
         if (ReadOnly) return Task.CompletedTask;
         _rows.RemoveAt(index);
+        _rowIdentity = new();
         return CommitAsync();
     }
 
@@ -65,6 +77,7 @@ public partial class BpmnListEntry
     {
         if (ReadOnly || index + offset < 0 || index + offset >= _rows.Count) return Task.CompletedTask;
         (_rows[index], _rows[index + offset]) = (_rows[index + offset], _rows[index]);
+        _rowIdentity = new();
         return CommitAsync();
     }
 

@@ -277,6 +277,11 @@
         <target state="translated">BPMN gösterim galerisi</target>
         <note />
       </trans-unit>
+      <trans-unit id="Home.FeelAuthoring">
+        <source>FEEL authoring</source>
+        <target state="new">FEEL authoring</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Home.Gallery">
         <source>Notation gallery</source>
         <target state="translated">Gösterim galerisi</target>

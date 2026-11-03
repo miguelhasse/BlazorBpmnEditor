@@ -19,6 +19,7 @@ public abstract class BpmnToolbarBase : BpmnEditorComponentBase
     /// <inheritdoc />
     protected override bool ShouldRenderOnStateChange(BpmnEditorState previous, BpmnEditorState current) =>
         ChildContent is not null || previous.Zoom != current.Zoom || previous.IsReadOnly != current.IsReadOnly
+            || previous.PropertyActionRevision != current.PropertyActionRevision
             || previous.CanUndo != current.CanUndo || previous.CanRedo != current.CanRedo
             || previous.Document != current.Document || previous.MessageCatalog != current.MessageCatalog
             || previous.MessageFocusOrigin != current.MessageFocusOrigin
@@ -163,9 +164,19 @@ public abstract class BpmnToolbarBase : BpmnEditorComponentBase
     /// <summary>Opens the document-level Message catalog.</summary>
     protected void OpenMessageCatalog() => Session.ShowMessages();
 
+    /// <summary>Action supplied by the last-focused property.</summary>
+    protected BpmnPropertyAction? PropertyAction => Session.PropertyAction;
+    /// <summary>Native handle for the property manager action, supplied by the active UI kit.</summary>
+    protected ElementReference PropertyActionButton { get; set; }
+
+    /// <summary>Opens the active property's manager.</summary>
+    protected Task OpenPropertyManagerAsync() => Session.ExecutePropertyActionAsync();
+
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (Session.TakePropertyActionFocus() && PropertyAction is not null)
+            await PropertyActionButton.FocusAsync(preventScroll: true).ConfigureAwait(true);
         if (Session.TakeMessageFocus("toolbar") && ShowMessages)
             await MessagesButton.FocusAsync(preventScroll: true).ConfigureAwait(true);
     }

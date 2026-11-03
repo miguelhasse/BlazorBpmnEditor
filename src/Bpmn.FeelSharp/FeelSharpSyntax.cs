@@ -5,8 +5,10 @@ namespace Hasseware.AspNetCore.Components.Bpmn.FeelSharp;
 
 internal sealed class FeelSharpSyntax
 {
-    private readonly IFeelEngine _engine = new FeelEngineBuilder()
-        .WithAutoDiscovery(false).WithExternalFunctions(false).Build();
+    private readonly Lazy<IFeelEngine> _engine = new(() => new FeelEngineBuilder()
+        .WithAutoDiscovery(false).WithExternalFunctions(false).Build());
+
+    internal bool IsInitialized => _engine.IsValueCreated;
 
     internal string? Validate(string expression)
     {
@@ -14,9 +16,10 @@ internal sealed class FeelSharpSyntax
         {
             return null;
         }
-        lock (_engine)
+        var engine = _engine.Value;
+        lock (engine)
         {
-            var result = _engine.ParseExpression(expression);
+            var result = engine.ParseExpression(expression);
             return result.IsSuccess ? null : result.Error;
         }
     }

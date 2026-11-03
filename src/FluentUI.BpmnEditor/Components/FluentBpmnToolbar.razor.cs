@@ -13,6 +13,7 @@ public sealed partial class FluentBpmnToolbar
     private bool _colorsOpened;
     private bool _restoreColorsFocus;
     private FluentButton? _messages;
+    private FluentButton? _propertyActionButton;
 
     private bool CanEditColors => CanColor(BpmnColorChannel.Border);
 
@@ -39,6 +40,8 @@ public sealed partial class FluentBpmnToolbar
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (_propertyActionButton is not null)
+            PropertyActionButton = _propertyActionButton.Element;
         if (_messages is not null)
             MessagesButton = _messages.Element;
 

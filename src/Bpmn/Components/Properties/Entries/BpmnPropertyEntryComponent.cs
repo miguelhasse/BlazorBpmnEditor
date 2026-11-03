@@ -11,6 +11,14 @@ namespace Hasseware.AspNetCore.Components.Bpmn;
 /// <summary>Shared context and style contract for the built-in property editors.</summary>
 public abstract class BpmnPropertyEntryComponent : ComponentBase
 {
+    /// <summary>Optional native text enhancement; absent for ordinary property controls.</summary>
+    [CascadingParameter] protected BpmnPropertyInputEnhancement? InputEnhancement { get; set; }
+
+    /// <summary>Forwards optional fallback keys without competing with enhanced native input handling.</summary>
+    protected Task InputKeyDownAsync(Microsoft.AspNetCore.Components.Web.KeyboardEventArgs args) =>
+        InputEnhancement?.IsEnhanced != true && InputEnhancement?.KeyDown is { } keyDown
+            ? keyDown(args) : Task.CompletedTask;
+
     /// <summary>The property metadata and guarded write callbacks; an empty read-only entry when omitted.</summary>
     [Parameter]
     public BpmnPropertyEntryContext Context { get; set; } = new(new("", "", BpmnPropertyEntryKind.ReadOnly), default, default, true, 0);

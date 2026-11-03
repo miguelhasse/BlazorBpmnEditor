@@ -1,4 +1,5 @@
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
+using Hasseware.AspNetCore.Components.Bpmn.FeelSharp;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp;
@@ -11,6 +12,16 @@ public static class FluentBpmnFeelSharpServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
         services.Configure<BpmnOptions>(options => options.Properties.Editors.AddFeelEditor<FluentBpmnFeelSharpCodeEditor>());
+        return services;
+    }
+
+    /// <summary>Installs the Fluent editor with shared diagnostics options, without enabling evaluation.</summary>
+    public static IServiceCollection AddFluentBpmnFeelSharpEditor(this IServiceCollection services,
+        Action<BpmnFeelSharpEditorOptions> configure)
+    {
+        ArgumentNullException.ThrowIfNull(configure);
+        services.AddFluentBpmnFeelSharpEditor();
+        services.Configure(configure);
         return services;
     }
 }

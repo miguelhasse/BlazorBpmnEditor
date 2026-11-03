@@ -3,6 +3,16 @@
 
 <label class="@(Block + "__property")" title="@Entry.Tooltip">
     <span class="@(Block + "__label")">@Entry.Label</span>
-    @ChildContent
+    @if (InputEnhancement?.Suffix is { } suffix)
+    {
+        <span data-property-input-group>
+            @ChildContent
+            @suffix
+        </span>
+    }
+    else
+    {
+        @ChildContent
+    }
     <BpmnPropertyEntryHelp Context="@Context" />
 </label>

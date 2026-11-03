@@ -71,12 +71,31 @@ public sealed class EditorTests : BunitContext
         var entry = Entry(BpmnFeelMode.Required, "=1 + )") with { Error = "binding failed" };
         var editor = RenderEditor(Context(entry, value => submitted = value));
         Assert.Contains("binding failed", editor.Markup, StringComparison.Ordinal);
-        Assert.Contains("FEEL", editor.Find("[role=status]").TextContent, StringComparison.Ordinal);
+        Assert.Contains("FEEL", editor.Find("[role=status]:not(.bpmn-feelsharp-announcement)").TextContent, StringComparison.Ordinal);
         editor.Find("textarea").Input("2 + )");
         editor.Find("textarea").Change("2 + )");
         Assert.Equal("=2 + )", submitted);
         editor.Find("textarea").Change("");
         Assert.Null(submitted);
+    }
+
+    [Fact]
+    public void DeferredDiagnosticsStillAnalyzeResetWhenDomEnhancementIsUnavailable()
+    {
+        Services.AddSingleton<IJSRuntime>(new UnavailableRuntime());
+        Services.Configure<BpmnFeelSharpEditorOptions>(options =>
+        {
+            options.DeferInitialDiagnostics = true;
+            options.DiagnosticsDelay = TimeSpan.FromMilliseconds(20);
+        });
+        var editor = RenderEditor(Context(Entry(BpmnFeelMode.Required, "=1 + )")));
+        editor.WaitForAssertion(() => Assert.Single(editor.Instance.Diagnostics));
+        editor.Render(parameters => parameters.Add(component => component.Context,
+            Context(Entry(BpmnFeelMode.Required, "=2")) with { Revision = 2 }));
+        editor.WaitForAssertion(() => Assert.Empty(editor.Instance.Diagnostics));
+        editor.Render(parameters => parameters.Add(component => component.Context,
+            Context(Entry(BpmnFeelMode.Required, "=2 + )")) with { Revision = 3 }));
+        editor.WaitForAssertion(() => Assert.Single(editor.Instance.Diagnostics));
     }
 
     [Fact]
@@ -91,7 +110,7 @@ public sealed class EditorTests : BunitContext
 
         await editor.InvokeAsync(async () =>
         {
-            editor.Instance.Input(new() { Value = "stale" }, oldGeneration);
+            await editor.Instance.InputAsync(new() { Value = "stale" }, oldGeneration);
             await editor.Instance.ChangeAsync(new() { Value = "stale" }, oldGeneration);
             await editor.Instance.KeyDownAsync(new() { Key = "Enter", CtrlKey = true }, oldGeneration);
         });
@@ -194,7 +213,146 @@ public sealed class EditorTests : BunitContext
         Assert.Null(submitted);
     }
 
-    private IRenderedComponent<BpmnFeelSharpCodeEditor> RenderEditor(BpmnPropertyEntryContext context, bool fluent = false)
+    [Fact]
+    public async Task DiagnosticsPublishOncePerAnalysisAndClearAfterComposition()
+    {
+        var updates = new List<BpmnFeelSharpDiagnosticsUpdate>();
+        var observed = new List<BpmnFeelSharpDiagnosticsUpdate>();
+        Services.AddBpmnFeelSharpEditor(options =>
+        {
+            options.DiagnosticsObserver = update =>
+            {
+                observed.Add(update);
+                return Task.CompletedTask;
+            };
+        });
+        var module = JSInterop.SetupModule(ModulePath);
+        var bridge = module.SetupModule("attach", _ => true);
+        bridge.SetupVoid("dispose", _ => true).SetVoidResult();
+        var callback = EventCallback.Factory.Create<BpmnFeelSharpDiagnosticsUpdate>(this, updates.Add);
+        var editor = RenderEditor(Context(Entry(BpmnFeelMode.Required, "=1 + )")), diagnosticsChanged: callback);
+        var diagnostic = Assert.Single(editor.Instance.Diagnostics);
+        Assert.Equal("FEEL.Syntax", diagnostic.Code);
+        Assert.Equal(BpmnFeelSharpDiagnosticSeverity.Warning, diagnostic.Severity);
+        Assert.Null(diagnostic.Start);
+        Assert.Null(diagnostic.Length);
+        Assert.Single(updates);
+        Assert.Single(observed);
+        await editor.Instance.SnapshotAsync("1 + )", 1, 1, 1, 1, false, true);
+        await editor.Instance.NativeKeyAsync("Escape", 1, 1);
+        Assert.Single(updates);
+        await editor.Instance.SnapshotAsync("1", 1, 1, 2, 1, true, true);
+        Assert.Single(updates);
+        await editor.Instance.SnapshotAsync("1", 1, 1, 3, 1, false, true);
+        Assert.Empty(editor.Instance.Diagnostics);
+        Assert.Equal(2, updates.Count);
+        Assert.Equal(2, observed.Count);
+        editor.Render(parameters => parameters.Add(component => component.Context,
+            Context(Entry(BpmnFeelMode.Optional, "literal")) with { Revision = 2 }));
+        Assert.Empty(Assert.Single(updates, update => update.Generation == 2).Diagnostics);
+        await editor.Instance.SnapshotAsync("stale", 5, 5, 4, 1, false, true);
+        Assert.Equal(3, updates.Count);
+        await editor.InvokeAsync(() => editor.Instance.DisposeAsync().AsTask());
+        await editor.Instance.SnapshotAsync("bad", 3, 3, 5, 2, false, true);
+        Assert.Equal(3, updates.Count);
+    }
+
+    [Fact]
+    public async Task DiagnosticCallbackResetCannotDeliverOldUpdateToObserver()
+    {
+        var observed = new List<BpmnFeelSharpDiagnosticsUpdate>();
+        Services.Configure<BpmnFeelSharpEditorOptions>(options =>
+            options.DiagnosticsObserver = update => { observed.Add(update); return Task.CompletedTask; });
+        var module = JSInterop.SetupModule(ModulePath);
+        var bridge = module.SetupModule("attach", _ => true);
+        bridge.SetupVoid("dispose", _ => true).SetVoidResult();
+        var pending = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var callback = EventCallback.Factory.Create<BpmnFeelSharpDiagnosticsUpdate>(this, async update =>
+        {
+            if (!update.Diagnostics.IsEmpty)
+            {
+                entered.SetResult();
+                await pending.Task;
+            }
+        });
+        var editor = RenderEditor(Context(Entry(BpmnFeelMode.Required, "=1")), diagnosticsChanged: callback);
+        var snapshot = editor.Instance.SnapshotAsync("1 + )", 5, 5, 1, 1, false, true);
+        await entered.Task.WaitAsync(Xunit.TestContext.Current.CancellationToken);
+        editor.Render(parameters => parameters.Add(component => component.Context,
+            Context(Entry(BpmnFeelMode.Required, "=2")) with { Revision = 2 }));
+        pending.SetResult();
+        await snapshot;
+        Assert.All(observed, update => Assert.Empty(update.Diagnostics));
+        Assert.Equal(2, observed.Count);
+        Assert.Empty(editor.Instance.Diagnostics);
+    }
+
+    [Fact]
+    public async Task ObserverFailuresPropagateInsteadOfHidingDiagnostics()
+    {
+        Services.Configure<BpmnFeelSharpEditorOptions>(options => options.DiagnosticsObserver = update =>
+            update.Diagnostics.IsEmpty ? Task.CompletedTask : Task.FromException(new InvalidOperationException("Observer failed")));
+        var module = JSInterop.SetupModule(ModulePath);
+        var bridge = module.SetupModule("attach", _ => true);
+        bridge.SetupVoid("dispose", _ => true).SetVoidResult();
+        var editor = RenderEditor(Context(Entry(BpmnFeelMode.Required, "=1")));
+        var error = await Assert.ThrowsAsync<InvalidOperationException>(() => editor.Instance.SnapshotAsync("1 + )", 5, 5, 1, 1, false, true));
+        Assert.Equal("Observer failed", error.Message);
+        Assert.Single(editor.Instance.Diagnostics);
+    }
+
+    [Fact]
+    public async Task ExplicitCompletionShowsEscapedHelpAndRequestsNativeCaret()
+    {
+        var module = JSInterop.SetupModule(ModulePath);
+        var bridge = module.SetupModule("attach", _ => true);
+        bridge.SetupVoid("dispose", _ => true).SetVoidResult();
+        bridge.SetupVoid("complete", _ => true).SetVoidResult();
+        var editor = RenderEditor(Context(Entry(BpmnFeelMode.Required, "=")) with
+        { Variables = [new("abs", "Value", "<script>host documentation</script>")] });
+        editor.Find("button[aria-keyshortcuts]").Click();
+        Assert.Single(bridge.Invocations, invocation => invocation.Identifier == "complete");
+        await editor.Instance.SnapshotAsync("", 0, 0, 1, 1, false, true);
+        await editor.Instance.NativeKeyAsync("complete", 1, 1);
+        Assert.NotEmpty(editor.FindAll("[role=option]"));
+        Assert.Empty(editor.FindAll("script"));
+        Assert.Contains("<script>host documentation</script>", editor.Find(".bpmn-feelsharp-help").TextContent, StringComparison.Ordinal);
+        Assert.Contains(editor.Instance.HelpId, editor.Find("textarea").GetAttribute("aria-describedby"), StringComparison.Ordinal);
+        Assert.Contains("suggestions available", editor.Find(".bpmn-feelsharp-announcement").TextContent, StringComparison.Ordinal);
+        await editor.Instance.NativeKeyAsync("Escape", 1, 1);
+        Assert.Empty(editor.FindAll(".bpmn-feelsharp-help"));
+        await editor.Instance.SnapshotAsync("sum", 3, 3, 2, 1, false, true);
+        Assert.Contains("sum(list)", editor.Find(".bpmn-feelsharp-help").TextContent, StringComparison.Ordinal);
+        Assert.Equal("sum([1, 2, 3])", editor.Find(".bpmn-feelsharp-help code").TextContent);
+    }
+
+    [Fact]
+    public async Task VariableRefreshPreservesExplicitEmptyCompletion()
+    {
+        var module = JSInterop.SetupModule(ModulePath);
+        var bridge = module.SetupModule("attach", _ => true);
+        bridge.SetupVoid("dispose", _ => true).SetVoidResult();
+        var context = Context(Entry(BpmnFeelMode.Required, "=")) with { Variables = [new("amount")] };
+        var editor = RenderEditor(context);
+        await editor.Instance.SnapshotAsync("", 0, 0, 1, 1, false, true);
+        await editor.Instance.NativeKeyAsync("complete", 1, 1);
+        Assert.NotEmpty(editor.FindAll("[role=option]"));
+        await editor.Instance.NativeKeyAsync("ArrowDown", 1, 1);
+
+        editor.Render(parameters => parameters.Add(component => component.Context,
+            context with { Variables = [new("account", "Updated type", "Updated documentation")] }));
+
+        Assert.Contains(editor.FindAll("[role=option]"), option => option.TextContent.Contains("account", StringComparison.Ordinal));
+        Assert.DoesNotContain(editor.FindAll("[role=option]"), option => option.TextContent.Contains("amount", StringComparison.Ordinal));
+        Assert.Contains("Updated documentation", editor.Find(".bpmn-feelsharp-help").TextContent, StringComparison.Ordinal);
+        await editor.Instance.NativeKeyAsync("Escape", 1, 1);
+        editor.Render(parameters => parameters.Add(component => component.Context, context));
+        Assert.Empty(editor.FindAll("[role=option]"));
+    }
+
+    private IRenderedComponent<BpmnFeelSharpCodeEditor> RenderEditor(BpmnPropertyEntryContext context, bool fluent = false,
+        EventCallback<BpmnFeelSharpDiagnosticsUpdate> diagnosticsChanged = default)
     {
         var services = new ServiceCollection();
         if (fluent)
@@ -210,7 +368,9 @@ public sealed class EditorTests : BunitContext
         var registry = provider.GetRequiredService<IOptions<BpmnOptions>>().Value.Properties.Editors;
         var scope = Render<BpmnPropertyScopeProvider>(parameters => parameters
             .Add(component => component.Editors, registry)
-            .AddChildContent<BpmnFeelSharpCodeEditor>(child => child.Add(component => component.Context, context)));
+            .AddChildContent<BpmnFeelSharpCodeEditor>(child => child.Add(component => component.Context, context)
+                .Add(component => component.PropertyInput, false)
+                .Add(component => component.DiagnosticsChanged, diagnosticsChanged)));
         return scope.FindComponent<BpmnFeelSharpCodeEditor>();
     }
 

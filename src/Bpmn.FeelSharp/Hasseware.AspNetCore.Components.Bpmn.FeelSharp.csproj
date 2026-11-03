@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="FeelSharp" />
     <ProjectReference Include="..\Bpmn\Hasseware.AspNetCore.Components.Bpmn.csproj" />
+    <ProjectReference Include="..\BpmnEditor\Hasseware.AspNetCore.Components.BpmnEditor.csproj" />
     <ProjectReference Include="..\Bpmn.FeelSharp.Scripts\Hasseware.AspNetCore.Components.Bpmn.FeelSharp.Scripts.esproj" PrivateAssets="All" />
     <InternalsVisibleTo Include="Hasseware.AspNetCore.Components.Bpmn.FeelSharp.Tests" />
     <InternalsVisibleTo Include="Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp" />

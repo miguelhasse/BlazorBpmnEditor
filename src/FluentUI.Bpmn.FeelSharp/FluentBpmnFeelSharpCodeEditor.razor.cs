@@ -9,10 +9,9 @@ public partial class FluentBpmnFeelSharpCodeEditor
     private FluentFeelSharpInput? _textArea;
 
     internal override ElementReference InputElement => _textArea?.Element ?? default;
-    internal override string AttachMethod => "attachFluent";
+    internal override string AttachMethod => PropertyInput ? "attachProperty" : "attachFluent";
 
-    private void DraftChanged(string? value, int generation) => Input(new ChangeEventArgs { Value = value }, generation);
-
+    private Task DraftChangedAsync(string? value, int generation) => InputAsync(new ChangeEventArgs { Value = value }, generation);
     private Task CommitFallbackAsync(FocusEventArgs _, int generation) =>
         ChangeAsync(new ChangeEventArgs { Value = Expression }, generation);
 }

@@ -1,0 +1,49 @@
+@using Hasseware.AspNetCore.Components.Bpmn.FeelSharp
+@using Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp
+<h1>Managed FEEL authoring</h1>
+<p>Opt-in authoring features. Sample data stays local; evaluation requires explicit authorization and Run.</p>
+<button id="feel-reset" @onclick="Reset">Reset entries</button>
+<button id="feel-readonly" @onclick="ToggleReadOnly">Toggle read-only</button>
+@if (Plain)
+{
+<BpmnEditorScope @ref="_editor" Document="@Document" IsReadOnly="@_readOnly" KitDefaults="@BpmnStandardDefaults.Kit">
+    <section id="native-authoring">
+        <BpmnToolbar ShowZoom="false" ShowUndoRedo="false" ShowShortcuts="false" ShowMessages="false" />
+        <BpmnPropertyScopeProvider MultilineRows="6" IsReadOnly="@_readOnly">
+            <BpmnFeelSharpCodeEditor Context="@NativeContext" />
+        </BpmnPropertyScopeProvider>
+        <output>@_native</output>
+    </section>
+</BpmnEditorScope>
+}
+else
+{
+<BpmnEditorScope @ref="_editor" Document="@Document" IsReadOnly="@_readOnly" KitDefaults="@FluentBpmnDefaults.Kit">
+    <section id="fluent-authoring">
+        <FluentBpmnToolbar ShowZoom="false" ShowUndoRedo="false" ShowShortcuts="false" ShowMessages="false" />
+        <BpmnPropertyScopeProvider MultilineRows="6" IsReadOnly="@_readOnly">
+            <FluentBpmnFeelSharpCodeEditor Context="@FluentContext" />
+        </BpmnPropertyScopeProvider>
+        <output>@_fluent</output>
+    </section>
+</BpmnEditorScope>
+}
+<hr />
+<label><input type="checkbox" @bind="_authorize" /> Authorize trusted sample interpretation</label>
+@if (Plain)
+{
+<BpmnFeelSharpWorkspace Value="@_workspace" Applied="ApplyWorkspace" Cancelled="CancelWorkspace"
+                        ContextKey="demo-workspace" Revision="@_revision" Label="Standalone FEEL workspace"
+                        ReadOnly="@_readOnly" Variables="@Variables"
+                        Evaluator="@(_authorize ? Evaluator : null)" Actions="@HostActions" />
+}
+else
+{
+<FluentBpmnFeelSharpWorkspace Value="@_workspace" Applied="ApplyWorkspace" Cancelled="CancelWorkspace"
+                              ContextKey="demo-workspace" Revision="@_revision" Label="Standalone FEEL workspace"
+                              ReadOnly="@_readOnly" Variables="@Variables"
+                              Evaluator="@(_authorize ? Evaluator : null)" Actions="@HostActions" />
+}
+<output id="feel-workspace-result">@_workspace</output>
+<p>@_notice</p>
+<FluentDialogProvider />

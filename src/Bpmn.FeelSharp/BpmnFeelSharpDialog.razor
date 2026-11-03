@@ -1,0 +1,14 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn.FeelSharp
+<BpmnDialog Class="bpmn-feelsharp-manager" style="inline-size: min(52rem, calc(100vw - 2rem))" Visible="@Visible" OnDismiss="CancelAsync" OnClosed="@Closed" aria-label="@Label">
+    <TitleTemplate><h2>@Label</h2></TitleTemplate>
+    <ChildContent>
+        <BpmnFeelSharpWorkspace @ref="_workspace" Value="@Value" Applied="@Applied" Cancelled="CancelAsync"
+                               ContextKey="@ContextKey" Revision="@Revision" ReadOnly="@ReadOnly"
+                               Variables="@Variables" Label="@Label" EditorType="@EditorType"
+                               Evaluator="@Evaluator" Actions="@Actions" ShowCommitActions="false" MinimalEditor="true" />
+    </ChildContent>
+    <ActionTemplate>
+        <button type="button" disabled="@ReadOnly" @onclick="ApplyAsync">@Text("Feel.Apply")</button>
+        <button type="button" @onclick="CancelAsync">@Text("Feel.Cancel")</button>
+    </ActionTemplate>
+</BpmnDialog>

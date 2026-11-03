@@ -11,6 +11,7 @@
   <data name="Home.Gallery" xml:space="preserve"><value>Notation gallery</value></data>
   <data name="Home.Icons" xml:space="preserve"><value>Icon manifest</value></data>
   <data name="Home.Interchange" xml:space="preserve"><value>XML interchange</value></data>
+  <data name="Home.FeelAuthoring" xml:space="preserve"><value>FEEL authoring</value></data>
   <data name="SampleDiagram" xml:space="preserve"><value>Sample diagram</value></data>
   <data name="ImportDiagnostics" xml:space="preserve"><value>{0} import diagnostic(s)</value></data>
   <data name="DocumentSummary" xml:space="preserve"><value>{0} flow nodes, {1} sequence flows, {2} diagram(s)</value></data>

@@ -1,0 +1,13 @@
+.fluent-feelsharp-workspace { display: grid; gap: 1rem; color: var(--colorNeutralForeground1, CanvasText); }
+.fluent-feelsharp-tabs { display: flex; flex-wrap: wrap; gap: .25rem; border-bottom: 1px solid var(--colorNeutralStroke1, GrayText); }
+.fluent-feelsharp-tabs ::deep [role="tab"] { border-radius: 0; border-bottom: 2px solid transparent; }
+.fluent-feelsharp-tabs ::deep [aria-selected="true"] { font-weight: 600; border-bottom-color: var(--colorBrandStroke1, Highlight); }
+.fluent-feelsharp-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem; margin-block-end: 1rem; }
+.fluent-feelsharp-filters ::deep fluent-field { flex: 1; min-width: 10rem; }
+.fluent-feelsharp-workspace article { padding-block: .75rem; border-bottom: 1px solid var(--colorNeutralStroke2, GrayText); }
+.fluent-feelsharp-workspace article p { margin-block: .375rem; }
+.fluent-feelsharp-workspace article small { display: block; }
+.fluent-feelsharp-workspace pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.fluent-feelsharp-tools summary { cursor: pointer; padding-block: .5rem; }
+.fluent-feelsharp-tools > div, .fluent-feelsharp-actions { display: flex; flex-wrap: wrap; gap: .5rem; padding-block: .5rem; }
+.fluent-feelsharp-workspace [hidden] { display: none; }

@@ -94,5 +94,11 @@
                       Disabled="@(!CanManageMessages)" aria-disabled="@(!CanManageMessages ? "true" : null)" OnClick="OpenMessageCatalog">@Text("MessageCatalog.Title")</FluentButton>
     }
 
+    @if (PropertyAction is { } propertyAction)
+    {
+        <FluentButton @ref="_propertyActionButton" Appearance="ButtonAppearance.Subtle" Type="ButtonType.Button" Class="bpmn-toolbar__button"
+                      role="button" data-property-action="manage" Disabled="@(!propertyAction.Enabled)"
+                      OnClick="OpenPropertyManagerAsync">@propertyAction.Label</FluentButton>
+    }
     @ChildContent
 </div>

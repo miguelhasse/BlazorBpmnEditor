@@ -62,6 +62,7 @@ public sealed partial class BpmnEditorSession
 
     private void RefreshState()
     {
+        ValidatePropertyAction();
         _selectionSnapshot = _selection.Count == 1 ? Describe(_selection[0]) : null;
         ContextMenuSnapshot = _menu?.ElementId is { Length: > 0 } id ? Describe(id) : null;
         var previous = State;
@@ -88,6 +89,7 @@ public sealed partial class BpmnEditorSession
         var next = new BpmnEditorState
         {
             Document = EditedDocument,
+            PropertyActionRevision = _propertyActionRevision,
             DrawnDocument = DrawnDocument,
             Configuration = PreserveRecord(previous.Configuration, ConfigurationSnapshot),
             IsReadOnly = IsReadOnly,

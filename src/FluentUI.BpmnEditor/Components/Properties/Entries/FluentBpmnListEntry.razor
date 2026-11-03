@@ -16,7 +16,7 @@
             @for (var index = 0; index < _rows.Count; index++)
             {
                 var rowIndex = index;
-                <tr>
+                <tr @key="(_rowIdentity, rowIndex)">
                     @foreach (var column in VisibleColumns)
                     {
                         <td>

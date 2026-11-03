@@ -1,7 +1,10 @@
 .fluent-bpmn-feelsharp { display: grid; gap: .25rem; }
+.fluent-bpmn-feelsharp[data-density="compact"] { --bpmn-feel-padding: .25rem; }
+.fluent-bpmn-feelsharp[data-density="comfortable"] { --bpmn-feel-padding: .75rem; }
 .fluent-bpmn-feelsharp-control { position: relative; min-width: 0; }
 .fluent-bpmn-feelsharp-surface { position: relative; }
 .fluent-bpmn-feelsharp-surface ::deep fluent-textarea { display: block; width: 100%; }
+.fluent-bpmn-feelsharp-surface ::deep fluent-textarea::part(root) { width: 100%; box-sizing: border-box; }
 .bpmn-feelsharp-highlight {
     position: absolute;
     box-sizing: border-box;
@@ -12,8 +15,10 @@
 }
 [data-enhanced="true"] .bpmn-feelsharp-highlight { visibility: visible; }
 .feel-keyword { color: var(--colorBrandForeground1, #005a9e); }
-.feel-string { color: #a33d10; }
-.feel-number { color: #087443; }
+.feel-function { color: var(--bpmn-feel-function, var(--colorBrandForeground1, #005a9e)); }
+.feel-temporal { color: var(--bpmn-feel-temporal, var(--bpmn-feel-string, #a33d10)); }
+.feel-string { color: var(--bpmn-feel-string, var(--colorPaletteRedForeground1, #a33d10)); }
+.feel-number { color: var(--bpmn-feel-number, var(--colorPaletteGreenForeground1, #087443)); }
 .feel-comment { color: GrayText; }
 .fluent-bpmn-feelsharp-completions {
     position: absolute;
@@ -32,6 +37,11 @@
     outline: 1px solid var(--colorBrandForeground1, Highlight);
 }
 .fluent-bpmn-feelsharp-completions small { margin-left: .75rem; color: GrayText; }
+.bpmn-feelsharp-popup { position: fixed; inset: auto; margin: 0; padding: 0; box-sizing: border-box; overflow: auto; background: var(--colorNeutralBackground1, Canvas); color: var(--colorNeutralForeground1, CanvasText); border: 1px solid var(--colorNeutralStroke1, GrayText); box-shadow: 0 2px 8px #0003; }
+.bpmn-feelsharp-popup .fluent-bpmn-feelsharp-completions { position: relative; border: 0; box-shadow: none; }
+.bpmn-feelsharp-help { display: grid; gap: .25rem; padding: .5rem; color: var(--colorNeutralForeground1, CanvasText); }
+.bpmn-feelsharp-help code { white-space: pre-wrap; overflow-wrap: anywhere; }
+.bpmn-feelsharp-announcement { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 @media (forced-colors: active) {
     .bpmn-feelsharp-highlight { display: none; }
 }

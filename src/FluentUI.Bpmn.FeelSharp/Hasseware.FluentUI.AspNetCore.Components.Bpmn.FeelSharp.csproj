@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" />
     <ProjectReference Include="..\Bpmn.FeelSharp\Hasseware.AspNetCore.Components.Bpmn.FeelSharp.csproj" />
+    <ProjectReference Include="..\FluentUI.BpmnEditor\Hasseware.FluentUI.AspNetCore.Components.BpmnEditor.csproj" />
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>

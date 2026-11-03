@@ -1,0 +1,126 @@
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp
+@using Hasseware.AspNetCore.Components.Bpmn.FeelSharp
+<div class="fluent-feelsharp-workspace">
+    <div role="tablist" aria-label="@Workspace.Label" class="fluent-feelsharp-tabs">
+        @foreach (var tab in BpmnFeelSharpWorkspace.Tabs)
+        {
+            <FluentButton Id="@Workspace.TabId(tab)" Type="ButtonType.Button" Appearance="ButtonAppearance.Subtle"
+                          role="tab" aria-controls="@Workspace.PanelId(tab)" aria-selected="@(Workspace._tab == tab ? "true" : "false")"
+                          tabindex="@(Workspace._tab == tab ? 0 : -1)" OnClick="() => Workspace.SelectTab(tab)"
+                          @onkeydown="args => Workspace.TabKeyAsync(args, tab)">@Workspace.Text("Feel." + tab)</FluentButton>
+        }
+    </div>
+    <div role="tabpanel" id="@Workspace.PanelId("Editor")" aria-labelledby="@Workspace.TabId("Editor")" hidden="@(Workspace._tab != "Editor")">
+        <BpmnFeelSharpField @ref="Workspace._field" Value="@Workspace._initial" Revision="@Workspace._generation"
+                           Variables="@Workspace.AllVariables" Label="@Workspace.Label" ReadOnly="@Workspace.ReadOnly"
+                           Rows="16" EditorType="@Workspace.EditorType" EnableExpansion="false" Minimal="true"
+                           DraftChanged="Workspace.DraftAsync" ValueChanged="Workspace.CommitDraft" DiagnosticsChanged="Workspace.DiagnosticsAsync" />
+        @if (Workspace.Actions?.Suggest is not null || Workspace.Actions?.Share is not null || Workspace.Actions?.Collaborate is not null)
+        {
+            <details class="fluent-feelsharp-tools">
+                <summary>@Workspace.Text("Feel.Tools")</summary>
+                <div>
+                    @if (Workspace.Actions?.Suggest is not null)
+                    {
+                        <FluentButton Type="ButtonType.Button" role="button" Disabled="@(Workspace.ReadOnly || Workspace._busy)"
+                                      aria-disabled="@(Workspace.ReadOnly || Workspace._busy ? "true" : "false")"
+                                      OnClick="Workspace.SuggestAsync">@Workspace.Text("Feel.Suggest")</FluentButton>
+                    }
+                    @if (Workspace.Actions?.Share is not null)
+                    {
+                        <FluentButton Type="ButtonType.Button" role="button" Disabled="@Workspace._busy"
+                                      aria-disabled="@(Workspace._busy ? "true" : "false")"
+                                      OnClick="Workspace.ShareAsync">@Workspace.Text("Feel.Share")</FluentButton>
+                    }
+                    @if (Workspace.Actions?.Collaborate is not null)
+                    {
+                        <FluentButton Type="ButtonType.Button" role="button" Disabled="@(Workspace.ReadOnly || Workspace._busy)"
+                                      aria-disabled="@(Workspace.ReadOnly || Workspace._busy ? "true" : "false")"
+                                      OnClick="Workspace.CollaborateAsync">@Workspace.Text("Feel.Collaborate")</FluentButton>
+                    }
+                </div>
+            </details>
+        }
+        @if (Workspace._proposal is not null)
+        {
+            <pre>@Workspace._proposal</pre>
+            <FluentButton Type="ButtonType.Button" role="button" Disabled="@Workspace.ReadOnly"
+                          aria-disabled="@(Workspace.ReadOnly ? "true" : "false")"
+                          OnClick="Workspace.AcceptProposalAsync">@Workspace.Text("Feel.AcceptProposal")</FluentButton>
+        }
+    </div>
+    <div role="tabpanel" id="@Workspace.PanelId("Reference")" aria-labelledby="@Workspace.TabId("Reference")" hidden="@(Workspace._tab != "Reference")">
+        @if (Workspace._visited.Contains("Reference"))
+        {
+            <div class="fluent-feelsharp-filters">
+                <FluentTextInput Label="@Workspace.Text("Feel.Search")" Value="@Workspace._search" Immediate="true"
+                                 ValueChanged="value => Workspace._search = value ?? string.Empty" />
+                <FluentSelect TOption="string" TValue="string" Items="@BpmnFeelSharpWorkspace.Categories"
+                              OptionText="@(category => Workspace.Text("Feel.Category." + category))" OptionValue="category => category"
+                              Label="@Workspace.Text("Feel.Category")" Value="@Workspace._category"
+                              ValueChanged="value => Workspace._category = value ?? string.Empty" />
+            </div>
+            @foreach (var function in Workspace.Reference)
+            {
+                <article><strong>@function.Signature</strong><p>@Workspace.Text("Feel.Function." + function.Name)</p><code>@function.Example</code>
+                    @if (function.Note is { } note)
+                    {
+                        <p>@Workspace.Text(note)</p>
+                    }
+                </article>
+            }
+            @if (Workspace._category is "all" or "host")
+            {
+                @foreach (var function in Workspace.HostFunctions)
+                {
+                    <article><strong>@function.Signature</strong><p>@function.Description</p><code>@function.Example</code>
+                        <small>@Workspace.Text("Feel.HostFunction")</small></article>
+                }
+            }
+        }
+    </div>
+    <div role="tabpanel" id="@Workspace.PanelId("Variables")" aria-labelledby="@Workspace.TabId("Variables")" hidden="@(Workspace._tab != "Variables")">
+        @if (Workspace._visited.Contains("Variables"))
+        {
+            @if (!string.IsNullOrEmpty(Workspace.VariableText))
+            {
+                <pre>@Workspace.VariableText</pre>
+            }
+            <FluentTextArea Label="@Workspace.Text("Feel.Sample")" Value="@Workspace.Sample" Immediate="true"
+                            ValueChanged="value => Workspace.Sample = value ?? string.Empty" Height="10rem" />
+            <FluentButton Type="ButtonType.Button" role="button" OnClick="Workspace.InferAsync">@Workspace.Text("Feel.Infer")</FluentButton>
+        }
+    </div>
+    <div role="tabpanel" id="@Workspace.PanelId("Evaluation")" aria-labelledby="@Workspace.TabId("Evaluation")" hidden="@(Workspace._tab != "Evaluation")">
+        @if (Workspace._visited.Contains("Evaluation"))
+        {
+            <p>@Workspace.Text("Feel.ExecutionNotice")</p>
+            @if (Workspace.Evaluator is { } evaluator)
+            {
+                <p>@evaluator.Profile</p>
+            }
+            <div class="fluent-feelsharp-actions">
+                <FluentButton Type="ButtonType.Button" role="button" Appearance="ButtonAppearance.Primary" data-action="run"
+                              aria-disabled="@(Workspace.Evaluator is null || Workspace._busy ? "true" : "false")"
+                              Disabled="@(Workspace.Evaluator is null || Workspace._busy)" OnClick="Workspace.RunAsync">@Workspace.Text("Feel.Run")</FluentButton>
+                @if (Workspace._result is not null)
+                {
+                    <FluentButton Type="ButtonType.Button" role="button" OnClick="Workspace.CopyAsync">@Workspace.Text("Feel.CopyResult")</FluentButton>
+                }
+            </div>
+            @if (Workspace.Evaluator is null)
+            {
+                <p>@Workspace.Text("Feel.Unavailable")</p>
+            }
+            @if (Workspace._result is not null)
+            {
+                <output><strong>@Workspace._resultType</strong><pre>@Workspace._result</pre></output>
+            }
+            <small>@Workspace.Text("Feel.CapabilityLimits")</small>
+        }
+    </div>
+    @if (!string.IsNullOrEmpty(Workspace._message))
+    {
+        <FluentMessageBar Intent="MessageBarIntent.Info" AllowDismiss="false" role="status">@Workspace._message</FluentMessageBar>
+    }
+</div>

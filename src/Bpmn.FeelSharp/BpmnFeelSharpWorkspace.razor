@@ -1,0 +1,120 @@
+@namespace Hasseware.AspNetCore.Components.Bpmn.FeelSharp
+@if (ContentTemplate is not null)
+{
+    @ContentTemplate(this)
+}
+else
+{
+<div class="bpmn-feelsharp-workspace">
+    <div role="tablist" aria-label="@Label" class="bpmn-feelsharp-tabs">
+        @foreach (var tab in Tabs)
+        {
+            <button type="button" role="tab" id="@TabId(tab)" aria-controls="@PanelId(tab)"
+                    aria-selected="@(_tab == tab ? "true" : "false")" tabindex="@(_tab == tab ? 0 : -1)"
+                    @onclick="() => SelectTab(tab)" @onkeydown="args => TabKeyAsync(args, tab)">@Text("Feel." + tab)</button>
+        }
+    </div>
+    <div role="tabpanel" id="@PanelId("Editor")" aria-labelledby="@TabId("Editor")" hidden="@(_tab != "Editor")">
+        <BpmnFeelSharpField @ref="_field" Value="@_initial" Revision="@_generation" Variables="@AllVariables"
+                           Label="@Label" ReadOnly="@ReadOnly" Rows="16" EditorType="@EditorType" EnableExpansion="false"
+                           DraftChanged="DraftAsync" ValueChanged="CommitDraft" DiagnosticsChanged="DiagnosticsAsync" Minimal="@MinimalEditor" />
+        <div class="bpmn-feelsharp-workspace-actions">
+            @if (ShowCommitActions)
+            {
+                <button type="button" disabled="@ReadOnly" @onclick="ApplyAsync">@Text("Feel.Apply")</button>
+                <button type="button" @onclick="CancelAsync">@Text("Feel.Cancel")</button>
+            }
+            @if (!MinimalEditor)
+            {
+                <button type="button" disabled="@ReadOnly" @onclick="IndentAsync">@Text("Feel.Indent")</button>
+                <button type="button" disabled="@ReadOnly" @onclick="DelimiterAsync">@Text("Feel.Delimiter")</button>
+            }
+            @if (Actions?.Suggest is not null || Actions?.Share is not null || Actions?.Collaborate is not null)
+            {
+                <details class="bpmn-feelsharp-tools">
+                    <summary>@Text("Feel.Tools")</summary>
+                    <div>
+                        @if (Actions?.Suggest is not null)
+                        {
+                            <button type="button" disabled="@(ReadOnly || _busy)" @onclick="SuggestAsync">@Text("Feel.Suggest")</button>
+                        }
+                        @if (Actions?.Share is not null)
+                        {
+                            <button type="button" disabled="@_busy" @onclick="ShareAsync">@Text("Feel.Share")</button>
+                        }
+                        @if (Actions?.Collaborate is not null)
+                        {
+                            <button type="button" disabled="@(ReadOnly || _busy)" @onclick="CollaborateAsync">@Text("Feel.Collaborate")</button>
+                        }
+                    </div>
+                </details>
+            }
+        </div>
+        @if (_proposal is not null)
+        {
+            <pre>@_proposal</pre>
+            <button type="button" disabled="@ReadOnly" @onclick="AcceptProposalAsync">@Text("Feel.AcceptProposal")</button>
+        }
+    </div>
+    <div role="tabpanel" id="@PanelId("Reference")" aria-labelledby="@TabId("Reference")" hidden="@(_tab != "Reference")">
+        @if (_visited.Contains("Reference"))
+        {
+            <label>@Text("Feel.Search") <input @bind="_search" @bind:event="oninput" /></label>
+            <label>@Text("Feel.Category")
+                <select @bind="_category">
+                    @foreach (var category in Categories)
+                    {
+                        <option value="@category">@Text("Feel.Category." + category)</option>
+                    }
+                </select>
+            </label>
+            @foreach (var function in Reference)
+            {
+                <div><strong>@function.Signature</strong><p>@Text("Feel.Function." + function.Name)</p><code>@function.Example</code>
+                    @if (function.Note is { } note)
+                    {
+                        <p>@Text(note)</p>
+                    }
+                </div>
+            }
+            @if (_category is "all" or "host")
+            {
+                @foreach (var function in HostFunctions)
+                {
+                    <div><strong>@function.Signature</strong><p>@function.Description</p><code>@function.Example</code><small>@Text("Feel.HostFunction")</small></div>
+                }
+            }
+        }
+    </div>
+    <div role="tabpanel" id="@PanelId("Variables")" aria-labelledby="@TabId("Variables")" hidden="@(_tab != "Variables")">
+        @if (_visited.Contains("Variables"))
+        {
+            <pre>@VariableText</pre>
+            <label>@Text("Feel.Sample") <textarea rows="6" @bind="Sample" @bind:event="oninput"></textarea></label>
+            <button type="button" @onclick="InferAsync">@Text("Feel.Infer")</button>
+        }
+    </div>
+    <div role="tabpanel" id="@PanelId("Evaluation")" aria-labelledby="@TabId("Evaluation")" hidden="@(_tab != "Evaluation")">
+        @if (_visited.Contains("Evaluation"))
+        {
+            <p>@Text("Feel.ExecutionNotice")</p>
+            <p>@Evaluator?.Profile</p>
+            <button type="button" data-action="run" disabled="@(Evaluator is null || _busy)" @onclick="RunAsync">@Text("Feel.Run")</button>
+            <button type="button" disabled="@(_result is null)" @onclick="CopyAsync">@Text("Feel.CopyResult")</button>
+            @if (Evaluator is null)
+            {
+                <p>@Text("Feel.Unavailable")</p>
+            }
+            @if (_result is not null)
+            {
+                <output><strong>@_resultType</strong><pre>@_result</pre></output>
+            }
+            <p>@Text("Feel.CapabilityLimits")</p>
+        }
+    </div>
+    @if (!string.IsNullOrEmpty(_message))
+    {
+        <div role="status">@_message</div>
+    }
+</div>
+}

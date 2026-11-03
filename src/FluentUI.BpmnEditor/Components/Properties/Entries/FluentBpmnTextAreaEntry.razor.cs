@@ -18,6 +18,15 @@ public partial class FluentBpmnTextAreaEntry
         _source = source;
         _value = Entry.Value;
     }
-    private void DraftChanged(string? value) { if (!ReadOnly) _value = value; }
-    private Task CommitAsync(FocusEventArgs _) => ReadOnly ? Task.CompletedTask : SubmitAsync(_value);
+    private Task DraftChanged(string? value)
+    {
+        if (ReadOnly || InputEnhancement?.IsEnhanced == true) return Task.CompletedTask;
+        _value = value;
+        return InputEnhancement?.DraftChanged?.Invoke(value) ?? Task.CompletedTask;
+    }
+    private Task CommitAsync(FocusEventArgs _) => ReadOnly || InputEnhancement?.IsEnhanced == true
+        ? Task.CompletedTask : SubmitAsync(_value);
+
+    /// <inheritdoc />
+    protected override bool ShouldRender() => InputEnhancement?.IsEnhanced != true;
 }

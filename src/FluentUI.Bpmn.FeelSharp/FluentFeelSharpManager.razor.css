@@ -1,0 +1,8 @@
+.fluent-feelsharp-manager { display: contents; }
+.fluent-feelsharp-manager-title { margin: 0; font-size: 1.125rem; font-weight: 600; }
+.fluent-feelsharp-manager ::deep fluent-dialog::part(dialog) {
+    width: min(52rem, calc(100vw - 2rem));
+    max-width: calc(100vw - 2rem);
+    max-height: calc(100dvh - 2rem);
+    box-sizing: border-box;
+}

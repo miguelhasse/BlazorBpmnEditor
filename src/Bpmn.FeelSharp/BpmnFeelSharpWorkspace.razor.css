@@ -1,0 +1,15 @@
+.bpmn-feelsharp-workspace { display: grid; gap: 1rem; color: var(--bpmn-surface-foreground, CanvasText); font: inherit; }
+.bpmn-feelsharp-workspace-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-block-start: .5rem; }
+.bpmn-feelsharp-workspace-actions:empty { display: none; }
+.bpmn-feelsharp-workspace textarea { display: block; box-sizing: border-box; width: 100%; font: 14px/1.5 monospace; }
+.bpmn-feelsharp-workspace pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.bpmn-feelsharp-workspace label { display: grid; gap: .375rem; margin-block-end: 1rem; }
+.bpmn-feelsharp-workspace button, .bpmn-feelsharp-workspace input, .bpmn-feelsharp-workspace select { font: inherit; color: inherit; background: var(--bpmn-surface-background, Canvas); border: 1px solid var(--bpmn-surface-border, GrayText); border-radius: 4px; padding: .375rem .625rem; }
+.bpmn-feelsharp-workspace button { cursor: pointer; }
+.bpmn-feelsharp-workspace button:disabled { cursor: default; opacity: .6; }
+.bpmn-feelsharp-tabs { display: flex; flex-wrap: wrap; gap: .25rem; border-bottom: 1px solid var(--bpmn-surface-border, GrayText); }
+.bpmn-feelsharp-tabs button { border: 0; border-radius: 0; border-bottom: 2px solid transparent; background: transparent; padding: .625rem .75rem; }
+.bpmn-feelsharp-tabs [aria-selected="true"] { font-weight: 600; border-bottom-color: var(--bpmn-accent, Highlight); }
+.bpmn-feelsharp-tools summary { cursor: pointer; padding: .375rem 0; }
+.bpmn-feelsharp-tools > div { display: flex; flex-wrap: wrap; gap: .5rem; padding-block: .5rem; }
+.bpmn-feelsharp-workspace [hidden] { display: none; }

@@ -5,19 +5,17 @@ internal sealed record FeelSharpToken(string Text, string Kind, int Offset)
     internal int End => Offset + Text.Length;
 }
 
-internal sealed record FeelSharpCompletion(string Label, string Text, string? Detail, int Start, int Length);
+internal sealed record FeelSharpCompletion(string Label, string Text, string? Detail, int Start, int Length,
+    string? Info = null, string? Example = null, string? Note = null, bool HostFunction = false,
+    int? PlaceholderStart = null, int PlaceholderLength = 0);
 
 internal sealed class FeelSharpLanguage
 {
     private static readonly string[] Keywords =
         ["if", "then", "else", "for", "return", "some", "every", "satisfies", "in", "and", "or", "not", "between",
             "instance of", "function", "true", "false", "null"];
-    private static readonly string[] Functions =
-        ["abs", "append", "ceiling", "concatenate", "contains", "count", "date", "date and time", "day of week",
-            "day of year", "distinct values", "duration", "ends with", "floor", "get entries", "get value",
-            "index of", "insert before", "list contains", "lower case", "max", "mean", "min", "now", "number",
-            "reverse", "round", "sort", "split", "starts with", "string", "string join", "string length",
-            "substring", "sum", "time", "today", "upper case"];
+    private static readonly FeelSharpFunction[] FunctionsByLength =
+        FeelSharpFunctionCatalog.Functions.OrderByDescending(function => function.Name.Length).ToArray();
 
     internal static IReadOnlyList<FeelSharpToken> Tokenize(string source)
     {
@@ -27,9 +25,13 @@ internal sealed class FeelSharpLanguage
             var start = offset;
             var kind = "plain";
             var character = source[offset++];
-            if (character == '"')
+            if (character == '"' || character == '@' && offset < source.Length && source[offset] == '"')
             {
-                kind = "string";
+                kind = character == '@' ? "temporal" : "string";
+                if (character == '@')
+                {
+                    offset++;
+                }
                 while (offset < source.Length)
                 {
                     var next = source[offset++];
@@ -76,6 +78,22 @@ internal sealed class FeelSharpLanguage
                         offset++;
                     }
                 }
+                if (offset < source.Length && source[offset] is 'e' or 'E')
+                {
+                    var exponent = offset + 1;
+                    if (exponent < source.Length && source[exponent] is '+' or '-')
+                    {
+                        exponent++;
+                    }
+                    if (exponent < source.Length && char.IsDigit(source[exponent]))
+                    {
+                        offset = exponent + 1;
+                        while (offset < source.Length && char.IsDigit(source[offset]))
+                        {
+                            offset++;
+                        }
+                    }
+                }
             }
             else if (IsName(character))
             {
@@ -85,6 +103,30 @@ internal sealed class FeelSharpLanguage
                 }
                 var word = source[start..offset];
                 kind = Keywords.Contains(word, StringComparer.Ordinal) ? "keyword" : "name";
+                if (source.AsSpan(start).StartsWith("instance of", StringComparison.Ordinal) &&
+                    (start + 11 == source.Length || !IsName(source[start + 11])))
+                {
+                    offset = start + 11;
+                    kind = "keyword";
+                }
+                foreach (var function in FunctionsByLength)
+                {
+                    if (!source.AsSpan(start).StartsWith(function.Name, StringComparison.Ordinal))
+                    {
+                        continue;
+                    }
+                    var next = start + function.Name.Length;
+                    while (next < source.Length && char.IsWhiteSpace(source[next]))
+                    {
+                        next++;
+                    }
+                    if (next < source.Length && source[next] == '(')
+                    {
+                        offset = start + function.Name.Length;
+                        kind = "function";
+                        break;
+                    }
+                }
             }
             else if ("+-*/=<>!.,:()[]{}".Contains(character, StringComparison.Ordinal))
             {
@@ -96,25 +138,41 @@ internal sealed class FeelSharpLanguage
     }
 
     internal static IReadOnlyList<FeelSharpCompletion> Complete(string source, int start, int end,
-        IReadOnlyList<BpmnFeelVariable> variables)
+        IReadOnlyList<BpmnFeelVariable> variables, bool explicitlyRequested = false,
+        BpmnFeelSharpEditorOptions? options = null, IReadOnlyList<FeelSharpToken>? tokens = null)
     {
         if (start < 0 || end < start || end > source.Length)
         {
             return [];
         }
-        if (Tokenize(source).Any(token => token.Kind is "string" or "comment" && start > token.Offset && start <= token.End))
+        tokens ??= Tokenize(source);
+        if (tokens.Any(token => token.Kind is "string" or "comment" or "temporal" && start > token.Offset && start <= token.End))
         {
             return [];
         }
-        var candidates = new List<(string Name, string Text, string? Detail)>();
+        var candidates = new List<(string Name, string Text, string? Detail, string? Info, string? Example, string? Note)>();
+        if (options?.LocalVariables == true)
+        {
+            AddVariables(FeelSharpAuthoring.Locals(source, start, tokens), "", candidates);
+        }
         AddVariables(variables, "", candidates);
+        foreach (var function in options?.Functions ?? [])
+        {
+            candidates.Add((function.Name, function.Name + "()", function.Signature, function.Description, function.Example, "Feel.HostFunction"));
+        }
         foreach (var keyword in Keywords)
         {
-            candidates.Add((keyword, keyword, "FEEL"));
+            candidates.Add((keyword, keyword, "FEEL", null, null, null));
         }
-        foreach (var function in Functions)
+        foreach (var function in FeelSharpFunctionCatalog.Functions)
         {
-            candidates.Add((function, function + "()", "FEEL"));
+            candidates.Add((function.Name, function.Name + "()", function.Signature, function.Description, function.Example, function.Note));
+        }
+        if (options?.Snippets == true)
+        {
+            candidates.Add(("if expression", "if condition then value else null", "if ... then ... else", "Feel.Snippet.Conditional", null, null));
+            candidates.Add(("for expression", "for item in items return item", "for ... in ... return", "Feel.Snippet.Iteration", null, null));
+            candidates.Add(("some expression", "some item in items satisfies item != null", "some ... satisfies", "Feel.Snippet.Existential", null, null));
         }
         var replacementStart = start;
         while (replacementStart > 0 && (IsName(source[replacementStart - 1]) || source[replacementStart - 1] == '.'))
@@ -135,7 +193,7 @@ internal sealed class FeelSharpLanguage
                 prefix = suffix;
             }
         }
-        if (prefix.Length == 0 && start == end)
+        if (prefix.Length == 0 && start == end && !explicitlyRequested)
         {
             return [];
         }
@@ -146,7 +204,10 @@ internal sealed class FeelSharpLanguage
         }
         return candidates.Where(candidate => candidate.Name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
             .DistinctBy(candidate => candidate.Name, StringComparer.Ordinal)
-            .OrderBy(candidate => candidate.Name, StringComparer.Ordinal)
+            .OrderBy(candidate => options?.RankCompletions == true
+                ? candidate.Text == candidate.Name && candidate.Detail != "FEEL" ? 0 : candidate.Text.EndsWith("()", StringComparison.Ordinal) ? 1 : 2
+                : 0)
+            .ThenBy(candidate => candidate.Name, StringComparer.Ordinal)
             .Take(12)
             .Select(candidate =>
             {
@@ -165,22 +226,32 @@ internal sealed class FeelSharpLanguage
                     next++;
                 }
                 var hasArguments = next < source.Length && source[next] == '(';
+                var placeholder = candidate.Name switch
+                {
+                    "if expression" when candidate.Text == "if condition then value else null" => "condition",
+                    "for expression" when candidate.Text == "for item in items return item" => "item",
+                    "some expression" when candidate.Text == "some item in items satisfies item != null" => "item",
+                    _ => null,
+                };
                 return new FeelSharpCompletion(candidate.Name,
                     hasArguments && candidate.Text.EndsWith("()", StringComparison.Ordinal) ? candidate.Name : candidate.Text,
-                    candidate.Detail, replacementStart, candidateEnd - replacementStart);
+                    candidate.Detail, replacementStart, candidateEnd - replacementStart, candidate.Info, candidate.Example, candidate.Note,
+                    options?.Functions.Any(function => function.Name == candidate.Name) == true &&
+                    !variables.Any(variable => variable.Name == candidate.Name),
+                    placeholder is null ? null : candidate.Text.IndexOf(placeholder, StringComparison.Ordinal), placeholder?.Length ?? 0);
             }).ToArray();
     }
 
     private static void AddVariables(IReadOnlyList<BpmnFeelVariable> variables, string prefix,
-        List<(string Name, string Text, string? Detail)> candidates)
+        List<(string Name, string Text, string? Detail, string? Info, string? Example, string? Note)> candidates)
     {
         foreach (var variable in variables)
         {
             var name = prefix + variable.Name;
-            candidates.Add((name, name, variable.Detail ?? variable.Info));
+            candidates.Add((name, name, variable.Detail, variable.Info, null, null));
             AddVariables(variable.Entries, name + ".", candidates);
         }
     }
 
-    private static bool IsName(char character) => char.IsLetterOrDigit(character) || character is '_' or '\'';
+    internal static bool IsName(char character) => char.IsLetterOrDigit(character) || character is '_' or '\'';
 }

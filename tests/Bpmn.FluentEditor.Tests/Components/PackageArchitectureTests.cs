@@ -74,6 +74,20 @@ public sealed class PackageArchitectureTests
         Assert.DoesNotContain(typeof(FluentBpmnEditor).Assembly.GetName().Name!, friends);
     }
 
+    [Theory]
+    [InlineData("EditorDemo.razor")]
+    [InlineData("Gallery.razor")]
+    [InlineData("FeelAuthoringHarness.razor")]
+    public void DemoEditorSurfacesRenderDialogProviderInsideInteractiveScope(string page)
+    {
+        var source = File.ReadAllText(Path.Combine(RepositoryRoot(), "playground", "Bpmn.Demo.Client", "Pages", page));
+        Assert.Equal(1, source.Split("<FluentDialogProvider />", StringSplitOptions.None).Length - 1);
+        if (page != "FeelAuthoringHarness.razor")
+        {
+            Assert.Contains("@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))", source, StringComparison.Ordinal);
+        }
+    }
+
     private static string RepositoryRoot()
     {
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)

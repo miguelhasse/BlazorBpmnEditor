@@ -5,7 +5,13 @@
     var generation = _generation;
 }
 
-<div class="fluent-bpmn-feelsharp @(Block + "__feel-entry")">
+@if (PropertyInput)
+{
+    <BpmnFeelSharpPropertyInput Editor="this" />
+}
+else
+{
+<div class="fluent-bpmn-feelsharp @(Block + "__feel-entry")" data-density="@Density">
     @if (Entry.Feel == BpmnFeelMode.Optional)
     {
         <FluentButton Type="ButtonType.Button" Class="@(Block + "__feel-toggle")"
@@ -14,48 +20,86 @@
     }
     @if (FeelActive || ReadOnly)
     {
-        <FluentLabel ForId="@InputId" title="@Entry.Tooltip">@Entry.Label</FluentLabel>
+        @if (!Minimal)
+        {
+            <FluentLabel ForId="@InputId" title="@Entry.Tooltip">@Entry.Label</FluentLabel>
+        }
         <div class="fluent-bpmn-feelsharp-control">
-            @if (FeelActive)
+            @if (FeelActive && !Minimal)
             {
                 <span class="@(Block + "__feel-badge")">@Text("Expression.Feel")</span>
             }
             <div class="fluent-bpmn-feelsharp-surface" @ref="_surface"
                  data-enhanced="@(_enhanced ? "true" : "false")" data-generation="@_generation"
                  data-completion="@(_completions.Count > 0 ? "true" : "false")"
+                 data-accept-enter="@(AcceptEnter ? "true" : "false")" data-accept-tab="@(AcceptTab ? "true" : "false")"
                  data-input-label="@Entry.Label" data-input-invalid="@(Entry.Error is not null || Warning is not null ? "true" : null)"
-                 data-input-describedby="@DescribedBy" data-input-autocomplete="list" data-input-controls="@CompletionId"
+                 data-input-readonly="@(ReadOnly || _expanded ? "true" : "false")"
+                 data-input-describedby="@InputDescribedBy" data-input-autocomplete="list" data-input-controls="@CompletionId"
                  data-input-expanded="@(_completions.Count > 0 ? "true" : "false")"
                  data-input-activedescendant="@(_completions.Count > 0 ? OptionId(_selected) : null)">
                 <FluentFeelSharpInput Id="@InputId" @ref="_textArea" @key="_generation"
                                      Height="@(FormattableString.Invariant($"{MultilineRows * 1.5 + 1}em"))"
                                      InitialValue="@(_enhanced ? _initialText : DisplayValue)"
-                                     ValueChanged="value => DraftChanged(value, generation)"
-                                     Enhanced="@_enhanced" DescribedBy="@DescribedBy"
+                                     ValueChanged="value => DraftChangedAsync(value, generation)"
+                                     Enhanced="@_enhanced" DescribedBy="@InputDescribedBy"
                                      AriaInvalid="@(Entry.Error is not null || Warning is not null ? "true" : null)"
-                                     IsReadOnly="@ReadOnly" Placeholder="@Entry.Placeholder" Label="@Entry.Label"
+                                     IsReadOnly="@(ReadOnly || _expanded)" Placeholder="@Entry.Placeholder" Label="@Entry.Label"
                                      FocusOut="args => CommitFallbackAsync(args, generation)"
                                      KeyDown="args => KeyDownAsync(args, generation)" />
-                <pre class="bpmn-feelsharp-highlight" aria-hidden="true">@foreach (var token in FeelSharpLanguage.Tokenize(DisplayValue))
+                <pre class="bpmn-feelsharp-highlight" aria-hidden="true">@foreach (var token in Tokens)
                     {<span class="@("feel-" + token.Kind)">@token.Text</span>}@("\n")</pre>
             </div>
+            @if (!Minimal)
+            {
+                <FluentButton Type="ButtonType.Button" Disabled="@(!_enhanced || ReadOnly)"
+                          aria-label="@Text("Feel.Complete")" aria-keyshortcuts="Control+Space"
+                          @onmousedown:preventDefault OnClick="RequestCompletionAsync">@Text("Feel.Complete")</FluentButton>
+            }
+            <small id="@ShortcutsId" class="@(Minimal ? "bpmn-feelsharp-announcement" : null)">@Text("Feel.Shortcuts")</small>
+            @if (ExpandedEnabled && !Minimal)
+            {
+                <FluentButton Type="ButtonType.Button" Disabled="@ReadOnly" @onmousedown:preventDefault OnClick="OpenExpandedAsync">@Text("Feel.Expand")</FluentButton>
+            }
+            <span class="bpmn-feelsharp-announcement" role="status" aria-live="polite" aria-atomic="true">@CompletionAnnouncement</span>
+            @if (ActiveSignature is { } signature)
+            {
+                <small role="status">@signature.Signature - @Text("Feel.Parameter") @signature.Parameter</small>
+            }
             @if (_completions.Count > 0 && !ReadOnly)
             {
-                <div id="@CompletionId" class="fluent-bpmn-feelsharp-completions" role="listbox"
-                     aria-label="@Entry.Label" @onmousedown:preventDefault>
-                    @for (var index = 0; index < _completions.Count; index++)
+                <div class="bpmn-feelsharp-popup" data-feel-completions popover="manual">
+                    <div id="@CompletionId" class="fluent-bpmn-feelsharp-completions" role="listbox"
+                         aria-label="@Entry.Label" @onmousedown:preventDefault>
+                        @for (var index = 0; index < _completions.Count; index++)
+                        {
+                            var option = index;
+                            var completion = _completions[index];
+                            <FluentButton Id="@OptionId(index)" Type="ButtonType.Button" Appearance="ButtonAppearance.Transparent"
+                                          role="option" aria-selected="@(index == _selected ? "true" : "false")"
+                                          tabindex="-1" OnClick="() => ApplyCompletionAsync(option)">
+                                @completion.Label
+                                @if (completion.Detail is not null)
+                                {
+                                    <small>@completion.Detail</small>
+                                }
+                            </FluentButton>
+                        }
+                    </div>
+                    @if (SelectedCompletion is { } selected && CompletionInfo is { } info)
                     {
-                        var option = index;
-                        var completion = _completions[index];
-                        <FluentButton Id="@OptionId(index)" Type="ButtonType.Button" Appearance="ButtonAppearance.Transparent"
-                                      role="option" aria-selected="@(index == _selected ? "true" : "false")"
-                                      tabindex="-1" OnClick="() => ApplyCompletionAsync(option)">
-                            @completion.Label
-                            @if (completion.Detail is not null)
+                        <div id="@HelpId" class="bpmn-feelsharp-help">
+                            <strong>@selected.Detail</strong>
+                            <span>@info</span>
+                            @if (selected.Example is { } example)
                             {
-                                <small>@completion.Detail</small>
+                                <code>@example</code>
                             }
-                        </FluentButton>
+                            @if (selected.Note is { } note)
+                            {
+                                <small>@Text(note)</small>
+                            }
+                        </div>
                     }
                 </div>
             }
@@ -78,3 +122,11 @@
         <DynamicComponent Type="@DefaultEditor" Parameters="@EditorParameters" @key="Context.Revision" />
     }
 </div>
+}
+@if (_managerMounted)
+{
+    <FluentFeelSharpManager Visible="@_expanded" Closed="ManagerClosed" Value="@_expandedValue" Applied="ApplyExpandedAsync" Cancelled="CancelExpanded"
+                            ContextKey="@(Context.ElementId + ":" + Entry.Id)" Revision="@Context.Revision"
+                            ReadOnly="@ReadOnly" Variables="@Context.Variables" Label="@ManagerTitle"
+                            Evaluator="@WorkspaceEvaluator" Actions="@WorkspaceActions" />
+}

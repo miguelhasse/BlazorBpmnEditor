@@ -1,0 +1,22 @@
+@namespace Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp
+<div class="fluent-feelsharp-manager">
+    <FluentBpmnDialog Class="bpmn-feelsharp-manager" Visible="@Visible" OnDismiss="CancelAsync" OnClosed="@Closed" aria-label="@Label">
+        <TitleTemplate><h2 class="fluent-feelsharp-manager-title">@Label</h2></TitleTemplate>
+        <ChildContent>
+            <BpmnFeelSharpWorkspace @ref="_workspace" Value="@Value" Applied="@Applied" Cancelled="CancelAsync"
+                                   ContextKey="@ContextKey" Revision="@Revision" ReadOnly="@ReadOnly"
+                                   Variables="@Variables" Label="@Label" EditorType="@typeof(FluentBpmnFeelSharpCodeEditor)"
+                                   Evaluator="@Evaluator" Actions="@Actions" ShowCommitActions="false" MinimalEditor="true">
+                <ContentTemplate Context="workspace">
+                    <FluentFeelSharpWorkspaceContent Workspace="@workspace" />
+                </ContentTemplate>
+            </BpmnFeelSharpWorkspace>
+        </ChildContent>
+        <ActionTemplate>
+            <FluentButton Appearance="ButtonAppearance.Primary" Type="ButtonType.Button" role="button"
+                          Disabled="@ReadOnly" aria-disabled="@(ReadOnly ? "true" : "false")" OnClick="ApplyAsync">@Text("Feel.Apply")</FluentButton>
+            <FluentButton Appearance="ButtonAppearance.Outline" Type="ButtonType.Button" role="button"
+                          OnClick="CancelAsync">@Text("Feel.Cancel")</FluentButton>
+        </ActionTemplate>
+    </FluentBpmnDialog>
+</div>

@@ -6,5 +6,5 @@
               readonly="@ReadOnly" value="@_value" placeholder="@Entry.Placeholder"
               aria-invalid="@(ValidationContext.Entry.Error is not null ? "true" : null)"
               aria-describedby="@(ValidationContext.Entry.Error is not null ? ErrorId : null)"
-              @oninput="Input" @onchange="ChangeAsync"></textarea>
+              @oninput="Input" @onchange="ChangeAsync" @onkeydown="InputKeyDownAsync"></textarea>
 </BpmnPropertyEntryFrame>

@@ -783,4 +783,89 @@
   <data name="ReferenceKind.Shape" xml:space="preserve"><value>Shape</value></data>
   <data name="ReferenceKind.Edge" xml:space="preserve"><value>Edge</value></data>
   <data name="StencilReason.WithCode" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Feel.Complete" xml:space="preserve"><value>Show FEEL suggestions</value></data>
+  <data name="Feel.TemporalResult" xml:space="preserve"><value>FeelSharp 1.3.0 exposes this temporal result as internal text (StringValue), not a typed temporal value.</value></data>
+  <data name="Feel.Shortcuts" xml:space="preserve"><value>Ctrl+Space: suggestions. Up/Down: select. Enter/Tab: accept. Escape: dismiss. Ctrl/Cmd+Enter: commit.</value></data>
+  <data name="Feel.CompletionCount" xml:space="preserve"><value>{0} FEEL suggestions available.</value></data>
+  <data name="Feel.Function.abs" xml:space="preserve"><value>Absolute value of a number.</value></data>
+  <data name="Feel.Function.append" xml:space="preserve"><value>Append an item to a list.</value></data>
+  <data name="Feel.Function.ceiling" xml:space="preserve"><value>Smallest integer greater than or equal to a number.</value></data>
+  <data name="Feel.Function.concatenate" xml:space="preserve"><value>Combine lists in order.</value></data>
+  <data name="Feel.Function.contains" xml:space="preserve"><value>Check whether a string contains a substring.</value></data>
+  <data name="Feel.Function.count" xml:space="preserve"><value>Number of items in a list.</value></data>
+  <data name="Feel.Function.date" xml:space="preserve"><value>Convert an ISO date string to a date.</value></data>
+  <data name="Feel.Function.date and time" xml:space="preserve"><value>Convert an ISO date-time string.</value></data>
+  <data name="Feel.Function.day of week" xml:space="preserve"><value>Weekday name for a date.</value></data>
+  <data name="Feel.Function.day of year" xml:space="preserve"><value>Day number within the year.</value></data>
+  <data name="Feel.Function.distinct values" xml:space="preserve"><value>Remove duplicate list items.</value></data>
+  <data name="Feel.Function.duration" xml:space="preserve"><value>Convert an ISO duration string.</value></data>
+  <data name="Feel.Function.ends with" xml:space="preserve"><value>Check a string suffix.</value></data>
+  <data name="Feel.Function.floor" xml:space="preserve"><value>Largest integer less than or equal to a number.</value></data>
+  <data name="Feel.Function.get entries" xml:space="preserve"><value>List the keys and values of a context.</value></data>
+  <data name="Feel.Function.get value" xml:space="preserve"><value>Read a context entry by its key.</value></data>
+  <data name="Feel.Function.index of" xml:space="preserve"><value>One-based positions of matching list items.</value></data>
+  <data name="Feel.Function.insert before" xml:space="preserve"><value>Insert an item at a one-based list position.</value></data>
+  <data name="Feel.Function.list contains" xml:space="preserve"><value>Check whether a list contains an item.</value></data>
+  <data name="Feel.Function.lower case" xml:space="preserve"><value>Convert text to lower case.</value></data>
+  <data name="Feel.Function.max" xml:space="preserve"><value>Maximum value in a list.</value></data>
+  <data name="Feel.Function.mean" xml:space="preserve"><value>Arithmetic mean of a list of numbers.</value></data>
+  <data name="Feel.Function.min" xml:space="preserve"><value>Minimum value in a list.</value></data>
+  <data name="Feel.Function.now" xml:space="preserve"><value>Current date and time from the engine clock.</value></data>
+  <data name="Feel.Function.number" xml:space="preserve"><value>Convert a numeric string to a number.</value></data>
+  <data name="Feel.Function.reverse" xml:space="preserve"><value>Reverse the order of list items.</value></data>
+  <data name="Feel.Function.round" xml:space="preserve"><value>Round a number to a decimal scale.</value></data>
+  <data name="Feel.Function.sort" xml:space="preserve"><value>Sort items using a comparison function.</value></data>
+  <data name="Feel.Function.split" xml:space="preserve"><value>Split text using a delimiter pattern.</value></data>
+  <data name="Feel.Function.starts with" xml:space="preserve"><value>Check a string prefix.</value></data>
+  <data name="Feel.Function.string" xml:space="preserve"><value>Convert a value to its string representation.</value></data>
+  <data name="Feel.Function.string join" xml:space="preserve"><value>Join strings with a delimiter.</value></data>
+  <data name="Feel.Function.string length" xml:space="preserve"><value>Number of characters in a string.</value></data>
+  <data name="Feel.Function.substring" xml:space="preserve"><value>Extract text using a one-based start position.</value></data>
+  <data name="Feel.Function.sum" xml:space="preserve"><value>Sum a list of numbers.</value></data>
+  <data name="Feel.Function.time" xml:space="preserve"><value>Convert an ISO time string.</value></data>
+  <data name="Feel.Function.today" xml:space="preserve"><value>Current date from the engine clock.</value></data>
+  <data name="Feel.Function.upper case" xml:space="preserve"><value>Convert text to upper case.</value></data>
+  <data name="Feel.Parameter" xml:space="preserve"><value>Parameter</value></data>
+  <data name="Feel.Apply" xml:space="preserve"><value>Apply</value></data>
+  <data name="Feel.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Feel.Indent" xml:space="preserve"><value>Indent selection</value></data>
+  <data name="Feel.Delimiter" xml:space="preserve"><value>Complete unmatched delimiters</value></data>
+  <data name="Feel.Suggest" xml:space="preserve"><value>Request host suggestion</value></data>
+  <data name="Feel.Share" xml:space="preserve"><value>Share with host</value></data>
+  <data name="Feel.Collaborate" xml:space="preserve"><value>Request collaboration revision</value></data>
+  <data name="Feel.AcceptProposal" xml:space="preserve"><value>Accept proposed edit</value></data>
+  <data name="Feel.Reference" xml:space="preserve"><value>Function reference</value></data>
+  <data name="Feel.Search" xml:space="preserve"><value>Search functions</value></data>
+  <data name="Feel.Variables" xml:space="preserve"><value>Variables and sample context</value></data>
+  <data name="Feel.Sample" xml:space="preserve"><value>Sample context JSON (local, ephemeral)</value></data>
+  <data name="Feel.Infer" xml:space="preserve"><value>Infer sample variables</value></data>
+  <data name="Feel.Playground" xml:space="preserve"><value>Explicit evaluation playground</value></data>
+  <data name="Feel.ExecutionNotice" xml:space="preserve"><value>Run uses the explicitly authorized sample evaluator shown below, not BPMN execution. Authorization is not a sandbox. Cancellation may not interrupt synchronous interpretation.</value></data>
+  <data name="Feel.Run" xml:space="preserve"><value>Run</value></data>
+  <data name="Feel.CopyResult" xml:space="preserve"><value>Copy result</value></data>
+  <data name="Feel.Unavailable" xml:space="preserve"><value>Evaluation unavailable until the host explicitly supplies an evaluator.</value></data>
+  <data name="Feel.NoSafeFix" xml:space="preserve"><value>No safe delimiter correction is available.</value></data>
+  <data name="Feel.Expand" xml:space="preserve"><value>Expand FEEL editor</value></data>
+  <data name="Feel.Manager" xml:space="preserve"><value>Manage FEEL expression</value></data>
+  <data name="Feel.ManagerProperty" xml:space="preserve"><value>Manage FEEL expression: {0}</value></data>
+  <data name="Feel.Tools" xml:space="preserve"><value>Tools</value></data>
+  <data name="Feel.Editor" xml:space="preserve"><value>Editor</value></data>
+  <data name="Feel.Evaluation" xml:space="preserve"><value>Evaluation</value></data>
+  <data name="Feel.Category" xml:space="preserve"><value>Function category</value></data>
+  <data name="Feel.Category.all" xml:space="preserve"><value>All functions</value></data>
+  <data name="Feel.Category.number" xml:space="preserve"><value>Numbers</value></data>
+  <data name="Feel.Category.string" xml:space="preserve"><value>Strings</value></data>
+  <data name="Feel.Category.temporal" xml:space="preserve"><value>Temporal values</value></data>
+  <data name="Feel.Category.list" xml:space="preserve"><value>Lists</value></data>
+  <data name="Feel.Category.context" xml:space="preserve"><value>Contexts</value></data>
+  <data name="Feel.Category.host" xml:space="preserve"><value>Host functions</value></data>
+  <data name="Feel.HostFunction" xml:space="preserve"><value>Requires a separately authorized host function provider; metadata alone does not enable execution.</value></data>
+  <data name="Feel.Capabilities" xml:space="preserve"><value>Capability limitations</value></data>
+  <data name="Feel.CapabilityLimits" xml:space="preserve"><value>Parse-only unary tests, semantic formatting, and hard interpreter timeouts are unavailable. FeelSharp 1.3.0 unary wildcard '-' fails; range '[1..10]' with input 3 returns false. Local bindings are conservative lexical hints, not a full FEEL syntax tree.</value></data>
+  <data name="Feel.Snippet.Conditional" xml:space="preserve"><value>Conditional expression snippet.</value></data>
+  <data name="Feel.Snippet.Iteration" xml:space="preserve"><value>Iteration expression snippet.</value></data>
+  <data name="Feel.Snippet.Existential" xml:space="preserve"><value>Existential expression snippet.</value></data>
+  <data name="Feel.StaleProposal" xml:space="preserve"><value>Proposal rejected: the draft changed or native editing is no longer available. Request a new proposal.</value></data>
+  <data name="Feel.CopyFailed" xml:space="preserve"><value>Could not copy the result. Check browser clipboard permissions or select and copy the displayed text.</value></data>
+  <data name="Feel.StaleResult" xml:space="preserve"><value>Result no longer matches the current draft. Run the expression again before copying.</value></data>
 </root>

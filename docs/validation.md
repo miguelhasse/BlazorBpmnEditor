@@ -110,6 +110,51 @@ FeelSharp parsing has its own upstream behavior; the managed default parser's
 not syntax validation, automatic editor execution, or BPMN-node execution.
 The [Fluent FeelSharp extension](../src/FluentUI.Bpmn.FeelSharp/README.md) uses the
 same diagnostics and commit rules; changing UI controls does not change validation.
+Both renderings expose immutable `Diagnostics` and `DiagnosticsChanged`, plus an
+optional shared registration `DiagnosticsObserver` for registry-created editors.
+Updates identify element/property revision and input generation; warnings retain
+the upstream text and no guessed ranges. Initial and meaningful draft/mode changes
+publish updates; selection navigation does not. Composition defers analysis, and
+stale generations cannot publish superseded observer updates. These notifications
+do not change commit/export policy or register evaluation. Parser messages may
+contain expression fragments; hosts control their retention and transmission.
+
+Optional `DiagnosticsDelay` coalesces draft analysis after idle time; commits always
+flush pending diagnostics and composition/reset/disposal suppress stale work. The
+parser remains synchronous, with no hard timeout or incremental-parse claim.
+`DiagnosticsDelay` alone does not defer the first/reset check. The separate opt-in
+`DeferInitialDiagnostics` schedules it after DOM attachment (or first fallback,
+literal, or read-only render), then the idle delay. A zero delay still yields.
+Pending diagnostics are empty, not a syntax-validity signal. Commits flush analysis
+and delayed observer failures still reach the renderer. Empty/literal-only fields
+do not initialize a FeelSharp engine.
+
+Standalone fields and transactional expanded workspaces preserve the same advisory
+syntax policy; Apply is explicit, while Cancel never persists. Sample hints are
+non-executing and clear when the sample changes. Workspace Run requires an explicitly
+supplied evaluator; it is not enabled by editor selection or DI registration alone.
+No parse-only unary-test API exists in FeelSharp 1.3.0, so unary validation is
+unavailable. Its experimental explicit unary evaluator records upstream wildcard
+and range limitations; neither authoring hints nor successful parsing establish
+Camunda/DMN runtime equivalence.
+
+For startup investigations, compare `/feel-authoring` and `/feel-authoring-server`
+in a fresh browser context and with a warm cache separately. Record first editable
+input, `data-enhanced="true"`, initial diagnostics, and modal-ready times, not just
+navigation completion. Measure published Release output with compression enabled:
+development boot assets include full icon assemblies and debugging data that are
+absent from trimmed output. Inspect actual resource transfers and `Content-Encoding`,
+not uncompressed build-directory sizes. Keep parsing time, runtime boot, DOM
+attachment, and dialog rendering distinct; an idle delay moves work rather than
+making synchronous interpretation or parsing interruptible.
+
+Startup regression coverage exercises lazy engine construction, deferred
+initial/reset diagnostics, zero-delay scheduling, composition interruption,
+disposal, observer failure, and native fallback. Workspace reference content renders
+only while its disclosure is open; keyboard activation and search state survive
+closing/reopening. Combined variable metadata remains stable across unrelated
+renders. Standalone local commits do not echo back as new source generations while
+an explicit draft capture is pending; host value/reset revisions remain authoritative.
 
 The Camunda 7 schema provider marks expression-bearing attributes as JUEL, including
 `delegateExpression`, `expression`, `topic`, `assignee`, `candidateUsers`, `candidateGroups`,
