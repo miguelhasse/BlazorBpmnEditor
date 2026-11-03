@@ -356,6 +356,34 @@ public sealed class EditorTests : BunitContext
         Assert.Empty(workspace.FindAll("output"));
     }
 
+    [Fact]
+    public async Task FluentWorkspaceDraftDoesNotRebuildVisitedReferenceTemplate()
+    {
+        SetupBridge();
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        Services.AddFluentBpmnEditor();
+        Services.AddFluentBpmnFeelSharpEditor();
+        Services.AddFluentUIComponents();
+        var renders = 0;
+        RenderFragment<BpmnFeelSharpWorkspace> content = state => builder =>
+        {
+            renders++;
+            builder.OpenComponent<FluentFeelSharpWorkspaceContent>(0);
+            builder.AddAttribute(1, nameof(FluentFeelSharpWorkspaceContent.Workspace), state);
+            builder.CloseComponent();
+        };
+        var workspace = Render<BpmnFeelSharpWorkspace>(parameters => parameters.Add(component => component.Value, "1")
+            .Add(component => component.EditorType, typeof(FluentBpmnFeelSharpCodeEditor))
+            .Add(component => component.ContentTemplate, content));
+        workspace.Find("[role=tab][id$='-Reference']").Click();
+        workspace.Find("[role=tab][id$='-Editor']").Click();
+        var before = renders;
+        var editor = workspace.FindComponent<FluentBpmnFeelSharpCodeEditor>();
+        await editor.Instance.SnapshotAsync("2", 1, 1, 1, 1, false, true);
+        Assert.Equal(before, renders);
+        Assert.NotEmpty(workspace.FindAll("[id$='-Reference-panel'] strong"));
+    }
+
     private IRenderedComponent<FluentBpmnFeelSharpCodeEditor> RenderEditor(BpmnPropertyEntryContext context, bool propertyInput = false)
     {
         JSInterop.Mode = JSRuntimeMode.Loose;

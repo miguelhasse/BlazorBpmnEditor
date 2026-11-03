@@ -44,6 +44,7 @@ export function attach(surface: HTMLElement, input: HTMLTextAreaElement | HTMLIn
   let completionAllowed = true;
   let pendingCommit = false;
   let pendingCompletion = false;
+  let previousSnapshot: { text: string; start: number; end: number; composing: boolean; focused: boolean } | undefined;
   let queue = Promise.resolve();
   const listeners = new AbortController();
   const options = { signal: listeners.signal };
@@ -73,13 +74,17 @@ export function attach(surface: HTMLElement, input: HTMLTextAreaElement | HTMLIn
       pendingCompletion = false;
     }
     if (key === 'complete') pendingCompletion = true;
-    const version = ++sequence;
     const text = input.value;
     const start = input.selectionStart ?? 0;
     const end = input.selectionEnd ?? 0;
     const isComposing = composing;
     const root = input.getRootNode?.() as Document | ShadowRoot | undefined;
     const focused = (root?.activeElement ?? document.activeElement) === input && completionAllowed;
+    if (!key && !pendingCommit && !pendingCompletion && previousSnapshot?.text === text &&
+        previousSnapshot.start === start && previousSnapshot.end === end &&
+        previousSnapshot.composing === isComposing && previousSnapshot.focused === focused) return;
+    previousSnapshot = { text, start, end, composing: isComposing, focused };
+    const version = ++sequence;
     queue = queue.then(async () => {
       if (!active() || version !== sequence) return;
       await receiver.invokeMethodAsync('SnapshotAsync', text, start, end, version, generation, isComposing, focused);
@@ -108,6 +113,7 @@ export function attach(surface: HTMLElement, input: HTMLTextAreaElement | HTMLIn
         throw error;
       }
     }).catch(error => {
+      if (version === sequence) previousSnapshot = undefined;
       // A later native event can resynchronize after a transient connection failure.
       console.error('FeelSharp editor callback failed', error);
     });
@@ -149,6 +155,7 @@ export function attach(surface: HTMLElement, input: HTMLTextAreaElement | HTMLIn
       event.preventDefault();
       if (event.key === 'Escape') {
         event.stopPropagation();
+        previousSnapshot = undefined;
       }
       // Navigation uses the acknowledged snapshot, not a new snapshot that resets the selected option.
       const version = sequence;
@@ -347,10 +354,10 @@ export async function attachFluent(surface: HTMLElement, host: HTMLElement, rece
     'aria-controls', 'aria-expanded', 'aria-activedescendant'];
   const attribute = (name: string) => surface.hasAttribute('data-input-label')
     ? surface.getAttribute(`data-input-${name.slice(5)}`) : host.getAttribute(name);
-  const sync = () => {
-    if (surface.hasAttribute('data-input-readonly')) {
-      input.readOnly = surface.dataset.inputReadonly === 'true';
-    }
+  const view = host.ownerDocument.defaultView;
+  let geometryFrame: number | undefined;
+  let aligned = false;
+  const align = () => {
     const rect = input.getBoundingClientRect();
     const container = surface.getBoundingClientRect();
     const computed = getComputedStyle(input);
@@ -362,10 +369,23 @@ export async function attachFluent(surface: HTMLElement, host: HTMLElement, rece
       padding: computed.padding, whiteSpace: 'pre', overflowWrap: 'normal',
       color: 'var(--colorNeutralForeground1, CanvasText)',
     });
+  };
+  const sync = () => {
+    if (surface.hasAttribute('data-input-readonly')) {
+      input.readOnly = surface.dataset.inputReadonly === 'true';
+    }
+    if (!aligned || !view?.requestAnimationFrame) {
+      aligned = true;
+      align();
+    } else if (geometryFrame === undefined) {
+      geometryFrame = view.requestAnimationFrame(() => { geometryFrame = undefined; align(); });
+    }
     for (const name of attributes) {
       const value = attribute(name);
-      if (value === null) input.removeAttribute(name);
-      else input.setAttribute(name, value);
+      if (input.getAttribute(name) !== value) {
+        if (value === null) input.removeAttribute(name);
+        else input.setAttribute(name, value);
+      }
     }
     // ID references cannot cross a shadow boundary; direct references can.
     const elements = (name: string) => (attribute(name) ?? '').split(/\s+/)
@@ -389,6 +409,12 @@ export async function attachFluent(surface: HTMLElement, host: HTMLElement, rece
   shadowObserver.observe(host.shadowRoot!, { childList: true, subtree: true, characterData: true });
   return attach(surface, input, receiver, generation, {
     sync,
-    dispose() { resize.disconnect(); attributesObserver.disconnect(); shadowObserver.disconnect(); style.remove(); },
+    dispose() {
+      if (geometryFrame !== undefined) view?.cancelAnimationFrame(geometryFrame);
+      resize.disconnect();
+      attributesObserver.disconnect();
+      shadowObserver.disconnect();
+      style.remove();
+    },
   });
 }

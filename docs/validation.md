@@ -150,11 +150,33 @@ making synchronous interpretation or parsing interruptible.
 
 Startup regression coverage exercises lazy engine construction, deferred
 initial/reset diagnostics, zero-delay scheduling, composition interruption,
-disposal, observer failure, and native fallback. Workspace reference content renders
-only while its disclosure is open; keyboard activation and search state survive
-closing/reopening. Combined variable metadata remains stable across unrelated
+disposal, observer failure, and native fallback. Workspace reference content first
+mounts on Reference-tab activation and remains mounted across tab switches;
+typing does not rerender the workspace or its visited reference content. Keyboard
+activation, search state and native editor undo survive tab switches.
+Combined variable metadata remains stable across unrelated
 renders. Standalone local commits do not echo back as new source generations while
 an explicit draft capture is pending; host value/reset revisions remain authoritative.
+
+The bridge suppresses identical text/selection/composition/focus snapshots, not
+meaningful caret changes. Explicit completion and commits bypass suppression, and
+failed deliveries remain retryable. Enhanced native editors remove delegated
+fallback handlers; unenhanced controls retain them. Fluent geometry synchronization
+and external popup resize/scroll work coalesce per animation frame; read-only and
+ARIA synchronization remain immediate. Pending frames and observers are disposed.
+Completion selects at most twelve ordered candidates without sorting a full
+materialized list. Built-in metadata is prepared once; mutable host variables and
+custom signatures remain observed on each request. Normalized source text is cached
+only on the editor instance.
+
+See [FEEL benchmark measurements](../tests/Bpmn.Benchmarks/README.md#feelsharp-authoring)
+for allocation and browser callback/layout comparisons and their limitations.
+Evaluator lifecycle is intentionally unchanged: each request owns a restricted engine,
+and syntax engines remain editor-local. The available upstream information did not
+establish safe shared interpreter/provider/mapper lifetimes. No cross-user expression
+cache, pooling, worker execution or hard timeout is introduced. Repeated warmed-parser
+measurements do not describe cold runtime boot or uncached long-expression parsing.
+Cancellation still brackets synchronous interpretation; `Task.Yield` does not offload it.
 
 The Camunda 7 schema provider marks expression-bearing attributes as JUEL, including
 `delegateExpression`, `expression`, `topic`, `assignee`, `candidateUsers`, `candidateGroups`,

@@ -177,6 +177,17 @@ result. Commits always flush pending analysis. Parser engines initialize lazily:
 empty and literal-only fields do not build an engine. Function references
 mount only when the Reference tab is first selected.
 
+Completion streams current metadata into at most twelve ordered candidates, while
+immutable built-ins are prepared once. Host variable/function mutations are not
+hidden behind reference-only caches. Duplicate bridge snapshots are suppressed;
+caret changes, composition, explicit completion and commits retain their semantics.
+Workspace drafts avoid rerendering previously visited reference tabs, except when
+clearing a displayed evaluation result. Fluent geometry and external popup positioning
+coalesce per frame without delaying read-only/ARIA updates. No shared evaluator engine,
+global expression cache or JavaScript editor plugin is added.
+See [managed and browser measurements](../../tests/Bpmn.Benchmarks/README.md#feelsharp-authoring)
+for reproducible allocation comparisons and remaining synchronous-engine limits.
+
 A reproducible 1/10/100 KB and 1,000-variable corpus is in
 `EnhancementTests`: initial development runs observed roughly 20–22 / 392–439 /
 1,295–1,581 ms parse time with approximately 3 / 27 / 267 MB total thread allocations

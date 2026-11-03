@@ -1,3 +1,5 @@
+using CompletionCandidate = (string Name, string Text, string? Detail, string? Info, string? Example, string? Note);
+
 namespace Hasseware.AspNetCore.Components.Bpmn.FeelSharp;
 
 internal sealed record FeelSharpToken(string Text, string Kind, int Offset)
@@ -16,6 +18,19 @@ internal sealed class FeelSharpLanguage
             "instance of", "function", "true", "false", "null"];
     private static readonly FeelSharpFunction[] FunctionsByLength =
         FeelSharpFunctionCatalog.Functions.OrderByDescending(function => function.Name.Length).ToArray();
+    private static readonly IReadOnlyDictionary<char, FeelSharpFunction[]> FunctionsByInitial =
+        FunctionsByLength.GroupBy(function => function.Name[0]).ToDictionary(group => group.Key, group => group.ToArray());
+    private static readonly CompletionCandidate[] BuiltInCandidates = Keywords
+        .Select(keyword => new CompletionCandidate(keyword, keyword, "FEEL", null, null, null))
+        .Concat(FeelSharpFunctionCatalog.Functions.Select(function => new CompletionCandidate(
+            function.Name, function.Name + "()", function.Signature, function.Description, function.Example, function.Note)))
+        .ToArray();
+    private static readonly CompletionCandidate[] SnippetCandidates =
+    [
+        new("if expression", "if condition then value else null", "if ... then ... else", "Feel.Snippet.Conditional", null, null),
+        new("for expression", "for item in items return item", "for ... in ... return", "Feel.Snippet.Iteration", null, null),
+        new("some expression", "some item in items satisfies item != null", "some ... satisfies", "Feel.Snippet.Existential", null, null),
+    ];
 
     internal static IReadOnlyList<FeelSharpToken> Tokenize(string source)
     {
@@ -109,7 +124,7 @@ internal sealed class FeelSharpLanguage
                     offset = start + 11;
                     kind = "keyword";
                 }
-                foreach (var function in FunctionsByLength)
+                foreach (var function in FunctionsByInitial.GetValueOrDefault(character) ?? [])
                 {
                     if (!source.AsSpan(start).StartsWith(function.Name, StringComparison.Ordinal))
                     {
@@ -132,6 +147,10 @@ internal sealed class FeelSharpLanguage
             {
                 kind = "operator";
             }
+            else if (char.IsWhiteSpace(character))
+            {
+                while (offset < source.Length && char.IsWhiteSpace(source[offset])) offset++;
+            }
             tokens.Add(new(source[start..offset], kind, start));
         }
         return tokens;
@@ -150,50 +169,46 @@ internal sealed class FeelSharpLanguage
         {
             return [];
         }
-        var candidates = new List<(string Name, string Text, string? Detail, string? Info, string? Example, string? Note)>();
-        if (options?.LocalVariables == true)
-        {
-            AddVariables(FeelSharpAuthoring.Locals(source, start, tokens), "", candidates);
-        }
-        AddVariables(variables, "", candidates);
-        foreach (var function in options?.Functions ?? [])
-        {
-            candidates.Add((function.Name, function.Name + "()", function.Signature, function.Description, function.Example, "Feel.HostFunction"));
-        }
-        foreach (var keyword in Keywords)
-        {
-            candidates.Add((keyword, keyword, "FEEL", null, null, null));
-        }
-        foreach (var function in FeelSharpFunctionCatalog.Functions)
-        {
-            candidates.Add((function.Name, function.Name + "()", function.Signature, function.Description, function.Example, function.Note));
-        }
-        if (options?.Snippets == true)
-        {
-            candidates.Add(("if expression", "if condition then value else null", "if ... then ... else", "Feel.Snippet.Conditional", null, null));
-            candidates.Add(("for expression", "for item in items return item", "for ... in ... return", "Feel.Snippet.Iteration", null, null));
-            candidates.Add(("some expression", "some item in items satisfies item != null", "some ... satisfies", "Feel.Snippet.Existential", null, null));
-        }
         var replacementStart = start;
         while (replacementStart > 0 && (IsName(source[replacementStart - 1]) || source[replacementStart - 1] == '.'))
         {
             replacementStart--;
         }
-        var prefix = source[replacementStart..start];
-        // Prefer a longer suffix when it completes a FEEL name containing spaces.
-        var scan = replacementStart;
-        while (scan > 0 && (IsName(source[scan - 1]) || source[scan - 1] is ' ' or '.'))
+        var wordStart = replacementStart;
+        var candidates = new List<CompletionCandidate>(12);
+        var names = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var candidate in Candidates(source, start, tokens, variables, options))
         {
-            scan--;
-            var suffix = source[scan..start];
-            if ((scan == 0 || !IsName(source[scan - 1])) && !suffix.StartsWith(' ') &&
-                candidates.Any(candidate => candidate.Name.StartsWith(suffix, StringComparison.OrdinalIgnoreCase)))
+            var candidateStart = candidate.Name.AsSpan().StartsWith(source.AsSpan(wordStart, start - wordStart),
+                StringComparison.OrdinalIgnoreCase) ? wordStart : -1;
+            // Find the longest matching multiword suffix without allocating a string per suffix/candidate.
+            for (var scan = wordStart - 1; scan >= 0 && start - scan <= candidate.Name.Length &&
+                (IsName(source[scan]) || source[scan] is ' ' or '.'); scan--)
             {
-                replacementStart = scan;
-                prefix = suffix;
+                if ((scan == 0 || !IsName(source[scan - 1])) && source[scan] != ' ' &&
+                    candidate.Name.AsSpan().StartsWith(source.AsSpan(scan, start - scan), StringComparison.OrdinalIgnoreCase))
+                {
+                    candidateStart = scan;
+                }
             }
+            if (candidateStart < 0 || candidateStart > replacementStart) continue;
+            if (candidateStart < replacementStart)
+            {
+                replacementStart = candidateStart;
+                candidates.Clear();
+                names.Clear();
+            }
+            if (!names.Add(candidate.Name)) continue;
+            var rank = Rank(candidate, options?.RankCompletions == true);
+            var index = 0;
+            while (index < candidates.Count && (Rank(candidates[index], options?.RankCompletions == true) < rank ||
+                Rank(candidates[index], options?.RankCompletions == true) == rank &&
+                string.CompareOrdinal(candidates[index].Name, candidate.Name) < 0)) index++;
+            if (index >= 12) continue;
+            candidates.Insert(index, candidate);
+            if (candidates.Count > 12) candidates.RemoveAt(12);
         }
-        if (prefix.Length == 0 && start == end && !explicitlyRequested)
+        if (replacementStart == start && start == end && !explicitlyRequested)
         {
             return [];
         }
@@ -202,14 +217,7 @@ internal sealed class FeelSharpLanguage
         {
             replacementEnd++;
         }
-        return candidates.Where(candidate => candidate.Name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-            .DistinctBy(candidate => candidate.Name, StringComparer.Ordinal)
-            .OrderBy(candidate => options?.RankCompletions == true
-                ? candidate.Text == candidate.Name && candidate.Detail != "FEEL" ? 0 : candidate.Text.EndsWith("()", StringComparison.Ordinal) ? 1 : 2
-                : 0)
-            .ThenBy(candidate => candidate.Name, StringComparer.Ordinal)
-            .Take(12)
-            .Select(candidate =>
+        return candidates.Select(candidate =>
             {
                 var candidateEnd = replacementEnd;
                 var nameEnd = replacementStart + candidate.Name.Length;
@@ -242,14 +250,37 @@ internal sealed class FeelSharpLanguage
             }).ToArray();
     }
 
-    private static void AddVariables(IReadOnlyList<BpmnFeelVariable> variables, string prefix,
-        List<(string Name, string Text, string? Detail, string? Info, string? Example, string? Note)> candidates)
+    private static int Rank(CompletionCandidate candidate, bool ranked) => !ranked ? 0 :
+        candidate.Text == candidate.Name && candidate.Detail != "FEEL" ? 0 :
+        candidate.Text.EndsWith("()", StringComparison.Ordinal) ? 1 : 2;
+
+    private static IEnumerable<CompletionCandidate> Candidates(string source, int caret,
+        IReadOnlyList<FeelSharpToken> tokens, IReadOnlyList<BpmnFeelVariable> variables, BpmnFeelSharpEditorOptions? options)
+    {
+        if (options?.LocalVariables == true)
+        {
+            foreach (var candidate in VariableCandidates(FeelSharpAuthoring.Locals(source, caret, tokens), "")) yield return candidate;
+        }
+        foreach (var candidate in VariableCandidates(variables, "")) yield return candidate;
+        foreach (var function in options?.Functions ?? [])
+            yield return new(function.Name, function.Name + "()", function.Signature, function.Description, function.Example, "Feel.HostFunction");
+        foreach (var candidate in BuiltInCandidates) yield return candidate;
+        if (options?.Snippets == true)
+        {
+            foreach (var candidate in SnippetCandidates) yield return candidate;
+        }
+    }
+
+    private static IEnumerable<CompletionCandidate> VariableCandidates(IReadOnlyList<BpmnFeelVariable> variables, string prefix)
     {
         foreach (var variable in variables)
         {
             var name = prefix + variable.Name;
-            candidates.Add((name, name, variable.Detail, variable.Info, null, null));
-            AddVariables(variable.Entries, name + ".", candidates);
+            yield return new(name, name, variable.Detail, variable.Info, null, null);
+            if (variable.Entries.Count > 0)
+            {
+                foreach (var candidate in VariableCandidates(variable.Entries, name + ".")) yield return candidate;
+            }
         }
     }
 

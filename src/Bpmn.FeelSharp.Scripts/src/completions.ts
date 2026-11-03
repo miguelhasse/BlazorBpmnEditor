@@ -8,6 +8,7 @@ export function floatingCompletions(surface: HTMLElement, input: HTMLElement) {
   const view = owner?.defaultView;
   const listeners = new AbortController();
   const options = { signal: listeners.signal };
+  let frame: number | undefined;
   const hide = () => {
     if (popup?.matches(':popover-open')) popup.hidePopover();
   };
@@ -22,6 +23,11 @@ export function floatingCompletions(surface: HTMLElement, input: HTMLElement) {
     if (typeof popup.showPopover !== 'function') {
       throw new Error('FEEL completions require browser Popover API support.');
     }
+    if (surface.dataset.completion !== 'true' || surface.dataset.inputReadonly === 'true' ||
+        surface.closest('[hidden]')) {
+      hide();
+      return;
+    }
     const anchor = input.getBoundingClientRect();
     const viewport = view?.visualViewport;
     const leftEdge = viewport?.offsetLeft ?? 0;
@@ -30,8 +36,7 @@ export function floatingCompletions(surface: HTMLElement, input: HTMLElement) {
     const height = viewport?.height ?? owner.documentElement.clientHeight;
     const rightEdge = leftEdge + width;
     const bottomEdge = topEdge + height;
-    if (surface.dataset.completion !== 'true' || surface.dataset.inputReadonly === 'true' ||
-        surface.closest('[hidden]') || input.getClientRects().length === 0 ||
+    if (input.getClientRects().length === 0 ||
         anchor.bottom <= topEdge || anchor.top >= bottomEdge || anchor.right <= leftEdge || anchor.left >= rightEdge) {
       hide();
       return;
@@ -50,16 +55,22 @@ export function floatingCompletions(surface: HTMLElement, input: HTMLElement) {
     popup.style.left = `${Math.max(leftEdge + padding, Math.min(left, rightEdge - box.width - padding))}px`;
     popup.style.top = `${Math.max(topEdge + padding, Math.min(top, bottomEdge - box.height - padding))}px`;
   };
-  view?.addEventListener('resize', sync, options);
-  view?.addEventListener('scroll', sync, { ...options, capture: true, passive: true });
-  view?.visualViewport?.addEventListener('resize', sync, options);
-  view?.visualViewport?.addEventListener('scroll', sync, options);
-  const observer = new ResizeObserver(sync);
+  const schedule = () => {
+    if (!popup) return;
+    if (!view?.requestAnimationFrame) sync();
+    else if (frame === undefined) frame = view.requestAnimationFrame(() => { frame = undefined; sync(); });
+  };
+  view?.addEventListener('resize', schedule, options);
+  view?.addEventListener('scroll', schedule, { ...options, capture: true, passive: true });
+  view?.visualViewport?.addEventListener('resize', schedule, options);
+  view?.visualViewport?.addEventListener('scroll', schedule, options);
+  const observer = new ResizeObserver(schedule);
   observer.observe(input);
   return {
     sync,
     dispose() {
       hide();
+      if (frame !== undefined) view?.cancelAnimationFrame(frame);
       listeners.abort();
       observer.disconnect();
     },

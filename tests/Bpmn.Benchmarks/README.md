@@ -1,6 +1,7 @@
 # Bpmn.Benchmarks
 
-BenchmarkDotNet executable for managed editor costs. Targets .NET 10 and references the core RCL.
+BenchmarkDotNet executable for managed editor costs. Targets .NET 10 and references the core
+RCL and optional FeelSharp RCL; the latter does not add a dependency to the core package.
 Run from the repository root, in Release:
 
 ```powershell
@@ -9,8 +10,9 @@ dotnet run -c Release --project tests\Bpmn.Benchmarks -- --filter "*"
 dotnet run -c Release --project tests\Bpmn.Benchmarks -- --filter "*WriteCanonical*"
 ```
 
-`Program.cs` uses `BenchmarkSwitcher.FromAssembly`, so arguments after `--` are BenchmarkDotNet
-options, not application arguments. No demo server or Playwright browser is needed. The core RCL's
+`Program.cs` uses `BenchmarkSwitcher.FromAssembly`; except for the `memory` and `feel` report
+commands, arguments after `--` are BenchmarkDotNet options. No demo server or Playwright browser
+is needed. The RCLs'
 normal build dependencies still apply when building the project.
 
 ## What stays in memory
@@ -118,6 +120,75 @@ Compare all nine cases, including small-lane controls. Avoid concurrent builds/b
 run after the baseline to expose order effects. Local Round 5 results and allocation trade-offs are in
 [docs/performance.md](../../docs/performance.md). `AccessibleGraphTests` compares complete graph content with the original
 full-scan interleaving algorithm on every plane in the shipped samples, plus overlapping/duplicate and undrawn memberships.
+
+## FeelSharp authoring
+
+```powershell
+dotnet run -c Release --project tests\Bpmn.Benchmarks -- --filter "*FeelSharpBenchmarks*" --job short --buildTimeout 600
+# Quick allocation comparison, not a statistically controlled timing benchmark:
+dotnet run -c Release --project tests\Bpmn.Benchmarks -- feel
+```
+
+`FeelSharpBenchmarks` varies expressions with 1/25/100 repeated terms and 10/1,000
+multiword variables, each with a nested member. Setup creates source, tokens and metadata
+outside measurement. Tokenization, completion, signature help, local inference, syntax
+validation and explicit evaluation are separate methods. Completion enables locals,
+ranking and snippets and consumes cached tokens. Evaluation includes a new restricted
+engine and evaluates `sum([1, 2, 3])`; it does not vary with the authoring parameters.
+
+`ColdParse` means a **new parser instance in a warmed process**, not process-cold startup
+or guaranteed uncached upstream parsing. `Parse` repeatedly validates identical text
+on the same parser. The quick report warms each method ten times, then reports the median
+of seven repeated-call timing rounds and mean allocated bytes/call. Tiering, upstream
+caches and short samples make its timings exploratory. Use BenchmarkDotNet for timing
+conclusions and the long-expression corpus in `EnhancementTests` for additional input shapes.
+
+Local Release before/after allocation samples (25 terms, same options and metadata):
+
+| Operation | Before | After |
+|---|---:|---:|
+| Completion, 10 variables | 23,960 B | 9,664 B |
+| Completion, 1,000 variables | 874,440 B | 432,752 B |
+| Signature help | 1,688 B | 336 B |
+| Explicit evaluation | 51,000 B | 51,000 B |
+
+These are allocation-shape observations, not cross-machine budgets or speed guarantees.
+The regression suite bounds the large-variable completion allocation and checks mutable
+metadata, ranking, replacement ranges, UTF-16 boundaries and custom signature precedence.
+An additional local 4,000-case differential probe matched completion output exactly.
+
+### Browser comparison
+
+Publish `playground\Bpmn.Demo\Bpmn.Demo.csproj` in Release, run the published host in
+Production, and exercise `/feel-authoring-server` and `/feel-authoring` with
+`?plain=true` and `?plain=false`. Separate fresh browser contexts from warm-cache pages.
+Visit Reference once, return to Editor, then submit twenty inputs of
+`'1 + '.repeat(i) + 'am'`, each followed by Left, Right and click. Count
+`DotNet.DotNetObject.prototype.invokeMethodAsync` by method, serialized argument
+characters, relevant `getBoundingClientRect` calls and `getComputedStyle` calls.
+Measure input until the highlight text matches; this is not paint or diagnostic completion.
+
+Local Chromium runs, three pages per route/kit:
+
+| Work per twenty-input sequence | Before | After |
+|---|---:|---:|
+| `SnapshotAsync`, either kit | 80 | 61 |
+| Native delegated `DispatchEventAsync` | 60 | 0 |
+| Native serialized argument characters, all observed calls | 21,997 | 4,291 |
+| Native geometry / computed-style reads | 634 / 159 | 558 / 140 |
+| Fluent geometry reads | 960 | 672–762 |
+| Fluent computed-style reads | 322 | 197–242 |
+
+Fluent retained 61 delegated events: its enhanced input intentionally suppresses
+rerenders to protect native draft ownership. Workspace typing no longer rerenders
+visited reference content. Highlight latency improved locally, but short browser runs,
+runtime warmup and instrumentation do not establish portable timing guarantees.
+DOM mutation counts and compressed startup transfer remained effectively unchanged.
+Supplemental checks verified Brotli FEEL assemblies, responsive popovers, native undo,
+manager completion/Escape and FEEL-owned observer counts returning to baseline after
+three manager closes. Observer counts do not measure retained heap or third-party
+library garbage collection. Modal-ready observations ranged 45–183 ms locally; no
+before/after modal or separately instrumented initial-diagnostics timing is claimed.
 
 ## Session publication and composition render baseline
 

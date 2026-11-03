@@ -5,6 +5,45 @@ namespace Hasseware.AspNetCore.Components.Bpmn.FeelSharp.Tests;
 public sealed class LanguageTests
 {
     [Fact]
+    public void LargeCompletionMetadataAvoidsFullCandidateSortAndBufferAllocations()
+    {
+        const string source = "sum([amount, amount]) + am";
+        var variables = Enumerable.Range(0, 1000).Select(index => new BpmnFeelVariable("amount " + index)
+        {
+            Entries = [new("value", "number")],
+        }).ToArray();
+        var options = new BpmnFeelSharpEditorOptions { LocalVariables = true, Snippets = true, RankCompletions = true };
+        var tokens = FeelSharpLanguage.Tokenize(source);
+        FeelSharpLanguage.Complete(source, source.Length, source.Length, variables, true, options, tokens);
+        var allocated = GC.GetAllocatedBytesForCurrentThread();
+        var completions = FeelSharpLanguage.Complete(source, source.Length, source.Length, variables, true, options, tokens);
+        allocated = GC.GetAllocatedBytesForCurrentThread() - allocated;
+        Assert.Equal(12, completions.Count);
+        Assert.True(allocated < 600_000, $"Completion allocated {allocated} bytes; budget is 600,000.");
+        Assert.Equal("amount 0", completions[0].Label);
+        Assert.Equal("amount 0.value", completions[1].Label);
+    }
+
+    [Fact]
+    public void CompletionObservesMutationsToHostMetadataAndCustomSignatures()
+    {
+        var entries = new List<BpmnFeelVariable> { new("before") };
+        var variables = new[] { new BpmnFeelVariable("customer") { Entries = entries } };
+        Assert.Contains(FeelSharpLanguage.Complete("customer.", 9, 9, variables, true), item => item.Label == "customer.before");
+        entries.Clear();
+        entries.Add(new("after"));
+        var changed = FeelSharpLanguage.Complete("customer.", 9, 9, variables, true);
+        Assert.Contains(changed, item => item.Label == "customer.after");
+        Assert.DoesNotContain(changed, item => item.Label == "customer.before");
+        var functions = new List<BpmnFeelSharpFunction> { new("sum", "custom sum(first)", "Custom sum") };
+        const string source = "sum(";
+        var tokens = FeelSharpLanguage.Tokenize(source);
+        Assert.Equal("custom sum(first)", FeelSharpAuthoring.Signature(source, source.Length, tokens, functions)!.Signature);
+        functions[0] = new("sum", "custom sum(changed)", "Changed");
+        Assert.Equal("custom sum(changed)", FeelSharpAuthoring.Signature(source, source.Length, tokens, functions)!.Signature);
+    }
+
+    [Fact]
     public void ParserEngineIsCreatedOnlyForNonemptyValidation()
     {
         var syntax = new FeelSharpSyntax();
@@ -38,10 +77,11 @@ public sealed class LanguageTests
     [Fact]
     public void TokenizationPreservesExactTextAndOffsets()
     {
-        const string source = "if x >= 2 then \"<script>😀\\\"\" else /* a\nb */ null\n";
+        const string source = " \t\r\nif x >= 2 then \"<script>😀\\\"\" else /* a\nb */ null\n  ";
         var tokens = FeelSharpLanguage.Tokenize(source);
         Assert.Equal(source, string.Concat(tokens.Select(token => token.Text)));
         Assert.All(tokens, token => Assert.Equal(token.Text, source[token.Offset..token.End]));
+        Assert.Equal(" \t\r\n", tokens[0].Text);
         Assert.Contains(tokens, token => token.Kind == "string" && token.Text.Contains("<script>", StringComparison.Ordinal));
         Assert.Contains(tokens, token => token.Kind == "comment");
     }

@@ -14,6 +14,7 @@
     <ProjectReference Include="..\BpmnEditor\Hasseware.AspNetCore.Components.BpmnEditor.csproj" />
     <ProjectReference Include="..\Bpmn.FeelSharp.Scripts\Hasseware.AspNetCore.Components.Bpmn.FeelSharp.Scripts.esproj" PrivateAssets="All" />
     <InternalsVisibleTo Include="Hasseware.AspNetCore.Components.Bpmn.FeelSharp.Tests" />
+    <InternalsVisibleTo Include="Hasseware.AspNetCore.Components.Bpmn.Benchmarks" />
     <InternalsVisibleTo Include="Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp" />
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>

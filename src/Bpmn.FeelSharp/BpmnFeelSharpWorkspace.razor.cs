@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
@@ -31,7 +30,6 @@ public partial class BpmnFeelSharpWorkspace : IAsyncDisposable
     private IReadOnlyList<BpmnFeelVariable> _allVariables = [];
     internal static readonly string[] Categories = ["all", "number", "string", "temporal", "list", "context", "host"];
     private IReadOnlyList<BpmnFeelVariable> _sampleVariables = [];
-    private ImmutableArray<BpmnFeelSharpDiagnostic> _diagnostics = [];
     internal string? _result;
     internal string? _resultType;
     private BpmnFeelSharpDraft? _resultDraft;
@@ -187,17 +185,20 @@ public partial class BpmnFeelSharpWorkspace : IAsyncDisposable
     }
 
     internal void CommitDraft(string? value) => _draft = value;
+    // Draft notifications update private state; only clearing a visible result needs a workspace render.
+    internal EventCallback<BpmnFeelSharpDraft> DraftCallback => new(null, (Func<BpmnFeelSharpDraft, Task>)DraftAsync);
     internal Task DraftAsync(BpmnFeelSharpDraft draft)
     {
         if (_draft != draft.Text)
         {
             _draft = draft.Text;
+            var hadResult = _result is not null;
             _result = _resultType = null;
             _resultDraft = null;
+            if (hadResult) StateHasChanged();
         }
         return Task.CompletedTask;
     }
-    internal void DiagnosticsAsync(BpmnFeelSharpDiagnosticsUpdate update) => _diagnostics = update.Diagnostics;
 
     private BpmnFeelSharpField Field => _field ?? throw new InvalidOperationException("The FEEL workspace has not rendered.");
     /// <summary>Captures and applies the current draft; advisory diagnostics do not block persistence.</summary>

@@ -46,8 +46,8 @@ else
                           aria-expanded="@(_completions.Count > 0 ? "true" : "false")"
                           aria-activedescendant="@(_completions.Count > 0 ? OptionId(_selected) : null)"
                           spellcheck="false" @ref="_input" @key="_generation"
-                          @oninput="args => InputAsync(args, generation)" @onchange="args => ChangeAsync(args, generation)"
-                          @onkeydown="args => KeyDownAsync(args, generation)"></textarea>
+                          @oninput="@FallbackInput(generation)" @onchange="@FallbackChange(generation)"
+                          @onkeydown="@FallbackKeyDown(generation)"></textarea>
             </div>
             @if (!Minimal)
             {

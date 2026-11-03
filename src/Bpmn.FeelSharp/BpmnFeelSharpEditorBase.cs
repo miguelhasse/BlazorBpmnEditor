@@ -19,6 +19,8 @@ public abstract partial class BpmnFeelSharpEditorBase : BpmnPropertyEntryCompone
     private IJSObjectReference? _bridge;
     private DotNetObjectReference<BpmnFeelSharpEditorBase>? _reference;
     private string? _value;
+    private string? _expressionSource;
+    private string _expression = "";
     private string? _source;
     private string? _entryId;
     private string? _elementId;
@@ -310,7 +312,18 @@ public abstract partial class BpmnFeelSharpEditorBase : BpmnPropertyEntryCompone
 
     internal bool FeelActive => Entry.Feel == BpmnFeelMode.Required ||
         Entry.Feel == BpmnFeelMode.Optional && _value?.StartsWith('=') == true;
-    internal string Expression => FeelSharpSyntax.Normalize(_value ?? "");
+    internal string Expression
+    {
+        get
+        {
+            if (!ReferenceEquals(_expressionSource, _value))
+            {
+                _expressionSource = _value;
+                _expression = FeelSharpSyntax.Normalize(_value ?? "");
+            }
+            return _expression;
+        }
+    }
     internal string DisplayValue => ReadOnly ? _value ?? "" : Expression;
     internal string InputId { get; } = "bpmn-feelsharp-" + Guid.NewGuid().ToString("N");
     internal string CompletionId => InputId + "-completion";
@@ -646,6 +659,13 @@ public abstract partial class BpmnFeelSharpEditorBase : BpmnPropertyEntryCompone
         await AnalyzeAsync(true);
         RefreshPropertyAction();
     }
+
+    internal EventCallback<ChangeEventArgs> FallbackInput(int generation) => _enhanced ? default :
+        EventCallback.Factory.Create<ChangeEventArgs>(this, args => InputAsync(args, generation));
+    internal EventCallback<ChangeEventArgs> FallbackChange(int generation) => _enhanced ? default :
+        EventCallback.Factory.Create<ChangeEventArgs>(this, args => ChangeAsync(args, generation));
+    internal EventCallback<KeyboardEventArgs> FallbackKeyDown(int generation) => _enhanced ? default :
+        EventCallback.Factory.Create<KeyboardEventArgs>(this, args => KeyDownAsync(args, generation));
 
     internal async Task InputAsync(ChangeEventArgs args, int generation)
     {

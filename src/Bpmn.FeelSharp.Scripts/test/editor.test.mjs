@@ -181,6 +181,43 @@ test('completion popup hides for tab changes, readonly and missing suggestions',
   bridge.dispose();
 });
 
+test('popup geometry coalesces events, reopens after offscreen scroll and cancels disposal work', () => {
+  const { bridge, popup, view, anchor, input } = setupFloating();
+  const frames = new Map();
+  let next = 0;
+  let reads = 0;
+  view.requestAnimationFrame = callback => { frames.set(++next, callback); return next; };
+  view.cancelAnimationFrame = id => frames.delete(id);
+  input.getBoundingClientRect = () => { reads++; return anchor; };
+  const flush = () => {
+    const callbacks = [...frames.values()];
+    frames.clear();
+    callbacks.forEach(callback => callback());
+  };
+  anchor.top = 400;
+  anchor.bottom = 430;
+  view.dispatchEvent(new Event('scroll'));
+  view.dispatchEvent(new Event('resize'));
+  view.visualViewport.dispatchEvent(new Event('scroll'));
+  assert.equal(frames.size, 1);
+  assert.equal(reads, 0);
+  flush();
+  assert.equal(reads, 1);
+  assert.equal(popup.opened, false);
+  anchor.top = 100;
+  anchor.bottom = 130;
+  view.dispatchEvent(new Event('scroll'));
+  flush();
+  assert.equal(popup.opened, true);
+  view.dispatchEvent(new Event('resize'));
+  assert.equal(frames.size, 1);
+  bridge.dispose();
+  assert.equal(frames.size, 0);
+  view.dispatchEvent(new Event('scroll'));
+  assert.equal(frames.size, 0);
+  assert.equal(reads, 2);
+});
+
 test('completion positioning respects visual viewport offsets and keyboard height', () => {
   const { bridge, popup, view } = setupFloating({ x: 200, y: 170 });
   Object.assign(view.visualViewport, { width: 280, height: 180, offsetLeft: 40, offsetTop: 50 });
@@ -236,6 +273,72 @@ test('blur commit survives a later native selection snapshot', async () => {
   await settle();
   assert.equal(calls.filter(call => call.method === 'NativeKeyAsync' && call.args[0] === 'commit').length, 1);
   assert.equal(calls.find(call => call.method === 'SnapshotAsync').args[0], 'cus');
+  bridge.dispose();
+});
+
+test('identical acknowledged snapshots are suppressed without dropping caret changes or explicit completion', async () => {
+  const { input, calls, bridge } = setup();
+  input.dispatchEvent(new Event('input'));
+  await settle();
+  for (const type of ['select', 'click', 'select']) {
+    input.dispatchEvent(new Event(type));
+    await settle();
+  }
+  assert.equal(calls.filter(call => call.method === 'SnapshotAsync').length, 1);
+  input.selectionStart = input.selectionEnd = 2;
+  input.dispatchEvent(new Event('select'));
+  await settle();
+  bridge.complete(1);
+  await settle();
+  assert.equal(calls.filter(call => call.method === 'SnapshotAsync').length, 3);
+  assert.equal(calls.filter(call => call.method === 'NativeKeyAsync' && call.args[0] === 'complete').length, 1);
+  bridge.dispose();
+});
+
+test('identical snapshot retries after failed delivery and Escape allows reopening at the same caret', async () => {
+  let fails = true;
+  const { input, surface, calls, bridge } = setup(async method => {
+    if (method === 'SnapshotAsync' && fails) { fails = false; throw new Error('test delivery failure'); }
+  });
+  const log = console.error;
+  console.error = () => {};
+  try {
+    input.dispatchEvent(new Event('input'));
+    await settle();
+  } finally { console.error = log; }
+  input.dispatchEvent(new Event('select'));
+  await settle();
+  assert.equal(calls.filter(call => call.method === 'SnapshotAsync').length, 2);
+  surface.dataset.completion = 'true';
+  const escape = new Event('keydown', { cancelable: true });
+  Object.assign(escape, { key: 'Escape' });
+  input.dispatchEvent(escape);
+  await settle();
+  input.dispatchEvent(new Event('click'));
+  await settle();
+  assert.equal(calls.filter(call => call.method === 'SnapshotAsync').length, 3);
+  bridge.dispose();
+});
+
+test('a slow snapshot retains only the latest queued draft and pending commit', async () => {
+  let release;
+  const pending = new Promise(resolve => { release = resolve; });
+  const { input, calls, bridge } = setup(async method => {
+    if (method === 'SnapshotAsync') await pending;
+  });
+  input.dispatchEvent(new Event('input'));
+  await settle();
+  for (const value of ['a', 'am', 'amount']) {
+    input.value = value;
+    input.selectionStart = input.selectionEnd = value.length;
+    input.dispatchEvent(new Event('input'));
+  }
+  input.dispatchEvent(new Event('focusout'));
+  release();
+  await settle();
+  assert.equal(calls.filter(call => call.method === 'SnapshotAsync').length, 2);
+  assert.equal(calls.filter(call => call.method === 'SnapshotAsync').at(-1).args[0], 'amount');
+  assert.equal(calls.filter(call => call.method === 'NativeKeyAsync' && call.args[0] === 'commit').length, 1);
   bridge.dispose();
 });
 
@@ -319,6 +422,7 @@ function setupFluent() {
   Object.assign(state.input, {
     getBoundingClientRect() { return { left: 7, top: 14 }; },
     clientWidth: 300, clientHeight: 100,
+    getAttribute(name) { return nativeAttributes.get(name) ?? null; },
     setAttribute(name, value) { nativeAttributes.set(name, value); },
     removeAttribute(name) { nativeAttributes.delete(name); },
   });
@@ -353,6 +457,28 @@ test('Fluent adapter recognizes shadow focus and aligns native input overlay', a
   assert.equal(style.removed, true);
 });
 
+test('Fluent overlay alignment batches within a frame while readonly synchronization stays immediate', async () => {
+  const { surface, input, host, calls } = setupFluent();
+  const frames = new Map();
+  let next = 0;
+  let reads = 0;
+  input.getBoundingClientRect = () => { reads++; return { left: 7, top: 14 }; };
+  host.ownerDocument.defaultView = {
+    requestAnimationFrame(callback) { frames.set(++next, callback); return next; },
+    cancelAnimationFrame(id) { frames.delete(id); },
+  };
+  const bridge = await attachFluent(surface, host, { async invokeMethodAsync(method, ...args) { calls.push({ method, args }); } }, 1);
+  assert.equal(reads, 1);
+  for (let index = 0; index < 5; index++) input.dispatchEvent(new Event('scroll'));
+  assert.equal(frames.size, 1);
+  assert.equal(reads, 1);
+  for (const callback of frames.values()) callback();
+  frames.clear();
+  assert.equal(reads, 2);
+  input.dispatchEvent(new Event('scroll'));
+  bridge.dispose();
+  assert.equal(frames.size, 0);
+});
 test('Fluent adapter attaches ready native controls without waiting for animation frames', async () => {
   const { surface, host } = setupFluent();
   globalThis.customElements.whenDefined = () => { throw new Error('Already-ready control must not wait for definition'); };

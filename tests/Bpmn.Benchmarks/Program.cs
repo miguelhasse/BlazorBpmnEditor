@@ -11,6 +11,11 @@ if (args.Length > 0 && args[0] == "memory")
     MemoryReport.Run(args[1..]);
     return;
 }
+if (args.Length > 0 && args[0] == "feel")
+{
+    FeelSharpBenchmarks.Report();
+    return;
+}
 
 if (args.Length > 0 && args[0] == "validation-reports")
 {

@@ -17,7 +17,7 @@ else
     <div role="tabpanel" id="@PanelId("Editor")" aria-labelledby="@TabId("Editor")" hidden="@(_tab != "Editor")">
         <BpmnFeelSharpField @ref="_field" Value="@_initial" Revision="@_generation" Variables="@AllVariables"
                            Label="@Label" ReadOnly="@ReadOnly" Rows="16" EditorType="@EditorType" EnableExpansion="false"
-                           DraftChanged="DraftAsync" ValueChanged="CommitDraft" DiagnosticsChanged="DiagnosticsAsync" Minimal="@MinimalEditor" />
+                           DraftChanged="@DraftCallback" ValueChanged="CommitDraft" Minimal="@MinimalEditor" />
         <div class="bpmn-feelsharp-workspace-actions">
             @if (ShowCommitActions)
             {

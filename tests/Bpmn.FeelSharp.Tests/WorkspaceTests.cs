@@ -46,6 +46,31 @@ public sealed class WorkspaceTests : BunitContext
     }
 
     [Fact]
+    public async Task TypingDoesNotRerenderWorkspaceOrVisitedReferenceContent()
+    {
+        Setup("1");
+        var workspace = Render<TrackedWorkspace>(parameters => parameters.Add(component => component.Value, "1"));
+        workspace.Find("[role=tab][id$='-Reference']").Click();
+        workspace.Find("[role=tab][id$='-Editor']").Click();
+        var renders = workspace.Instance.Renders;
+        var editor = workspace.FindComponent<BpmnFeelSharpCodeEditor>();
+        await editor.Instance.SnapshotAsync("2", 1, 1, 1, editor.Instance._generation, false, true);
+        Assert.Equal(renders, workspace.Instance.Renders);
+        Assert.NotEmpty(workspace.FindAll("[id$='-Reference-panel'] strong"));
+    }
+
+    private sealed class TrackedWorkspace : BpmnFeelSharpWorkspace
+    {
+        public int Renders { get; private set; }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            Renders++;
+            base.OnAfterRender(firstRender);
+        }
+    }
+
+    [Fact]
     public async Task TabsPreserveEditorDraftIdentityAndDoNotApply()
     {
         Setup("draft");
@@ -135,6 +160,20 @@ public sealed class WorkspaceTests : BunitContext
         workspace.Render();
         Assert.Contains(type, workspace.Find("output").TextContent, StringComparison.Ordinal);
         Assert.Equal(json, workspace.Find("output pre").TextContent);
+    }
+
+    [Fact]
+    public async Task ChangedDraftClearsEvaluationWithoutWaitingForAnotherWorkspaceAction()
+    {
+        Setup("1");
+        var workspace = Render<BpmnFeelSharpWorkspace>(parameters => parameters.Add(component => component.Value, "1")
+            .Add(component => component.Evaluator, new BpmnFeelSharpEvaluation()));
+        await workspace.InvokeAsync(workspace.Instance.RunAsync);
+        workspace.Render();
+        Assert.NotEmpty(workspace.FindAll("output"));
+        var editor = workspace.FindComponent<BpmnFeelSharpCodeEditor>();
+        await editor.Instance.SnapshotAsync("2", 1, 1, 1, editor.Instance._generation, false, true);
+        Assert.Empty(workspace.FindAll("output"));
     }
 
     [Fact]

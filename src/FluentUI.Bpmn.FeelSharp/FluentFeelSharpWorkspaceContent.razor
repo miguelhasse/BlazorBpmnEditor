@@ -14,7 +14,7 @@
         <BpmnFeelSharpField @ref="Workspace._field" Value="@Workspace._initial" Revision="@Workspace._generation"
                            Variables="@Workspace.AllVariables" Label="@Workspace.Label" ReadOnly="@Workspace.ReadOnly"
                            Rows="16" EditorType="@Workspace.EditorType" EnableExpansion="false" Minimal="true"
-                           DraftChanged="Workspace.DraftAsync" ValueChanged="Workspace.CommitDraft" DiagnosticsChanged="Workspace.DiagnosticsAsync" />
+                           DraftChanged="@Workspace.DraftCallback" ValueChanged="Workspace.CommitDraft" />
         @if (Workspace.Actions?.Suggest is not null || Workspace.Actions?.Share is not null || Workspace.Actions?.Collaborate is not null)
         {
             <details class="fluent-feelsharp-tools">

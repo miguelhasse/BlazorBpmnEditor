@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Bpmn\Hasseware.AspNetCore.Components.Bpmn.csproj" />
+    <ProjectReference Include="..\..\src\Bpmn.FeelSharp\Hasseware.AspNetCore.Components.Bpmn.FeelSharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -40,19 +40,33 @@ internal sealed class FeelSharpAuthoring
         }
         foreach (var frame in stack.Where(frame => frame.Open == '('))
         {
-            var prefix = source[..frame.Offset].TrimEnd();
-            var functions = custom.Select(function => (function.Name, function.Signature))
-                .Concat(FeelSharpFunctionCatalog.Functions.Select(function => (function.Name, function.Signature)));
-            var function = functions.OrderByDescending(function => function.Name.Length).FirstOrDefault(function =>
-                prefix.EndsWith(function.Name, StringComparison.Ordinal) &&
-                (prefix.Length == function.Name.Length || !FeelSharpLanguage.IsName(prefix[prefix.Length - function.Name.Length - 1])));
-            if (function.Name is not null)
+            var prefix = source.AsSpan(0, frame.Offset).TrimEnd();
+            string? signature = null;
+            var length = -1;
+            foreach (var function in custom)
             {
-                return new(function.Signature, frame.Parameter + 1);
+                if (function.Name.Length > length && MatchesFunction(prefix, function.Name))
+                {
+                    length = function.Name.Length;
+                    signature = function.Signature;
+                }
             }
+            foreach (var function in FeelSharpFunctionCatalog.Functions)
+            {
+                if (function.Name.Length > length && MatchesFunction(prefix, function.Name))
+                {
+                    length = function.Name.Length;
+                    signature = function.Signature;
+                }
+            }
+            if (signature is not null) return new(signature, frame.Parameter + 1);
         }
         return null;
     }
+
+    private static bool MatchesFunction(ReadOnlySpan<char> prefix, string name) =>
+        prefix.EndsWith(name, StringComparison.Ordinal) &&
+        (prefix.Length == name.Length || !FeelSharpLanguage.IsName(prefix[prefix.Length - name.Length - 1]));
 
     internal static IReadOnlyList<BpmnFeelVariable> Locals(string source, int caret, IReadOnlyList<FeelSharpToken> tokens)
     {
