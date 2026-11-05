@@ -3,6 +3,7 @@ using System.Threading.Channels;
 
 using Microsoft.AspNetCore.Http.Connections.Client;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Storage.SignalR.Client;
 
@@ -44,6 +45,8 @@ public sealed class SignalRBpmnDocumentChangeSubscriber : ReconnectingBpmnDocume
         var channel = Channel.CreateUnbounded<string>();
         var hub = new HubConnectionBuilder()
             .WithUrl(_hubUrl, http => _configureHttp?.Invoke(http))
+            .AddJsonProtocol(protocol =>
+                protocol.PayloadSerializerOptions.TypeInfoResolverChain.Insert(0, BpmnSignalRClientJsonContext.Default))
             .Build();
 
         hub.On<string>("Changed", json => channel.Writer.TryWrite(json));

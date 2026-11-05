@@ -1,10 +1,10 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.FeelSharp;
 
@@ -41,7 +41,6 @@ public partial class BpmnFeelSharpWorkspace : IAsyncDisposable
     private IBpmnFeelSharpEvaluation? _authorizedEvaluator;
     private BpmnFeelSharpHostActions? _authorizedActions;
     private CancellationTokenSource _request = new();
-    private static readonly JsonSerializerOptions ResultOptions = new() { WriteIndented = true };
 
     [Inject] private IStringLocalizer<Resources.BpmnStrings> Localizer { get; set; } = default!;
     [Inject] private IJSRuntime JS { get; set; } = default!;
@@ -274,7 +273,7 @@ public partial class BpmnFeelSharpWorkspace : IAsyncDisposable
             if (result.IsSuccess)
             {
                 _resultType = result.Value?.GetType().Name ?? "null";
-                _result = JsonSerializer.Serialize(result.Value?.ToObject(), ResultOptions);
+                _result = FeelSharpResultJson.Serialize(result.Value?.ToObject());
                 _resultDraft = current;
             }
             else

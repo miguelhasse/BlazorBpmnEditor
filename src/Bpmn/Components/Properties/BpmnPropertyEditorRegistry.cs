@@ -1,5 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
+using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
-
 using Microsoft.AspNetCore.Components;
 
 namespace Hasseware.AspNetCore.Components.Bpmn;
@@ -9,69 +10,69 @@ public sealed class BpmnPropertyEditorRegistry
 {
     internal int Revision { get; private set; }
 
-    private Type? _feelEditor;
-    private Type? _defaultFeelEditor;
-    private readonly Dictionary<BpmnPropertyEntryKind, Type> _defaultKinds = [];
-    private readonly Dictionary<BpmnPropertyEntryKind, Type> _kinds = [];
-    private readonly Dictionary<string, Type> _keys = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, Type> _defaultKeys = new(StringComparer.Ordinal);
-    private readonly List<(Func<BpmnPropertyEntry, bool> Predicate, Type Component)> _predicates = [];
+    private BpmnComponentType? _feelEditor;
+    private BpmnComponentType? _defaultFeelEditor;
+    private readonly Dictionary<BpmnPropertyEntryKind, BpmnComponentType> _defaultKinds = [];
+    private readonly Dictionary<BpmnPropertyEntryKind, BpmnComponentType> _kinds = [];
+    private readonly Dictionary<string, BpmnComponentType> _keys = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, BpmnComponentType> _defaultKeys = new(StringComparer.Ordinal);
+    private readonly List<(Func<BpmnPropertyEntry, bool> Predicate, BpmnComponentType Component)> _predicates = [];
 
     /// <summary>Registers an editor for a kind.</summary>
-    public BpmnPropertyEditorRegistry AddEditor<TComponent>(BpmnPropertyEntryKind kind) where TComponent : IComponent
+    public BpmnPropertyEditorRegistry AddEditor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent>(BpmnPropertyEntryKind kind) where TComponent : IComponent
     {
         Revision++;
-        _kinds[kind] = typeof(TComponent);
+        _kinds[kind] = new(typeof(TComponent));
         return this;
     }
 
     /// <summary>Registers an explicitly keyed editor.</summary>
-    public BpmnPropertyEditorRegistry AddEditor<TComponent>(string editorKey) where TComponent : IComponent
+    public BpmnPropertyEditorRegistry AddEditor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent>(string editorKey) where TComponent : IComponent
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(editorKey);
         Revision++;
-        _keys[editorKey] = typeof(TComponent);
+        _keys[editorKey] = new(typeof(TComponent));
         return this;
     }
 
     /// <summary>Registers a matching editor; the last matching registration wins.</summary>
-    public BpmnPropertyEditorRegistry AddEditor<TComponent>(Func<BpmnPropertyEntry, bool> predicate) where TComponent : IComponent
+    public BpmnPropertyEditorRegistry AddEditor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent>(Func<BpmnPropertyEntry, bool> predicate) where TComponent : IComponent
     {
         ArgumentNullException.ThrowIfNull(predicate);
         Revision++;
-        _predicates.Add((predicate, typeof(TComponent)));
+        _predicates.Add((predicate, new(typeof(TComponent))));
         return this;
     }
 
     /// <summary>Replaces the default editor for required and optional FEEL expressions.</summary>
-    public BpmnPropertyEditorRegistry AddFeelEditor<TComponent>() where TComponent : IComponent
+    public BpmnPropertyEditorRegistry AddFeelEditor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent>() where TComponent : IComponent
     {
         Revision++;
-        _feelEditor = typeof(TComponent);
+        _feelEditor = new(typeof(TComponent));
         return this;
     }
 
     /// <summary>Registers the editor for a kind unless the host has registered one; for UI kits.</summary>
-    public BpmnPropertyEditorRegistry UseDefaultEditor<TComponent>(BpmnPropertyEntryKind kind) where TComponent : IComponent
+    public BpmnPropertyEditorRegistry UseDefaultEditor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent>(BpmnPropertyEntryKind kind) where TComponent : IComponent
     {
-        if (_defaultKinds.TryAdd(kind, typeof(TComponent))) Revision++;
+        if (_defaultKinds.TryAdd(kind, new(typeof(TComponent)))) Revision++;
         return this;
     }
 
     /// <summary>Registers a keyed kit default without replacing host editors.</summary>
-    public BpmnPropertyEditorRegistry UseDefaultEditor<TComponent>(string key) where TComponent : IComponent
+    public BpmnPropertyEditorRegistry UseDefaultEditor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent>(string key) where TComponent : IComponent
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
-        if (_defaultKeys.TryAdd(key, typeof(TComponent))) Revision++;
+        if (_defaultKeys.TryAdd(key, new(typeof(TComponent)))) Revision++;
         return this;
     }
 
     /// <summary>Registers the FEEL editor unless the host has replaced it; for UI kits.</summary>
-    public BpmnPropertyEditorRegistry UseDefaultFeelEditor<TComponent>() where TComponent : IComponent
+    public BpmnPropertyEditorRegistry UseDefaultFeelEditor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent>() where TComponent : IComponent
     {
         if (_defaultFeelEditor is null)
         {
-            _defaultFeelEditor = typeof(TComponent);
+            _defaultFeelEditor = new(typeof(TComponent));
             Revision++;
         }
         return this;
@@ -95,18 +96,19 @@ public sealed class BpmnPropertyEditorRegistry
     }
 
     /// <summary>Resolves key, then predicates, then FEEL, then kind, then a kit default, then the read-only view.</summary>
+    [return: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
     public Type Resolve(BpmnPropertyEntry entry)
     {
         ArgumentNullException.ThrowIfNull(entry);
-        if (entry.EditorKey is { } key && _keys.TryGetValue(key, out var keyed)) return keyed;
+        if (entry.EditorKey is { } key && _keys.TryGetValue(key, out var keyed)) return keyed.Type;
         for (var index = _predicates.Count - 1; index >= 0; index--)
         {
             var registration = _predicates[index];
-            if (registration.Predicate(entry)) return registration.Component;
+            if (registration.Predicate(entry)) return registration.Component.Type;
         }
-        if (entry.Feel is BpmnFeelMode.Required or BpmnFeelMode.Optional && (_feelEditor ?? _defaultFeelEditor) is { } feel) return feel;
-        if (_kinds.TryGetValue(entry.Kind, out var component)) return component;
-        if (entry.EditorKey is { } defaultKey && _defaultKeys.TryGetValue(defaultKey, out var keyedDefault)) return keyedDefault;
-        return _defaultKinds.GetValueOrDefault(entry.Kind) ?? typeof(BpmnReadOnlyEntry);
+        if (entry.Feel is BpmnFeelMode.Required or BpmnFeelMode.Optional && (_feelEditor ?? _defaultFeelEditor) is { } feel) return feel.Type;
+        if (_kinds.TryGetValue(entry.Kind, out var component)) return component.Type;
+        if (entry.EditorKey is { } defaultKey && _defaultKeys.TryGetValue(defaultKey, out var keyedDefault)) return keyedDefault.Type;
+        return _defaultKinds.GetValueOrDefault(entry.Kind)?.Type ?? typeof(BpmnReadOnlyEntry);
     }
 }

@@ -13,11 +13,15 @@ internal static partial class ConnectorEndpoints
     {
         if (document.Associations.Count == 0) return document;
 
+        Dictionary<string, List<BpmnAssociation>>? connections = null;
+        var useLookups = document.TextAnnotations.Count > 64 && document.Associations.Count > 64;
+        var cachePaths = document.TextAnnotations.Count > 8 && document.Associations.Count > 8;
         BpmnDiagram[]? diagrams = null;
         for (var diagramIndex = 0; diagramIndex < document.Diagrams.Count; diagramIndex++)
         {
             var diagram = document.Diagrams[diagramIndex];
             var oldPlane = before?.Diagrams.FirstOrDefault(candidate => candidate.Id == diagram.Id)?.Plane;
+            Dictionary<BpmnEdge, IReadOnlyList<DiPoint>>? paths = null;
             var flows = new Dictionary<string, BpmnEdge>(StringComparer.Ordinal);
             foreach (var edge in diagram.Plane.Edges)
                 if (document.Find(edge.BpmnElement) is BpmnSequenceFlow or BpmnMessageFlow)
@@ -75,8 +79,8 @@ internal static partial class ConnectorEndpoints
                 var follows = oldEdge is { Waypoints.Count: >= 2 } && oldFlow is { Waypoints.Count: >= 2 }
                     && oldAssociation?.SourceRef == association.SourceRef && oldAssociation.TargetRef == association.TargetRef
                     && !oldFlow.Waypoints.SequenceEqual(flow.Waypoints);
-                var path = RoundedFlowPath.Flatten(flow.Waypoints);
-                var oldPath = follows ? RoundedFlowPath.Flatten(oldFlow!.Waypoints) : null;
+                var path = PathFor(flow);
+                var oldPath = follows ? PathFor(oldFlow!) : null;
                 var ratio = follows
                     ? ClosestRatio(oldPath!, sourceIsFlow ? oldEdge!.Waypoints[0] : oldEdge!.Waypoints[^1])
                     : ClosestRatio(path, flowPoint);
@@ -84,7 +88,8 @@ internal static partial class ConnectorEndpoints
                 var oldAnnotation = oldShapes.GetValueOrDefault(annotationShape.Id);
                 if (follows && oldAnnotation?.Bounds == annotationShape.Bounds
                     && positionedAnnotations?.Contains(annotationShape.Id) != true
-                    && BpmnAnnotationAttachments.UniqueConnection(document, annotationId)?.Id == association.Id)
+                    && BpmnAnnotationAttachments.UniqueConnection(document, annotationId,
+                        useLookups ? connections ??= BpmnAnnotationAttachments.ConnectionsByElement(document) : null)?.Id == association.Id)
                 {
                     var oldPoint = PointAtRatio(oldPath!, ratio);
                     var delta = new DiPoint(point.X - oldPoint.X, point.Y - oldPoint.Y);
@@ -110,6 +115,18 @@ internal static partial class ConnectorEndpoints
                 route[0] = first;
                 route[^1] = last;
                 return edge with { Waypoints = route };
+            }
+
+            IReadOnlyList<DiPoint> PathFor(BpmnEdge edge)
+            {
+                if (!cachePaths) return RoundedFlowPath.Flatten(edge.Waypoints);
+                paths ??= new(ReferenceEqualityComparer.Instance);
+                if (!paths.TryGetValue(edge, out var path))
+                {
+                    path = RoundedFlowPath.Flatten(edge.Waypoints);
+                    paths.Add(edge, path);
+                }
+                return path;
             }
         }
         return diagrams is null ? document : document with { Diagrams = diagrams };

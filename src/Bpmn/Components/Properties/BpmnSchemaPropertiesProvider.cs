@@ -53,8 +53,12 @@ public sealed partial class BpmnSchemaPropertiesProvider : IBpmnPropertiesProvid
 
         if (zeebe is not null)
         {
+            IReadOnlyList<BpmnExtensionType>? allowedTypes = null;
             BpmnExtensionType? zeebeType(string name) => zeebe.Types.FirstOrDefault(type => type.Name == name);
-            bool Allows(string typeName) => registry.ExtensionElementTypesFor(wireType)
+            // Custom label providers may register schemas between queries.
+            bool Allows(string typeName) => (labels is BpmnEnglishPropertyLabelProvider
+                ? allowedTypes ??= registry.ExtensionElementTypesFor(wireType)
+                : registry.ExtensionElementTypesFor(wireType))
                 .Any(type => type.NamespaceUri == ZeebeUri && type.Name == typeName);
             string XmlName(string typeName) => zeebeType(typeName)?.ElementName ?? char.ToLowerInvariant(typeName[0]) + typeName[1..];
             void Claim(string typeName) => claimed.Add((ZeebeUri, XmlName(typeName)));

@@ -1,0 +1,13 @@
+<linker>
+  <assembly fullname="Bpmn.Demo.Client">
+    <!-- Server-rendered WebAssembly descriptors identify these entry points by type name. -->
+    <type fullname="Bpmn.Demo.Client.Pages.Compatibility" preserve="all" />
+    <type fullname="Bpmn.Demo.Client.Pages.EditorDemo" preserve="all" />
+    <type fullname="Bpmn.Demo.Client.Pages.FeelAuthoring" preserve="all" />
+    <type fullname="Bpmn.Demo.Client.Pages.Gallery" preserve="all" />
+    <type fullname="Bpmn.Demo.Client.Pages.Home" preserve="all" />
+    <type fullname="Bpmn.Demo.Client.Pages.Icons" preserve="all" />
+    <type fullname="Bpmn.Demo.Client.Pages.Interchange" preserve="all" />
+    <type fullname="Bpmn.Demo.Client.Pages.LiveUpdates" preserve="all" />
+  </assembly>
+</linker>

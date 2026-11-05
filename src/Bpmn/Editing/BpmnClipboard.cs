@@ -497,7 +497,7 @@ public static class BpmnClipboard
 
     /// <summary>The wire name of a type, which is what a generated id is prefixed with.</summary>
     private static string PrefixOf(BpmnFlowNodeType type) =>
-        System.Text.Json.JsonSerializer.Serialize(type).Trim('"');
+        Hasseware.AspNetCore.Components.Bpmn.Serialization.BpmnWireNames.Of(type);
 
     private static Bounds Shift(Bounds bounds, DiPoint offset) =>
         bounds with { X = bounds.X + offset.X, Y = bounds.Y + offset.Y };

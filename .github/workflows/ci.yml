@@ -12,6 +12,61 @@ env:
   CI: true
 
 jobs:
+  native-aot:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project: Bpmn.AotSmoke
+            properties: ''
+          - project: Bpmn.AotSmoke
+            properties: '-p:BpmnSmokeParsers=javascript'
+          - project: Bpmn.AotSmoke
+            properties: '-p:BpmnSmokeParsers=lua'
+          - project: Bpmn.AotHttpSmoke
+            properties: '-p:BpmnSmokeMcp=true'
+          - project: Bpmn.AotHttpSmoke
+            properties: '-p:BpmnSmokeSignalR=true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: src/Bpmn.Scripts/package-lock.json
+      - name: Install native prerequisites
+        run: sudo apt-get update && sudo apt-get install -y clang zlib1g-dev
+      - name: Install canvas build dependencies
+        working-directory: src/Bpmn.Scripts
+        run: npm ci
+      - name: Analyze and publish native verification host
+        run: >-
+          dotnet publish tests/${{ matrix.project }}/${{ matrix.project }}.csproj
+          -c Release -r linux-x64 -o artifacts/native
+          -p:BpmnCompatibilityAnalysis=true -p:TreatWarningsAsErrors=true
+          ${{ matrix.properties }}
+      - name: Execute published native artifact
+        run: ./artifacts/native/${{ matrix.project }}
+      - name: Publish native CLI
+        if: matrix.project == 'Bpmn.AotSmoke' && matrix.properties == ''
+        run: >-
+          dotnet publish src/Bpmn.Mcp.Tool/Hasseware.AspNetCore.Components.Bpmn.Mcp.Tool.csproj
+          -c Release -r linux-x64 -o artifacts/native-cli
+          -p:PublishAot=true -p:PackAsTool=false
+          -p:JsonSerializerIsReflectionEnabledByDefault=false
+          -p:BpmnCompatibilityAnalysis=true -p:TreatWarningsAsErrors=true
+      - name: Execute native CLI and stdio protocol
+        if: matrix.project == 'Bpmn.AotSmoke' && matrix.properties == ''
+        shell: pwsh
+        run: >-
+          ./tests/Bpmn.AotSmoke/Verify-NativeCli.ps1
+          -Executable ./artifacts/native-cli/Hasseware.AspNetCore.Components.Bpmn.Mcp.Tool
+          -SampleDirectory ./playground/Bpmn.Demo/wwwroot/samples
+
   build:
     # Pinned rather than ubuntu-latest: the visual regression suite arriving with the full
     # marker matrix compares rendered output, which is only stable on a fixed image.
@@ -57,8 +112,13 @@ jobs:
         working-directory: src/Bpmn.WebMcp.Scripts
         run: npm run check
 
+      - name: Check all owned-source trimming and AOT diagnostics
+        shell: pwsh
+        run: ./tests/Bpmn.AotSmoke/Verify-CompatibilityAnalysis.ps1
+
+      # Analysis sets IsTrimmable; rebuild normal artifacts before tests and --no-build packing.
       - name: Build
-        run: dotnet build BlazorBpmnEditor.slnx -c Release --no-restore
+        run: dotnet build BlazorBpmnEditor.slnx -c Release -t:Rebuild --no-restore
 
       - name: Unit and component tests
         run: dotnet test tests/Bpmn.Tests/Hasseware.AspNetCore.Components.Bpmn.Tests.csproj -c Release --no-build
@@ -114,8 +174,17 @@ jobs:
 
       - name: Publish the playground and check its precompressed assets
         run: |
-          dotnet publish playground/Bpmn.Demo/Bpmn.Demo.csproj -c Release -o artifacts/publish-demo
+          dotnet publish playground/Bpmn.Demo/Bpmn.Demo.csproj -c Release -p:TrimMode=full -o artifacts/publish-demo
           node src/Bpmn.Scripts/tools/publish-size.mjs artifacts/publish-demo/wwwroot
+
+      - name: Verify linked browser components and interop
+        env:
+          BPMN_E2E_PUBLISHED_DIRECTORY: ${{ github.workspace }}/artifacts/publish-demo
+        run: >-
+          dotnet run --project tests/Bpmn.E2E.Tests -c Release --no-build --
+          -class '*CompatibilityTests' -class '*CanvasSmokeTests'
+          -class '*FeelAuthoringTests' -class '*WebMcpTests'
+          -class '*ExecutionOverlayTests' -maxThreads 2 -noColor
 
       - uses: actions/upload-artifact@v4
         if: always()

@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 
 using Hasseware.AspNetCore.Components.Bpmn.Model;
@@ -47,7 +48,7 @@ internal static class CanvasDocumentPayload
 
     private static readonly JsonSerializerOptions Options = new(JsonSerializerDefaults.Web)
     {
-        TypeInfoResolver = new DefaultJsonTypeInfoResolver { Modifiers = { Trim } },
+        TypeInfoResolver = CanvasJsonContext.Default.WithAddedModifier(Trim),
     };
 
     private static readonly ConditionalWeakTable<BpmnDocument, object> Made = [];
@@ -61,13 +62,15 @@ internal static class CanvasDocumentPayload
 
         // GetValue, not a check and then an add: two circuits can render the same document at once (a shared sample, a cached document), and the second
         // add of one key throws. At worst both serialize and one result is kept.
-        return (JsonElement)Made.GetValue(document, key => JsonSerializer.SerializeToElement(key, Options));
+        return (JsonElement)Made.GetValue(document, key => JsonSerializer.SerializeToElement(key, TypeInfo));
     }
 
     /// <summary>The same projection as JSON text, for measuring it.</summary>
     /// <param name="document">The document to project.</param>
     /// <returns>The JSON the canvas is sent.</returns>
-    internal static string Serialize(BpmnDocument document) => JsonSerializer.Serialize(document, Options);
+    internal static string Serialize(BpmnDocument document) => JsonSerializer.Serialize(document, TypeInfo);
+
+    private static JsonTypeInfo<BpmnDocument> TypeInfo => (JsonTypeInfo<BpmnDocument>)Options.GetTypeInfo(typeof(BpmnDocument));
 
     internal static JsonElement Project<T>(T value) => JsonSerializer.SerializeToElement(value, Options);
 
@@ -113,9 +116,21 @@ internal static class CanvasDocumentPayload
             // JsonIgnore keeps derived values out of persisted JSON; only the canvas needs them.
             var existing = type.Properties.FirstOrDefault(property => property.Name == name);
             if (existing is not null) type.Properties.Remove(existing);
-            var property = type.CreateJsonPropertyInfo(typeof(string), name);
-            property.Get = get;
+            var property = JsonMetadataServices.CreatePropertyInfo<string>(type.Options, new JsonPropertyInfoValues<string>
+            {
+                IsProperty = true,
+                IsPublic = true,
+                DeclaringType = type.Type,
+                PropertyName = name,
+                JsonPropertyName = name,
+                Getter = value => (string?)get(value),
+            });
             type.Properties.Add(property);
         }
+
     }
 }
+
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+[JsonSerializable(typeof(BpmnDocument))]
+internal sealed partial class CanvasJsonContext : JsonSerializerContext;

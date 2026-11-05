@@ -58,6 +58,25 @@ public sealed class SseServerTests
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
+    [Theory]
+    [InlineData("/bpmn/changes/{path}", "a.bpmn")]
+    [InlineData("/bpmn/changes/{**path}", "claims/a.bpmn")]
+    public async Task CustomRoutePathsTakePrecedenceOverQueryPaths(string pattern, string path)
+    {
+        await using var harness = await SseHarness.StartAsync(pattern: pattern);
+        using var response = await harness.Http.GetAsync(
+            "/bpmn/changes/" + path + "?path=../invalid.bpmn", HttpCompletionOption.ResponseHeadersRead, Token);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var reading = ReadAsync(response, 2);
+        await harness.PublishAsync(Change("acme", path, "route-revision"));
+        var items = await reading;
+
+        var change = Assert.Single(items, item => item.EventType == "change");
+        using var json = JsonDocument.Parse(change.Data);
+        Assert.Equal(path, json.RootElement.GetProperty("path").GetString());
+    }
+
     [Fact]
     public async Task RefusesACallerWithoutATenantClaimInsteadOfServingTheSharedSpace()
     {
@@ -155,7 +174,8 @@ public sealed class SseServerTests
     {
         await using var harness = await SseHarness.StartAsync();
         var response = await OpenAsync(harness.Http, "a.bpmn");
-        await ReadAsync(response, 1);
+        await using var stream = await response.Content.ReadAsStreamAsync(Token);
+        await ReadFromAsync(stream, 1);
         Assert.Equal(1, harness.Feed.Open);
 
         response.Dispose();

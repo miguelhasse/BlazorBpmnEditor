@@ -1,0 +1,16 @@
+@page "/compatibility"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+<PageTitle>Component compatibility probe</PageTitle>
+
+<div class="demo-scroll-page">
+    <h1>Component compatibility probe</h1>
+    <section id="compatibility-standard" aria-label="Standard registry">
+        <BpmnPropertyEntryView Context="@Context" Registry="@_registry" />
+    </section>
+    <section id="compatibility-fluent" aria-label="Fluent registry">
+        <FluentBpmnPropertyEntryView Context="@Context" Registry="@_registry" />
+    </section>
+    <FluentButton Type="ButtonType.Button" role="button" OnClick="@ToggleReadOnly">Toggle read-only</FluentButton>
+    <output id="compatibility-value">@_value</output>
+</div>

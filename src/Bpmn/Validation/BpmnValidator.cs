@@ -106,6 +106,7 @@ public static partial class BpmnValidator
     {
         public BpmnDocument Document { get; } = document;
 
+        /// <summary>Flow nodes in first-seen container and document order.</summary>
         public ILookup<string, BpmnFlowNode> NodesByContainer { get; } =
             document.FlowNodes.ToLookup(node => node.ContainerId, StringComparer.Ordinal);
 

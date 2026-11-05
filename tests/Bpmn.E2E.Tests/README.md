@@ -15,6 +15,12 @@ Browser installation is needed once per Playwright version. On hosts needing bro
 packages, use Playwright's `install --with-deps` option. Unit-only runs need neither the demo nor
 Playwright; see [Bpmn.Tests](../Bpmn.Tests/README.md).
 
+To exercise fully linked WebAssembly output instead of development build output, publish the
+playground with `-c Release -p:TrimMode=full`, then set `BPMN_E2E_PUBLISHED_DIRECTORY` to its absolute publish directory before
+running the Release test executable. The fixture launches that directory's `Bpmn.Demo.dll`
+in Production, serves its published assets, and owns the process lifetime as usual. An invalid
+directory fails explicitly; it never falls back to development output.
+
 ## Why these are separate from the unit tests
 
 The canvas only exists once the WebAssembly client has booted and imported the real static web
@@ -33,6 +39,8 @@ to pure logic and everything paper-dependent lands in this project.
 | `CanvasSmokeTests.cs` | Navigate to `/editor`, pick a sample, assert the paper exists with the expected cell count, exercise zoom and fit, and require zero `console.error` |
 | `RenderDiagnosticsTests.cs` | The import-diagnostic surface for documents that do not read cleanly |
 | `GalleryTests.cs` | Spec-valid event cells, real Boundary hosts and Event Sub-Process starts, both Pool orientations, unique accessible items and repeated sheet switching without rendering errors |
+| `FeelAuthoringTests.cs` | Fluent page controls with both editor kits on WebAssembly and Server routes, explicit evaluation authorization, reset/read-only and transactional workspace actions, small-viewport scrolling in light/dark mode |
+| `CompatibilityTests.cs` | Custom editor registration, registry merging, reflected parameters, dependency injection, callbacks and read-only state through both UI kits |
 | `Fixtures/DemoAppFixture.cs` | Process lifecycle: free port, launch, poll until ready, kill on dispose |
 
 ## Gotchas

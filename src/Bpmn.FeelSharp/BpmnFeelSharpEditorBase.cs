@@ -1,5 +1,5 @@
-using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using System.Collections.Immutable;
+using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Logging;
@@ -362,6 +362,7 @@ public abstract partial class BpmnFeelSharpEditorBase : BpmnPropertyEntryCompone
     internal string InputDescribedBy => string.Join(" ", new[]
         { DescribedBy, ShortcutsId, SelectedCompletion?.Info is not null ? HelpId : null }
         .Where(value => value is not null));
+    [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All)]
     internal Type DefaultEditor
     {
         get

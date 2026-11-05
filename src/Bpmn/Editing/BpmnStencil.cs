@@ -1,5 +1,3 @@
-using System.Text.Json;
-
 using Hasseware.AspNetCore.Components.Bpmn.Model;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Editing;
@@ -138,8 +136,8 @@ public sealed record BpmnStencilEntry(
             : $"flowNode/{Wire(Type)}/{Wire(EventDefinition)}",
     };
 
-    private static string Wire<T>(T value) =>
-        JsonSerializer.Serialize(value).Trim('"');
+    private static string Wire<T>(T value) where T : struct, Enum =>
+        Hasseware.AspNetCore.Components.Bpmn.Serialization.BpmnWireNames.Of(value);
 }
 
 /// <summary>A titled run of stencil entries.</summary>

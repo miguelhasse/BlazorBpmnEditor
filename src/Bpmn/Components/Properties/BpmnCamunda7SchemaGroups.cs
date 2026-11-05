@@ -53,7 +53,7 @@ public sealed partial class BpmnSchemaPropertiesProvider
             };
             foreach (var (node, index) in items.Select((e, i) => (e, i)).Where(x => x.e.Children.Count > 0))
                 entries.Add(new(id + ":structured:" + index, Label("structured", "Structured value (preserved)") + ": " + (node.Attributes.GetValueOrDefault("name") ?? (index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)),
-                    BpmnPropertyEntryKind.ReadOnly, JsonSerializer.Serialize(node))
+                    BpmnPropertyEntryKind.ReadOnly, JsonSerializer.Serialize(node, Serialization.BpmnExtensionJsonContext.Default.BpmnExtensionElement))
                 { IsReadOnly = true });
             Add(id, label, entries);
         }

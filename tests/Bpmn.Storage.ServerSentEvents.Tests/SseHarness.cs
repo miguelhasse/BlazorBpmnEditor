@@ -93,7 +93,8 @@ internal sealed class SseHarness : IBpmnChangeFeedHarness
     public static async Task<SseHarness> StartAsync(
         Action<BpmnChangeFeedServerOptions>? server = null,
         Action<IServiceCollection>? services = null,
-        string? user = "alice,acme")
+        string? user = "alice,acme",
+        string pattern = "/bpmn/changes")
     {
         var auth = new AuthState();
         var builder = WebApplication.CreateBuilder();
@@ -113,7 +114,7 @@ internal sealed class SseHarness : IBpmnChangeFeedHarness
         var app = builder.Build();
         app.UseAuthentication();
         app.UseAuthorization();
-        app.MapBpmnDocumentChangeEvents("/bpmn/changes");
+        app.MapBpmnDocumentChangeEvents(pattern);
         await app.StartAsync(TestContext.Current.CancellationToken);
 
         var handler = new KillableHandler(app.GetTestServer().CreateHandler());

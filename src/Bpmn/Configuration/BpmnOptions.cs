@@ -11,15 +11,17 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Configuration;
 /// </remarks>
 public sealed class BpmnOptions
 {
+    private BpmnEditorComponentOptions? _components;
+
     /// <summary>Creates default options including the template property binding factory.</summary>
     public BpmnOptions()
     {
         Properties.BindingCommandFactories.Add(new Editing.BpmnTemplateBindingCommandFactory(Templates.Registry));
-        BpmnCoreDefaults.Register(this);
     }
 
     /// <summary>The components that render the editor's parts, app-wide.</summary>
-    public BpmnEditorComponentOptions Components { get; } = new();
+    public BpmnEditorComponentOptions Components =>
+        LazyInitializer.EnsureInitialized(ref _components, BpmnCoreDefaults.CreateComponents);
 
     /// <summary>Property panel providers and editor overrides.</summary>
     public BpmnPropertyPanelOptions Properties { get; } = new();
@@ -56,6 +58,5 @@ public sealed class BpmnOptions
     /// <summary>Opt-in extension schemas used by extension editors.</summary>
     public BpmnExtensionOptions Extensions { get; } = new();
 }
-
 
 

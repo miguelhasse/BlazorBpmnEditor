@@ -54,12 +54,23 @@ internal static class BpmnCanonicalLossAnalyzer
                     Id(sourceElement)));
             }
 
-            var canonicalChildren = canonicalElement.Elements().ToList();
+            var canonicalChildren = canonicalElement.Elements().ToArray();
+            // Small sibling sets are cheaper to scan than to index.
+            var lookup = canonicalChildren.Length > 8 ? new SiblingLookup(canonicalChildren) : null;
+            var ordinals = lookup is null ? null : new Dictionary<XName, int>();
             foreach (var child in sourceElement.Elements())
             {
+                var ordinal = 0;
+                if (ordinals is not null)
+                {
+                    ordinal = ordinals.GetValueOrDefault(child.Name);
+                    ordinals[child.Name] = ordinal + 1;
+                }
                 if (IsRedundantFlowReference(child)) continue;
 
-                var counterpart = FindCounterpart(child, canonicalChildren);
+                var counterpart = lookup is null
+                    ? FindCounterpart(child, canonicalChildren)
+                    : lookup.Find(child, ordinal);
                 if (counterpart is null)
                 {
                     // A known model element missing from canonical output was explicitly removed
@@ -87,6 +98,34 @@ internal static class BpmnCanonicalLossAnalyzer
                     $"Canonical output cannot preserve the source {node.NodeType}.",
                     Id(sourceElement)));
             }
+        }
+    }
+
+    private sealed class SiblingLookup
+    {
+        private readonly Dictionary<(XName Name, string Id), XElement> _identified;
+        private readonly Dictionary<XName, List<XElement>> _named = [];
+
+        internal SiblingLookup(IReadOnlyList<XElement> children)
+        {
+            _identified = new(children.Count);
+            foreach (var child in children)
+            {
+                if (Id(child) is { } id) _identified.TryAdd((child.Name, id), child);
+                if (!_named.TryGetValue(child.Name, out var named))
+                {
+                    named = [];
+                    _named.Add(child.Name, named);
+                }
+                named.Add(child);
+            }
+        }
+
+        internal XElement? Find(XElement source, int ordinal)
+        {
+            if (Id(source) is { } id) return _identified.GetValueOrDefault((source.Name, id));
+            return _named.TryGetValue(source.Name, out var named) && ordinal < named.Count
+                ? named[ordinal] : null;
         }
     }
 

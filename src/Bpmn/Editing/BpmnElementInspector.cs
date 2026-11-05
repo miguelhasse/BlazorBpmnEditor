@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Text.Json;
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
 using Hasseware.AspNetCore.Components.Bpmn.Model.Di;
@@ -89,7 +88,7 @@ public static class BpmnElementInspector
             Waypoints = edge?.Waypoints ?? [],
             Capabilities = isReadOnly
                 ? BpmnElementCapabilities.None
-                : CapabilitiesOf(document, element, category, switchable.Count > 1),
+               : CapabilitiesOf(properties, element, category, switchable.Count > 1),
             Diagnostics = DiagnosticsFor(invariants?.Invoke(document) ?? BpmnDocumentInvariants.Check(document), elementId),
             SwitchableTypes = switchable.Count > 1 ? switchable : [],
         };
@@ -125,8 +124,11 @@ public static class BpmnElementInspector
         }
         var groups = new List<BpmnPropertyGroup>();
         var claimedRoots = new HashSet<(string Namespace, string LocalName)>();
+        // Custom callbacks can mutate extras or the snapshot's raw descriptor list.
+        var reuseRaw = extensionOptions.LabelProvider is BpmnEnglishPropertyLabelProvider;
         foreach (var builder in extensionOptions.GroupBuilders)
         {
+            reuseRaw &= builder is BpmnSchemaPropertiesProvider;
             var result = builder.Build(snapshot, element, extras, registry, extensionOptions.LabelProvider);
             groups.AddRange(result.Groups);
             claimedRoots.UnionWith(result.ClaimedRoots);
@@ -135,7 +137,7 @@ public static class BpmnElementInspector
         var claimedIndices = extras.Extensions.Select((extension, index) => (extension, index))
             .Where(item => claimedRoots.Contains((item.extension.Namespace, item.extension.LocalName)))
             .Select(item => item.index.ToString(CultureInfo.InvariantCulture)).ToHashSet(StringComparer.Ordinal);
-        var raw = ExtensionProperties(element).Where(property =>
+        var raw = (reuseRaw ? originalRaw : ExtensionProperties(element)).Where(property =>
         {
             if (!property.Name.StartsWith(ExtensionPrefix, StringComparison.Ordinal)) return true;
             var path = property.Name[ExtensionPrefix.Length..];
@@ -158,7 +160,7 @@ public static class BpmnElementInspector
     /// <summary>The wire name for a flow node type, which is what the canvas and the icons key by.</summary>
     /// <param name="type">The type to name.</param>
     /// <returns>The camelCase BPMN element name.</returns>
-    public static string WireNameOf(BpmnFlowNodeType type) => JsonSerializer.Serialize(type).Trim('"');
+    public static string WireNameOf(BpmnFlowNodeType type) => Hasseware.AspNetCore.Components.Bpmn.Serialization.BpmnWireNames.Of(type);
 
     /// <summary>The standard properties of one element, without the rest of what <c>Describe</c> works out.</summary>
     /// <remarks>
@@ -174,6 +176,26 @@ public static class BpmnElementInspector
         ArgumentException.ThrowIfNullOrEmpty(elementId);
 
         return document.Find(elementId) is { } element ? Properties(document, element) : [];
+    }
+
+    // One synchronous batch only: lookups must not outlive host mutations.
+    internal static Func<string, IReadOnlyList<BpmnPropertyDescriptor>> CreatePropertyReader(BpmnDocument document)
+    {
+        ILookup<string, BpmnSequenceFlow>? outgoingFlows = null;
+        return Read;
+
+        IReadOnlyList<BpmnPropertyDescriptor> Read(string elementId)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(elementId);
+            if (document.Find(elementId) is not { } element) return [];
+            if (element is BpmnFlowNode node && document.FlowNodes.Count > 8
+                && (CategoryOf(node.Type) == BpmnElementCategory.Activity
+                    || node.Type is BpmnFlowNodeType.ExclusiveGateway or BpmnFlowNodeType.InclusiveGateway or BpmnFlowNodeType.ComplexGateway))
+            {
+                outgoingFlows ??= document.SequenceFlows.ToLookup(flow => flow.SourceRef, StringComparer.Ordinal);
+            }
+            return Properties(document, element, outgoingFlows);
+        }
     }
 
     // --- identity ---------------------------------------------------------------
@@ -326,7 +348,7 @@ public static class BpmnElementInspector
     // --- capabilities -----------------------------------------------------------
 
     private static BpmnElementCapabilities CapabilitiesOf(
-        BpmnDocument document,
+        IReadOnlyList<BpmnPropertyDescriptor> properties,
         object element,
         BpmnElementCategory category,
         bool canSwitch)
@@ -360,7 +382,7 @@ public static class BpmnElementInspector
             or BpmnElementCategory.Pool;
 
         return new BpmnElementCapabilities(
-            CanEditLabel: Properties(document, element).Any(property => property.Name is "name" or "text"),
+            CanEditLabel: properties.Any(property => property.Name is "name" or "text"),
             CanEditProperties: true,
             CanSwitchType: canSwitch,
             CanDelete: element is not BpmnProcess and not BpmnCollaboration,
@@ -413,10 +435,12 @@ public static class BpmnElementInspector
     /// </remarks>
     /// <param name="document">The document, for resolving choice lists.</param>
     /// <param name="element">The element to describe.</param>
+    /// <param name="outgoingFlows">Optional index scoped to one synchronous inspection batch.</param>
     /// <returns>The descriptors.</returns>
-    internal static IReadOnlyList<BpmnPropertyDescriptor> Properties(BpmnDocument document, object element)
+    internal static IReadOnlyList<BpmnPropertyDescriptor> Properties(
+        BpmnDocument document, object element, ILookup<string, BpmnSequenceFlow>? outgoingFlows = null)
     {
-        var standard = StandardProperties(document, element);
+        var standard = StandardProperties(document, element, outgoingFlows);
 
         // Documentation is the one field every BPMN element has and none of them has for its own
         // reasons, so it is appended once here rather than repeated down the switch. It goes last
@@ -475,6 +499,17 @@ public static class BpmnElementInspector
         string trail,
         List<BpmnPropertyDescriptor> found)
     {
+        Dictionary<string, (int Total, int Seen)>? occurrences = null;
+        if (elements.Count > 8)
+        {
+            occurrences = new(StringComparer.Ordinal);
+            foreach (var element in elements)
+            {
+                var previous = occurrences.GetValueOrDefault(element.LocalName);
+                occurrences[element.LocalName] = (previous.Total + 1, 0);
+            }
+        }
+
         for (var index = 0; index < elements.Count; index++)
         {
             var element = elements[index];
@@ -482,7 +517,18 @@ public static class BpmnElementInspector
                 ? index.ToString(System.Globalization.CultureInfo.InvariantCulture)
                 : $"{path}/{index.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
 
-            var name = Occurrence(elements, index) is { } ordinal
+            int? occurrence;
+            if (occurrences is null)
+            {
+                occurrence = Occurrence(elements, index);
+            }
+            else
+            {
+                var (total, seen) = occurrences[element.LocalName];
+                occurrences[element.LocalName] = (total, seen + 1);
+                occurrence = total > 1 ? seen + 1 : null;
+            }
+            var name = occurrence is { } ordinal
                 ? $"{element.LocalName}[{ordinal.ToString(System.Globalization.CultureInfo.InvariantCulture)}]"
                 : element.LocalName;
             var label = trail.Length == 0 ? name : $"{trail} / {name}";
@@ -561,10 +607,11 @@ public static class BpmnElementInspector
         _ => null,
     };
 
-    private static IReadOnlyList<BpmnPropertyDescriptor> StandardProperties(BpmnDocument document, object element) =>
+    private static IReadOnlyList<BpmnPropertyDescriptor> StandardProperties(
+        BpmnDocument document, object element, ILookup<string, BpmnSequenceFlow>? outgoingFlows) =>
         element switch
         {
-            BpmnFlowNode node => FlowNodeProperties(document, node),
+            BpmnFlowNode node => FlowNodeProperties(document, node, outgoingFlows),
             BpmnSequenceFlow flow => SequenceFlowProperties(flow),
             BpmnMessageFlow flow =>
             [
@@ -621,7 +668,8 @@ public static class BpmnElementInspector
             _ => [],
         };
 
-    private static List<BpmnPropertyDescriptor> FlowNodeProperties(BpmnDocument document, BpmnFlowNode node)
+    private static List<BpmnPropertyDescriptor> FlowNodeProperties(
+        BpmnDocument document, BpmnFlowNode node, ILookup<string, BpmnSequenceFlow>? outgoingFlows)
     {
         var properties = new List<BpmnPropertyDescriptor> { Text("name", "Name", node.Name) };
         var category = CategoryOf(node.Type);
@@ -758,7 +806,9 @@ public static class BpmnElementInspector
             or BpmnFlowNodeType.ComplexGateway
             || category == BpmnElementCategory.Activity)
         {
-            var outgoing = document.SequenceFlows.Where(flow => flow.SourceRef == node.Id).ToList();
+            var outgoing = outgoingFlows is null
+                ? document.SequenceFlows.Where(flow => flow.SourceRef == node.Id).ToList()
+                : outgoingFlows[node.Id].ToList();
 
             if (outgoing.Count > 1)
             {
@@ -855,7 +905,7 @@ public static class BpmnElementInspector
         [new(string.Empty, "(none)") { LabelResourceKey = "PropertyChoice.Empty" }, .. choices];
 
     private static string Wire<TEnum>(TEnum value) where TEnum : struct, Enum =>
-        JsonSerializer.Serialize(value).Trim('"');
+        Hasseware.AspNetCore.Components.Bpmn.Serialization.BpmnWireNames.Of(value);
 
     // --- references -------------------------------------------------------------
 

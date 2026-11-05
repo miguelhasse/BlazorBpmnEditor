@@ -195,7 +195,7 @@ public static class BpmnConnectionRules
                 BpmnElementInspector.WireNameOf(node.Type),
                 node.ContainerId,
                 node.PoolId,
-                JsonSerializer.Serialize(node.EventDefinition).Trim('"'),
+                Hasseware.AspNetCore.Components.Bpmn.Serialization.BpmnWireNames.Of(node.EventDefinition),
                 node.IsForCompensation),
             BpmnParticipant pool => new BpmnConnectionEndpoint(pool.Id, "pool", PoolId: pool.Id),
             BpmnLane lane => new BpmnConnectionEndpoint(lane.Id, "lane"),

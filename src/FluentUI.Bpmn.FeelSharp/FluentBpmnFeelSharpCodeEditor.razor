@@ -119,7 +119,7 @@ else
     }
     else
     {
-        <DynamicComponent Type="@DefaultEditor" Parameters="@EditorParameters" @key="Context.Revision" />
+        @(BpmnComponentRenderer.Render(DefaultEditor, EditorParameters, Context.Revision))
     }
 </div>
 }

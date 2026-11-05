@@ -229,6 +229,18 @@ The unit suites use xUnit executable runners; `dotnet test` currently reports ze
 Zero warnings is the standard under `src/`, where warnings are errors and XML documentation is
 required on every public member.
 
+## Native AOT and trimming
+
+Headless model/tools, file storage, SSE, MCP HTTP, SignalR, and JavaScript/Lua parser
+paths have executable Native AOT probes with reflection-based JSON disabled.
+This is not blanket certification of every UI or integration package. FeelSharp/F#
+and Roslyn dependencies expose publishing blockers; Blazor Server itself does not
+support Native AOT on .NET 10.
+
+See the [package/feature matrix and verification commands](docs/native-aot.md) for
+qualified paths, remaining boundaries, custom-component obligations, and the opt-in
+whole-library analyzers. CI publishes and executes the supported probes on Linux.
+
 ## Principles the code is held to
 
 **The SVG is a view.** The semantic model and the BPMNDI layout model are the two persisted layers;

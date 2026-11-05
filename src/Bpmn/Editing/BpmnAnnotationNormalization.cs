@@ -18,6 +18,8 @@ public sealed record BpmnAnnotationNormalization(
 
     internal static BpmnAnnotationNormalization Inspect(BpmnDocument document)
     {
+        if (document.TextAnnotations.Count == 0) return new([], [], []);
+
         var sourceOrder = document.Source?.Clone().Descendants()
             .Where(element => element.Name == BpmnXmlNames.Model + "association")
             .Select(element => (string?)element.Attribute("id"))

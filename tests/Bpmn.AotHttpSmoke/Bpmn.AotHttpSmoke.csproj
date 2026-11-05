@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <PublishAot>true</PublishAot>
+    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>false</IsTestProject>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(BpmnSmokeMcp)' == 'true'">
+    <DefineConstants>$(DefineConstants);BPMN_SMOKE_MCP</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(BpmnSmokeSignalR)' == 'true'">
+    <DefineConstants>$(DefineConstants);BPMN_SMOKE_SIGNALR</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Bpmn.Storage.ServerSentEvents\Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents.csproj" />
+    <ProjectReference Include="..\..\src\Bpmn.Storage.ServerSentEvents.Client\Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents.Client.csproj" />
+    <ProjectReference Condition="'$(BpmnSmokeMcp)' == 'true'" Include="..\..\src\Bpmn.Mcp.AspNetCore\Hasseware.AspNetCore.Components.Bpmn.Mcp.AspNetCore.csproj" />
+    <ProjectReference Condition="'$(BpmnSmokeSignalR)' == 'true'" Include="..\..\src\Bpmn.Storage.SignalR\Hasseware.AspNetCore.Components.Bpmn.Storage.SignalR.csproj" />
+    <ProjectReference Condition="'$(BpmnSmokeSignalR)' == 'true'" Include="..\..\src\Bpmn.Storage.SignalR.Client\Hasseware.AspNetCore.Components.Bpmn.Storage.SignalR.Client.csproj" />
+  </ItemGroup>
+</Project>

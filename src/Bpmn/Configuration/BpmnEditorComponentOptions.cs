@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Configuration;
@@ -37,8 +38,8 @@ public sealed class BpmnEditorComponentOptions
 
     internal int Revision { get; private set; }
 
-    private readonly Dictionary<BpmnEditorPart, Type> _explicit = [];
-    private readonly Dictionary<BpmnEditorPart, Type> _defaults = [];
+    private readonly Dictionary<BpmnEditorPart, BpmnComponentType> _explicit = [];
+    private readonly Dictionary<BpmnEditorPart, BpmnComponentType> _defaults = [];
     private readonly HashSet<BpmnEditorPart> _removed = [];
 
     /// <summary>The base class a component must derive from to render <paramref name="part"/>.</summary>
@@ -52,22 +53,24 @@ public sealed class BpmnEditorComponentOptions
     /// <summary>The component configured for a part, or <see langword="null"/> when there is none.</summary>
     /// <param name="part">The part.</param>
     /// <returns>The host's component, else the kit default, else <see langword="null"/>.</returns>
+    [return: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
     public Type? Get(BpmnEditorPart part)
     {
         if (_removed.Contains(part)) return null;
-        if (_explicit.TryGetValue(part, out var type)) return type;
-        return _defaults.GetValueOrDefault(part);
+        if (_explicit.TryGetValue(part, out var type)) return type.Type;
+        return _defaults.GetValueOrDefault(part)?.Type;
     }
 
     /// <summary>The component for a part within a composition: the host's, else the composition's kit, else the app-wide default.</summary>
     /// <param name="part">The part.</param>
     /// <param name="kit">The composition's own defaults, or <see langword="null"/> for none.</param>
     /// <returns>The component, or <see langword="null"/> when there is none.</returns>
+    [return: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
     public Type? Get(BpmnEditorPart part, BpmnKitDefaults? kit)
     {
         if (_removed.Contains(part)) return null;
-        if (_explicit.TryGetValue(part, out var type)) return type;
-        return kit?.Components._defaults.GetValueOrDefault(part) ?? _defaults.GetValueOrDefault(part);
+        if (_explicit.TryGetValue(part, out var type)) return type.Type;
+        return (kit?.Components._defaults.GetValueOrDefault(part) ?? _defaults.GetValueOrDefault(part))?.Type;
     }
 
     /// <summary>Renders <paramref name="part"/> with <typeparamref name="TComponent"/>, overriding any default.</summary>
@@ -75,11 +78,11 @@ public sealed class BpmnEditorComponentOptions
     /// <param name="part">The part.</param>
     /// <returns>These options, for chaining.</returns>
     /// <exception cref="ArgumentException"><typeparamref name="TComponent"/> does not derive from the part's base class.</exception>
-    public BpmnEditorComponentOptions Use<TComponent>(BpmnEditorPart part) where TComponent : IComponent
+    public BpmnEditorComponentOptions Use<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent>(BpmnEditorPart part) where TComponent : IComponent
     {
         Validate(part, typeof(TComponent));
         Revision++;
-        _explicit[part] = typeof(TComponent);
+        _explicit[part] = new(typeof(TComponent));
         _removed.Remove(part);
         return this;
     }
@@ -90,12 +93,12 @@ public sealed class BpmnEditorComponentOptions
     /// <param name="part">The part.</param>
     /// <returns>These options, for chaining.</returns>
     /// <exception cref="ArgumentException"><typeparamref name="TComponent"/> does not derive from the part's base class.</exception>
-    public BpmnEditorComponentOptions UseDefault<TComponent>(BpmnEditorPart part) where TComponent : IComponent
+    public BpmnEditorComponentOptions UseDefault<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent>(BpmnEditorPart part) where TComponent : IComponent
     {
         Validate(part, typeof(TComponent));
         if (!_defaults.ContainsKey(part))
         {
-            _defaults[part] = typeof(TComponent);
+            _defaults[part] = new(typeof(TComponent));
             Revision++;
         }
         return this;

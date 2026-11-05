@@ -96,8 +96,19 @@ public sealed class DemoAppFixture : IAsyncLifetime
             UseShellExecute = false,
         };
 
+        var publishedDirectory = Environment.GetEnvironmentVariable("BPMN_E2E_PUBLISHED_DIRECTORY");
+        if (!string.IsNullOrWhiteSpace(publishedDirectory))
+        {
+            publishedDirectory = Path.GetFullPath(publishedDirectory);
+            var application = Path.Combine(publishedDirectory, "Bpmn.Demo.dll");
+            if (!File.Exists(application))
+                throw new FileNotFoundException("The published playground application was not found.", application);
+            startInfo.Arguments = $"\"{application}\"";
+            startInfo.WorkingDirectory = publishedDirectory;
+        }
+
         startInfo.Environment["ASPNETCORE_URLS"] = _baseUrl;
-        startInfo.Environment["ASPNETCORE_ENVIRONMENT"] = "Development";
+        startInfo.Environment["ASPNETCORE_ENVIRONMENT"] = string.IsNullOrWhiteSpace(publishedDirectory) ? "Development" : "Production";
 
         _process = Process.Start(startInfo)
             ?? throw new InvalidOperationException("Could not start the playground application.");

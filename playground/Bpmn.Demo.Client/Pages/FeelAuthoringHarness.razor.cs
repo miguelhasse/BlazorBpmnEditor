@@ -1,9 +1,9 @@
 using Hasseware.AspNetCore.Components.Bpmn;
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.AspNetCore.Components.Bpmn.FeelSharp;
-using Microsoft.AspNetCore.Components;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
 using Hasseware.AspNetCore.Components.Bpmn.Serialization;
+using Microsoft.AspNetCore.Components;
 
 namespace Bpmn.Demo.Client.Pages;
 
@@ -49,7 +49,7 @@ public partial class FeelAuthoringHarness
         Share = async (draft, token) =>
         {
             token.ThrowIfCancellationRequested();
-            _notice = $"Host received explicit shared draft ({draft.Text.Length} characters); no network transport.";
+            _notice = Localizer["FeelAuthoring.Shared", draft.Text.Length];
             await InvokeAsync(StateHasChanged);
         },
     };
@@ -69,5 +69,5 @@ public partial class FeelAuthoringHarness
     }
     private void ToggleReadOnly() => _readOnly = !_readOnly;
     private void ApplyWorkspace(string? value) => _workspace = value;
-    private void CancelWorkspace() => _notice = "Workspace draft cancelled; persisted value unchanged.";
+    private void CancelWorkspace() => _notice = Localizer["FeelAuthoring.Cancelled"];
 }

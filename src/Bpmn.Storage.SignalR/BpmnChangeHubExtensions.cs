@@ -23,7 +23,8 @@ public static class BpmnChangeHubExtensions
         services.TryAddSingleton(options);
         services.AddBpmnDocumentChanges();
         services.AddHttpContextAccessor();
-        services.AddSignalR();
+        services.AddSignalR().AddJsonProtocol(protocol =>
+            protocol.PayloadSerializerOptions.TypeInfoResolverChain.Insert(0, BpmnSignalRJsonContext.Default));
         services.TryAddSingleton<IBpmnDocumentAuthorizer, AllowAllBpmnDocumentAuthorizer>();
         services.TryAddSingleton<BpmnChangeFeedServer>();
         return services;

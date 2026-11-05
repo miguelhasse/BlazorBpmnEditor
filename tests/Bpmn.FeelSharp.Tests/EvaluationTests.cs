@@ -1,7 +1,7 @@
 using global::FeelSharp;
+using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.FeelSharp.Tests;
 

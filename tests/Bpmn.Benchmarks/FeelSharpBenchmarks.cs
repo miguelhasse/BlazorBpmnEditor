@@ -27,7 +27,7 @@ public class FeelSharpBenchmarks
     public int Terms { get; set; }
 
     /// <summary>Host metadata size.</summary>
-    [Params(10, 1000)]
+    [Params(10, 1000, 10000)]
     public int VariableCount { get; set; }
 
     /// <summary>Prepares expressions, tokens and metadata outside timed methods.</summary>
@@ -41,7 +41,10 @@ public class FeelSharpBenchmarks
             Entries = [new("value", "number")],
         }).ToArray();
         _syntax = new();
-        _syntax.Validate("1");
+        if (_syntax.Validate("1 + 2") is not null || string.IsNullOrWhiteSpace(_syntax.Validate("1 + )")))
+        {
+            throw new InvalidOperationException("Parser benchmark must accept valid syntax and reject invalid syntax.");
+        }
     }
 
     /// <summary>New parser instance in a warmed process, including engine construction and first parse.</summary>
@@ -78,7 +81,7 @@ public class FeelSharpBenchmarks
     {
         foreach (var terms in new[] { 1, 25, 100 })
         {
-            foreach (var count in new[] { 10, 1000 })
+            foreach (var count in new[] { 10, 1000, 10000 })
             {
                 var benchmark = new FeelSharpBenchmarks { Terms = terms, VariableCount = count };
                 benchmark.Setup();

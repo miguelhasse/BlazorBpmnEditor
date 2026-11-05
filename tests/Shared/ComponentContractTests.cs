@@ -57,7 +57,8 @@ public sealed class ComponentContractTests : BunitContext
         Assert.True(BpmnEditorComponentOptions.RequiredBase(part).IsAssignableFrom(type));
         AssertNoRequiredParameters(type);
         var rendered = this.Render<BpmnPart>(p => p.Add(c => c.Part, part), canvas: true);
-        Assert.IsType(type, rendered.Cut.FindComponent<DynamicComponent>().Instance.Instance);
+        Assert.Single(rendered.Cut.FindComponents<BpmnEditorComponentBase>(),
+            component => component.Instance.GetType() == type);
     }
 
     [Theory, MemberData(nameof(EntryKinds))]

@@ -39,6 +39,7 @@ public partial class BpmnFeelCodeEditor : IAsyncDisposable
     private string? DescribedBy => Entry.Error is not null
         ? Warning is not null ? ErrorId + " " + WarningId : ErrorId
         : Warning is not null ? WarningId : null;
+    [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All)]
     private Type DefaultEditor => Editors.Resolve(Entry with { Feel = BpmnFeelMode.None });
     private IDictionary<string, object> EditorParameters => new Dictionary<string, object>
     {

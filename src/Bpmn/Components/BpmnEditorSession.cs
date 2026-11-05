@@ -1273,7 +1273,7 @@ public sealed partial class BpmnEditorSession
 
     /// <summary>The wire name for a type, which is what the canvas and the icon manifest key by.</summary>
     private static string WireNameOf(BpmnFlowNodeType type) =>
-        System.Text.Json.JsonSerializer.Serialize(type).Trim('"');
+        Hasseware.AspNetCore.Components.Bpmn.Serialization.BpmnWireNames.Of(type);
 
     private static string ConnectorPrefix(BpmnConnectorKind kind) => kind switch
     {

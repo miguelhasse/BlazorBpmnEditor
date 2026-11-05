@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net.ServerSentEvents;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
@@ -44,7 +45,7 @@ public static class BpmnChangeEventsExtensions
     /// Maps <c>GET {pattern}?path=…</c>: one stream per document, authenticated, with the tenant taken from the caller's claims.
     /// </summary>
     /// <param name="endpoints">The route builder.</param>
-    /// <param name="pattern">Where to serve it.</param>
+    /// <param name="pattern">Where to serve it. A <c>path</c> route parameter takes precedence over the query parameter.</param>
     /// <returns>The endpoint's convention builder.</returns>
     /// <exception cref="InvalidOperationException">The options leave open how callers are partitioned, or contradict one another.</exception>
     public static IEndpointConventionBuilder MapBpmnDocumentChangeEvents(this IEndpointRouteBuilder endpoints, string pattern = "/bpmn/changes")
@@ -54,8 +55,15 @@ public static class BpmnChangeEventsExtensions
         var options = endpoints.ServiceProvider.GetRequiredService<BpmnChangeFeedServerOptions>();
         Validate(options);
 
-        var endpoint = endpoints.MapGet(pattern, (HttpContext context, string? path, BpmnChangeFeedServer feed, CancellationToken cancellationToken) =>
-            HandleAsync(context, path, feed, options, cancellationToken));
+        var endpoint = endpoints.MapGet(pattern, (RequestDelegate)(async context =>
+        {
+            var path = context.Request.RouteValues.TryGetValue("path", out var routePath)
+                ? Convert.ToString(routePath, CultureInfo.InvariantCulture)
+                : context.Request.Query.TryGetValue("path", out var paths) ? paths.ToString() : null;
+            var result = await HandleAsync(context, path,
+                context.RequestServices.GetRequiredService<BpmnChangeFeedServer>(), options, context.RequestAborted).ConfigureAwait(false);
+            await result.ExecuteAsync(context).ConfigureAwait(false);
+        }));
 
         if (options.AllowAnonymous)
         {

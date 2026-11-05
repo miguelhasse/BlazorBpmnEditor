@@ -642,20 +642,21 @@ public static partial class BpmnValidator
         {
             var current = queue.Dequeue();
 
-            var next = forward
-                ? index.Outgoing[current].Select(flow => flow.TargetRef)
-                : index.Incoming[current].Select(flow => flow.SourceRef);
+            var flows = forward ? index.Outgoing[current] : index.Incoming[current];
+            foreach (var flow in flows)
+            {
+                var id = forward ? flow.TargetRef : flow.SourceRef;
+                if (seen.Add(id)) queue.Enqueue(id);
+            }
 
             // A Boundary Event's own outgoing flow continues the main path, so a node reached only
             // through one is reachable — following the host's attachments keeps that true.
             if (forward)
             {
-                next = next.Concat(index.Attached[current].Select(boundary => boundary.Id));
-            }
-
-            foreach (var id in next)
-            {
-                if (seen.Add(id)) queue.Enqueue(id);
+                foreach (var boundary in index.Attached[current])
+                {
+                    if (seen.Add(boundary.Id)) queue.Enqueue(boundary.Id);
+                }
             }
         }
 

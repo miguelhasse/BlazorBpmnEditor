@@ -11,7 +11,7 @@
      data-input-activedescendant="@(Editor._completions.Count > 0 ? Editor.OptionId(Editor._selected) : null)"
      @onfocusin="Editor.ActivatePropertyAsync">
     <CascadingValue Value="@Editor.PropertyEnhancement">
-        <DynamicComponent Type="@Editor.DefaultEditor" Parameters="@Editor.PropertyParameters" @key="Editor._generation" />
+        @(BpmnComponentRenderer.Render(Editor.DefaultEditor, Editor.PropertyParameters, Editor._generation))
     </CascadingValue>
     @if (Editor._completions.Count > 0)
     {

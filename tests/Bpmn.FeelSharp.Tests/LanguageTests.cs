@@ -1,5 +1,3 @@
-using Hasseware.AspNetCore.Components.Bpmn.FeelSharp;
-
 namespace Hasseware.AspNetCore.Components.Bpmn.FeelSharp.Tests;
 
 public sealed class LanguageTests
@@ -19,9 +17,47 @@ public sealed class LanguageTests
         var completions = FeelSharpLanguage.Complete(source, source.Length, source.Length, variables, true, options, tokens);
         allocated = GC.GetAllocatedBytesForCurrentThread() - allocated;
         Assert.Equal(12, completions.Count);
-        Assert.True(allocated < 600_000, $"Completion allocated {allocated} bytes; budget is 600,000.");
+        Assert.True(allocated < 300_000, $"Completion allocated {allocated} bytes; budget is 300,000.");
         Assert.Equal("amount 0", completions[0].Label);
         Assert.Equal("amount 0.value", completions[1].Label);
+    }
+
+    [Fact]
+    public void NestedCompletionPreservesDepthFirstDuplicatePrecedenceAndTopTwelve()
+    {
+        BpmnFeelVariable[] variables =
+        [
+            new("customer") { Entries = [new("full name", "first"), new("full name", "second"),
+                new("address") { Entries = [new("city", "nested")] }] },
+            new("customer.address.city", "duplicate"),
+        ];
+
+        var completions = FeelSharpLanguage.Complete("customer.", 9, 9, variables, true);
+
+        Assert.Equal(["customer.address", "customer.address.city", "customer.full name"],
+            completions.Select(item => item.Label));
+        Assert.Equal("first", completions[2].Detail);
+        Assert.Equal("nested", completions[1].Detail);
+        Assert.All(completions, item => Assert.Equal(0, item.Start));
+    }
+
+    [Fact]
+    public void UnmatchedNestedMetadataDoesNotAllocateRecursiveIterators()
+    {
+        const string source = "missing";
+        var variables = Enumerable.Range(0, 1000).Select(index => new BpmnFeelVariable($"amount {index}")
+        {
+            Entries = [new("value")],
+        }).ToArray();
+        var tokens = FeelSharpLanguage.Tokenize(source);
+        FeelSharpLanguage.Complete(source, source.Length, source.Length, variables, true, tokens: tokens);
+        var allocated = GC.GetAllocatedBytesForCurrentThread();
+
+        var completions = FeelSharpLanguage.Complete(source, source.Length, source.Length, variables, true, tokens: tokens);
+
+        allocated = GC.GetAllocatedBytesForCurrentThread() - allocated;
+        Assert.Empty(completions);
+        Assert.True(allocated < 150_000, $"Unmatched metadata allocated {allocated} bytes; budget is 150,000.");
     }
 
     [Fact]

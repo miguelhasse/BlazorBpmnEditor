@@ -49,6 +49,8 @@
     <Project Path="samples/SqlServerChangeIngress/SqlServerChangeIngress.csproj" />
   </Folder>
   <Folder Name="/Testing/">
+    <Project Path="tests/Bpmn.AotSmoke/Bpmn.AotSmoke.csproj" />
+    <Project Path="tests/Bpmn.AotHttpSmoke/Bpmn.AotHttpSmoke.csproj" />
     <Project Path="tests/FluentUI.Bpmn.FeelSharp.Tests/Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp.Tests.csproj" />
     <Project Path="tests/Bpmn.FeelSharp.Tests/Hasseware.AspNetCore.Components.Bpmn.FeelSharp.Tests.csproj" />
     <Project Path="tests/Bpmn.Benchmarks/Hasseware.AspNetCore.Components.Bpmn.Benchmarks.csproj" />

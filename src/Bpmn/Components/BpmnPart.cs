@@ -12,7 +12,7 @@ namespace Hasseware.AspNetCore.Components.Bpmn;
 /// </remarks>
 public sealed class BpmnPart : ComponentBase
 {
-    private Type? _componentType;
+    private BpmnComponentType? _componentType;
     private readonly Dictionary<string, object> _toolbarParameters = new()
     {
         [nameof(BpmnToolbarBase.ShowColorPicker)] = false,
@@ -51,7 +51,7 @@ public sealed class BpmnPart : ComponentBase
         var key = (Part, Session.KitDefaults, options, options.Revision, Session.KitDefaults?.Components.Revision ?? 0);
         if (_resolution == key) return;
         _resolution = key;
-        _componentType = options.Get(Part, Session.KitDefaults);
+        _componentType = options.Get(Part, Session.KitDefaults) is { } type ? new(type) : null;
     }
 
     /// <inheritdoc />
@@ -63,10 +63,9 @@ public sealed class BpmnPart : ComponentBase
         }
         else if (_componentType is { } type)
         {
-            builder.OpenComponent<DynamicComponent>(1);
-            builder.AddComponentParameter(2, nameof(DynamicComponent.Type), type);
+            builder.OpenComponent(1, type.Type);
             if (Part == BpmnEditorPart.Toolbar)
-                builder.AddComponentParameter(3, nameof(DynamicComponent.Parameters), _toolbarParameters);
+                builder.AddMultipleAttributes(3, _toolbarParameters);
             builder.CloseComponent();
         }
         else if (Fallback is not null)

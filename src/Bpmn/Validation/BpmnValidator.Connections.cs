@@ -30,62 +30,68 @@ public static partial class BpmnValidator
 
     private static void CheckEventFlows(DocumentIndex index, BpmnFlowNode node, List<BpmnDiagnostic> found)
     {
-        var incoming = index.Incoming[node.Id].ToList();
-        var outgoing = index.Outgoing[node.Id].ToList();
+        if (node.Type is not (BpmnFlowNodeType.StartEvent or BpmnFlowNodeType.EndEvent
+            or BpmnFlowNodeType.BoundaryEvent or BpmnFlowNodeType.IntermediateThrowEvent
+            or BpmnFlowNodeType.IntermediateCatchEvent)) return;
+
+        var incoming = index.Incoming[node.Id];
+        var outgoing = index.Outgoing[node.Id];
+        var incomingCount = incoming.Count();
+        var outgoingCount = outgoing.Count();
 
         // D001: a Start Event starts something. An incoming flow would mean it does not.
-        if (node.Type == BpmnFlowNodeType.StartEvent && incoming.Count > 0)
+        if (node.Type == BpmnFlowNodeType.StartEvent && incomingCount > 0)
         {
             found.Add(BpmnDiagnostic.FromDetail(
                 BpmnRules.D001,
                 node.Id,
-                incoming[0].Id,
-                BpmnDiagnosticText.Create("D001.Detail", "{0} has {1}.", Name(node), incoming.Count)));
+                incoming.First().Id,
+                BpmnDiagnosticText.Create("D001.Detail", "{0} has {1}.", Name(node), incomingCount)));
         }
 
         // D002: an End Event ends it.
-        if (node.Type == BpmnFlowNodeType.EndEvent && outgoing.Count > 0)
+        if (node.Type == BpmnFlowNodeType.EndEvent && outgoingCount > 0)
         {
             found.Add(BpmnDiagnostic.FromDetail(
                 BpmnRules.D002,
                 node.Id,
-                outgoing[0].Id,
-                BpmnDiagnosticText.Create("D002.Detail", "{0} has {1}.", Name(node), outgoing.Count)));
+                outgoing.First().Id,
+                BpmnDiagnosticText.Create("D002.Detail", "{0} has {1}.", Name(node), outgoingCount)));
         }
 
         // SF-017/SF-018: a Link pair is a jump, so the throw continues and the catch is reached
         // through its partner rather than by drawn flow.
         if (node.EventDefinition == BpmnEventDefinitionType.Link)
         {
-            if (node.Type == BpmnFlowNodeType.IntermediateThrowEvent && outgoing.Count > 0)
+            if (node.Type == BpmnFlowNodeType.IntermediateThrowEvent && outgoingCount > 0)
             {
                 found.Add(BpmnDiagnostic.FromDetail(
                     BpmnRules.SF017,
                     node.Id,
-                    outgoing[0].Id,
-                    BpmnDiagnosticText.Create("SF-017.Detail", "{0} has {1}.", Name(node), outgoing.Count)));
+                    outgoing.First().Id,
+                    BpmnDiagnosticText.Create("SF-017.Detail", "{0} has {1}.", Name(node), outgoingCount)));
             }
 
-            if (node.Type == BpmnFlowNodeType.IntermediateCatchEvent && incoming.Count > 0)
+            if (node.Type == BpmnFlowNodeType.IntermediateCatchEvent && incomingCount > 0)
             {
                 found.Add(BpmnDiagnostic.FromDetail(
                     BpmnRules.SF018,
                     node.Id,
-                    incoming[0].Id,
-                    BpmnDiagnosticText.Create("SF-018.Detail", "{0} has {1}.", Name(node), incoming.Count)));
+                    incoming.First().Id,
+                    BpmnDiagnosticText.Create("SF-018.Detail", "{0} has {1}.", Name(node), incomingCount)));
             }
         }
 
         if (node.Type != BpmnFlowNodeType.BoundaryEvent) return;
 
         // D003: a Boundary Event is triggered by its host, never reached by a flow.
-        if (incoming.Count > 0)
+        if (incomingCount > 0)
         {
             found.Add(BpmnDiagnostic.FromDetail(
                 BpmnRules.D003,
                 node.Id,
-                incoming[0].Id,
-                BpmnDiagnosticText.Create("D003.Detail", "{0} has {1}.", Name(node), incoming.Count)));
+                incoming.First().Id,
+                BpmnDiagnosticText.Create("D003.Detail", "{0} has {1}.", Name(node), incomingCount)));
         }
 
         var host = index.Node(node.AttachedToRef);
@@ -161,8 +167,8 @@ public static partial class BpmnValidator
     {
         if (!IsGateway(node)) return;
 
-        var incoming = index.Incoming[node.Id].ToList();
-        var outgoing = index.Outgoing[node.Id].ToList();
+        var incoming = index.Incoming[node.Id];
+        var outgoing = index.Outgoing[node.Id];
 
         CheckDecision(node, outgoing, found);
         CheckRedundantMerge(node, incoming, outgoing, found);
@@ -185,11 +191,11 @@ public static partial class BpmnValidator
     /// </remarks>
     private static void CheckDecision(
         BpmnFlowNode node,
-        List<BpmnSequenceFlow> outgoing,
+        IEnumerable<BpmnSequenceFlow> outgoing,
         List<BpmnDiagnostic> found)
     {
         var decides = node.Type is BpmnFlowNodeType.ExclusiveGateway or BpmnFlowNodeType.InclusiveGateway;
-        if (!decides || outgoing.Count < 2) return;
+        if (!decides || outgoing.Count() < 2) return;
 
         var defaults = outgoing.Count(flow => flow.IsDefault);
 
@@ -203,7 +209,7 @@ public static partial class BpmnValidator
         found.Add(BpmnDiagnostic.FromDetail(
             BpmnRules.D004,
             node.Id,
-            (unconditional.FirstOrDefault() ?? outgoing[0]).Id,
+            (unconditional.FirstOrDefault() ?? outgoing.First()).Id,
             defaults > 1
             ? BpmnDiagnosticText.Create("D004.Detail", "{0} has {1} default flows.", Name(node), defaults)
             : BpmnDiagnosticText.Create("D004.Detail.2", "{0} has {1} branches with neither a conditionExpression nor the default flag.", Name(node), unconditional.Count)));
@@ -212,8 +218,8 @@ public static partial class BpmnValidator
     /// <summary>D005: a merge gateway with one incoming flow synchronises nothing.</summary>
     private static void CheckRedundantMerge(
         BpmnFlowNode node,
-        List<BpmnSequenceFlow> incoming,
-        List<BpmnSequenceFlow> outgoing,
+        IEnumerable<BpmnSequenceFlow> incoming,
+        IEnumerable<BpmnSequenceFlow> outgoing,
         List<BpmnDiagnostic> found)
     {
         var synchronises = node.Type is BpmnFlowNodeType.ParallelGateway
@@ -222,7 +228,7 @@ public static partial class BpmnValidator
 
         // A merge is a gateway with one way out; with several it is a split, and one incoming flow
         // is exactly what a split is meant to have.
-        if (synchronises && incoming.Count == 1 && outgoing.Count <= 1)
+        if (synchronises && incoming.Count() == 1 && outgoing.Count() <= 1)
         {
             found.Add(BpmnDiagnostic.FromDetail(
                 BpmnRules.D005,
@@ -242,7 +248,7 @@ public static partial class BpmnValidator
     private static void CheckEventGateway(
         DocumentIndex index,
         BpmnFlowNode node,
-        List<BpmnSequenceFlow> outgoing,
+        IEnumerable<BpmnSequenceFlow> outgoing,
         List<BpmnDiagnostic> found)
     {
         if (node.Type != BpmnFlowNodeType.EventBasedGateway) return;

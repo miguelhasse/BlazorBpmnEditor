@@ -98,7 +98,7 @@ public sealed class BpmnDisplayLocalizer(IStringLocalizer<BpmnStrings> localizer
         return descriptor with
         {
             Label = PropertyLabel(descriptor.Name, descriptor.Label),
-            Choices = [.. descriptor.Choices.Select(choice => choice with { Label = ChoiceLabel(descriptor.Name, choice) })],
+            Choices = [.. descriptor.Choices.Select(choice => LocalizeChoice(descriptor.Name, choice))],
         };
     }
 
@@ -113,10 +113,7 @@ public sealed class BpmnDisplayLocalizer(IStringLocalizer<BpmnStrings> localizer
         return entry with
         {
             Label = label,
-            Choices = entry.Choices.Select(choice => choice with
-            {
-                Label = ChoiceLabel(entry.Id, choice),
-            }).ToArray(),
+            Choices = entry.Choices.Select(choice => LocalizeChoice(entry.Id, choice)).ToArray(),
         };
     }
 
@@ -148,7 +145,7 @@ public sealed class BpmnDisplayLocalizer(IStringLocalizer<BpmnStrings> localizer
                 {
                     Label = BuiltIn(prefix + column.Name, column.Label),
                 }).ToArray(),
-                Choices = entry.Choices.Select(choice => choice with { Label = ChoiceLabel(entry.Id, choice) }).ToArray(),
+                Choices = entry.Choices.Select(choice => LocalizeChoice(entry.Id, choice)).ToArray(),
             } : Property(entry)).ToArray(),
             Children = group.Children.Select(Group).ToArray(),
         };
@@ -247,6 +244,12 @@ public sealed class BpmnDisplayLocalizer(IStringLocalizer<BpmnStrings> localizer
             return name.EndsWith("#text", StringComparison.Ordinal) && fallback.EndsWith(" text", StringComparison.Ordinal)
                 ? Text("Property.RawText", fallback[..^5]) : fallback;
         return BuiltIn($"Property.{name}", fallback);
+    }
+
+    private BpmnPropertyChoice LocalizeChoice(string name, BpmnPropertyChoice choice)
+    {
+        var label = ChoiceLabel(name, choice);
+        return string.Equals(label, choice.Label, StringComparison.Ordinal) ? choice : choice with { Label = label };
     }
 
     private string ChoiceLabel(string name, BpmnPropertyChoice choice)

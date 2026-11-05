@@ -236,6 +236,53 @@ public sealed class BpmnDisplayLocalizationTests
     private static BpmnDisplayLocalizer Display(params (string Key, string Value)[] entries) =>
         new(new TestStrings(entries.ToDictionary(entry => entry.Key, entry => entry.Value)));
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    public void UnchangedChoicesReuseRecordsButNotMutableSourceLists(int surface)
+    {
+        var host = new BpmnPropertyChoice("host", "Host document name");
+        var builtIn = new BpmnPropertyChoice("none", "None")
+        {
+            LabelResourceKey = "PropertyChoice.loopCharacteristics.none",
+        };
+        var choices = new List<BpmnPropertyChoice> { host, builtIn };
+        var translations = new Dictionary<string, string>();
+        var display = new BpmnDisplayLocalizer(new TestStrings(translations));
+
+        IReadOnlyList<BpmnPropertyChoice> Localize() => surface switch
+        {
+            0 => display.Descriptor(new("loopCharacteristics", "Loop", BpmnPropertyKind.Choice, "none", Choices: choices)).Choices,
+            1 => display.Property(new("loopCharacteristics", "Loop", BpmnPropertyEntryKind.Select) { Choices = choices }).Choices,
+            _ => display.Group(new("camunda:test", "Host group",
+                [new("loopCharacteristics", "Loop", BpmnPropertyEntryKind.Select) { Choices = choices }])
+            {
+                Namespace = "http://camunda.org/schema/1.0/bpmn",
+                HasBuiltInLabels = true,
+            }).Entries[0].Choices,
+        };
+
+        var original = Localize();
+        Assert.NotSame(choices, original);
+        Assert.Same(host, original[0]);
+        Assert.Same(builtIn, original[1]);
+        translations["PropertyChoice.loopCharacteristics.none"] = "Translated none";
+
+        var translated = Localize();
+
+        Assert.Same(host, translated[0]);
+        Assert.NotSame(builtIn, translated[1]);
+        Assert.Equal("Translated none", translated[1].Label);
+        Assert.Equal(builtIn with { Label = "Translated none" }, translated[1]);
+        Assert.Equal("None", original[1].Label);
+        choices[0] = host with { Label = "Updated host name" };
+        Assert.Equal("Host document name", original[0].Label);
+        Assert.Equal("Updated host name", Localize()[0].Label);
+        translations.Clear();
+        Assert.Same(builtIn, Localize()[1]);
+    }
+
     private sealed class TestStrings(Dictionary<string, string> values) : IStringLocalizer<BpmnStrings>
     {
         public LocalizedString this[string name] => values.TryGetValue(name, out var value)

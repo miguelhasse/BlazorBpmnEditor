@@ -12,6 +12,17 @@
   <data name="Home.Icons" xml:space="preserve"><value>Icon manifest</value></data>
   <data name="Home.Interchange" xml:space="preserve"><value>XML interchange</value></data>
   <data name="Home.FeelAuthoring" xml:space="preserve"><value>FEEL authoring</value></data>
+  <data name="FeelAuthoring.Heading" xml:space="preserve"><value>Managed FEEL authoring</value></data>
+  <data name="FeelAuthoring.Intro" xml:space="preserve"><value>Opt-in authoring features. Sample data stays local; evaluation requires explicit authorization and Run.</value></data>
+  <data name="FeelAuthoring.Reset" xml:space="preserve"><value>Reset entries</value></data>
+  <data name="FeelAuthoring.ToggleReadOnly" xml:space="preserve"><value>Toggle read-only</value></data>
+  <data name="FeelAuthoring.Entry" xml:space="preserve"><value>FEEL expression entry</value></data>
+  <data name="FeelAuthoring.EntryValue" xml:space="preserve"><value>Committed expression</value></data>
+  <data name="FeelAuthoring.Workspace" xml:space="preserve"><value>Standalone FEEL workspace</value></data>
+  <data name="FeelAuthoring.Authorize" xml:space="preserve"><value>Authorize trusted sample interpretation</value></data>
+  <data name="FeelAuthoring.WorkspaceValue" xml:space="preserve"><value>Applied workspace value:</value></data>
+  <data name="FeelAuthoring.Shared" xml:space="preserve"><value>Host received explicit shared draft ({0} characters); no network transport.</value></data>
+  <data name="FeelAuthoring.Cancelled" xml:space="preserve"><value>Workspace draft cancelled; persisted value unchanged.</value></data>
   <data name="SampleDiagram" xml:space="preserve"><value>Sample diagram</value></data>
   <data name="ImportDiagnostics" xml:space="preserve"><value>{0} import diagnostic(s)</value></data>
   <data name="DocumentSummary" xml:space="preserve"><value>{0} flow nodes, {1} sequence flows, {2} diagram(s)</value></data>

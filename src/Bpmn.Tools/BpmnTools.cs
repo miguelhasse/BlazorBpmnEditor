@@ -331,7 +331,7 @@ public static partial class BpmnTools
     private static string CamelCase(string name) => JsonNamingPolicy.CamelCase.ConvertName(name);
 
     // Flow node types are named by BpmnElementInspector.WireNameOf; this covers the other enums.
-    private static string Wire<TEnum>(TEnum value) where TEnum : struct, Enum => JsonSerializer.Serialize(value).Trim('"');
+    private static string Wire<TEnum>(TEnum value) where TEnum : struct, Enum => Hasseware.AspNetCore.Components.Bpmn.Serialization.BpmnWireNames.Of(value);
 
     private static BpmnToolResult<TData> Succeeded<TData>(IBpmnToolHost host, TData data, IReadOnlyList<BpmnToolDiagnostic>? diagnostics = null) =>
         new() { Ok = true, Data = data, Diagnostics = diagnostics ?? [], Revision = host.Revision, IsDirty = DirtyOf(host) };

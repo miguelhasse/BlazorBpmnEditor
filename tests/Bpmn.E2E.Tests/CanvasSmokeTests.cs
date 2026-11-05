@@ -97,7 +97,7 @@ public class CanvasSmokeTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
         };
         Page.PageError += (_, error) => errors.Add(error);
 
-        await Page.GotoAsync(app.Url(this));
+        await GoToEditorAsync();
         await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         // Asserted on the joined text so a failure reports what actually went wrong in the

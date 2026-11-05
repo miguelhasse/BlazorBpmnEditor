@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Bunit;
 
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
@@ -82,7 +83,8 @@ public sealed class BpmnCanvasTests : BunitContext
 
         Render<BpmnCanvas>(parameters => parameters.Add(p => p.Configuration, configuration));
 
-        var applied = Assert.IsType<EditorConfig>(JSInterop.Invocations["initialize"].Single().Arguments[3]);
+        var applied = Assert.IsType<JsonElement>(JSInterop.Invocations["initialize"].Single().Arguments[3])
+            .Deserialize(BpmnInteropJsonContext.Default.EditorConfig)!;
         Assert.NotNull(applied.Strings);
         Assert.Equal("Expand sub-process {0}", applied.Strings.Values["ExpandNamed"]);
         Assert.Equal("User Task", applied.Strings.Values["Type.userTask"]);
@@ -99,7 +101,8 @@ public sealed class BpmnCanvasTests : BunitContext
         var component = Render<BpmnCanvas>();
 
         Assert.Equal("localized:AriaLabel", component.Find("div.bpmn-canvas").GetAttribute("aria-label"));
-        var configuration = Assert.IsType<EditorConfig>(JSInterop.Invocations["initialize"].Single().Arguments[3]);
+        var configuration = Assert.IsType<JsonElement>(JSInterop.Invocations["initialize"].Single().Arguments[3])
+            .Deserialize(BpmnInteropJsonContext.Default.EditorConfig)!;
         Assert.NotNull(configuration.Strings);
         Assert.Equal("localized:ExpandNamed", configuration.Strings.Values["ExpandNamed"]);
         Assert.Equal("localized:Type.userTask", configuration.Strings.Values["Type.userTask"]);

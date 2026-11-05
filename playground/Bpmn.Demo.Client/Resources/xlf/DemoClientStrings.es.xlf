@@ -237,6 +237,61 @@
         <target state="translated">Normalizado</target>
         <note />
       </trans-unit>
+      <trans-unit id="FeelAuthoring.Authorize">
+        <source>Authorize trusted sample interpretation</source>
+        <target state="new">Authorize trusted sample interpretation</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FeelAuthoring.Cancelled">
+        <source>Workspace draft cancelled; persisted value unchanged.</source>
+        <target state="new">Workspace draft cancelled; persisted value unchanged.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FeelAuthoring.Entry">
+        <source>FEEL expression entry</source>
+        <target state="new">FEEL expression entry</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FeelAuthoring.EntryValue">
+        <source>Committed expression</source>
+        <target state="new">Committed expression</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FeelAuthoring.Heading">
+        <source>Managed FEEL authoring</source>
+        <target state="new">Managed FEEL authoring</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FeelAuthoring.Intro">
+        <source>Opt-in authoring features. Sample data stays local; evaluation requires explicit authorization and Run.</source>
+        <target state="new">Opt-in authoring features. Sample data stays local; evaluation requires explicit authorization and Run.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FeelAuthoring.Reset">
+        <source>Reset entries</source>
+        <target state="new">Reset entries</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FeelAuthoring.Shared">
+        <source>Host received explicit shared draft ({0} characters); no network transport.</source>
+        <target state="new">Host received explicit shared draft ({0} characters); no network transport.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FeelAuthoring.ToggleReadOnly">
+        <source>Toggle read-only</source>
+        <target state="new">Toggle read-only</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FeelAuthoring.Workspace">
+        <source>Standalone FEEL workspace</source>
+        <target state="new">Standalone FEEL workspace</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FeelAuthoring.WorkspaceValue">
+        <source>Applied workspace value:</source>
+        <target state="new">Applied workspace value:</target>
+        <note />
+      </trans-unit>
       <trans-unit id="Gallery.Activities">
         <source>Activities and markers</source>
         <target state="translated">Actividades y marcadores</target>

@@ -296,10 +296,9 @@ public abstract class BpmnPropertyPanelBase : BpmnEditorComponentBase
             if (context.Entry.Kind == BpmnPropertyEntryKind.Hidden)
                 return;
 
-            builder.OpenComponent<DynamicComponent>(0);
+            builder.OpenComponent(0, Session.Editors.Resolve(context.Entry));
             builder.SetKey($"{context.Entry.Id}:{context.Revision}");
-            builder.AddComponentParameter(1, nameof(DynamicComponent.Type), Session.Editors.Resolve(context.Entry));
-            builder.AddComponentParameter(2, nameof(DynamicComponent.Parameters),
+            builder.AddMultipleAttributes(2,
                 _entryContexts.TryGetValue(context.Entry, out var cached) && ReferenceEquals(cached.Context, context)
                     ? cached.Parameters : new Dictionary<string, object> { ["Context"] = context });
             builder.CloseComponent();

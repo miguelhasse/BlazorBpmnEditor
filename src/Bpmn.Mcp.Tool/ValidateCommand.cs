@@ -14,9 +14,8 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Mcp.Tool;
 /// It runs the same handler an agent's <c>bpmn_validate</c> does, so a build fails on exactly what an agent was
 /// told. Only the editor's own rules run; profile validators belong to hosts that register them.
 /// </remarks>
-internal static class ValidateCommand
+internal static partial class ValidateCommand
 {
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) { WriteIndented = true };
 
     // CI wants every finding, not a page of them.
     private static readonly BpmnToolLimits Limits = BpmnToolLimits.Default with { MaxElements = 100_000 };
@@ -182,19 +181,24 @@ internal static class ValidateCommand
 
     private static async Task WriteJsonAsync(TextWriter output, List<FileReport> reports, int errors, int warnings)
     {
-        var document = new
-        {
-            files = reports.Select(report => new { path = report.Path, errors = report.Errors, warnings = report.Warnings, findings = report.Findings }),
-            errors,
-            warnings,
-        };
+        var document = new ValidationReport(
+            reports.Select(report => new ValidationFile(report.Path, report.Errors, report.Warnings, report.Findings)).ToArray(),
+            errors, warnings);
 
-        await output.WriteLineAsync(JsonSerializer.Serialize(document, JsonOptions)).ConfigureAwait(false);
+        await output.WriteLineAsync(JsonSerializer.Serialize(document, ValidationJsonContext.Default.ValidationReport)).ConfigureAwait(false);
     }
 
     private static string OneLine(string text) => text.ReplaceLineEndings(" ");
 
     private sealed record Finding(string Code, string Severity, string Message, string? ElementId);
+
+    private sealed record ValidationReport(IReadOnlyList<ValidationFile> Files, int Errors, int Warnings);
+    private sealed record ValidationFile(string Path, int Errors, int Warnings, IReadOnlyList<Finding> Findings);
+
+    [System.Text.Json.Serialization.JsonSourceGenerationOptions(
+        PropertyNamingPolicy = System.Text.Json.Serialization.JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
+    [System.Text.Json.Serialization.JsonSerializable(typeof(ValidationReport))]
+    private sealed partial class ValidationJsonContext : System.Text.Json.Serialization.JsonSerializerContext;
 
     private sealed record FileReport(string Path, bool Unreadable, int Errors, int Warnings, List<Finding> Findings)
     {

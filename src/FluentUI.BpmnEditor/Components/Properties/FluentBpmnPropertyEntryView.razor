@@ -5,7 +5,6 @@
 @if (Context.Entry.Kind != BpmnPropertyEntryKind.Hidden)
 {
     <BpmnPropertyScopeProvider Editors="Registry">
-        <DynamicComponent Type="@EffectiveRegistry.Resolve(Context.Entry)" Parameters="@EditorParameters"
-                          @key="@($"{Context.Entry.Id}:{Context.Revision}")" />
+        @(BpmnComponentRenderer.Render(EffectiveRegistry.Resolve(Context.Entry), EditorParameters, $"{Context.Entry.Id}:{Context.Revision}"))
     </BpmnPropertyScopeProvider>
 }

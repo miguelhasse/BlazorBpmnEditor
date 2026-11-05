@@ -30,6 +30,66 @@ is stated rather than hidden because it is what the diagram costs today: a scale
 every mounted view at once, and that work is not divisible the way a pan's is. Raising this is the
 next piece of performance work, not something the current numbers pretend is done.
 
+## Whole-document validation
+
+Validation now consumes existing incoming/outgoing lookup groups without making
+two flow-list copies per node and two more per gateway. One operation-local,
+ordered container lookup serves reachability and event-subprocess checks; BFS
+visits adjacency and boundary-attachment groups directly instead of composing
+iterators for each visited node. Large annotation sets reuse the existing
+association index rather than scanning all associations for every annotation.
+No persistent cache, public API, wire format or validation rule changed.
+
+Local Release quick reports, two interleaved before/after pairs on the same
+machine and default runtime settings:
+
+| Complete validation workload | Before median | After median | Allocated before / after |
+|---|---:|---:|---:|
+| Flat chain, 600 nodes | 0.60-0.75 ms | 0.51-0.57 ms | 626,680 / 499,280 B |
+| Many containers, 5,000 nodes | 91-93 ms | 27-32 ms | 7.17 / 6.35 MB |
+| Event subprocesses, 5,000 child nodes + 1,666 owners | 161-223 ms | 17-20 ms | 10.64 / 9.58 MB |
+| 5,000 nodes and 5,000 notes, 7,500 associations | 285-319 ms | 30-31 ms | 8.34 / 8.03 MB |
+| 602-node stress fixture, including DI | 1.50-1.53 ms | 0.87-1.52 ms | 901,240 / 773,360 B |
+
+MB here means decimal megabytes. These measure complete core validation, not
+isolated loops, UI latency, browser paint or end-to-end edits. The existing element
+index is warm; a separate `new-document` sample includes rebuilding it for a fresh
+shallow document copy. Allocation and timing include all new operation-local
+indexes. Each case warms 30 times, then records seven rounds. This is exploratory
+evidence, not BenchmarkDotNet confidence intervals.
+
+Separate tiering-disabled pairs retained the large-workload gains: 5,000-node
+many-container validation fell from 92-98 to 38-40 ms; event subprocesses from
+166-178 to 22-24 ms; dense notes from 263-272 to 24-27 ms. Small timings are not
+uniformly improved: the stress fixture in these runs rose from 1.63-1.66 to
+1.84-1.96 ms, despite allocation falling from 901,408 to 773,560 B. Flat 600-node
+timings overlapped, and one default-runtime fresh-document gateway sample also
+regressed. Retain the reduced allocation and large scaling improvements; do not
+infer a universal speedup, cold-start gain or tighter browser frame budget.
+
+These measurements predate rebasing onto local main's annotation-only connection
+counts. The rebased validator retains that count-only implementation, combining it
+with direct adjacency traversal and flow-copy removal; the combined implementation
+has not been rebenchmarked. The earlier measured annotation indexing was limited
+to more than 64 notes and more than 64 associations.
+The 64-note direct-scan control allocated 107,024 to 92,808 B; the 65-note indexed
+control allocated 110,912 to 105,136 B in default-runtime comparisons. Both include
+the other validator changes; this is not isolated index-build cost. Null host
+association endpoints retain direct-scan behavior. Self-associations count once,
+duplicate associations separately, and diagnostic/container/node order, localized
+arguments, malformed-reference handling and boundary escape traversal stay intact.
+Indexes are discarded with the validation call; dense annotation index construction
+still allocates temporary lists, and no peak-memory reduction is claimed.
+
+All 31 ordered diagnostic digests matched untouched baseline in both pairs under
+both runtime settings. Core regression coverage includes an allocation guard and
+Native AOT executable coverage for container traversal, gateway selection and
+indexed annotation warnings. One selected editor template-panel group-order check
+fails identically with the untouched baseline library; unrelated ordering behavior
+was not changed.
+
+Reproduce with the [validation report](../tests/Bpmn.Benchmarks/README.md#whole-document-validation).
+
 ## Baselines, 2026-10-15
 
 Production build (`dotnet publish -c Release`), Chromium 153 headless at 1440 × 900, the 602-shape stress diagram, **median of three fresh browsers with the
@@ -836,6 +896,49 @@ respectively in that run. The canonical tree and diagnostics are still built, so
 Each needs a decision or touches a contract: a history byte budget or a lower default depth (100 steps retain 6.7 MB, so it is not urgent); a document-size cap on the stores; esbuild code splitting
 (changes the module path); virtualizing the accessible tree (roving tabindex, `aria-setsize`); AOT; and folding `getInitResult` into `initialize` (see "Round 2: input, labels and mount").
 
+## Further managed improvements, 2026-11-05
+
+A repository-wide source scan selected two measurable managed opportunities rather
+than changing every LINQ call or dictionary. Earlier geometry, accessibility-tree,
+lane-membership and canvas-reconciliation optimizations remain intact.
+
+**FEEL completion:** Direct depth-first metadata traversal replaces recursive
+iterator allocation. With 1,000 variables and one nested member each, completion
+allocates 264,400 B instead of 432,752 B (25-term expression, cached tokens,
+ranking/locals/snippets enabled). At 10,000 variables the allocation reduction is
+about 41%. Ordering, duplicate precedence, replacement spans and the 12-result cap
+are unchanged; mutable metadata is read on every invocation, not cached globally.
+Interleaved local quick reports put the 1,000-variable case at 556-576 microseconds
+before versus 333-358 after. This is managed completion cost, not browser input latency.
+
+**Canonical XML loss analysis:** Repeated sibling scans now use a local lookup on
+wide parents, preserving namespace-qualified names, first duplicate-ID matches,
+ID-less ordinals, ordered diagnostics and source immutability. Synthetic 5,000-task
+sibling analysis dropped from 185-236 ms to 3.5-4.2 ms in interleaved quick reports;
+allocation ranged from 2.21-2.53 MB before versus approximately 2.14 MB after
+(decimal MB; tiering affects the baseline). The actual 602-shape
+fixture's single warmed canonical export sample changed from 70.8 ms/7.4 MB to
+19.4 ms/7.1 MB. The stream overload still constructs the canonical tree and loss
+diagnostics; no streaming tree rewrite or fidelity behavior change was made.
+
+These measurements used Release/.NET 10 on one Windows machine. Quick reports show
+allocation shape and directional timings, not statistical confidence intervals.
+Commands, workload parameters and the 1,296-case completion digest are documented in
+[Bpmn.Benchmarks](../tests/Bpmn.Benchmarks/README.md).
+
+**Current browser baseline, not a before/after claim:** Three fresh Chromium contexts
+against the fully trimmed Release host measured cold/warm startup medians of
+2,680/1,845 ms; delete/undo long-task totals of 250/358 ms; zoom p95 18.5 ms and
+worst frame 88.5 ms. Initial SVG nodes numbered 2,092; pan had no long tasks.
+These are current-machine results and must not replace historical paired comparisons.
+The browser harness now opens the Files popover before selecting its fixture.
+
+An additional sampled delete/undo CPU profile attributed approximately 918 ms to
+WebAssembly/runtime frames, 381 ms to URL-backed script frames, 41 ms to GC and
+408 ms to other frames, excluding idle samples. Minified scripts and interpreter
+frames do not provide reliable managed method attribution. No speculative browser
+rewrite, tree virtualization or interop contract change was retained from this trace.
+
 ## Virtualization
 
 Only what is on screen, plus a full viewport of margin in each direction, is in the DOM. On this
@@ -958,3 +1061,478 @@ Re-measured on the same machine with two interleaved rounds of two fresh browser
 On the 602-shape stress diagram, a host-confirmed delete now sends only its deletion closure to the canvas and removes those cells in one graph batch; the resident semantic model, lane membership, and DI planes are updated without rebuilding cell projections. Lane deletion still uses the full renderer because it changes layout; Pool and Process deletion remain refused by the editor. The direct path also falls back if a removal would detach an unlisted connector or embedded survivor.
 
 Measured with `perf-bench.mjs` in Edge on the same machine: delete main-thread blocking fell from 3,133 ms (2,402–3,133; 2 runs) to 721 ms (673–765; 3 runs) at the default zoom, and from 2,625 ms (2,415–2,625) to 653 ms (580–751) zoomed out — reductions of about 77% and 75%. Compare these before/after figures with each other; browser setup differs from earlier samples above. Undo still uses the full document render and measured 1,050 ms at default zoom and 858 ms zoomed out. The fast path avoids serializing and reconstructing the full canvas projection for a deletion; these browser runs do not isolate managed allocation counts.
+
+## Fidelity save allocations and reference indexing
+
+`BpmnFidelityWriter` now snapshots only elements carrying modeled flow references,
+instead of allocating reference lists for every XML descendant. Larger owner sets
+use lazily built per-direction sequence-flow lookups; up to eight owners retain
+direct scans to avoid indexing thousands of flows for a sparse reference set.
+Lookups remain local to each call so mutable host flow lists stay observable.
+Leaf merges skip empty child-matching dictionaries and sets.
+
+Two interleaved local Release comparisons using task chains of 5,000 nodes:
+
+| Workload | Before | After |
+|---|---:|---:|
+| Every node carries references: synchronization | 284-289 ms / 9.32 MB | 4.8-9.4 ms / 3.86 MB |
+| Every node carries references: complete fidelity save | 333-336 ms / 39.52 MB | 60-92 ms / 29.97 MB |
+| No references: complete fidelity save allocation | 26.26 MB | 15.60 MB |
+| Sparse references: synchronization allocation | 2,428,728 B | 4,472 B |
+
+MB values are decimal. These are exploratory quick-report medians, not
+BenchmarkDotNet confidence intervals or browser-edit gains. Sparse full-save timing
+was noisy and is not claimed as an improvement. The 1/8/9-node boundary cases
+allocated less without a repeatable synchronization slowdown.
+
+Output hashes matched the baseline for all 18 size/reference-density combinations
+in four interleaved runs. Regression coverage preserves whitespace and existing
+node identity on unchanged references, model order, duplicate IDs, self-loops,
+absent directions, foreign namespaces, detached nested owners, mutable host lists,
+and retained-source immutability. See the [benchmark instructions](../tests/Bpmn.Benchmarks/README.md#fidelity-export).
+
+## Document diff allocation reduction
+
+`BpmnDocumentDiff` now builds property dictionaries directly with first-name-wins
+semantics, rather than building groups before dictionaries. Two ordered dictionary
+passes replace a concatenated/distinct property-key set. Geometry appends coordinates
+directly into pre-sized route buckets instead of allocating an array for every point
+and repeatedly growing the destination. No document cache or reference-identity
+shortcut was added; host-supplied mutable routes remain observable on every call.
+
+Two interleaved local Release comparisons of unchanged task chains:
+
+| Nodes / route points per connector | Before | After |
+|---|---:|---:|
+| 600 / 2 | 6.02 MB | 3.32 MB |
+| 600 / 32 | 9.88 MB | 3.89 MB |
+| 5,000 / 2 | 50.58 MB | 28.02 MB |
+| 5,000 / 32 | 82.74 MB | 32.82 MB |
+
+MB values are decimal. Edited-document variants showed similar reductions.
+These are whole-diff allocations, not retained memory or browser-edit measurements.
+Large-document timings remained noisy; no reliable speed gain is claimed.
+The same harness produced matching output digests for all 12 workloads in four runs.
+See [diff benchmark scope and commands](../tests/Bpmn.Benchmarks/README.md#document-diff).
+
+### Scoped scan and findings
+
+Pre-change scan of `Bpmn.Tools/BpmnDocumentDiff.cs`, before classification:
+
+| Recipe | Matching source lines |
+|---|---:|
+| Select/Where/Cast/Take/Aggregate/GroupBy/Concat/Distinct | 3 |
+| SelectMany (route projection) | 1 |
+| Any/All | 0 |
+| Explicit new List / new Dictionary | 4 / 2 |
+| Static Dictionary / FrozenDictionary | 0 / 0 |
+| ContainsKey (membership only, not followed by indexer) | 1 |
+| Literal IndexOf/StartsWith/EndsWith/Contains without comparison | 0 |
+| Substring / culture casing / Replace / params | 0 / 0 / 0 / 0 |
+| Sync waits / stackalloc / byte or char arrays / string.Format | 0 / 0 / 0 / 0 |
+| Regex construction or Compiled / JSON/options/client construction | 0 / 0 |
+| Sealed non-static record types / total non-static types | 5 / 5 |
+
+**Moderate, fixed:** property projection and key union created multiple intermediate
+collections per shared element (`BpmnDocumentDiff.ValuesOf`, `Properties`).
+Direct dictionaries and ordered passes preserve first-value and output-order semantics.
+
+**Moderate, fixed:** route flattening allocated one array per point and grew the
+coordinate list repeatedly (`BpmnDocumentDiff.GeometryOf`). Direct appends and
+known-capacity reservation remove those intermediates. Sibling Tools files had
+no equivalent property grouping or point-array flattening sites.
+
+**Info, subsequently addressed below:** standard property inspection scans outgoing sequence flows
+when constructing activity/default-flow choices (`BpmnElementInspector.FlowNodeProperties`).
+A per-operation batch context avoids repeated scans; subsequent measurements and
+descriptor-equivalence coverage are recorded below.
+
+| Severity | Count | Top issue |
+|---|---:|---|
+| 🔴 Critical | 0 | None identified in scoped scan |
+| 🟡 Moderate | 2 | Property/geometry intermediates, fixed |
+| ℹ️ Info | 1 | Outgoing-flow choice scans, addressed in follow-up |
+
+> ⚠️ **Disclaimer:** These results are generated by an AI assistant and are non-deterministic.
+> Findings may include false positives, miss real issues, or suggest changes that are incorrect
+> for your specific context. Always verify recommendations with benchmarks and human review
+> before applying changes to production code.
+
+### Per-comparison outgoing-flow indexing
+
+Follow-up attribution confirmed the repeated scans were material. Document diffs
+now use an internal batch property reader. The reader lazily indexes sequence flows
+only when inspecting an activity or default-capable gateway in a document with more
+than eight flow nodes. Standard single-element inspection keeps its original path.
+The same descriptor builder handles both paths; no duplicate property schema or
+public API was introduced. Core grants Tools internal access for this batch entry point.
+
+Each comparison creates fresh readers for its two documents. The lookup does not
+escape the synchronous operation or persist on the document, so mutations to host
+flow lists are observed on the next comparison. Choice order, duplicate flow IDs,
+self-loops, null values and the rule that a default-flow property requires multiple
+outgoing flows remain unchanged.
+
+Two interleaved local Release comparisons against the allocation-reduced diff above:
+
+| Unchanged task chain | Before | After |
+|---|---:|---:|
+| 600 nodes, 2-point routes | 23.4-24.6 ms | 5.5-5.8 ms |
+| 5,000 nodes, 2-point routes | 377-389 ms | 46-64 ms |
+| 5,000 nodes, 32-point routes | 429-463 ms | 48-62 ms |
+
+Edited variants also improved (5,000 nodes: 376-579 ms before, 41-71 ms after).
+These short-run medians are exploratory, not statistical confidence intervals or
+browser frame-time measurements. Allocation remains approximately 27-33 MB per
+5,000-node comparison; indexing targets time, not another major allocation reduction.
+Eight-node cases retain scanning and add 192 B for two operation-scoped reader
+closures, with no repeatable timing regression in these runs.
+
+All 12 output digests matched across four runs. Additional descriptor comparisons
+cover all 23 flow-node types, both sides of the 8/9-node threshold, and zero/one/many
+outgoing flows, including duplicate IDs, loops and repeated reads in one batch.
+Mutation coverage adds/removes an outgoing flow between comparisons and checks the
+resulting default-flow property changes.
+
+## Wide extension inspection
+
+Raw extension labels previously rescanned every sibling for every child to decide
+whether to append an occurrence number. Wide lists now count local names once,
+then track ordinals in traversal order. Lists of up to eight entries retain the
+scan path. Indexes are local to each sibling list and rebuilt per traversal, never
+cached on host-owned extension trees.
+
+Local-name matching remains ordinal and case-sensitive, intentionally independent
+of namespace, as before. Paths still use child indices; sibling order, attribute
+sorting, leaf-only text, unique-name labels and nested ordinal resets are unchanged.
+
+Two interleaved local Release comparisons of 5,000 children:
+
+| Operation | Before | After |
+|---|---:|---:|
+| Raw descriptors, unique names | 148-163 ms | 7.3-9.7 ms |
+| Raw descriptors, repeated names | ~171 ms | 8.1-8.2 ms |
+| Complete snapshot, unique names | 160-176 ms | 18-22 ms |
+| Complete snapshot, repeated names | 201-227 ms | 24-35 ms |
+
+This trades temporary index storage for time: unique-name raw allocation grows
+from 5.80 MB to 6.25 MB; repeated names remain about 6.26 MB (decimal MB).
+Small 1/8-entry cases retain existing allocations. Nine unique names add 1,032 B;
+no repeatable timing regression was observed at that boundary. These are exploratory
+quick-report medians, not portable latency budgets or browser interaction measurements.
+
+All ten raw descriptor digests matched across four runs. Independent sibling-scan
+tests cover 0/1/8/9/64-entry lists, mixed namespaces, case-distinct names, nested
+repetition, sorted attributes, null/empty text and live host-list mutations.
+See [inspection benchmark instructions](../tests/Bpmn.Benchmarks/README.md#extension-inspection).
+
+### Scoped scan and findings
+
+Pre-change scan of `BpmnElementInspector.ExtensionProperties`, recursive `Describe`
+and `Occurrence`:
+
+| Recipe | Matching source lines |
+|---|---:|
+| Select/Where/OrderBy/GroupBy | 1 |
+| Any/All / explicit new List / explicit new Dictionary | 0 / 1 / 0 |
+| Static Dictionary/FrozenDictionary / ContainsKey | 0 / 0 |
+| Literal comparisons missing StringComparison | 0 |
+| Substring / culture casing / Replace / params | 0 / 0 / 0 / 0 |
+| Sync waits / stackalloc / byte or char arrays / string.Format | 0 / 0 / 0 / 0 |
+| Regex / JSON/options/client construction | 0 / 0 |
+| Non-static class declarations | 0 (methods on existing static inspector) |
+
+**Moderate, fixed:** one repeated sibling-scan site
+(`BpmnElementInspector.Describe`/`Occurrence`) dominated wide extension inspection.
+Per-list counts preserve existing labels without persistent state. Navigator and
+extension-command sibling searches resolve individual paths/edits, not every
+descriptor's occurrence; those were left unchanged.
+
+**Info, addressed in follow-up:** complete snapshots constructed standard properties
+again for capability detection. Separate attribution and results appear below.
+
+| Severity | Count | Top issue |
+|---|---:|---|
+| 🔴 Critical | 0 | None identified in scoped scan |
+| 🟡 Moderate | 1 | Repeated wide sibling scans, fixed |
+| ℹ️ Info | 1 | Duplicate capability property construction, addressed below |
+
+> ⚠️ **Disclaimer:** These results are generated by an AI assistant and are non-deterministic.
+> Findings may include false positives, miss real issues, or suggest changes that are incorrect
+> for your specific context. Always verify recommendations with benchmarks and human review
+> before applying changes to production code.
+
+## Snapshot capability descriptor reuse
+
+Capability detection now reads the standard descriptor list already constructed
+for the snapshot. Previously, determining whether `name` or `text` was available
+built another complete property list, including default-flow choices.
+Read-only snapshots still return no capabilities; schema and template builder
+ordering, extension filtering and public APIs remain unchanged.
+
+Two interleaved local Release comparisons of a task with outgoing flows:
+
+| Outgoing flows | Before allocation | After allocation |
+|---|---:|---:|
+| 0 | 9,056 B | 8,328 B |
+| 8 | 14,144 B | 12,472 B |
+| 600 | 283,032 B | 236,672 B |
+| 5,000 | 2,255,672 B | 1,883,352 B |
+
+Allocation falls 8-17%. Timings overlapped, so no speed improvement is claimed.
+The benchmark includes complete localized snapshots and validation, not browser
+rendering. Four capability/descriptor/choice digests matched across four runs.
+Regression coverage checks every flow-node type, read-only capabilities, mutations
+between snapshots, and a 600-flow allocation budget.
+See [snapshot benchmark instructions](../tests/Bpmn.Benchmarks/README.md#snapshot-capability-reuse).
+
+Registered-schema filtering still regenerates raw extension descriptors. Reusing
+the list passed to custom group builders would need a separate mutation contract
+review; this optimization deliberately leaves that surface alone.
+
+## Reusing unchanged localized choices
+
+`BpmnDisplayLocalizer` previously cloned every property choice even when its label
+was a document name or localization returned the original caption. Descriptor,
+property-entry and schema-group localization now share a helper that clones only
+when the resolved label differs ordinally. The records are immutable; output arrays
+remain independent copies. Every call still resolves applicable resources, preserving
+UI culture changes, host localizers, explicit resource keys and fallback behavior.
+
+Two interleaved local Release comparisons with the existing `snapshot` harness:
+
+| Outgoing flows | Before allocation | After allocation |
+|---|---:|---:|
+| 0 | 8,328 B | 8,168 B |
+| 8 | 12,472 B | 11,952 B |
+| 600 | 236,672 B | 212,472 B |
+| 5,000 | 1,883,352 B | 1,683,152 B |
+
+Large-choice snapshots allocate about 10% less than the preceding capability-reuse
+version. Timing did not establish a speed gain; eight-flow medians increased from
+0.023-0.025 ms to 0.028 ms in these quick reports. These are local allocation
+observations, not browser latency or portable budgets.
+
+Four output digests matched across four runs. Regression coverage verifies unchanged
+record identity, changed translations, fallback restoration, mutable localizer
+results, independent output arrays and mutable source-list replacement through
+descriptor, entry and schema-group surfaces. No persistent localization cache was added.
+
+## Operation-scoped schema applicability
+
+The built-in schema group builder used to enumerate all allowed extension types
+for every Zeebe field-family check. A service task performs five such queries.
+It now resolves that list lazily once per `Build` operation when using the sealed
+default English label provider. Small membership checks remain list scans; no
+registry-wide cache, invalidation machinery or public API was added.
+
+Custom label providers retain independent queries: a host label callback can
+register another schema while groups are being built. Registrations between
+operations also remain visible. Custom group-builder order, raw extension
+regeneration, localization and read-only handling are unchanged.
+
+Two interleaved local Windows x64 Release comparisons (SDK 10.0.403,
+.NET 10.0.14), complete service-task snapshots with empty extension collections:
+
+| Registered schemas | Before allocation | After allocation |
+|---|---:|---:|
+| None | 8,184 B | 8,184 B |
+| Zeebe | 270,112 B | 76,704 B |
+| Zeebe + Camunda 7 | 452,208 B | 151,120 B |
+| Both + 100 unrelated types in four packages | 662,797-663,754 B | 194,320 B |
+
+Zeebe-only builder medians were 0.284-0.377 ms before versus 0.069-0.073 ms
+after; complete snapshots were 0.322-0.419 ms versus 0.113-0.239 ms.
+With 600 input rows, Zeebe snapshot allocation fell from about 1.929 MB to
+1.737-1.738 MB, but timing ranges overlapped. These quick reports are exploratory,
+not BenchmarkDotNet confidence intervals or browser paint measurements.
+
+All 21 builder/snapshot output digests matched across four runs, covering no
+schemas, individual/both vendor packages, extra packages, service tasks, call
+activities, end events, wide collections and namespace-filtered snapshots.
+Regression coverage compares the reused-query and independent-query builder
+results across every flow-node type and all three vendor combinations, and
+checks late registration from custom label callbacks.
+
+## Connector normalization intermediates
+
+Shape, old-bounds and annotation-flow lookup construction now uses direct
+first-item-wins dictionary population rather than grouping intermediates.
+Unchanged endpoint normalization and resize following no longer copy waypoint
+lists before deciding whether to modify a route. Required endpoint correction,
+diagonal repair, attachment following and diagnostics still run.
+
+Two interleaved local Release comparisons, no annotations and already normalized
+routes:
+
+| Workload | Before allocation | After allocation |
+|---|---:|---:|
+| Normalize 2 nodes, 32-point routes | 1,464 B | 512 B |
+| Normalize 600 nodes, 32-point routes | 462,784 B | 22,880 B |
+| Normalize 5,000 nodes, 2-point routes | 1,502,928 B | 203,904 B |
+| Normalize 5,000 nodes, 32-point routes | 3,902,448 B | 203,904 B |
+| Complete move, 5,000 nodes, 32-point routes | 9,694,928 B | 5,425,576 B |
+| Complete XML read, 5,000 nodes, 32-point routes | ~117.37 MB | ~113.67 MB |
+
+The synthetic diagrams contain `nodes - 1` flows. Changed routes still require
+copies: 5,000-node/32-point displaced-route normalization fell from 4,622,576 B
+to 3,763,464 B, not to the unchanged-route budget.
+With 600 nodes and 60 flow-attached notes, unchanged four-point normalization
+fell from 400,184 B to 157,616 B.
+
+Tiered quick timings were unstable: the 600-node/32-point unchanged case
+increased from 0.51-1.21 ms to 2.23-2.64 ms even though larger cases improved.
+A separate four-run interleaved check with `DOTNET_TieredCompilation=0`
+removed tiering transitions: that case measured 0.46-0.65 ms before versus
+0.31-0.32 ms after; 5,000-node normalization measured 4.60-6.40 ms versus
+3.41-4.02 ms. Full XML-read timing still overlapped. Allocation reductions are
+the primary result; no unconditional latency or startup improvement is claimed.
+Tiny two-node optimized-code read timings also overlapped.
+
+All 20 output digests matched across four default-runtime and four
+tiering-disabled runs. Digests cover normalized, imported and moved documents,
+normalization reports, and import/edit diagnostics. Cases include 2/600/5,000
+nodes, 2/4/32 points, valid and off-outline endpoints, and flow-attached notes.
+Tests additionally cover duplicate first-match lookup across diagrams, mutable
+host waypoint ownership and allocation budgets. Native AOT smoke exercises both
+registered schema inspection and unchanged/changed route normalization.
+See [benchmark commands and scope](../tests/Bpmn.Benchmarks/README.md#schema-inspection-and-connector-normalization).
+
+## Annotation inspection and attachment following
+
+Annotation-free import inspection now returns before cloning retained source XML.
+Nonempty inspection retains its source-order, confirmation and fidelity behavior.
+An experimental association index for that nonempty inspection was rejected:
+cloning still dominated and the added allocation lacked an established
+end-to-end payoff.
+
+Geometry following now uses operation-local ordered association and lazy
+first-match DI indexes for large note sets. Repeated notes on the same flow reuse
+the exact flattened path, keyed by edge reference identity. The lookup used after
+the shape pass sees translated output shapes, not stale input bounds. Duplicate
+first matches, association direction, explicit positioning and diagram boundaries
+remain unchanged. Nothing caches mutable host data between operations or changes
+the rounding algorithm, curve sampling, closest-point ratio or retained XML
+ownership.
+
+Two interleaved local Release comparisons on .NET 10, decimal MB, approximate
+allocated bytes/call:
+
+| Workload | Before | After |
+|---|---:|---:|
+| Empty policy inspection, 600-node retained XML | 1,067,552 B | 96 B |
+| Empty policy inspection, 5,000-node retained XML | 8,881,952 B | 96 B |
+| Empty policy inspection, JSON without source | 1,072 B | 96 B |
+| Complete reroute, 600 nodes / 500 notes sharing one rounded flow | 28.07 MB | 3.16 MB |
+| Complete reroute, 5,000 nodes / 500 notes sharing one rounded flow | 33.93 MB | 11.81 MB |
+| Complete reroute, 5,000 nodes / 500 notes on distinct flows | 25.15 MB | 28.65 MB |
+
+The distinct-flow row is an intentional allocation-versus-time tradeoff, not a
+memory improvement. Sparse 60-note indexing had inconsistent timing and extra
+allocation, so plane/association indexes now require more than 64 notes and
+associations. Smaller sets retain scans. Path reuse starts above eight notes and
+associations because it independently saves repeated shared-flow allocations.
+Tiny edits can add tens of bytes from larger operation-local closure state;
+this is not an across-the-board allocation reduction.
+
+The final two interleaved comparisons measured complete 5,000-node reroutes:
+
+| 500-note target | Default runtime, before / after | Tiering disabled, before / after |
+|---|---|---|
+| One shared rounded flow | 251-305 / 78-94 ms | 314-443 / 82-90 ms |
+| Distinct flows | 239-319 / 55-78 ms | 267-344 / 84-87 ms |
+
+Quick-report times are sensitive to runtime tiering and machine load. In
+particular, the 600-node/60-distinct-note edit slowed from 7.6-15.0 ms to
+28.7-30.9 ms in the short default-runtime reports, despite avoiding DI indexes.
+The tiering-disabled comparison overlapped at 8.3-13.1 ms before and 8.5-9.0 ms
+after. That smaller case is not a demonstrated speed improvement; its allocation
+increased about 9 KB from path-cache bookkeeping. Shape-edit timings also varied.
+Default runtime and tiering-disabled results must be considered separately;
+neither measures browser latency or process-cold startup. No universal speedup or
+small-edit latency improvement is claimed.
+
+All 13 inspection digests matched the baseline in both final optimized runs.
+All 15 attachment digests matched across four interleaved default-runtime and
+four tiering-disabled runs. These are fixture-level equivalence checks, not a
+proof for arbitrary host input.
+
+Regression coverage compares indexed and scan paths across the 64/65-note
+boundary, reversed connections, explicit positioning, duplicate first matches,
+multiple diagrams and mutable host input. Allocation guards cover source-size-
+independent empty inspection and shared rounded paths. Native AOT smoke covers
+annotation-free preview and a 65-note indexed attachment reroute. See
+[benchmark commands, workload details and digest scope](../tests/Bpmn.Benchmarks/README.md#annotation-inspection-and-attachments).
+
+## Descriptor ownership and registry query caches
+
+Raw extension descriptors were built once for the initial snapshot and again
+after group builders. The second traversal is now avoided **only** when every
+builder is the sealed built-in schema provider and labels use the sealed default
+provider. Custom builders/labels still get the original snapshot and mutable host
+extras, and the final raw fallback is still rebuilt after those callbacks.
+No custom-callback sharing or new immutability contract was introduced. Template
+fallback continues to use the original descriptor list, including its existing
+callback-visible behavior.
+
+Two interleaved local Release comparisons, default runtime, complete service-task
+snapshots with 600 input rows:
+
+| Registered schemas / callbacks | Before allocation | After allocation |
+|---|---:|---:|
+| Zeebe, built-in | 1,738,416 B | 1,124,192 B |
+| Zeebe + Camunda, built-in | 1,813,360 B | 1,199,136 B |
+| Both, built-in, read-only | 1,932,792 B | 1,318,576 B |
+| Both, forwarding custom builder + labels | 2,091,240 B | 2,091,240 B |
+
+Empty/no-schema and custom-callback allocations remain unchanged in these
+fixtures. Snapshot timings are noisy, including overlapping or slower samples
+with tiering disabled; allocation savings, not universal snapshot latency, are
+the primary result.
+
+Registry ownership analysis found a different safe boundary: registration already
+deep-copies schema list containers into read-only snapshots. Inheritance-property
+and child-order results can therefore be reused for exact registry-owned type
+references. These caches are **instance-local**, lazy and bounded by registered
+types, not arbitrary query strings or caller records. New package registration
+clears both under the same lock, because late packages can supply missing bases,
+traits or serialized child types. Idempotent registrations and conflicts preserve
+existing results. External type records retain the original uncached resolution
+behavior, including observation of mutable host lists. Exceptions/partial
+recursive results are not cached.
+
+The registry harness registers both vendor packages plus synthetic ordered
+children and inheritance. Full schema-ordered extension-add edits include the
+normal edit pipeline, not just an isolated cache lookup:
+
+| Synthetic package | Default-runtime edit, before / after | Allocation, before / after |
+|---|---|---|
+| 32 children, 8 inheritance levels | 4.97-5.97 / 0.073-0.075 ms | 9.70-10.50 MB / 15,288 B |
+| 128 children, 8 inheritance levels | 23.8-25.1 / 1.12-1.19 ms | 41.99-45.32 MB / 45,680 B |
+
+MB values are decimal. Separate `DOTNET_TieredCompilation=0` runs measured the
+32-child edit at 6.81-8.21 ms before versus 0.028 ms after; 128 children,
+34.5-34.8 ms versus 0.277-0.281 ms. Default and tiering-disabled samples are
+different runtime settings, not confidence intervals or browser/startup claims.
+Warmed property/child-order calls allocate 0 B in all six synthetic cases.
+
+**Costs remain explicit.** Warming both queries for every type across both vendor
+packages and the synthetic package retains approximately 18-27 KB per registry
+in the forced-GC probe. This is query-cache growth, excluding the registered
+schemas themselves; larger/deeper packages may retain more. Registries that
+never query do not allocate cache dictionaries, but the object gains two
+references (16 B on this measured x64 runtime). Identical-registration allocation
+is unchanged. For 32 children/eight levels, first child-order query including
+registration allocated 427,632 B before versus 428,200 B after with tiering
+disabled. Default-runtime cold timings worsened; tiering-disabled cold samples
+overlapped. Registration/cold-start speed is not an improvement claim.
+
+All 16 descriptor and six registry output digests matched across four interleaved
+default-runtime and four tiering-disabled runs. Ownership expectations also ran
+against the untouched baseline library before adding allocation guards. Tests
+cover callback mutation, editable/read-only/template fallback, separate-operation
+host mutations, late bases/traits/aliases/cycles, diamond overrides, registry
+isolation, read-only return values and concurrent readers/registration.
+Native AOT smoke exercises warmed query results and late-trait invalidation.
+No dependency, public API, wire-format, unsafe-code or broad cleanup change.
+See [benchmark commands and exact scope](../tests/Bpmn.Benchmarks/README.md#descriptor-reuse-and-registry-caches).

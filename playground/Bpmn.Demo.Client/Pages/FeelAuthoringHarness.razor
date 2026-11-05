@@ -1,49 +1,77 @@
 @using Hasseware.AspNetCore.Components.Bpmn.FeelSharp
 @using Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp
-<h1>Managed FEEL authoring</h1>
-<p>Opt-in authoring features. Sample data stays local; evaluation requires explicit authorization and Run.</p>
-<button id="feel-reset" @onclick="Reset">Reset entries</button>
-<button id="feel-readonly" @onclick="ToggleReadOnly">Toggle read-only</button>
-@if (Plain)
-{
-<BpmnEditorScope @ref="_editor" Document="@Document" IsReadOnly="@_readOnly" KitDefaults="@BpmnStandardDefaults.Kit">
-    <section id="native-authoring">
-        <BpmnToolbar ShowZoom="false" ShowUndoRedo="false" ShowShortcuts="false" ShowMessages="false" />
-        <BpmnPropertyScopeProvider MultilineRows="6" IsReadOnly="@_readOnly">
-            <BpmnFeelSharpCodeEditor Context="@NativeContext" />
-        </BpmnPropertyScopeProvider>
-        <output>@_native</output>
-    </section>
-</BpmnEditorScope>
-}
-else
-{
-<BpmnEditorScope @ref="_editor" Document="@Document" IsReadOnly="@_readOnly" KitDefaults="@FluentBpmnDefaults.Kit">
-    <section id="fluent-authoring">
-        <FluentBpmnToolbar ShowZoom="false" ShowUndoRedo="false" ShowShortcuts="false" ShowMessages="false" />
-        <BpmnPropertyScopeProvider MultilineRows="6" IsReadOnly="@_readOnly">
-            <FluentBpmnFeelSharpCodeEditor Context="@FluentContext" />
-        </BpmnPropertyScopeProvider>
-        <output>@_fluent</output>
-    </section>
-</BpmnEditorScope>
-}
-<hr />
-<label><input type="checkbox" @bind="_authorize" /> Authorize trusted sample interpretation</label>
-@if (Plain)
-{
-<BpmnFeelSharpWorkspace Value="@_workspace" Applied="ApplyWorkspace" Cancelled="CancelWorkspace"
-                        ContextKey="demo-workspace" Revision="@_revision" Label="Standalone FEEL workspace"
-                        ReadOnly="@_readOnly" Variables="@Variables"
-                        Evaluator="@(_authorize ? Evaluator : null)" Actions="@HostActions" />
-}
-else
-{
-<FluentBpmnFeelSharpWorkspace Value="@_workspace" Applied="ApplyWorkspace" Cancelled="CancelWorkspace"
-                              ContextKey="demo-workspace" Revision="@_revision" Label="Standalone FEEL workspace"
-                              ReadOnly="@_readOnly" Variables="@Variables"
-                              Evaluator="@(_authorize ? Evaluator : null)" Actions="@HostActions" />
-}
-<output id="feel-workspace-result">@_workspace</output>
-<p>@_notice</p>
+
+<PageTitle>@Localizer["Home.FeelAuthoring"]</PageTitle>
+
+<div class="demo-scroll-page demo-feel-authoring">
+    <div class="demo-shell demo-report">
+        <h1>@Localizer["FeelAuthoring.Heading"]</h1>
+        <p class="demo-intro">@Localizer["FeelAuthoring.Intro"]</p>
+
+        <div data-actions>
+            <FluentButton Id="feel-reset" Type="ButtonType.Button" role="button" OnClick="Reset">
+                @Localizer["FeelAuthoring.Reset"]
+            </FluentButton>
+            <FluentButton Id="feel-readonly" Type="ButtonType.Button" role="button" OnClick="ToggleReadOnly"
+                          aria-pressed="@(_readOnly ? "true" : "false")">
+                @Localizer["FeelAuthoring.ToggleReadOnly"]
+            </FluentButton>
+        </div>
+
+        <section aria-labelledby="feel-entry-heading">
+            <h2 id="feel-entry-heading">@Localizer["FeelAuthoring.Entry"]</h2>
+            @if (Plain)
+            {
+                <BpmnEditorScope @ref="_editor" Document="@Document" IsReadOnly="@_readOnly" KitDefaults="@BpmnStandardDefaults.Kit">
+                    <div id="native-authoring">
+                        <BpmnToolbar ShowZoom="false" ShowUndoRedo="false" ShowShortcuts="false" ShowMessages="false" />
+                        <BpmnPropertyScopeProvider MultilineRows="6" IsReadOnly="@_readOnly">
+                            <BpmnFeelSharpCodeEditor Context="@NativeContext" />
+                        </BpmnPropertyScopeProvider>
+                        <output aria-label="@Localizer["FeelAuthoring.EntryValue"]">@_native</output>
+                    </div>
+                </BpmnEditorScope>
+            }
+            else
+            {
+                <BpmnEditorScope @ref="_editor" Document="@Document" IsReadOnly="@_readOnly" KitDefaults="@FluentBpmnDefaults.Kit">
+                    <div id="fluent-authoring">
+                        <FluentBpmnToolbar ShowZoom="false" ShowUndoRedo="false" ShowShortcuts="false" ShowMessages="false" />
+                        <BpmnPropertyScopeProvider MultilineRows="6" IsReadOnly="@_readOnly">
+                            <FluentBpmnFeelSharpCodeEditor Context="@FluentContext" />
+                        </BpmnPropertyScopeProvider>
+                        <output aria-label="@Localizer["FeelAuthoring.EntryValue"]">@_fluent</output>
+                    </div>
+                </BpmnEditorScope>
+            }
+        </section>
+
+        <section aria-labelledby="feel-workspace-heading">
+            <h2 id="feel-workspace-heading">@Localizer["FeelAuthoring.Workspace"]</h2>
+            <FluentCheckbox Id="feel-authorize" @bind-Value="_authorize"
+                            role="checkbox" aria-checked="@(_authorize ? "true" : "false")"
+                            Label="@Localizer["FeelAuthoring.Authorize"]"
+                            AriaLabel="@Localizer["FeelAuthoring.Authorize"]" />
+            @if (Plain)
+            {
+                <BpmnFeelSharpWorkspace Value="@_workspace" Applied="ApplyWorkspace" Cancelled="CancelWorkspace"
+                                        ContextKey="demo-workspace" Revision="@_revision" Label="@Localizer["FeelAuthoring.Workspace"]"
+                                        ReadOnly="@_readOnly" Variables="@Variables"
+                                        Evaluator="@(_authorize ? Evaluator : null)" Actions="@HostActions" />
+            }
+            else
+            {
+                <FluentBpmnFeelSharpWorkspace Value="@_workspace" Applied="ApplyWorkspace" Cancelled="CancelWorkspace"
+                                              ContextKey="demo-workspace" Revision="@_revision" Label="@Localizer["FeelAuthoring.Workspace"]"
+                                              ReadOnly="@_readOnly" Variables="@Variables"
+                                              Evaluator="@(_authorize ? Evaluator : null)" Actions="@HostActions" />
+            }
+            <p data-result>
+                <strong>@Localizer["FeelAuthoring.WorkspaceValue"]</strong>
+                <output id="feel-workspace-result">@_workspace</output>
+            </p>
+        </section>
+        <p role="status">@_notice</p>
+    </div>
+</div>
 <FluentDialogProvider />

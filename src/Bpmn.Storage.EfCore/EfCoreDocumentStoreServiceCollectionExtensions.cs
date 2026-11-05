@@ -14,7 +14,10 @@ public static class EfCoreDocumentStoreServiceCollectionExtensions
     /// <typeparam name="TContext">The host's context.</typeparam>
     /// <param name="services">Host services.</param>
     /// <returns>The same service collection for chaining.</returns>
-    public static IServiceCollection AddBpmnEfCoreDocumentStore<TContext>(this IServiceCollection services)
+    public static IServiceCollection AddBpmnEfCoreDocumentStore<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(
+        System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors |
+        System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.NonPublicConstructors |
+        System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicProperties)] TContext>(this IServiceCollection services)
         where TContext : DbContext
     {
         ArgumentNullException.ThrowIfNull(services);

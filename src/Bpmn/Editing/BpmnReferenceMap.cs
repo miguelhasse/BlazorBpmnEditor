@@ -222,5 +222,5 @@ public static class BpmnReferenceMap
         string diagramId) => Optional(ownerId, kind, diagramId, candidate);
 
     private static string Wire(BpmnEventDefinitionType type) =>
-        System.Text.Json.JsonSerializer.Serialize(type).Trim('"');
+        Hasseware.AspNetCore.Components.Bpmn.Serialization.BpmnWireNames.Of(type);
 }

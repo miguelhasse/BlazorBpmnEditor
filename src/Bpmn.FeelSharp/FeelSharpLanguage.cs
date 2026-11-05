@@ -177,7 +177,31 @@ internal sealed class FeelSharpLanguage
         var wordStart = replacementStart;
         var candidates = new List<CompletionCandidate>(12);
         var names = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var candidate in Candidates(source, start, tokens, variables, options))
+        if (options?.LocalVariables == true)
+        {
+            VisitVariables(FeelSharpAuthoring.Locals(source, start, tokens), "");
+        }
+        VisitVariables(variables, "");
+        foreach (var candidate in Candidates(options))
+        {
+            AddCandidate(candidate);
+        }
+
+        void VisitVariables(IReadOnlyList<BpmnFeelVariable> entries, string prefix)
+        {
+            for (var item = 0; item < entries.Count; item++)
+            {
+                var variable = entries[item];
+                var name = prefix + variable.Name;
+                AddCandidate(new(name, name, variable.Detail, variable.Info, null, null));
+                if (variable.Entries.Count > 0)
+                {
+                    VisitVariables(variable.Entries, name + ".");
+                }
+            }
+        }
+
+        void AddCandidate(CompletionCandidate candidate)
         {
             var candidateStart = candidate.Name.AsSpan().StartsWith(source.AsSpan(wordStart, start - wordStart),
                 StringComparison.OrdinalIgnoreCase) ? wordStart : -1;
@@ -191,20 +215,20 @@ internal sealed class FeelSharpLanguage
                     candidateStart = scan;
                 }
             }
-            if (candidateStart < 0 || candidateStart > replacementStart) continue;
+            if (candidateStart < 0 || candidateStart > replacementStart) return;
             if (candidateStart < replacementStart)
             {
                 replacementStart = candidateStart;
                 candidates.Clear();
                 names.Clear();
             }
-            if (!names.Add(candidate.Name)) continue;
+            if (!names.Add(candidate.Name)) return;
             var rank = Rank(candidate, options?.RankCompletions == true);
             var index = 0;
             while (index < candidates.Count && (Rank(candidates[index], options?.RankCompletions == true) < rank ||
                 Rank(candidates[index], options?.RankCompletions == true) == rank &&
                 string.CompareOrdinal(candidates[index].Name, candidate.Name) < 0)) index++;
-            if (index >= 12) continue;
+            if (index >= 12) return;
             candidates.Insert(index, candidate);
             if (candidates.Count > 12) candidates.RemoveAt(12);
         }
@@ -254,33 +278,14 @@ internal sealed class FeelSharpLanguage
         candidate.Text == candidate.Name && candidate.Detail != "FEEL" ? 0 :
         candidate.Text.EndsWith("()", StringComparison.Ordinal) ? 1 : 2;
 
-    private static IEnumerable<CompletionCandidate> Candidates(string source, int caret,
-        IReadOnlyList<FeelSharpToken> tokens, IReadOnlyList<BpmnFeelVariable> variables, BpmnFeelSharpEditorOptions? options)
+    private static IEnumerable<CompletionCandidate> Candidates(BpmnFeelSharpEditorOptions? options)
     {
-        if (options?.LocalVariables == true)
-        {
-            foreach (var candidate in VariableCandidates(FeelSharpAuthoring.Locals(source, caret, tokens), "")) yield return candidate;
-        }
-        foreach (var candidate in VariableCandidates(variables, "")) yield return candidate;
         foreach (var function in options?.Functions ?? [])
             yield return new(function.Name, function.Name + "()", function.Signature, function.Description, function.Example, "Feel.HostFunction");
         foreach (var candidate in BuiltInCandidates) yield return candidate;
         if (options?.Snippets == true)
         {
             foreach (var candidate in SnippetCandidates) yield return candidate;
-        }
-    }
-
-    private static IEnumerable<CompletionCandidate> VariableCandidates(IReadOnlyList<BpmnFeelVariable> variables, string prefix)
-    {
-        foreach (var variable in variables)
-        {
-            var name = prefix + variable.Name;
-            yield return new(name, name, variable.Detail, variable.Info, null, null);
-            if (variable.Entries.Count > 0)
-            {
-                foreach (var candidate in VariableCandidates(variable.Entries, name + ".")) yield return candidate;
-            }
         }
     }
 

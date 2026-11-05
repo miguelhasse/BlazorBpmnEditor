@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
@@ -167,7 +169,10 @@ public sealed partial class BpmnWebMcp : IAsyncDisposable
         _bridge = new BpmnWebMcpBridge(host, tools, RunOnRendererAsync, Logger, guard);
         _reference = DotNetObjectReference.Create(_bridge);
 
-        var registration = await module.InvokeAsync<BpmnWebMcpRegistration>("registerAll", _reference, tools.Descriptors).ConfigureAwait(true);
+        var descriptors = JsonSerializer.SerializeToElement(tools.Descriptors, BpmnWebMcpJsonContext.Default.IReadOnlyListBpmnWebMcpToolDescriptor);
+        var payload = await module.InvokeAsync<JsonElement>("registerAll", _reference, descriptors).ConfigureAwait(true);
+        var registration = payload.Deserialize(BpmnWebMcpJsonContext.Default.BpmnWebMcpRegistration)
+            ?? throw new JsonException("The WebMCP registration result must not be null.");
         _registrationId = registration.Id;
         if (_disposed) return;
         RegisteredTools = registration.Registered;
@@ -258,7 +263,7 @@ public sealed partial class BpmnWebMcp : IAsyncDisposable
         GC.SuppressFinalize(this);
     }
 
-    private sealed record BpmnWebMcpRegistration(int Id, string[] Registered, BpmnWebMcpRegistrationFailure[] Failures);
+    internal sealed record BpmnWebMcpRegistration(int Id, string[] Registered, BpmnWebMcpRegistrationFailure[] Failures);
 
-    private sealed record BpmnWebMcpRegistrationFailure(string Name, string Message);
+    internal sealed record BpmnWebMcpRegistrationFailure(string Name, string Message);
 }

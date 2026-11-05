@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\templates\*.json" />
+    <TrimmerRootDescriptor Include="TrimmerRoots.xml" />
   </ItemGroup>
 
   <ItemGroup>

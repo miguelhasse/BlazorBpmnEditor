@@ -1,10 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk" TreatAsLocalProperty="PublishAot;PublishTrimmed;IsAotCompatible;IsTrimmable;SelfContained;RuntimeIdentifier">
 
   <PropertyGroup>
     <!-- Source generators load into whatever Roslyn version the consuming SDK ships, so this
          targets netstandard2.0 for the broadest possible host compatibility rather than the
          repo's usual net10.0 (a Roslyn-authoring convention, not an accident). -->
     <TargetFramework>netstandard2.0</TargetFramework>
+    <!-- A generator executes in the build host, never in the published application. -->
+    <PublishAot>false</PublishAot>
+    <PublishTrimmed>false</PublishTrimmed>
+    <IsAotCompatible>false</IsAotCompatible>
+    <IsTrimmable>false</IsTrimmable>
+    <SelfContained>false</SelfContained>
+    <RuntimeIdentifier />
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>

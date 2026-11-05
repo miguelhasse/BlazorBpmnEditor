@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <PublishAot>true</PublishAot>
+    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>false</IsTestProject>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(BpmnSmokeParsers)' != '' And '$(BpmnSmokeParsers)' != 'false'">
+    <DefineConstants>$(DefineConstants);BPMN_SMOKE_PARSERS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(BpmnSmokeParsers)' == 'true' Or '$(BpmnSmokeParsers)' == 'csharp'">
+    <DefineConstants>$(DefineConstants);BPMN_SMOKE_CSHARP</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(BpmnSmokeParsers)' == 'true' Or '$(BpmnSmokeParsers)' == 'javascript'">
+    <DefineConstants>$(DefineConstants);BPMN_SMOKE_JAVASCRIPT</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(BpmnSmokeParsers)' == 'true' Or '$(BpmnSmokeParsers)' == 'lua'">
+    <DefineConstants>$(DefineConstants);BPMN_SMOKE_LUA</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(BpmnSmokeFeel)' == 'true'">
+    <DefineConstants>$(DefineConstants);BPMN_SMOKE_FEEL</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Bpmn.Tools\Hasseware.AspNetCore.Components.Bpmn.Tools.csproj" />
+    <ProjectReference Include="..\..\src\Bpmn.Storage.FileSystem\Hasseware.AspNetCore.Components.Bpmn.Storage.FileSystem.csproj" />
+    <ProjectReference Condition="'$(BpmnSmokeParsers)' == 'true' Or '$(BpmnSmokeParsers)' == 'csharp'" Include="..\..\src\Bpmn.Scripting.CSharp\Hasseware.AspNetCore.Components.Bpmn.Scripting.CSharp.csproj" />
+    <ProjectReference Condition="'$(BpmnSmokeParsers)' == 'true' Or '$(BpmnSmokeParsers)' == 'javascript'" Include="..\..\src\Bpmn.Scripting.JavaScript\Hasseware.AspNetCore.Components.Bpmn.Scripting.JavaScript.csproj" />
+    <ProjectReference Condition="'$(BpmnSmokeParsers)' == 'true' Or '$(BpmnSmokeParsers)' == 'lua'" Include="..\..\src\Bpmn.Scripting.Lua\Hasseware.AspNetCore.Components.Bpmn.Scripting.Lua.csproj" />
+    <ProjectReference Condition="'$(BpmnSmokeFeel)' == 'true'" Include="..\..\src\Bpmn.FeelSharp\Hasseware.AspNetCore.Components.Bpmn.FeelSharp.csproj" />
+  </ItemGroup>
+</Project>

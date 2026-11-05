@@ -98,7 +98,7 @@ public sealed class InteropOwnershipTests
         var invokableNames = typeof(BpmnCanvasEventBridge)
             .GetMethods(BindingFlags.Instance | BindingFlags.Public)
             .Where(method => method.GetCustomAttribute<JSInvokableAttribute>() is not null)
-            .Select(method => method.Name)
+            .Select(method => method.GetCustomAttribute<JSInvokableAttribute>()!.Identifier ?? method.Name)
             .ToList();
 
         Assert.NotEmpty(invokableNames);

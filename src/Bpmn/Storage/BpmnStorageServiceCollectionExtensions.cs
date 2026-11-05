@@ -33,7 +33,7 @@ public static class BpmnStorageServiceCollectionExtensions
     /// resource such as a database context.
     /// </param>
     /// <returns>The same service collection, for chaining.</returns>
-    public static IServiceCollection AddBpmnDocumentStore<TStore>(
+    public static IServiceCollection AddBpmnDocumentStore<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] TStore>(
         this IServiceCollection services,
         ServiceLifetime lifetime = ServiceLifetime.Singleton)
         where TStore : class, IBpmnDocumentStore

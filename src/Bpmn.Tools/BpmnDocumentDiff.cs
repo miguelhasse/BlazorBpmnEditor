@@ -68,6 +68,8 @@ public static class BpmnDocumentDiff
         var afterElements = ElementsOf(after);
         var beforeGeometry = GeometryOf(before);
         var afterGeometry = GeometryOf(after);
+        var beforeProperties = BpmnElementInspector.CreatePropertyReader(before);
+        var afterProperties = BpmnElementInspector.CreatePropertyReader(after);
 
         var added = new List<BpmnDiffElement>();
         var removed = new List<BpmnDiffElement>();
@@ -100,7 +102,7 @@ public static class BpmnDocumentDiff
                 continue;
             }
 
-            var properties = Properties(before, after, id, earlier, element, limits);
+            var properties = Properties(beforeProperties, afterProperties, id, earlier, element, limits);
             var sourceMoved = earlier.Source != element.Source;
             var targetMoved = earlier.Target != element.Target;
             var geometryChanged = !SameGeometry(beforeGeometry.GetValueOrDefault(id), afterGeometry.GetValueOrDefault(id));
@@ -123,8 +125,8 @@ public static class BpmnDocumentDiff
     }
 
     private static List<BpmnPropertyChange> Properties(
-        BpmnDocument before,
-        BpmnDocument after,
+        Func<string, IReadOnlyList<BpmnPropertyDescriptor>> before,
+        Func<string, IReadOnlyList<BpmnPropertyDescriptor>> after,
         string id,
         Element earlier,
         Element later,
@@ -133,11 +135,10 @@ public static class BpmnDocumentDiff
         var changes = new List<BpmnPropertyChange>();
         if (earlier.Type != later.Type) changes.Add(new BpmnPropertyChange("type", Text(earlier.Type, limits), Text(later.Type, limits)));
 
-        var old = ValuesOf(before, id);
-        var now = ValuesOf(after, id);
-        foreach (var name in old.Keys.Concat(now.Keys).Distinct(StringComparer.Ordinal))
+        var old = ValuesOf(before(id));
+        var now = ValuesOf(after(id));
+        foreach (var (name, previous) in old)
         {
-            var previous = old.GetValueOrDefault(name);
             var current = now.GetValueOrDefault(name);
             if (!string.Equals(previous, current, StringComparison.Ordinal))
             {
@@ -145,13 +146,23 @@ public static class BpmnDocumentDiff
             }
         }
 
+        foreach (var (name, current) in now)
+        {
+            if (!old.ContainsKey(name) && current is not null)
+            {
+                changes.Add(new BpmnPropertyChange(name, null, Text(current, limits)));
+            }
+        }
+
         return changes;
     }
 
-    private static Dictionary<string, string?> ValuesOf(BpmnDocument document, string id) =>
-        BpmnElementInspector.PropertiesOf(document, id)
-            .GroupBy(property => property.Name, StringComparer.Ordinal)
-            .ToDictionary(group => group.Key, group => group.First().Value, StringComparer.Ordinal);
+    private static Dictionary<string, string?> ValuesOf(IReadOnlyList<BpmnPropertyDescriptor> properties)
+    {
+        var values = new Dictionary<string, string?>(properties.Count, StringComparer.Ordinal);
+        foreach (var property in properties) values.TryAdd(property.Name, property.Value);
+        return values;
+    }
 
     // Every element the tools describe, in document order, keyed by id.
     private static Dictionary<string, Element> ElementsOf(BpmnDocument document)
@@ -187,12 +198,22 @@ public static class BpmnDocumentDiff
         {
             foreach (var shape in plane.Shapes)
             {
-                Bucket(geometry, shape.BpmnElement).AddRange([shape.Bounds.X, shape.Bounds.Y, shape.Bounds.Width, shape.Bounds.Height]);
+                var values = Bucket(geometry, shape.BpmnElement);
+                values.Add(shape.Bounds.X);
+                values.Add(shape.Bounds.Y);
+                values.Add(shape.Bounds.Width);
+                values.Add(shape.Bounds.Height);
             }
 
             foreach (var edge in plane.Edges)
             {
-                Bucket(geometry, edge.BpmnElement).AddRange(edge.Waypoints.SelectMany(point => new[] { point.X, point.Y }));
+                var values = Bucket(geometry, edge.BpmnElement);
+                values.EnsureCapacity(values.Count + edge.Waypoints.Count * 2);
+                foreach (var point in edge.Waypoints)
+                {
+                    values.Add(point.X);
+                    values.Add(point.Y);
+                }
             }
         }
 

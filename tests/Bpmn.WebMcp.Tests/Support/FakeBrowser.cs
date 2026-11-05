@@ -61,7 +61,7 @@ internal sealed class FakeBrowser : IJSRuntime
 
                 case "registerAll":
                     Reference = (DotNetObjectReference<BpmnWebMcpBridge>)args![0]!;
-                    foreach (var tool in (IEnumerable<BpmnWebMcpToolDescriptor>)args[1]!)
+                    foreach (var tool in ((JsonElement)args[1]!).Deserialize<BpmnWebMcpToolDescriptor[]>(Web)!)
                     {
                         if (Refused.Contains(tool.Name)) Failures.Add((tool.Name, "A tool with that name is already registered."));
                         else Registered.Add(tool);

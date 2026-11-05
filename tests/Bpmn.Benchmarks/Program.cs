@@ -6,6 +6,11 @@ using Hasseware.AspNetCore.Components.Bpmn.Validation;
 
 // dotnet run -c Release --project tests/Bpmn.Benchmarks -- --filter "*"     time and allocation per call
 // dotnet run -c Release --project tests/Bpmn.Benchmarks -- memory           what stays in memory (history, index, source tree)
+if (args.Length > 0 && args[0] == "validation")
+{
+    ValidationBenchmarks.Report();
+    return;
+}
 if (args.Length > 0 && args[0] == "memory")
 {
     MemoryReport.Run(args[1..]);
@@ -14,6 +19,66 @@ if (args.Length > 0 && args[0] == "memory")
 if (args.Length > 0 && args[0] == "feel")
 {
     FeelSharpBenchmarks.Report();
+    return;
+}
+if (args.Length > 0 && args[0] == "export")
+{
+    ExportBenchmarks.Report();
+    return;
+}
+if (args.Length > 0 && args[0] == "completion-corpus")
+{
+    CompletionCorpus.Report();
+    return;
+}
+if (args.Length > 0 && args[0] == "diff")
+{
+    DiffBenchmarks.Report();
+    return;
+}
+if (args.Length > 0 && args[0] == "snapshot")
+{
+    SnapshotBenchmarks.Report();
+    return;
+}
+if (args.Length > 0 && args[0] == "schema")
+{
+    SchemaInspectionBenchmarks.Report();
+    return;
+}
+if (args.Length > 0 && args[0] == "descriptor-reuse")
+{
+    SchemaInspectionBenchmarks.ReportReuse();
+    return;
+}
+if (args.Length > 0 && args[0] == "registry-cache")
+{
+    RegistryCacheBenchmarks.Report();
+    return;
+}
+if (args.Length > 0 && args[0] == "normalization")
+{
+    NormalizationBenchmarks.Report();
+    return;
+}
+if (args.Length > 0 && args[0] == "annotation-inspection")
+{
+    AnnotationInspectionBenchmarks.Report();
+    return;
+}
+if (args.Length > 0 && args[0] == "annotation-attachments")
+{
+    AnnotationAttachmentBenchmarks.Report();
+    return;
+}
+if (args.Length > 0 && args[0] == "inspection")
+{
+    InspectionBenchmarks.Report();
+    return;
+}
+if (args.Length > 0 && args[0] == "fidelity")
+{
+    FidelityBenchmarks.Report();
     return;
 }
 

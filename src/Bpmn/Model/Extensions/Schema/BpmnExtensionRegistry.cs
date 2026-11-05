@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Model.Extensions.Schema;
@@ -7,6 +8,8 @@ public sealed class BpmnExtensionRegistry
 {
     private readonly Lock _gate = new();
     private readonly Dictionary<string, BpmnExtensionSchema> _schemas = new(StringComparer.Ordinal);
+    private Dictionary<BpmnExtensionType, IReadOnlyList<BpmnExtensionProperty>>? _properties;
+    private Dictionary<BpmnExtensionType, IReadOnlyList<string>>? _childOrders;
 
     /// <summary>Registered packages in registration order, as a read-only snapshot.</summary>
     public IReadOnlyList<BpmnExtensionSchema> Schemas
@@ -33,6 +36,9 @@ public sealed class BpmnExtensionRegistry
             if (snapshot.Types.Select(t => t.Name).Distinct(StringComparer.Ordinal).Count() != snapshot.Types.Count)
                 throw new BpmnExtensionSchemaException("Schema contains duplicate type names.");
             _schemas.Add(snapshot.Uri, snapshot);
+            // New packages can supply missing bases, traits and serialized child types.
+            _properties?.Clear();
+            _childOrders?.Clear();
         }
         return this;
     }
@@ -107,33 +113,50 @@ public sealed class BpmnExtensionRegistry
         ArgumentNullException.ThrowIfNull(type);
         lock (_gate)
         {
-            var schema = SchemaFor(type);
-            var result = new List<BpmnExtensionProperty>();
-            var path = new HashSet<string>(StringComparer.Ordinal);
-            var visited = new HashSet<string>(StringComparer.Ordinal);
-            void Collect(BpmnExtensionType current, BpmnExtensionSchema owner)
+            if (_properties?.TryGetValue(type, out var cached) == true) return cached;
+            var properties = CollectProperties(type);
+            if (Owns(type))
             {
-                if (!path.Add(current.QualifiedName)) throw new BpmnExtensionSchemaException($"Cyclic superclass chain at '{current.QualifiedName}'.");
-                if (visited.Add(current.QualifiedName))
-                {
-                    foreach (var parent in current.SuperClass)
-                        if (TryResolveType(Qualify(parent, owner), out var baseType, out var baseSchema)) Collect(baseType, baseSchema);
-                    foreach (var property in current.Properties)
-                    {
-                        var index = result.FindIndex(p => p.Name == property.Name);
-                        if (index >= 0) result[index] = property; else result.Add(property);
-                    }
-                }
-                path.Remove(current.QualifiedName);
+                _properties ??= new(ReferenceEqualityComparer.Instance);
+                _properties.Add(type, properties);
             }
-            if (schema is null) return Array.AsReadOnly(type.Properties.ToArray());
-            var registered = Resolve(type.Name, schema) ?? type;
-            Collect(registered, schema);
-            foreach (var owner in _schemas.Values)
-                foreach (var trait in owner.Types.Where(t => t.Extends.Count > 0))
-                    if (trait.Extends.Any(target => IsExtensionA(registered, schema, Qualify(target, owner), new(StringComparer.Ordinal)))) Collect(trait, owner);
-            return result.AsReadOnly();
+            return properties;
         }
+    }
+
+    // External type records can still carry mutable host lists.
+    private bool Owns(BpmnExtensionType type) =>
+        _schemas.TryGetValue(type.NamespaceUri, out var schema)
+        && schema.Types.Any(candidate => ReferenceEquals(candidate, type));
+
+    private ReadOnlyCollection<BpmnExtensionProperty> CollectProperties(BpmnExtensionType type)
+    {
+        var schema = SchemaFor(type);
+        var result = new List<BpmnExtensionProperty>();
+        var path = new HashSet<string>(StringComparer.Ordinal);
+        var visited = new HashSet<string>(StringComparer.Ordinal);
+        void Collect(BpmnExtensionType current, BpmnExtensionSchema owner)
+        {
+            if (!path.Add(current.QualifiedName)) throw new BpmnExtensionSchemaException($"Cyclic superclass chain at '{current.QualifiedName}'.");
+            if (visited.Add(current.QualifiedName))
+            {
+                foreach (var parent in current.SuperClass)
+                    if (TryResolveType(Qualify(parent, owner), out var baseType, out var baseSchema)) Collect(baseType, baseSchema);
+                foreach (var property in current.Properties)
+                {
+                    var index = result.FindIndex(p => p.Name == property.Name);
+                    if (index >= 0) result[index] = property; else result.Add(property);
+                }
+            }
+            path.Remove(current.QualifiedName);
+        }
+        if (schema is null) return Array.AsReadOnly(type.Properties.ToArray());
+        var registered = Resolve(type.Name, schema) ?? type;
+        Collect(registered, schema);
+        foreach (var owner in _schemas.Values)
+            foreach (var trait in owner.Types.Where(t => t.Extends.Count > 0))
+                if (trait.Extends.Any(target => IsExtensionA(registered, schema, Qualify(target, owner), new(StringComparer.Ordinal)))) Collect(trait, owner);
+        return result.AsReadOnly();
     }
 
     /// <summary>Concrete Element subtypes allowed in extensionElements; meta.allowedIn takes precedence when supplied.</summary>
@@ -164,14 +187,24 @@ public sealed class BpmnExtensionRegistry
     {
         lock (_gate)
         {
-            return Array.AsReadOnly(GetAllProperties(parentType).Where(p => !p.IsAttr && !p.IsBody).Select(p =>
+            if (_childOrders?.TryGetValue(parentType, out var cached) == true) return cached;
+            var order = CollectChildOrder(parentType);
+            if (_properties?.ContainsKey(parentType) == true)
+            {
+                _childOrders ??= new(ReferenceEqualityComparer.Instance);
+                _childOrders.Add(parentType, order);
+            }
+            return order;
+        }
+    }
+
+    private ReadOnlyCollection<string> CollectChildOrder(BpmnExtensionType parentType) =>
+        Array.AsReadOnly(GetAllProperties(parentType).Where(p => !p.IsAttr && !p.IsBody).Select(p =>
             {
                 var owner = _schemas.GetValueOrDefault(p.NamespaceUri) ?? SchemaFor(parentType);
                 return p.Serialize is "property" or "xsi:type" || p.IsReference || owner is null
                     ? LocalName(p.Name) : Resolve(p.Type, owner)?.ElementName ?? LocalName(p.Name);
             }).Distinct(StringComparer.Ordinal).ToArray());
-        }
-    }
 
     /// <summary>Compares child local names in schema order; unknown names sort after known names.</summary>
     public int CompareChildOrder(BpmnExtensionType parentType, string leftLocalName, string rightLocalName)

@@ -1,10 +1,10 @@
 using Bpmn.Demo.Components;
-using Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp;
 using Hasseware.AspNetCore.Components.Bpmn.FeelSharp;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
 using Hasseware.AspNetCore.Components.Bpmn.Storage;
 using Hasseware.AspNetCore.Components.Bpmn.Storage.ServerSentEvents;
 using Hasseware.FluentUI.AspNetCore.Components.Bpmn;
+using Hasseware.FluentUI.AspNetCore.Components.Bpmn.FeelSharp;
 using Microsoft.FluentUI.AspNetCore.Components;
 
 var builder = WebApplication.CreateBuilder(args);

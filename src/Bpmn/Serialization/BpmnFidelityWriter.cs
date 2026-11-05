@@ -58,33 +58,43 @@ internal sealed class BpmnFidelityWriter(BpmnDocument document, List<BpmnExportD
     /// <param name="root">The merged document root.</param>
     internal void SynchroniseFlowReferences(XElement root)
     {
-        foreach (var element in root.Descendants().ToList())
+        var incomingName = BpmnXmlNames.Model + "incoming";
+        var outgoingName = BpmnXmlNames.Model + "outgoing";
+        ILookup<string, string>? incomingFlows = null;
+        ILookup<string, string>? outgoingFlows = null;
+        // Snapshot owners before replacing references, including any nested owners.
+        var owners = root.Descendants()
+            .Where(element => element.Element(incomingName) is not null || element.Element(outgoingName) is not null)
+            .ToArray();
+        foreach (var element in owners)
         {
-            var incoming = element.Elements(BpmnXmlNames.Model + "incoming").ToList();
-            var outgoing = element.Elements(BpmnXmlNames.Model + "outgoing").ToList();
-            if (incoming.Count == 0 && outgoing.Count == 0) continue;
-
             var id = Id(element);
             if (id is null) continue;
 
-            Rewrite(element, incoming, "incoming", document.SequenceFlows
-                .Where(flow => flow.TargetRef == id)
-                .Select(flow => flow.Id));
+            var incoming = element.Elements(incomingName).ToList();
+            var outgoing = element.Elements(outgoingName).ToList();
+            if (incoming.Count > 0)
+            {
+                var references = owners.Length <= 8
+                    ? document.SequenceFlows.Where(flow => flow.TargetRef == id).Select(flow => flow.Id)
+                    : (incomingFlows ??= document.SequenceFlows.ToLookup(flow => flow.TargetRef, flow => flow.Id, StringComparer.Ordinal))[id];
+                Rewrite(incoming, "incoming", references);
+            }
 
-            Rewrite(element, outgoing, "outgoing", document.SequenceFlows
-                .Where(flow => flow.SourceRef == id)
-                .Select(flow => flow.Id));
+            if (outgoing.Count > 0)
+            {
+                var references = owners.Length <= 8
+                    ? document.SequenceFlows.Where(flow => flow.SourceRef == id).Select(flow => flow.Id)
+                    : (outgoingFlows ??= document.SequenceFlows.ToLookup(flow => flow.SourceRef, flow => flow.Id, StringComparer.Ordinal))[id];
+                Rewrite(outgoing, "outgoing", references);
+            }
         }
 
-        static void Rewrite(XElement owner, List<XElement> existing, string name, IEnumerable<string> references)
+        static void Rewrite(List<XElement> existing, string name, IEnumerable<string> references)
         {
-            if (existing.Count == 0) return;
-
-            var wanted = references.ToList();
-
             // Nothing to do is the common case, and doing it anyway would strip the whitespace
             // between these elements for no gain.
-            if (existing.Select(element => element.Value.Trim()).SequenceEqual(wanted, StringComparer.Ordinal))
+            if (existing.Select(element => element.Value.Trim()).SequenceEqual(references, StringComparer.Ordinal))
             {
                 return;
             }
@@ -93,7 +103,7 @@ internal sealed class BpmnFidelityWriter(BpmnDocument document, List<BpmnExportD
             foreach (var element in existing.Skip(1)) element.Remove();
 
             var written = false;
-            foreach (var reference in wanted)
+            foreach (var reference in references)
             {
                 var element = new XElement(BpmnXmlNames.Model + name, reference);
                 if (written)
@@ -169,6 +179,8 @@ internal sealed class BpmnFidelityWriter(BpmnDocument document, List<BpmnExportD
 
     private void MergeChildren(XElement source, XElement canonical)
     {
+        if (!source.HasElements && !canonical.HasElements) return;
+
         var canonicalById = canonical.Elements()
             .Where(element => Id(element) is not null)
             .ToDictionary(element => Id(element)!, StringComparer.Ordinal);

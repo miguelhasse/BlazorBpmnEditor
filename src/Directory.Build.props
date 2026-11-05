@@ -17,6 +17,12 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(BpmnCompatibilityAnalysis)' == 'true' and '$(MSBuildProjectExtension)' == '.csproj' and '$(MSBuildProjectName)' != 'Hasseware.AspNetCore.Components.Bpmn.RulesGenerator'">
+    <IsTrimmable>true</IsTrimmable>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <EnableAotAnalyzer>true</EnableAotAnalyzer>
+  </PropertyGroup>
+
   <ItemGroup Condition="'$(MSBuildProjectExtension)' != '.esproj'">
     <None Include="$(RepositoryRoot)LICENSE.txt" Link="LICENSE.txt" Pack="true" PackagePath="\" />
   </ItemGroup>

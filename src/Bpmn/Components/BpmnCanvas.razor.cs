@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Globalization;
 using System.Resources;
+using System.Text.Json;
 
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Execution;
@@ -299,7 +300,8 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
         if (_instance is null || _disposed) return;
 
         await InvokeSafelyAsync(async () =>
-            await _instance.InvokeVoidAsync("setViewport", _disposalCts.Token, command)
+            await _instance.InvokeVoidAsync("setViewport", _disposalCts.Token,
+                    JsonSerializer.SerializeToElement(command, BpmnInteropJsonContext.Default.ViewportCommand))
                 .ConfigureAwait(false)).ConfigureAwait(true);
     }
 
@@ -406,7 +408,7 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
                 HostElement,
                 _paperElement,
                 CanvasDocumentPayload.For(sentDocument),
-                localizedConfig,
+                JsonSerializer.SerializeToElement(localizedConfig, BpmnInteropJsonContext.Default.EditorConfig),
                 _bridgeReference)
             .ConfigureAwait(true);
 
@@ -874,7 +876,8 @@ public sealed partial class BpmnCanvas : ComponentBase, IAsyncDisposable
     internal ValueTask SetExecutionStateAsync(BpmnExecutionState state) =>
         _instance is null || _disposed
             ? ValueTask.CompletedTask
-            : _instance.InvokeVoidAsync("setExecutionState", _disposalCts.Token, state);
+            : _instance.InvokeVoidAsync("setExecutionState", _disposalCts.Token,
+                JsonSerializer.SerializeToElement(state, BpmnInteropJsonContext.Default.BpmnExecutionState));
 
     /// <summary>Removes every execution overlay.</summary>
     internal ValueTask ClearExecutionStateAsync() =>
