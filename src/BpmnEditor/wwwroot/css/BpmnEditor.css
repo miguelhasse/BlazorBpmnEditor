@@ -76,6 +76,31 @@
   min-block-size: 0;
 }
 
+@media (max-width: 600px) {
+  .bpmn-editor {
+    grid-template-areas:
+      'toolbar'
+      'stencil'
+      'canvas'
+      'panel'
+      'footer';
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+  }
+
+  .bpmn-editor__stencil,
+  .bpmn-editor__panel {
+    max-block-size: min(20vh, 10rem);
+    overflow: auto;
+  }
+
+  .bpmn-editor__panel {
+    box-sizing: border-box;
+    inline-size: auto;
+    min-inline-size: 0;
+  }
+}
+
 .bpmn-toolbar__colors > .bpmn-toolbar__button {
   display: inline-flex;
   align-items: center;

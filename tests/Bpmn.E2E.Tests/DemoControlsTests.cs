@@ -178,6 +178,9 @@ public class DemoControlsTests(DemoAppFixture app) : PageTest, IClassFixture<Dem
         await Page.SetViewportSizeAsync(width, 800);
         await GoToEditorAsync();
 
+        var canvasUsesMostOfEditor = await Page.Locator(".demo-editor .bpmn-editor__canvas")
+            .EvaluateAsync<bool>("element => element.getBoundingClientRect().width >= element.parentElement.getBoundingClientRect().width * 0.75");
+        Assert.True(canvasUsesMostOfEditor, "The canvas must retain most of the editor width on narrow screens.");
         await Expect(FilesButton).ToBeInViewportAsync();
         await Expect(SettingsButton).ToBeInViewportAsync();
         await Expect(Page.GetByRole(AriaRole.Switch, new() { Name = "Properties", Exact = true })).ToBeInViewportAsync();
