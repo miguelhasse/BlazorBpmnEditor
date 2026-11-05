@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Xml.Linq;
+using Hasseware.AspNetCore.Components.Bpmn.Accessibility;
 using Hasseware.AspNetCore.Components.Bpmn;
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
@@ -44,6 +45,16 @@ var json = BpmnJsonWriter.Write(document);
 var restored = BpmnJsonReader.Read(json).Document;
 var xml = BpmnXmlWriter.Write(restored).Xml;
 var imported = BpmnXmlReader.Read(xml).Document;
+var graphDocument = imported with
+{
+    SequenceFlows = [.. imported.SequenceFlows, imported.SequenceFlows[0] with { Id = "repeat" },
+        imported.SequenceFlows[0] with { Id = "self", TargetRef = "start" }],
+};
+var accessibleGraph = BpmnAccessibleGraph.For(graphDocument, null);
+Require(accessibleGraph[0].Outgoing.SequenceEqual(["task", "task", "start"])
+    && accessibleGraph[0].Incoming.SequenceEqual(["start"])
+    && accessibleGraph[1].Incoming.SequenceEqual(["start", "start"]),
+    "Accessible graph lost ordered duplicate or self-reference adjacency.");
 var taskSnapshot = BpmnElementInspector.Describe(imported, "task");
 Require(taskSnapshot is { Capabilities.CanEditLabel: true }
     && taskSnapshot.Properties.Any(property => property.Name == "name"),

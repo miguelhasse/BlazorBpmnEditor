@@ -372,14 +372,21 @@ public sealed class BpmnCanvasTests : BunitContext
         SetupInitialize(Accepted());
         var patch = _canvas.Setup<DocumentLoaded?>("patchDocument", _ => true);
         var before = DiagramDocument();
-        var component = Render<BpmnCanvas>(parameters => parameters.Add(p => p.Document, before));
+        var synchronized = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var component = Render<BpmnCanvas>(parameters => parameters
+            .Add(p => p.Document, before)
+            .Add(p => p.OnDocumentLoaded, _ =>
+            {
+                if (patch.Invocations.Count == 2) synchronized.TrySetResult();
+            }));
         var first = before with { FlowNodes = [before.FlowNodes[0] with { Name = "First" }] };
         var second = before with { FlowNodes = [before.FlowNodes[0] with { Name = "Second" }] };
         component.Render(parameters => parameters.Add(p => p.Document, first));
+        await component.WaitForStateAsync(() => patch.Invocations.Count == 1);
         component.Render(parameters => parameters.Add(p => p.Document, second));
 
         patch.SetResult(new DocumentLoaded("Diagram_1", 1, 0, []));
-        await component.WaitForStateAsync(() => patch.Invocations.Count == 2);
+        await synchronized.Task.WaitAsync(TimeSpan.FromSeconds(5), Xunit.TestContext.Current.CancellationToken);
 
         var requests = patch.Invocations.Select(call => Assert.IsType<CanvasDocumentPatch>(call.Arguments[0])).ToArray();
         Assert.Equal(0, requests[0].BaseRevision);

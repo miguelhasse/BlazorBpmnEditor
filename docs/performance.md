@@ -30,6 +30,62 @@ is stated rather than hidden because it is what the diagram costs today: a scale
 every mounted view at once, and that work is not divisible the way a pan's is. Raising this is the
 next piece of performance work, not something the current numbers pretend is done.
 
+## Lane embedding and accessible-graph allocation
+
+Lane ownership during canvas embedding now uses lazy, per-build lookup maps.
+They preserve the first matching lane set and parent lane, including unresolved
+duplicates, and are discarded after the build. No maps are built on lane-free
+planes. Existing boundary-event, subprocess and rendered-owner precedence stays
+unchanged; no retained document-index cache or interop contract changed.
+
+Two isolated Node/model benchmark runs per version, with the same harness and no
+concurrent benchmark/build workload, measured these means:
+
+| Embedding workload, 2,500 lanes + 2,500 tasks + pool | Before | After |
+|---|---:|---:|
+| One root lane set | 30.1-30.8 ms | 0.57-0.65 ms |
+| One lane set per lane | 58.4-61.7 ms | 0.81-0.82 ms |
+| Nested lanes, depth bounded to three | 53.7-56.0 ms | 0.88-1.00 ms |
+
+These are complete embedding builds, including new map construction, not browser
+frame timings. Complete fresh JointJS model renders improved more modestly:
+the many-set layout went from 1,184-1,274 to 1,143-1,163 ms; incremental rename
+renders from 366-382 to 298-314 ms. Nested incremental samples overlap, and
+lane-free render samples vary in both directions. Eight-lane root embedding
+rose from about 1.0-1.2 to 1.3 microseconds; its complete render samples also
+regressed. Do not infer universal small-document, browser-paint or pan/zoom gains.
+All 20 ordered parent maps match a scan-based oracle; complete incremental
+renders also assert every expected parent.
+
+Managed accessible-graph construction now fills incoming/outgoing lists in one
+visible-flow traversal, without the filtered flow list and two GroupBy/projection
+pipelines. Visibility filtering, duplicate/self flows, neighbor order, independent
+result lists, artifact order and session cache behavior are unchanged.
+
+| Complete graph workload, 5,000 nodes | Before median | After median | Allocated before / after |
+|---|---:|---:|---:|
+| Connected chain | 12.4-13.1 ms | 6.4-10.7 ms | 5.35 / 3.61 MB |
+| Connected chain with ten lanes | 17.2-17.7 ms | 9.2-12.8 ms | 6.73 / 4.99 MB |
+| Chain plus 5,000 annotations and associations | 22.8-27.2 ms | 22.0-27.0 ms | 12.07 / 10.33 MB |
+
+MB means decimal megabytes. Results are two paired Release runs under default
+runtime settings, 30 warmups and seven sample rounds. Two further tiering-disabled
+pairs retained the connected/lane allocation and timing gains. Timing remains
+noisy: sparse/hidden-endpoint controls vary in both directions, and one
+tiering-disabled flat graph sample rose from 4.0 to 8.3 ms. Allocation savings
+are the stronger evidence; no universal timing or cold-start claim is made.
+Session semantic-edit reads are measured separately; geometry-only edits already
+reuse the existing graph cache and gain nothing from this change.
+
+All 32 complete graph digests, including internal attachment types, matched the
+untouched runtime in all four pairs; empty and missing-diagram controls matched
+too. A separate single-stop-list experiment saved only about 40 KB at 5,000 nodes
+and was discarded because its small benefit did not justify timing variability.
+Core allocation coverage guards a 600-node connected graph, and native smoke
+covers ordered duplicate/self-flow adjacency with reflection-based JSON disabled.
+
+Reproduce with the [accessible-graph and lane-embedding reports](../tests/Bpmn.Benchmarks/README.md#accessible-graph-and-lane-embedding).
+
 ## Whole-document validation
 
 Validation now consumes existing incoming/outgoing lookup groups without making

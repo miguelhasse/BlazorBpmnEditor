@@ -6,6 +6,11 @@ using Hasseware.AspNetCore.Components.Bpmn.Validation;
 
 // dotnet run -c Release --project tests/Bpmn.Benchmarks -- --filter "*"     time and allocation per call
 // dotnet run -c Release --project tests/Bpmn.Benchmarks -- memory           what stays in memory (history, index, source tree)
+if (args.Length > 0 && args[0] == "accessible-graph")
+{
+    AccessibleGraphBenchmarks.Report();
+    return;
+}
 if (args.Length > 0 && args[0] == "validation")
 {
     ValidationBenchmarks.Report();

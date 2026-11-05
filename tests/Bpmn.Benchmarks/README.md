@@ -10,10 +10,49 @@ dotnet run -c Release --project tests\Bpmn.Benchmarks -- --filter "*"
 dotnet run -c Release --project tests\Bpmn.Benchmarks -- --filter "*WriteCanonical*"
 ```
 
-`Program.cs` uses `BenchmarkSwitcher.FromAssembly`; except for the `memory`, `feel`, `export`, `fidelity`, `diff`, `inspection`, `snapshot`, `schema`, `descriptor-reuse`, `registry-cache`, `normalization`, `annotation-inspection`, `annotation-attachments`, `validation` and `completion-corpus` report
+`Program.cs` uses `BenchmarkSwitcher.FromAssembly`; except for the `memory`, `feel`, `export`, `fidelity`, `diff`, `inspection`, `snapshot`, `schema`, `descriptor-reuse`, `registry-cache`, `normalization`, `annotation-inspection`, `annotation-attachments`, `validation`, `accessible-graph` and `completion-corpus` report
 commands, arguments after `--` are BenchmarkDotNet options. No demo server or Playwright browser
 is needed. The RCLs'
 normal build dependencies still apply when building the project.
+
+## Accessible graph and lane embedding
+
+```powershell
+dotnet run -c Release --project tests\Bpmn.Benchmarks -p:ShouldRunBuildScript=false -- accessible-graph
+npm --prefix src\Bpmn.Scripts run bench -- test\bench\lane-embedding.perf.ts
+```
+
+`AccessibleGraphBenchmarks` reports complete graph construction, fresh shallow
+document construction and session semantic-edit reads at 8, 60, 600 and 5,000
+flow nodes. Eight layouts cover flat/connected, ten lanes, one annotation per
+node, deep/cyclic containers, fan-out and hidden endpoints. Every layout also
+includes duplicate self-flows and an undrawn endpoint. Empty and no-diagram
+results are separate untimed controls. Thirty warmups precede seven rounds,
+with 100 calls per round below 100 nodes and three otherwise. Reported allocation
+includes all operation-local data; document/fixture setup is outside measurement.
+The SHA256 covers ordered graph fields, adjacency, attachment names/types and
+accessible names. Reflection binds the internal attachment-type getter only
+for benchmark equivalence reporting, outside timed work.
+
+For comparison, preserve the untouched runtime and run the same report assembly
+against it and the candidate. Keep inputs, runtime settings and harness identical.
+Repeat with `DOTNET_TieredCompilation=0` when investigating tiering effects; do
+not compare a default-runtime baseline against a tiering-disabled candidate.
+
+`lane-embedding.perf.ts` measures complete embedding builds and fresh/incremental
+JointJS model renders with tinybench. Five task counts (8, 60, 300, 1,000, 2,500)
+cross no lanes, one root set, many sets and nested lanes of depth at most three.
+Lane layouts have one lane per task and a pool: maximum **5,001 shapes**, not
+2,500. No-lane controls have tasks and a pool. An ordered scan oracle verifies
+every embedding map; rendered graph parents are also checked outside timing.
+The printed rolling checksum is a comparison aid, not a cryptographic digest.
+Mean/p99 figures use 100 ms measurement and 50 ms warmup budgets with minimum
+iteration counts; short runs are exploratory, not confidence intervals.
+
+Run benchmark pairs without concurrent builds, tests or browser workloads.
+These reports measure managed/Node model work, not browser layout, SVG paint,
+end-to-end editing latency or retained/peak memory. Paired results and rejected
+experiments are recorded in [performance.md](../../docs/performance.md#lane-embedding-and-accessible-graph-allocation).
 
 ## What stays in memory
 

@@ -23,6 +23,7 @@ export function buildEmbeddingTree(
   renderedIds: ReadonlySet<string>,
 ): EmbeddingTree {
   const parents = new Map<string, string>();
+  let laneOwners: ReadonlyMap<string, string | undefined> | undefined;
   const isRendered = (id: string | null | undefined): id is string =>
     id !== null && id !== undefined && renderedIds.has(id);
 
@@ -38,7 +39,8 @@ export function buildEmbeddingTree(
       case 'lane': {
         // A nested Lane sits inside the Lane that owns its lane set; a top-level Lane
         // sits inside its Pool.
-        const owner = laneOwner(index, element.value.laneSetId);
+        laneOwners ??= laneOwnersOf(index);
+        const owner = laneOwners.get(element.value.laneSetId);
         if (isRendered(owner)) parents.set(element.value.id, owner);
         break;
       }
@@ -113,14 +115,20 @@ function nearestVisualParent(
   return null;
 }
 
-function laneOwner(index: BpmnDocumentIndex, laneSetId: string): string | undefined {
-  const laneSet = index.document.laneSets.find((candidate) => candidate.id === laneSetId);
-  if (laneSet === undefined) return undefined;
+function laneOwnersOf(index: BpmnDocumentIndex): ReadonlyMap<string, string | undefined> {
+  const parentLanes = new Map<string, string>();
+  for (const lane of index.document.lanes) {
+    if (lane.childLaneSetId !== null && !parentLanes.has(lane.childLaneSetId)) {
+      parentLanes.set(lane.childLaneSetId, lane.id);
+    }
+  }
 
-  // A child lane set is owned by the Lane that declares it; a root lane set by the
-  // Process, which in a collaboration is drawn as its Participant's Pool.
-  const parentLane = index.document.lanes.find((lane) => lane.childLaneSetId === laneSetId);
-  if (parentLane !== undefined) return parentLane.id;
-
-  return index.participantOfProcess(laneSet.containerId);
+  const owners = new Map<string, string | undefined>();
+  for (const laneSet of index.document.laneSets) {
+    // Keep the first set even when it has no owner; a later duplicate must not supply one.
+    if (!owners.has(laneSet.id)) {
+      owners.set(laneSet.id, parentLanes.get(laneSet.id) ?? index.participantOfProcess(laneSet.containerId));
+    }
+  }
+  return owners;
 }

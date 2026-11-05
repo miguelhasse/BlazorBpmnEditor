@@ -183,17 +183,15 @@ public static class BpmnAccessibleGraph
          */
         var swimlanes = Swimlanes(document, drawn);
 
-        var flows = document.SequenceFlows
-            .Where(flow => drawn.Contains(flow.SourceRef) && drawn.Contains(flow.TargetRef))
-            .ToList();
+        var outgoing = new Dictionary<string, List<string>>(StringComparer.Ordinal);
+        var incoming = new Dictionary<string, List<string>>(StringComparer.Ordinal);
 
-        var outgoing = flows
-            .GroupBy(flow => flow.SourceRef, StringComparer.Ordinal)
-            .ToDictionary(group => group.Key, group => group.Select(flow => flow.TargetRef).ToList(), StringComparer.Ordinal);
-
-        var incoming = flows
-            .GroupBy(flow => flow.TargetRef, StringComparer.Ordinal)
-            .ToDictionary(group => group.Key, group => group.Select(flow => flow.SourceRef).ToList(), StringComparer.Ordinal);
+        foreach (var flow in document.SequenceFlows
+            .Where(flow => drawn.Contains(flow.SourceRef) && drawn.Contains(flow.TargetRef)))
+        {
+            Add(outgoing, flow.SourceRef, flow.TargetRef);
+            Add(incoming, flow.TargetRef, flow.SourceRef);
+        }
 
         var depths = DepthsOf(nodes);
 
@@ -239,6 +237,16 @@ public static class BpmnAccessibleGraph
         var stops = flowNodes.Concat(Artifacts(document, drawn, depths)).ToList();
 
         return swimlanes.Count == 0 ? stops : Interleave(swimlanes, stops, document.Lanes);
+
+        static void Add(Dictionary<string, List<string>> adjacency, string owner, string neighbor)
+        {
+            if (!adjacency.TryGetValue(owner, out var neighbors))
+            {
+                neighbors = new List<string>(1);
+                adjacency.Add(owner, neighbors);
+            }
+            neighbors.Add(neighbor);
+        }
     }
 
     /// <summary>The artifacts and data elements drawn on this plane.</summary>
