@@ -1,13 +1,10 @@
 using System.Diagnostics;
-
 using Bunit;
-
 using Hasseware.AspNetCore.Components.Bpmn.Accessibility;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
 using Hasseware.AspNetCore.Components.Bpmn.Model.Di;
-
-using Microsoft.AspNetCore.Components.Web;
 using Hasseware.AspNetCore.Components.Bpmn.Resources;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 

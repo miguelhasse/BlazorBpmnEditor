@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Xml.Linq;
-using Hasseware.AspNetCore.Components.Bpmn.Accessibility;
 using Hasseware.AspNetCore.Components.Bpmn;
+using Hasseware.AspNetCore.Components.Bpmn.Accessibility;
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.AspNetCore.Components.Bpmn.Execution;
@@ -209,6 +209,31 @@ using var canvas = JsonDocument.Parse(CanvasDocumentPayload.Serialize(restored))
 Require(canvas.RootElement.GetProperty("flowNodes")[1].GetProperty("type").GetString() == "userTask",
     "Canvas projection lost its enum wire names.");
 Require(!canvas.RootElement.TryGetProperty("processes", out _), "Canvas projection included headless-only properties.");
+
+var renamedDocument = restored with
+{
+    FlowNodes = [restored.FlowNodes[0] with { Name = "Approved" }, .. restored.FlowNodes.Skip(1)],
+};
+var canvasPatch = CanvasDocumentPatch.Create(restored, renamedDocument, null, 0, 1);
+Require(canvasPatch is not null
+    && canvasPatch.Collections.Single().Delta.Upserts.Single().GetProperty("name").GetString() == "Approved",
+    "Canvas patch projection lost source-generated flow-node metadata.");
+var patchJson = JsonSerializer.SerializeToElement(canvasPatch, BpmnInteropJsonContext.Default.CanvasDocumentPatch);
+Require(patchJson.GetProperty("collections")[0].GetProperty("delta").GetProperty("upserts")[0]
+    .GetProperty("name").GetString() == "Approved", "Canvas patch JSON changed.");
+var firstDiagram = restored.Diagrams.Single();
+var firstShape = firstDiagram.Plane.Shapes[0];
+var movedShape = firstShape with { Bounds = firstShape.Bounds with { X = firstShape.Bounds.X + 10 } };
+var geometryDocument = restored with
+{
+    Diagrams = [firstDiagram with
+    {
+        Plane = firstDiagram.Plane with { Shapes = [movedShape, .. firstDiagram.Plane.Shapes.Skip(1)] },
+    }],
+};
+var geometryPatch = CanvasDocumentPatch.Create(restored, geometryDocument, null, 1, 2);
+Require(geometryPatch?.Planes.Single().Shapes?.Upserts.Single().GetProperty("bounds").GetProperty("x").GetDouble()
+    == movedShape.Bounds.X, "Canvas patch projection lost source-generated shape metadata.");
 
 var interop = BpmnInteropJsonContext.Default;
 var configuration = JsonSerializer.SerializeToElement(EditorConfig.CreateDefault(), interop.EditorConfig);

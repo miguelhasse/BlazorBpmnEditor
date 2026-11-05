@@ -113,9 +113,9 @@
                 <div data-controls="settings-group">
                     <FluentSwitch Class="demo-webmcp"
                                   role="switch" aria-checked="@(_webMcp ? "true" : "false")"
-                                  Value="@_webMcp" ValueChanged="@OnWebMcpChanged"
+                                  Value="@_webMcp" ValueChanged="@OnWebMcpChangedAsync"
                                   Label="@Localizer["Editor.WebMcp"]" />
-                    @if (_webMcp)
+                    @if (_webMcp && _webMcpToolsLoaded)
                     {
                         <FluentSwitch Class="demo-webmcp-edit"
                                       role="switch" aria-checked="@(_webMcpEdit ? "true" : "false")"
@@ -201,7 +201,7 @@
             <BpmnValidationPanel Class="demo-validation" />
         </Footer>
         <Dialogs>
-            @if (_webMcp)
+            @if (_webMcp && _webMcpToolsLoaded)
             {
                 <BpmnWebMcp @key="_webMcpEdit" @ref="_webMcpPart" AllowMutations="_webMcpEdit" OnRegistered="OnWebMcpSettled" OnUnavailable="OnWebMcpSettled" />
             }

@@ -72,7 +72,11 @@ internal static class CanvasDocumentPayload
 
     private static JsonTypeInfo<BpmnDocument> TypeInfo => (JsonTypeInfo<BpmnDocument>)Options.GetTypeInfo(typeof(BpmnDocument));
 
-    internal static JsonElement Project<T>(T value) => JsonSerializer.SerializeToElement(value, Options);
+    internal static JsonElement Project<T>(T value)
+    {
+        var typeInfo = (JsonTypeInfo<T>)Options.GetTypeInfo(typeof(T));
+        return JsonSerializer.SerializeToElement(value, typeInfo);
+    }
 
     private static void Trim(JsonTypeInfo type)
     {

@@ -24,4 +24,5 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Interop;
 [JsonSerializable(typeof(EditRejected))]
 [JsonSerializable(typeof(DropTarget))]
 [JsonSerializable(typeof(Anchor))]
+[JsonSerializable(typeof(CanvasDocumentPatch))]
 internal sealed partial class BpmnInteropJsonContext : JsonSerializerContext;

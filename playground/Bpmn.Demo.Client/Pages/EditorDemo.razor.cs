@@ -12,6 +12,7 @@ using Hasseware.FluentUI.AspNetCore.Components.Bpmn;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Services;
 using Microsoft.FluentUI.AspNetCore.Components;
 
 namespace Bpmn.Demo.Client.Pages;
@@ -208,6 +209,9 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
     [Inject]
     private IBpmnDocumentBindingFactory Bindings { get; init; } = default!;
 
+    [Inject]
+    private LazyAssemblyLoader AssemblyLoader { get; init; } = default!;
+
     /// <summary>The stored document the editor shows; created once, loaded with each sample.</summary>
     private BpmnDocumentBinding _binding = default!;
 
@@ -381,17 +385,30 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
 
     private bool _webMcp;
 
+    private bool _webMcpToolsLoaded;
+
     private bool _webMcpEdit;
 
     private string _webMcpStatus = string.Empty;
 
     private BpmnWebMcp? _webMcpPart;
 
-    private void OnWebMcpChanged(bool enabled)
+    private async Task OnWebMcpChangedAsync(bool enabled)
     {
         _webMcp = enabled;
         _webMcpStatus = string.Empty;
-        if (!_webMcp) _webMcpPart = null;
+
+        if (!enabled)
+        {
+            _webMcpPart = null;
+            return;
+        }
+
+        if (_webMcpToolsLoaded)
+            return;
+
+        await AssemblyLoader.LoadAssembliesAsync(["Hasseware.AspNetCore.Components.Bpmn.Tools.dll"]);
+        _webMcpToolsLoaded = true;
     }
 
     // The component reads the option once, at registration, so changing it makes a new component.
@@ -501,21 +518,18 @@ public sealed partial class EditorDemo : ComponentBase, IAsyncDisposable
 
     private async Task AscendAsync(string diagramId)
     {
-        if (!HasEditor) return;
+        if (!HasEditor)
+            return;
 
         await (Plain ? _plainEditor!.AscendToAsync(diagramId) : _fluentEditor!.AscendToAsync(diagramId));
     }
 
-    private void OnSelectionChanged(SelectionChanged payload)
+    private void OnSelectionChanged(SelectionChanged payload) => _editStatus = payload.ElementIds.Count switch
     {
-        _editStatus = payload.ElementIds.Count switch
-        {
-            0 => Localizer["Editor.NothingSelected"],
-            1 => Localizer["Editor.SelectedElement", payload.ElementIds[0]],
-            var count => Localizer["Editor.SelectedElements", count],
-        };
-
-    }
+        0 => Localizer["Editor.NothingSelected"],
+        1 => Localizer["Editor.SelectedElement", payload.ElementIds[0]],
+        var count => Localizer["Editor.SelectedElements", count],
+    };
 
     private bool _showProperties;
 

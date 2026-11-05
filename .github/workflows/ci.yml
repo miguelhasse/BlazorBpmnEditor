@@ -91,6 +91,9 @@ jobs:
       - name: Restore .NET dependencies
         run: dotnet restore BlazorBpmnEditor.slnx
 
+      - name: Build source generator for formatting
+        run: dotnet build src/Bpmn.RulesGenerator/Hasseware.AspNetCore.Components.Bpmn.RulesGenerator.csproj --no-restore
+
       - name: Verify formatting
         run: dotnet format BlazorBpmnEditor.slnx --verify-no-changes --no-restore
 

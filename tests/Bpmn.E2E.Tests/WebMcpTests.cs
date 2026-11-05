@@ -54,6 +54,26 @@ public class WebMcpTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFi
         ["bpmn_create_element", "bpmn_connect", "bpmn_set_property", "bpmn_delete", "bpmn_select", "bpmn_undo", "bpmn_redo"];
 
     [Fact]
+    public async Task LoadsToolAssemblyOnlyWhenWebMcpIsEnabled()
+    {
+        await Page.AddInitScriptAsync(Stub);
+        await GoToEditorAsync();
+
+        Assert.Empty(await ToolAssemblyRequestsAsync());
+
+        await TurnOnAsync();
+
+        var toolAssemblyRequests = await ToolAssemblyRequestsAsync();
+        Assert.Contains(toolAssemblyRequests, name => name.Contains("Hasseware.AspNetCore.Components.Bpmn.Tools.", StringComparison.Ordinal));
+
+        var transferSizes = await ToolAssemblyTransferSizesAsync();
+        Assert.True(transferSizes.Length >= 2, "Expected a resource timing entry for the loaded tools assembly.");
+        var encodedSize = transferSizes[0];
+        var decodedSize = transferSizes[1];
+        Assert.True(encodedSize > 0 && encodedSize < decodedSize, $"Expected compressed transfer size, received {encodedSize} encoded / {decodedSize} decoded bytes.");
+    }
+
+    [Fact]
     public async Task RegistersTheReadOnlyToolsWhenSwitchedOn()
     {
         await Page.AddInitScriptAsync(Stub);
@@ -202,6 +222,8 @@ public class WebMcpTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFi
 
         Assert.True(result.GetProperty("ok").GetBoolean(), result.ToString());
         var id = result.GetProperty("data").GetProperty("elementId").GetString()!;
+        var diagram = (await CallAsync("bpmn_get_diagram")).GetProperty("result").GetProperty("data");
+        Assert.Contains(diagram.GetProperty("elements").EnumerateArray(), element => element.GetProperty("id").GetString() == id);
         await Expect(Page.Locator($".bpmn-canvas .joint-cell[model-id='{id}']")).ToHaveCountAsync(1);
 
         await Page.Locator(".bpmn-canvas").ClickAsync(new() { Position = new() { X = 4, Y = 4 } });
@@ -267,6 +289,13 @@ public class WebMcpTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFi
     private async Task<JsonElement> CallAsync(string tool, string argumentsJson = "{}") =>
         await Page.EvaluateAsync<JsonElement>("([name, json]) => window.__webmcp.call(name, JSON.parse(json))", new object[] { tool, argumentsJson });
 
+    private async Task<string[]> ToolAssemblyRequestsAsync() =>
+        await Page.EvaluateAsync<string[]>(
+            "() => performance.getEntriesByType('resource').map(resource => resource.name).filter(name => name.includes('Hasseware.AspNetCore.Components.Bpmn.Tools.'))");
+
+    private async Task<long[]> ToolAssemblyTransferSizesAsync() =>
+        await Page.EvaluateAsync<long[]>(
+            "() => performance.getEntriesByType('resource').filter(resource => resource.name.includes('Hasseware.AspNetCore.Components.Bpmn.Tools.')).flatMap(resource => [resource.encodedBodySize, resource.decodedBodySize])");
     // Registration happens after the next render, so a test that calls a tool waits for the status that follows it.
     private async Task TurnOnAsync(bool expectRegistered = true)
     {

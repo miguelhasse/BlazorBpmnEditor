@@ -918,6 +918,66 @@ Pan touches no document, but selection publication and zoom-induced mounting sti
 `Hasseware.AspNetCore.Components.Bpmn` is 884 KB with Brotli, the largest single download after the runtime; `Bpmn.Tools` is 254 KB. The canvas module is 651,029 bytes
 (154 KB with Brotli) and the library CSS 12,908 bytes. `verify-bundle.mjs` now fails the build above 700,000 and 16,000 bytes.
 
+#### Updated .NET 10 publish measurement
+
+The pre-lazy Release playground publish with .NET SDK 10.0.403 measured **6,114 KB Brotli /
+20,044 KB raw** across 191 files. Default Release and full-trim publishes produced the same
+totals and largest assets in this checkout; changing trim mode alone did not reduce the payload.
+This is not a direct regression comparison with the historical publish above. The clean
+full-trim publish with WebMCP lazy loading measures **6,115 KB Brotli / 20,052 KB raw** across
+the same 191 files, an approximately 1 KB increase rather than an overall payload reduction.
+
+| Asset category | Files | Raw KB | Brotli KB |
+|---|---:|---:|---:|
+| Assemblies | 64 | 10,865 | 3,790 |
+| Runtime WASM | 1 | 2,931 | 954 |
+| Satellite assemblies | 52 | 1,680 | 477 |
+| JavaScript | 20 | 2,057 | 464 |
+| ICU data | 1 | 1,490 | 322 |
+| Other | 35 | 691 | 65 |
+| CSS | 18 | 338 | 44 |
+| **Total** | **191** | **20,052** | **6,115** |
+
+Largest Brotli assets are the BPMN assembly (1,208 KB), `dotnet.native` (954 KB),
+`System.Private.CoreLib` (576 KB), ICU data (322 KB) and `Bpmn.Tools` (240 KB).
+The playground retains all thirteen supported cultures, so its 477 KB of satellite
+assemblies and 322 KB ICU payload are required. WebMCP is now opt-in at the assembly
+loading boundary: the editor defers `Bpmn.Tools` until the user enables the WebMCP
+setting, then loads it before rendering the component. Published-browser coverage
+confirms there is no initial `Bpmn.Tools` resource request and that enabling WebMCP
+fetches the Brotli-compressed assembly (245,634 bytes compressed; 603,413 bytes raw).
+This defers about 240 KB Brotli from initial transfer, but does not reduce the complete
+publish size because the lazy assembly remains in the output; users enabling WebMCP
+still download it. No cold-start timing improvement is claimed. FEEL remains eagerly
+registered and integrated into the editor. No hot-path or low-risk trim change was
+justified by this audit. The publish-size check matched all 328 precompressed files to
+their originals in the lazy-enabled publish.
+
+#### Remaining payload candidates and verification limits
+
+The next feature-sized candidate is the FEEL stack: `FSharp.Core` (136,432 Brotli
+bytes), `FeelSharp.Core` (81,139 bytes) and the BPMN FEEL editor (51,213 bytes).
+The demo registers FEEL evaluation and the editor at startup, and uses FEEL editors
+in the property flow; deferring these assemblies needs a deliberate async activation
+boundary, not another lazy-assembly entry. `Bpmn.WebMcp` (58,821 bytes) also remains
+eager because startup calls `AddBpmnWebMcp` and the page statically references its
+component. Deferring it together with `Bpmn.Tools` needs the registration and
+component activation moved behind the same boundary. The 235,118-byte
+`System.Private.Xml` asset serves BPMN import/export; Fluent UI (121,486 bytes) is
+used by the playground shell and editor. Neither is a safe trim-only target.
+Reducing the core BPMN assembly or any of the thirteen cultures would remove
+playground functionality.
+
+The edit/undo browser benchmark against the default Release publish timed out while
+waiting for canvas acknowledgement, so it produced no comparable latency sample.
+The full-trim edit run remains blocked by `System.Text.Json`'s
+`ConstructorContainsNullParameterNames` serialization exception for
+`CanvasDocumentPatch` during `BpmnCanvas.SynchronizeDocumentAsync`; this also
+reproduced on a non-lazy full-trim control. Do not treat full trim as a verified
+interaction-safe size optimization: it did not reduce the measured transfer size,
+and its editing path has not passed this check. These failures do not implicate the
+WebMCP lazy-load change.
+
 ### Managed memory
 
 `dotnet run -c Release --project tests/Bpmn.Benchmarks -- memory` reports what stays in memory, which BenchmarkDotNet's allocation columns do not:

@@ -20,6 +20,7 @@
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\templates\*.json" />
     <TrimmerRootDescriptor Include="TrimmerRoots.xml" />
+    <BlazorWebAssemblyLazyLoad Include="Hasseware.AspNetCore.Components.Bpmn.Tools.dll" />
   </ItemGroup>
 
   <ItemGroup>
