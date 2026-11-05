@@ -585,11 +585,12 @@ public class ContextMenuTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
          * standard value, and a value the document rejected is the stalest kind.
          */
         await GoToEditorAsync();
+        await Page.OpenDemoFilesAsync();
+        await Page.GetByRole(AriaRole.Combobox, new() { Name = "Sample diagram" }).ClickAsync();
+        await Page.Locator("fluent-option", new() { HasTextString = "order-process.bpmn" }).ClickAsync();
+        await Expect(Page.Locator(".joint-cell[model-id='Gateway_IsValid']")).ToBeVisibleAsync();
 
-        var flow = await Page.EvaluateAsync<string>(
-            "() => document.querySelector('.bpmn-canvas .joint-link[model-id]')?.getAttribute('model-id') ?? ''");
-
-        Assert.NotEqual(string.Empty, flow);
+        const string flow = "Flow_3";
         await RightClickAsync(flow);
 
         // A condition first, so marking it the default breaks SF-006.
@@ -598,7 +599,7 @@ public class ContextMenuTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
         await Page.Locator(".bpmn-menu__title").ClickAsync();
 
         var isDefault = Page.Locator(".bpmn-menu__property", new() { HasText = "Default flow" })
-            .Locator("input[type=checkbox], fluent-checkbox");
+            .Locator("input[type=checkbox], fluent-checkbox, fluent-switch");
 
         // Clicked, not CheckAsync: that helper retries until the box is checked, and the whole
         // point here is that it does not stay checked.
@@ -674,8 +675,8 @@ public class ContextMenuTests(DemoAppFixture app) : PageTest, IClassFixture<Demo
         var prevented = await Page.EvaluateAsync<bool>(
             """
             id => {
-              const cell = document.querySelector(`.joint-cell[model-id="${id}"]`);
-              const body = cell.querySelector('[joint-selector="body"]') ?? cell;
+              const cell = document.querySelector(`.joint-cell[model-id="${id}"], .joint-link[model-id="${id}"]`);
+              const body = cell.querySelector('[joint-selector="body"], [joint-selector="wrapper"]') ?? cell;
               const box = body.getBoundingClientRect();
               const event = new MouseEvent('contextmenu', {
                 bubbles: true, cancelable: true,

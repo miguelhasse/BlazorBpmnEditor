@@ -245,7 +245,7 @@
             <FluentBpmnValidationPanel Class="demo-validation" />
         </Footer>
         <Dialogs>
-            @if (_webMcp)
+            @if (_webMcp && _webMcpToolsLoaded)
             {
                 <BpmnWebMcp @key="_webMcpEdit" @ref="_webMcpPart" AllowMutations="_webMcpEdit" OnRegistered="OnWebMcpSettled" OnUnavailable="OnWebMcpSettled" />
             }

@@ -66,6 +66,7 @@ public sealed class FeelAuthoringTests(DemoAppFixture app) : PageTest, IClassFix
         await Expect(input).ToHaveValueAsync("false");
         await input.FillAsync("true");
         await Expect(result).ToHaveTextAsync("false");
+        await input.PressAsync("Escape");
         await workspace.GetByRole(AriaRole.Button, new() { Name = "Cancel", Exact = true }).ClickAsync();
         await Expect(workspace.GetByRole(AriaRole.Textbox)).ToHaveValueAsync("false");
         await Expect(result).ToHaveTextAsync("false");
@@ -73,6 +74,7 @@ public sealed class FeelAuthoringTests(DemoAppFixture app) : PageTest, IClassFix
             .ToHaveTextAsync("Workspace draft cancelled; persisted value unchanged.");
 
         await workspace.GetByRole(AriaRole.Textbox).FillAsync("true");
+        await workspace.GetByRole(AriaRole.Textbox).PressAsync("Escape");
         await workspace.GetByRole(AriaRole.Button, new() { Name = "Apply", Exact = true }).ClickAsync();
         await Expect(result).ToHaveTextAsync("true");
         await Page.Locator("#feel-readonly").ClickAsync();

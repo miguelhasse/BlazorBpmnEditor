@@ -55,3 +55,4 @@ finally {
 }
 
 Write-Output 'BPMN Native AOT CLI validation and stdio smoke passed.'
+exit 0

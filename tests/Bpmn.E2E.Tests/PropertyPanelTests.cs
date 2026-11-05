@@ -512,6 +512,7 @@ public class PropertyPanelTests(DemoAppFixture app) : PageTest, IClassFixture<De
         await Expect(Page.Locator(".bpmn-message-reference").GetByRole(AriaRole.Combobox))
             .ToContainTextAsync("OrderSubmitted");
         await Page.GetByRole(AriaRole.Button, new() { Name = "Messages", Exact = true }).ClickAsync();
+        await dialog.Locator(".bpmn-message-catalog__heading").HoverAsync();
         await Expect(dialog.GetByRole(AriaRole.Button, new() { Name = "Delete", Exact = true })).ToBeDisabledAsync();
         await dialog.GetByRole(AriaRole.Button, new() { Name = "Edit name", Exact = true }).ClickAsync();
         await Expect(dialog).ToContainTextAsync("This definition is shared");

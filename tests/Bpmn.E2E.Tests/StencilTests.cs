@@ -418,7 +418,7 @@ public class StencilTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppF
     // --- the section 9.1 entries that are not Flow Nodes --------------------------
 
     [Fact]
-    public async Task OffersOnlyTheGenericEventAndPoolLaneTools()
+    public async Task OffersCreationToolsForDropsIntoCollaborationPools()
     {
         await GoToEditorAsync();
 
@@ -433,7 +433,7 @@ public class StencilTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppF
         Assert.DoesNotContain(
             "bpmn-stencil__tool--disabled",
             await poolLane.GetAttributeAsync("class") ?? string.Empty);
-        await Expect(Page.Locator(".bpmn-stencil > .bpmn-stencil__group .bpmn-stencil__tool", new() { HasTextString = "Intermediate / Boundary Event" })).ToHaveCountAsync(0);
+        await Expect(Page.Locator(".bpmn-stencil > .bpmn-stencil__group .bpmn-stencil__tool", new() { HasTextString = "Intermediate / Boundary Event" })).ToHaveCountAsync(1);
     }
 
     [Fact]

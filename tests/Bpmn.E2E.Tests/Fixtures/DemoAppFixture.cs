@@ -30,6 +30,7 @@ public sealed class DemoAppFixture : IAsyncLifetime
     private static Process? _process;
     private static ConcurrentQueue<string> _startupErrors = new();
     private static string _baseUrl = string.Empty;
+    private static bool _usesPublishedApplication;
     private static int _users;
 
     /// <summary>
@@ -53,6 +54,10 @@ public sealed class DemoAppFixture : IAsyncLifetime
     /// </remarks>
 #pragma warning disable CA1822 // Mark members as static
     public string BaseUrl => _baseUrl;
+#pragma warning restore CA1822
+
+#pragma warning disable CA1822 // Mark members as static
+    public bool UsesPublishedApplication => _usesPublishedApplication;
 #pragma warning restore CA1822
 
     public async ValueTask InitializeAsync()
@@ -97,6 +102,7 @@ public sealed class DemoAppFixture : IAsyncLifetime
         };
 
         var publishedDirectory = Environment.GetEnvironmentVariable("BPMN_E2E_PUBLISHED_DIRECTORY");
+        _usesPublishedApplication = !string.IsNullOrWhiteSpace(publishedDirectory);
         if (!string.IsNullOrWhiteSpace(publishedDirectory))
         {
             publishedDirectory = Path.GetFullPath(publishedDirectory);

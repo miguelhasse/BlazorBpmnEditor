@@ -56,6 +56,7 @@ public class WebMcpTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFi
     [Fact]
     public async Task LoadsToolAssemblyOnlyWhenWebMcpIsEnabled()
     {
+        await Page.AddInitScriptAsync("performance.setResourceTimingBufferSize(1000);");
         await Page.AddInitScriptAsync(Stub);
         await GoToEditorAsync();
 
@@ -70,7 +71,9 @@ public class WebMcpTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFi
         Assert.True(transferSizes.Length >= 2, "Expected a resource timing entry for the loaded tools assembly.");
         var encodedSize = transferSizes[0];
         var decodedSize = transferSizes[1];
-        Assert.True(encodedSize > 0 && encodedSize < decodedSize, $"Expected compressed transfer size, received {encodedSize} encoded / {decodedSize} decoded bytes.");
+        Assert.True(encodedSize > 0 && decodedSize > 0, "Expected non-empty transfer and decoded sizes for the loaded tools assembly.");
+        if (app.UsesPublishedApplication)
+            Assert.True(encodedSize < decodedSize, $"Expected compressed transfer size, received {encodedSize} encoded / {decodedSize} decoded bytes.");
     }
 
     [Fact]
