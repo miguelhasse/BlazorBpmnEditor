@@ -12,7 +12,7 @@ public sealed class BpmnWebMcpComponentTests : EditorContext
 {
     private static readonly string[] AllTools =
     [
-        "bpmn_get_diagram", "bpmn_describe_element", "bpmn_get_selection", "bpmn_validate", "bpmn_export", "bpmn_list_creatable",
+        "bpmn_get_diagram", "bpmn_search_elements", "bpmn_describe_element", "bpmn_get_selection", "bpmn_validate", "bpmn_export", "bpmn_list_creatable",
     ];
 
     private static BpmnWebMcp Component(IRenderedComponent<BpmnEditorScope> scope) => scope.FindComponent<BpmnWebMcp>().Instance;
@@ -45,6 +45,18 @@ public sealed class BpmnWebMcpComponentTests : EditorContext
 
         Assert.True(result.GetProperty("ok").GetBoolean());
         Assert.Contains(result.GetProperty("data").GetProperty("elements").EnumerateArray(), element => element.GetProperty("id").GetString() == "review");
+    }
+
+    [Fact]
+    public async Task SearchesTheOpenEditorsElementsAndConnectors()
+    {
+        var (scope, browser) = RenderWithBrowser();
+        scope.WaitForAssertion(() => Assert.Equal(BpmnWebMcpState.Registered, Component(scope).Status));
+
+        var result = await browser.Module.CallAsync("bpmn_search_elements", """{"query":"review"}""");
+
+        Assert.True(result.GetProperty("ok").GetBoolean());
+        Assert.Equal("review", Assert.Single(result.GetProperty("data").GetProperty("matches").EnumerateArray()).GetProperty("id").GetString());
     }
 
     [Fact]

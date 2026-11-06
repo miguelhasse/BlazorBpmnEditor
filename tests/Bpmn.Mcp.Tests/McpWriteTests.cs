@@ -350,7 +350,7 @@ public abstract class McpWriteTests : IDisposable
         var tools = (await server.Client.ListToolsAsync(cancellationToken: Token)).ToDictionary(tool => tool.Name);
 
         Assert.Equal(
-            ["bpmn_apply_batch", "bpmn_connect", "bpmn_create_document", "bpmn_create_element", "bpmn_delete", "bpmn_describe_element", "bpmn_diff", "bpmn_export", "bpmn_list_documents", "bpmn_open", "bpmn_set_property", "bpmn_validate"],
+            ["bpmn_apply_batch", "bpmn_connect", "bpmn_create_document", "bpmn_create_element", "bpmn_delete", "bpmn_describe_element", "bpmn_diff", "bpmn_export", "bpmn_list_documents", "bpmn_open", "bpmn_search_elements", "bpmn_set_property", "bpmn_validate"],
             tools.Keys.Order(StringComparer.Ordinal));
         Assert.False(tools["bpmn_set_property"].ProtocolTool.Annotations!.ReadOnlyHint);
         Assert.True(tools["bpmn_set_property"].ProtocolTool.Annotations!.IdempotentHint);

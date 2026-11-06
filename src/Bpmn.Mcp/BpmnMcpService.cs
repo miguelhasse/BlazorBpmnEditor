@@ -181,6 +181,28 @@ public sealed partial class BpmnMcpService
             },
             cancellationToken);
 
+    /// <summary>Finds elements and connectors in a stored document by id, type, name or standard property value.</summary>
+    /// <param name="documentId">The document's logical path.</param>
+    /// <param name="query">The case-insensitive substring to find.</param>
+    /// <param name="cursor">The cursor of the previous page.</param>
+    /// <param name="limit">The most matches on this page; capped.</param>
+    /// <param name="cancellationToken">Cancels the call.</param>
+    /// <returns>One page of matches.</returns>
+    public Task<BpmnToolResult<BpmnElementSearchResult>> SearchElementsAsync(
+        string documentId,
+        string query,
+        string? cursor,
+        int? limit,
+        CancellationToken cancellationToken) =>
+        RunAsync(
+            "bpmn_search_elements",
+            documentId,
+            async (host, _) => await BpmnTools.SearchElementsAsync(
+                host,
+                new BpmnSearchElementsRequest(query, cursor, limit),
+                cancellationToken).ConfigureAwait(false),
+            cancellationToken);
+
     /// <summary>Validates a document with the editor's rules and the registered profiles.</summary>
     /// <param name="documentId">The document's logical path.</param>
     /// <param name="cancellationToken">Cancels the call.</param>

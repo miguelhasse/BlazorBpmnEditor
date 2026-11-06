@@ -58,6 +58,7 @@ public static class BpmnToolJson
     AllowDuplicateProperties = false,
     UseStringEnumConverter = true)]
 [JsonSerializable(typeof(BpmnGetDiagramRequest))]
+[JsonSerializable(typeof(BpmnSearchElementsRequest))]
 [JsonSerializable(typeof(BpmnDescribeElementRequest))]
 [JsonSerializable(typeof(BpmnExportRequest))]
 [JsonSerializable(typeof(BpmnListCreatableRequest))]
@@ -70,6 +71,7 @@ public static class BpmnToolJson
 [JsonSerializable(typeof(BpmnToolResult))]
 [JsonSerializable(typeof(BpmnToolResult<object>))]
 [JsonSerializable(typeof(BpmnToolResult<BpmnDiagramSummary>))]
+[JsonSerializable(typeof(BpmnToolResult<BpmnElementSearchResult>))]
 [JsonSerializable(typeof(BpmnToolResult<BpmnSelection>))]
 [JsonSerializable(typeof(BpmnToolResult<BpmnElementDescription>))]
 [JsonSerializable(typeof(BpmnToolResult<BpmnValidationSummary>))]

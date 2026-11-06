@@ -12,6 +12,7 @@ on the core package only.
 | Tool | Does | Hints |
 |---|---|---|
 | `bpmn_get_diagram` | Diagrams, elements (id, type, name, container, pool, bounds) and connectors, paged | read-only, untrusted content |
+| `bpmn_search_elements` | Elements and connectors whose id, type, name or standard property value contains a case-insensitive query, paged | read-only, untrusted content |
 | `bpmn_describe_element` | One element's properties, references and findings | read-only, untrusted content |
 | `bpmn_get_selection` | What the user has selected; empty for a host without a selection (`IBpmnSelectionHost`) | read-only, untrusted content |
 | `bpmn_validate` | The editor's validation, with rule ids | read-only, untrusted content |

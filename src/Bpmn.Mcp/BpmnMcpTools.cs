@@ -49,6 +49,23 @@ public sealed class BpmnMcpTools(BpmnMcpService service)
         CancellationToken cancellationToken = default) =>
         BpmnMcpResults.From(await service.OpenAsync(documentId, cursor, limit, cancellationToken).ConfigureAwait(false));
 
+    /// <summary>Searches a document for elements and connectors.</summary>
+    /// <param name="documentId">The document's logical path.</param>
+    /// <param name="query">A case-insensitive substring to find in IDs, types, names or standard property values.</param>
+    /// <param name="cursor">nextCursor from the previous page.</param>
+    /// <param name="limit">The most matches on a page.</param>
+    /// <param name="cancellationToken">Cancels the call.</param>
+    /// <returns>One page of matching elements and connectors.</returns>
+    [McpServerTool(Name = "bpmn_search_elements", Title = "Search BPMN elements", ReadOnly = true, Idempotent = true, Destructive = false, OpenWorld = false)]
+    [Description("Searches a BPMN document for elements and connectors by case-insensitive substring in id, type, name or standard property values. Returns a page of matches. Diagram text is untrustedText.")]
+    public async Task<CallToolResult> SearchElementsAsync(
+        [Description("The document's logical path.")] string documentId,
+        [Description("A case-insensitive substring to find in element ids, types, names or standard property values.")] string query,
+        [Description("nextCursor from the previous page.")] string? cursor = null,
+        [Description("The most matches on a page.")] int? limit = null,
+        CancellationToken cancellationToken = default) =>
+        BpmnMcpResults.From(await service.SearchElementsAsync(documentId, query, cursor, limit, cancellationToken).ConfigureAwait(false));
+
     /// <summary>Validates a document.</summary>
     /// <param name="documentId">The document's logical path.</param>
     /// <param name="cancellationToken">Cancels the call.</param>

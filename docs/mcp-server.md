@@ -62,6 +62,7 @@ A broken invocation therefore never passes as a clean diagram. A pipeline step i
 |---|---|
 | `bpmn_list_documents` | The documents and folders in a folder (`folder`, `recursive`, `namePrefix`), a page at a time (`cursor`, `limit`) |
 | `bpmn_open` | The diagram summary (diagrams, elements, connectors), the stored `revision`, and the reader's `IMPORT-*` findings |
+| `bpmn_search_elements` | Elements and connectors whose id, type, name or standard property values contain a case-insensitive substring (`query`, `cursor`, `limit`) |
 | `bpmn_validate` | The editor's validation, with rule ids |
 | `bpmn_describe_element` | One element's properties, references and findings |
 | `bpmn_export` | BPMN 2.0 XML or the JSON interchange format |

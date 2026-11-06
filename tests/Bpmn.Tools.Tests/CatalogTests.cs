@@ -14,7 +14,7 @@ public sealed class CatalogTests
     {
         // A change here changes what every agent surface exposes; make it deliberately.
         Assert.Equal(
-            ["bpmn_get_diagram", "bpmn_describe_element", "bpmn_get_selection", "bpmn_validate", "bpmn_export", "bpmn_list_creatable",
+            ["bpmn_get_diagram", "bpmn_search_elements", "bpmn_describe_element", "bpmn_get_selection", "bpmn_validate", "bpmn_export", "bpmn_list_creatable",
              "bpmn_create_element", "bpmn_connect", "bpmn_set_property", "bpmn_delete", "bpmn_select", "bpmn_undo", "bpmn_redo",
              "bpmn_get_document_info", "bpmn_save"],
             BpmnToolCatalog.All.Select(tool => tool.Name));

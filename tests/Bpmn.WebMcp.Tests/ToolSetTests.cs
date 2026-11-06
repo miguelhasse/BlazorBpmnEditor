@@ -11,7 +11,7 @@ public sealed class ToolSetTests
 
     private static readonly string[] ReadOnlyTools =
     [
-        "bpmn_get_diagram", "bpmn_describe_element", "bpmn_get_selection", "bpmn_validate", "bpmn_export", "bpmn_list_creatable",
+        "bpmn_get_diagram", "bpmn_search_elements", "bpmn_describe_element", "bpmn_get_selection", "bpmn_validate", "bpmn_export", "bpmn_list_creatable",
     ];
 
     [Fact]
@@ -92,6 +92,7 @@ public sealed class ToolSetTests
         var tools = BpmnWebMcpToolSet.Create("bpmn_", string.Empty);
 
         Assert.True(tools.Descriptors.Single(tool => tool.Name == "bpmn_get_diagram").Annotations.UntrustedContent);
+        Assert.True(tools.Descriptors.Single(tool => tool.Name == "bpmn_search_elements").Annotations.UntrustedContent);
         Assert.True(tools.Descriptors.Single(tool => tool.Name == "bpmn_export").Annotations.UntrustedContent);
         Assert.False(tools.Descriptors.Single(tool => tool.Name == "bpmn_list_creatable").Annotations.UntrustedContent);
     }

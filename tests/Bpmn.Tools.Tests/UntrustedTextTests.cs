@@ -17,7 +17,7 @@ public sealed class UntrustedTextTests
 
     public static TheoryData<string> Calls =>
     [
-        "bpmn_get_diagram", "bpmn_describe_element", "bpmn_validate", "bpmn_export", "bpmn_connect", "bpmn_set_property", "bpmn_delete",
+        "bpmn_get_diagram", "bpmn_search_elements", "bpmn_describe_element", "bpmn_validate", "bpmn_export", "bpmn_connect", "bpmn_set_property", "bpmn_delete",
     ];
 
     [Theory]
@@ -27,6 +27,7 @@ public sealed class UntrustedTextTests
         var host = Host(Hostile());
         var arguments = tool switch
         {
+            "bpmn_search_elements" => """{"query":"IGNORE PREVIOUS"}""",
             "bpmn_describe_element" => """{"elementId":"evil"}""",
             "bpmn_connect" => """{"sourceId":"evil","targetId":"evil"}""",
             "bpmn_set_property" => """{"elementId":"evil","name":"noSuchProperty","value":"x"}""",

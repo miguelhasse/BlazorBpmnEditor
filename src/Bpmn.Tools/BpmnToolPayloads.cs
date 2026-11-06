@@ -51,6 +51,35 @@ public sealed record BpmnDiagramSummary(
     int Total,
     string? NextCursor);
 
+/// <summary>One element or connector found by <c>bpmn_search_elements</c>.</summary>
+/// <param name="Id">The BPMN element's id.</param>
+/// <param name="Type">Its type in wire form.</param>
+/// <param name="Name">Its name, or a text annotation's text.</param>
+/// <param name="ContainerId">The Process or Sub-Process that owns it.</param>
+/// <param name="PoolId">The Pool it sits in.</param>
+/// <param name="Bounds">Where it is drawn, when it is a shape.</param>
+/// <param name="DiagramId">The diagram the bounds are on.</param>
+/// <param name="IsConnector">Whether it is a connector.</param>
+/// <param name="SourceId">Where a connector starts.</param>
+/// <param name="TargetId">Where a connector ends.</param>
+public sealed record BpmnElementSearchMatch(
+    string Id,
+    string Type,
+    BpmnUntrustedText? Name,
+    string? ContainerId,
+    string? PoolId,
+    BpmnToolBounds? Bounds,
+    string? DiagramId,
+    bool IsConnector,
+    string? SourceId = null,
+    string? TargetId = null);
+
+/// <summary>The data of <c>bpmn_search_elements</c>: one page of matching elements and connectors.</summary>
+/// <param name="Matches">The matching shapes and connectors, in diagram-summary order.</param>
+/// <param name="Total">How many matches there are in all.</param>
+/// <param name="NextCursor">The cursor for the next page, or null on the last.</param>
+public sealed record BpmnElementSearchResult(IReadOnlyList<BpmnElementSearchMatch> Matches, int Total, string? NextCursor);
+
 /// <summary>The data of <c>bpmn_get_selection</c>: what the user has selected.</summary>
 /// <param name="Elements">The selected elements.</param>
 /// <param name="Connectors">The selected connectors.</param>

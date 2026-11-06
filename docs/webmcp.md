@@ -47,6 +47,7 @@ Options (`AddBpmnWebMcp(options => …)`): `ToolPrefix`, `DisabledTools` (by cat
 | Tool | Returns |
 |---|---|
 | `bpmn_get_diagram` | Diagrams, elements (id, type, name, container, pool, bounds) and connectors, a page at a time (`cursor`, `limit`) |
+| `bpmn_search_elements` | Elements and connectors whose id, type, name or standard property values contain a case-insensitive substring (`query`, `cursor`, `limit`) |
 | `bpmn_describe_element` | One element's properties and current values, references, findings and what the editor would let the user do |
 | `bpmn_get_selection` | What the user has selected |
 | `bpmn_validate` | The editor's validation with rule ids |

@@ -5,6 +5,12 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tools;
 /// <param name="Limit">The most items on this page; capped by <see cref="BpmnToolLimits.MaxElements"/>.</param>
 public sealed record BpmnGetDiagramRequest(string? Cursor = null, int? Limit = null);
 
+/// <summary>Arguments of <c>bpmn_search_elements</c>.</summary>
+/// <param name="Query">A non-empty, case-insensitive substring to find in an element's id, name, type or standard property value.</param>
+/// <param name="Cursor">The <see cref="BpmnElementSearchResult.NextCursor"/> of the previous page, or null for the first.</param>
+/// <param name="Limit">The most matches on this page; capped by <see cref="BpmnToolLimits.MaxElements"/>.</param>
+public sealed record BpmnSearchElementsRequest(string Query, string? Cursor = null, int? Limit = null);
+
 /// <summary>Arguments of <c>bpmn_describe_element</c>.</summary>
 /// <param name="ElementId">The element.</param>
 public sealed record BpmnDescribeElementRequest(string ElementId);

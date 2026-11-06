@@ -1,3 +1,5 @@
+using Hasseware.AspNetCore.Components.Bpmn.Editing;
+
 using static Hasseware.AspNetCore.Components.Bpmn.Tools.Tests.Documents;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Tools.Tests;
@@ -46,6 +48,68 @@ public sealed class ReadingToolTests
         var page = (await BpmnTools.GetDiagramAsync(host, new BpmnGetDiagramRequest(Limit: 100), Token)).Data!;
 
         Assert.Equal(2, page.Elements.Count + page.Connectors.Count);
+    }
+
+    [Fact]
+    public async Task SearchesNamesTypesAndStandardPropertyValuesCaseInsensitively()
+    {
+        var document = BpmnDocumentEditor.Apply(
+            Simple(),
+            new UpdatePropertiesCommand("review", "documentation", "Case-sensitive runbook reference")).Document;
+        var host = Host(document);
+
+        var byProperty = await BpmnTools.SearchElementsAsync(host, new BpmnSearchElementsRequest("RUNBOOK"), Token);
+        var byType = await BpmnTools.SearchElementsAsync(host, new BpmnSearchElementsRequest("USERTASK"), Token);
+        var byId = await BpmnTools.SearchElementsAsync(host, new BpmnSearchElementsRequest("REVIEW"), Token);
+        var byConnector = await BpmnTools.SearchElementsAsync(host, new BpmnSearchElementsRequest("SEQUENCEFLOW"), Token);
+
+        Assert.Equal("review", Assert.Single(byProperty.Data!.Matches).Id);
+        Assert.Equal("review", Assert.Single(byType.Data!.Matches).Id);
+        Assert.Equal("review", Assert.Single(byId.Data!.Matches).Id);
+        Assert.Equal("f1", Assert.Single(byConnector.Data!.Matches).Id);
+    }
+
+    [Fact]
+    public async Task PagesMatchesAndCapsThePageAtTheHostsLimit()
+    {
+        var host = Host(Simple(), limits: new BpmnToolLimits(MaxElements: 2));
+
+        var first = await BpmnTools.SearchElementsAsync(host, new BpmnSearchElementsRequest("e", Limit: 100), Token);
+        var second = await BpmnTools.SearchElementsAsync(host, new BpmnSearchElementsRequest("e", first.Data!.NextCursor, 100), Token);
+
+        Assert.True(first.Ok);
+        Assert.Equal(2, first.Data.Matches.Count);
+        Assert.Equal(2, second.Data!.Matches.Count);
+        Assert.Equal(4, first.Data.Total);
+        Assert.Null(second.Data.NextCursor);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("  ")]
+    public async Task RefusesAnEmptySearchQuery(string query)
+    {
+        var result = await BpmnTools.SearchElementsAsync(Host(Simple()), new BpmnSearchElementsRequest(query), Token);
+
+        Assert.Equal(BpmnToolCodes.InvalidArgument, result.Code);
+    }
+
+    [Fact]
+    public async Task RefusesAQueryLongerThanTheTextLimit()
+    {
+        var host = Host(Simple(), limits: new BpmnToolLimits(MaxTextLength: 4));
+
+        var result = await BpmnTools.SearchElementsAsync(host, new BpmnSearchElementsRequest("longer"), Token);
+
+        Assert.Equal(BpmnToolCodes.InvalidArgument, result.Code);
+    }
+
+    [Fact]
+    public async Task SearchRefusesACursorItDidNotProduce()
+    {
+        var result = await BpmnTools.SearchElementsAsync(Host(Simple()), new BpmnSearchElementsRequest("review", "next"), Token);
+
+        Assert.Equal(BpmnToolCodes.InvalidArgument, result.Code);
     }
 
     [Fact]

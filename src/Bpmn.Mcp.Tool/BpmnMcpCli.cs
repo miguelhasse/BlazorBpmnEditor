@@ -58,7 +58,7 @@ public static class BpmnMcpCli
         Usage:
           bpmn-mcp serve --root <folder> [--tenant <name>] [--allow-writes]
               Serves the BPMN documents under <folder> to an AI agent over MCP on stdin/stdout.
-              The agent can list, open, validate, describe, export and compare. With --allow-writes it can also
+              The agent can list, open, search, validate, describe, export and compare. With --allow-writes it can also
               create documents and edit them (edits are saved at the revision they were made against, so a
               concurrent change is refused). Without it nothing can change. Logs go to stderr.
 

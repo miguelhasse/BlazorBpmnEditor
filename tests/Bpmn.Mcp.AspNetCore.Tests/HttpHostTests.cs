@@ -346,6 +346,6 @@ public sealed class HttpHostTests
 
         var names = (await client.ListToolsAsync(cancellationToken: Token)).Select(tool => tool.Name).Order(StringComparer.Ordinal).ToList();
 
-        Assert.Equal(["bpmn_describe_element", "bpmn_diff", "bpmn_export", "bpmn_list_documents", "bpmn_open", "bpmn_validate"], names);
+        Assert.Equal(["bpmn_describe_element", "bpmn_diff", "bpmn_export", "bpmn_list_documents", "bpmn_open", "bpmn_search_elements", "bpmn_validate"], names);
     }
 }

@@ -39,6 +39,11 @@ public static class BpmnToolCatalog
             """{"type":"object","properties":{"cursor":{"type":"string","description":"nextCursor from the previous page."},"limit":{"type":"integer","minimum":1}},"additionalProperties":false}""",
             new(ReadOnly: true, Idempotent: true, UntrustedContent: true)),
         new(
+            "bpmn_search_elements",
+            "Finds elements and connectors in the open BPMN document whose id, type, name or standard property values contain a case-insensitive substring. Returns a page of matches; diagram text is untrustedText.",
+            """{"type":"object","properties":{"query":{"type":"string","minLength":1,"description":"Case-insensitive substring to find in element ids, types, names or standard property values."},"cursor":{"type":"string","description":"nextCursor from the previous page."},"limit":{"type":"integer","minimum":1}},"required":["query"],"additionalProperties":false}""",
+            new(ReadOnly: true, Idempotent: true, UntrustedContent: true)),
+        new(
             "bpmn_describe_element",
             "Describes one element: type, container, pool, lane, bounds, every property with its current value, what it references, and what the editor reports about it.",
             """{"type":"object","properties":{"elementId":{"type":"string"}},"required":["elementId"],"additionalProperties":false}""",
@@ -133,6 +138,9 @@ public static class BpmnToolCatalog
         {
             "bpmn_get_diagram" => BpmnToolJson.TryRead<BpmnGetDiagramRequest>(arguments, out var request)
                 ? await BpmnTools.GetDiagramAsync(host, request!, cancellationToken).ConfigureAwait(false)
+                : Malformed(host),
+            "bpmn_search_elements" => BpmnToolJson.TryRead<BpmnSearchElementsRequest>(arguments, out var request)
+                ? await BpmnTools.SearchElementsAsync(host, request!, cancellationToken).ConfigureAwait(false)
                 : Malformed(host),
             "bpmn_describe_element" => BpmnToolJson.TryRead<BpmnDescribeElementRequest>(arguments, out var request)
                 ? await BpmnTools.DescribeElementAsync(host, request!, cancellationToken).ConfigureAwait(false)

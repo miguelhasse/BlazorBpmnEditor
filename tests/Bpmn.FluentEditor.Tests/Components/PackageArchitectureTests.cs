@@ -69,7 +69,9 @@ public sealed class PackageArchitectureTests
     {
         var friends = Core.GetCustomAttributes<InternalsVisibleToAttribute>().Select(attribute => new AssemblyName(attribute.AssemblyName).Name!);
         Assert.All(friends, name => Assert.True(name.EndsWith(".Tests", StringComparison.Ordinal)
-            || name is "Hasseware.AspNetCore.Components.Bpmn.Benchmarks" or "Bpmn.AotSmoke", $"Unexpected friend assembly: {name}"));
+            || name is "Hasseware.AspNetCore.Components.Bpmn.Benchmarks"
+                or "Hasseware.AspNetCore.Components.Bpmn.Tools"
+                or "Bpmn.AotSmoke", $"Unexpected friend assembly: {name}"));
         Assert.DoesNotContain(typeof(BpmnEditor).Assembly.GetName().Name!, friends);
         Assert.DoesNotContain(typeof(FluentBpmnEditor).Assembly.GetName().Name!, friends);
     }

@@ -11,7 +11,7 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Mcp.Tests;
 /// <summary>The read-only tools over a store, through a real client and server; what is asked of the store is checked too.</summary>
 public abstract class McpServerTests : IDisposable
 {
-    private static readonly string[] Tools = ["bpmn_list_documents", "bpmn_open", "bpmn_validate", "bpmn_describe_element", "bpmn_export", "bpmn_diff"];
+    private static readonly string[] Tools = ["bpmn_list_documents", "bpmn_open", "bpmn_search_elements", "bpmn_validate", "bpmn_describe_element", "bpmn_export", "bpmn_diff"];
 
     protected abstract IBpmnDocumentStore CreateStore();
 
@@ -20,7 +20,7 @@ public abstract class McpServerTests : IDisposable
     private static CancellationToken Token => TestContext.Current.CancellationToken;
 
     [Fact]
-    public async Task OffersTheSixReadOnlyToolsAndNothingThatChangesADocument()
+    public async Task OffersTheSevenReadOnlyToolsAndNothingThatChangesADocument()
     {
         await using var server = await StartAsync(CreateStore());
 
@@ -66,6 +66,25 @@ public abstract class McpServerTests : IDisposable
         Assert.True(result.GetProperty("ok").GetBoolean(), result.ToString());
         Assert.Equal(stat!.Revision, result.GetProperty("revision").GetString());
         Assert.Contains(result.GetProperty("data").GetProperty("elements").EnumerateArray(), element => element.GetProperty("id").GetString() == "review");
+    }
+
+    [Fact]
+    public async Task SearchesStoredDocumentsByStandardPropertyAndReturnsUntrustedNames()
+    {
+        await using var server = await StartAsync(CreateStore());
+        var xml = Diagram().Replace(
+            "<userTask id=\"review\" name=\"Review\">",
+            "<userTask id=\"review\" name=\"Review\"><documentation>Runbook-Reference</documentation>",
+            StringComparison.Ordinal);
+        await server.SaveAsync("a.bpmn", xml);
+
+        var (result, isError, _) = await server.CallAsync("bpmn_search_elements", ("documentId", "a.bpmn"), ("query", "runbook-reference"));
+
+        Assert.False(isError);
+        Assert.True(result.GetProperty("ok").GetBoolean(), result.ToString());
+        var match = Assert.Single(result.GetProperty("data").GetProperty("matches").EnumerateArray());
+        Assert.Equal("review", match.GetProperty("id").GetString());
+        Assert.Equal("Review", match.GetProperty("name").GetProperty("untrustedText").GetString());
     }
 
     [Fact]

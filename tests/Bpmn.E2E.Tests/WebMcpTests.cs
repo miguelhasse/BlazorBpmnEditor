@@ -46,7 +46,7 @@ public class WebMcpTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFi
 
     private static readonly string[] Tools =
     [
-        "bpmn_get_diagram", "bpmn_describe_element", "bpmn_get_selection", "bpmn_validate", "bpmn_export", "bpmn_list_creatable",
+        "bpmn_get_diagram", "bpmn_search_elements", "bpmn_describe_element", "bpmn_get_selection", "bpmn_validate", "bpmn_export", "bpmn_list_creatable",
         "bpmn_get_document_info",
     ];
 
@@ -84,7 +84,7 @@ public class WebMcpTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFi
 
         await TurnOnAsync();
 
-        await Expect(Page.Locator(".demo-webmcp-status")).ToContainTextAsync("7 read-only tools");
+        await Expect(Page.Locator(".demo-webmcp-status")).ToContainTextAsync("8 read-only tools");
         Assert.Equal(Tools, await Page.EvaluateAsync<string[]>("() => window.__webmcp.names()"));
     }
 
@@ -303,7 +303,7 @@ public class WebMcpTests(DemoAppFixture app) : PageTest, IClassFixture<DemoAppFi
     private async Task TurnOnAsync(bool expectRegistered = true)
     {
         await Page.SetDemoSwitchAsync("Offer to browser agents (WebMCP)");
-        if (expectRegistered) await Expect(Page.Locator(".demo-webmcp-status")).ToContainTextAsync("7 read-only tools");
+        if (expectRegistered) await Expect(Page.Locator(".demo-webmcp-status")).ToContainTextAsync("8 read-only tools");
     }
 
     private async Task GoToEditorAsync()

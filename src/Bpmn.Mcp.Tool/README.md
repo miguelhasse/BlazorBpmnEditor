@@ -14,7 +14,7 @@ bpmn-mcp serve --root ./diagrams
 ```
 
 An MCP client launches it as a child process and talks over stdin and stdout; every log line goes to stderr, so
-the protocol is never interrupted. Unless you pass `--allow-writes` it only reads: the agent can list, open, validate, describe, export and compare the
+the protocol is never interrupted. Unless you pass `--allow-writes` it only reads: the agent can list, open, search, validate, describe, export and compare the
 documents under the folder, and name them only by logical path (`claims/intake.bpmn`), never by file path.
 `--tenant <name>` confines it to that tenant's folder. `--allow-writes` additionally lets it create documents and edit
 them; each edit is saved at the revision it was made against, so a concurrent change is refused rather than overwritten.

@@ -193,7 +193,7 @@ public sealed class ToolTests : IDisposable
         var listed = await client.CallToolAsync("bpmn_list_documents", new Dictionary<string, object?> { ["recursive"] = true }, cancellationToken: Token);
         var validated = await client.CallToolAsync("bpmn_validate", new Dictionary<string, object?> { ["documentId"] = "claims/intake.bpmn" }, cancellationToken: Token);
 
-        Assert.Equal(6, tools.Count);
+        Assert.Equal(7, tools.Count);
         Assert.Contains("claims/intake.bpmn", ((TextContentBlock)listed.Content[0]).Text, StringComparison.Ordinal);
         Assert.False(validated.IsError);
 

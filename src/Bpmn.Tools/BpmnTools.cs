@@ -82,6 +82,104 @@ public static partial class BpmnTools
             next < total ? next.ToString(CultureInfo.InvariantCulture) : null));
     }
 
+    /// <summary>Finds elements and connectors whose id, type, name or standard property values contain a query.</summary>
+    /// <param name="host">The document.</param>
+    /// <param name="request">The query and page to return.</param>
+    /// <param name="cancellationToken">Cancels the call.</param>
+    /// <returns>One page of matches, with diagram text wrapped as untrusted.</returns>
+    public static async ValueTask<BpmnToolResult<BpmnElementSearchResult>> SearchElementsAsync(
+        IBpmnToolHost host,
+        BpmnSearchElementsRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(host);
+        ArgumentNullException.ThrowIfNull(request);
+        if (await host.GetDocumentAsync(cancellationToken).ConfigureAwait(false) is not { } document) return NoDocument<BpmnElementSearchResult>(host);
+
+        if (string.IsNullOrWhiteSpace(request.Query) || request.Query.Length > host.Limits.MaxTextLength)
+        {
+            return Failed<BpmnElementSearchResult>(host, BpmnToolCodes.InvalidArgument, "The query must be non-empty and within the text limit.");
+        }
+
+        var start = 0;
+        if (request.Cursor is not null && (!int.TryParse(request.Cursor, NumberStyles.None, CultureInfo.InvariantCulture, out start) || start < 0))
+        {
+            return Failed<BpmnElementSearchResult>(host, BpmnToolCodes.InvalidArgument, "The cursor was not produced by this tool.");
+        }
+
+        var limit = Math.Clamp(request.Limit ?? host.Limits.MaxElements, 1, host.Limits.MaxElements);
+        var shapes = ShapeIndex(document, host.ActiveDiagramId);
+        var propertiesOf = BpmnElementInspector.CreatePropertyReader(document);
+        var matches = new List<BpmnElementSearchMatch>(limit);
+        var total = 0;
+
+        foreach (var element in Elements(document, shapes, host.Limits))
+        {
+            var properties = propertiesOf(element.Id);
+            if (!Matches(element.Id, element.Type, element.Name?.UntrustedText, properties, request.Query)) continue;
+
+            if (total >= start && matches.Count < limit)
+            {
+                matches.Add(new BpmnElementSearchMatch(
+                    element.Id,
+                    element.Type,
+                    element.Name,
+                    element.ContainerId,
+                    element.PoolId,
+                    element.Bounds,
+                    element.DiagramId,
+                    IsConnector: false));
+            }
+
+            total++;
+        }
+
+        foreach (var connector in Connectors(document, host.Limits))
+        {
+            var properties = propertiesOf(connector.Id);
+            if (!Matches(connector.Id, connector.Kind, connector.Name?.UntrustedText, properties, request.Query)) continue;
+
+            if (total >= start && matches.Count < limit)
+            {
+                matches.Add(new BpmnElementSearchMatch(
+                    connector.Id,
+                    connector.Kind,
+                    connector.Name,
+                    ContainerId: null,
+                    PoolId: null,
+                    Bounds: null,
+                    DiagramId: null,
+                    IsConnector: true,
+                    connector.SourceId,
+                    connector.TargetId));
+            }
+
+            total++;
+        }
+
+        var next = start + matches.Count;
+
+        return Succeeded(host, new BpmnElementSearchResult(
+            matches,
+            total,
+            next < total ? next.ToString(CultureInfo.InvariantCulture) : null));
+    }
+
+    private static bool Matches(
+        string id,
+        string type,
+        string? name,
+        IReadOnlyList<BpmnPropertyDescriptor> properties,
+        string query)
+    {
+        bool Contains(string? value) => value?.Contains(query, StringComparison.OrdinalIgnoreCase) == true;
+
+        return Contains(id)
+            || Contains(type)
+            || Contains(name)
+            || properties.Any(property => Contains(property.Value));
+    }
+
     /// <summary>Describes one element: its properties, references and what the editor says about it.</summary>
     /// <param name="host">The document.</param>
     /// <param name="request">Which element.</param>

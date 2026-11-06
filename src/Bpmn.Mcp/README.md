@@ -17,6 +17,7 @@ builder.Services
 |---|---|
 | `bpmn_list_documents` | The documents and folders in a folder, a page at a time |
 | `bpmn_open` | A summary of the diagram, the stored revision, and what the reader changed or dropped (`IMPORT-*`) |
+| `bpmn_search_elements` | Elements and connectors whose id, type, name or standard property values contain a case-insensitive substring, a page at a time |
 | `bpmn_validate` | The editor's validation, with rule ids |
 | `bpmn_describe_element` | One element's properties, references and findings |
 | `bpmn_export` | BPMN 2.0 XML or the JSON interchange format |
