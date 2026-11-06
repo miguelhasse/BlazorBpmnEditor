@@ -127,7 +127,7 @@ public static partial class BpmnDocumentEditor
                 BpmnEditSeverity.Rejected, "CT-001", $"No diagram '{requestedDiagramId}' exists to edit."));
         }
 
-        (string? DiagramId, string? ContainerId, string? ElementId) = command switch
+        (var DiagramId, var ContainerId, var ElementId) = command switch
         {
             CreateElementCommand create => (create.DiagramId, create.ContainerId, create.Id),
             CreateArtifactCommand create => (create.DiagramId, create.ContainerId, create.Id),
@@ -509,17 +509,21 @@ public static partial class BpmnDocumentEditor
 
         // First shape wins, as FirstOrDefault did; built once instead of scanned per node and Lane.
         var shapeByElement = new Dictionary<string, BpmnShape>(shapes.Count, StringComparer.Ordinal);
-        foreach (var shape in shapes.Values) shapeByElement.TryAdd(shape.BpmnElement, shape);
+        foreach (var shape in shapes.Values)
+            shapeByElement.TryAdd(shape.BpmnElement, shape);
 
         foreach (var (shapeId, bounds) in asked)
         {
-            if (next.FindFlowNode(shapes[shapeId].BpmnElement) is not { AttachedToRef: null } node) continue;
+            if (next.FindFlowNode(shapes[shapeId].BpmnElement) is not { AttachedToRef: null } node)
+                continue;
 
             var processLaneSets = next.LaneSets
                 .Where(set => set.ContainerId == node.ContainerId)
                 .Select(set => set.Id)
                 .ToHashSet(StringComparer.Ordinal);
-            if (processLaneSets.Count == 0) continue;
+
+            if (processLaneSets.Count == 0)
+                continue;
 
             // A Pool dragged as a whole carries its Lanes; where its nodes land says nothing
             // about membership, and Lanes a caller left out of the move are still at the old spot.
@@ -527,9 +531,11 @@ public static partial class BpmnDocumentEditor
                 .Where(participant => participant.ProcessRef == node.ContainerId)
                 .Select(participant => shapeByElement.GetValueOrDefault(participant.Id))
                 .FirstOrDefault(shape => shape is not null);
+
             if (poolShape is not null
                 && asked.TryGetValue(poolShape.Id, out var poolMove)
-                && poolMove != poolShape.Bounds) continue;
+                && poolMove != poolShape.Bounds)
+                continue;
 
             var (X, Y) = (bounds.X + (bounds.Width / 2), bounds.Y + (bounds.Height / 2));
 
@@ -544,7 +550,8 @@ public static partial class BpmnDocumentEditor
                 .Select(entry => entry.Lane)
                 .FirstOrDefault();
 
-            if (target is null || target.FlowNodeRefs.Contains(node.Id)) continue;
+            if (target is null || target.FlowNodeRefs.Contains(node.Id))
+                continue;
 
             next = next with
             {
@@ -1720,6 +1727,56 @@ public static partial class BpmnDocumentEditor
             return BpmnEditResult.Reject(document, missing);
         }
 
+        if (command.Kind == BpmnArtifactKind.Group)
+        {
+            BpmnDiagram? diagram = null;
+
+            if (command.DiagramId is null)
+            {
+                if (document.Diagrams.Count > 0)
+                    diagram = document.Diagrams[0];
+            }
+            else
+            {
+                foreach (var candidate in document.Diagrams)
+                {
+                    if (candidate.Id != command.DiagramId) continue;
+
+                    diagram = candidate;
+                    break;
+                }
+            }
+
+            if (diagram is not null)
+            {
+                var lanes = diagram.Plane.Shapes
+                    .Where(shape => document.Find(shape.BpmnElement) is BpmnLane)
+                    .ToArray();
+
+                if (lanes.Length > 0)
+                {
+                    var centerX = command.Bounds.X + (command.Bounds.Width / 2);
+                    var centerY = command.Bounds.Y + (command.Bounds.Height / 2);
+                    var isInsideLane = lanes.Any(lane =>
+                        centerX >= lane.Bounds.X
+                        && centerX <= lane.Bounds.X + lane.Bounds.Width
+                        && centerY >= lane.Bounds.Y
+                        && centerY <= lane.Bounds.Y + lane.Bounds.Height);
+
+                    if (!isInsideLane)
+                    {
+                        return BpmnEditResult.Reject(
+                            document,
+                            new BpmnEditDiagnostic(
+                                BpmnEditSeverity.Rejected,
+                                "ST-001",
+                                "A Group must be placed inside a Lane when the diagram contains Lanes.",
+                                command.Id));
+                    }
+                }
+            }
+        }
+
         var shape = new BpmnShape(
             command.ShapeId ?? BpmnId.ForDiagramElement(command.Id),
             command.Id,
@@ -2273,7 +2330,9 @@ public static partial class BpmnDocumentEditor
                 .Concat(fragment.Associations.Select(element => element.Id)).Concat(fragment.DataAssociations.Select(element => element.Id))
                 .Concat(fragment.TextAnnotations.Select(element => element.Id)).Concat(fragment.Groups.Select(element => element.Id))
                 .Concat(fragment.DataObjectReferences.Select(element => element.Id)).Concat(fragment.DataStoreReferences.Select(element => element.Id)).ToArray();
-            foreach (var transform in options.PasteTransforms) next = transform.Transform(next, pastedIds, options);
+
+            foreach (var transform in options.PasteTransforms)
+                next = transform.Transform(next, pastedIds, options);
         }
         catch (Exception exception) when (exception is InvalidOperationException or ArgumentException or FormatException)
         {

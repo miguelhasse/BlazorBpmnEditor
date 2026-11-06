@@ -142,6 +142,45 @@ public sealed class DiagramStencilCreationTests : BunitContext
         Assert.NotNull(session.EditedDocument!.FindFlowNode(created.Id));
     }
 
+    [Fact]
+    public async Task GroupDropOutsideEveryLaneIsRejectedByTheCreateCommand()
+    {
+        var document = PooledDocument();
+        var editor = RenderEditor(document);
+        var session = editor.FindComponent<BpmnEditorScope>().Instance.Session;
+        EditRejected? rejection = null;
+        session.OnEditRejected = EventCallback.Factory.Create<EditRejected>(this, value => rejection = value);
+        _canvas.Setup<DropTarget?>("resolveDrop", _ => true)
+            .SetResult(new(new Bounds(700, 500, 300, 200), null, null));
+
+        var result = await editor.InvokeAsync(() => session.CreateAtAsync(Entry("group"), 850, 600));
+
+        Assert.NotNull(result);
+        Assert.False(result.IsApplied);
+        Assert.Contains(result.Rejections, item => item.Code == "ST-001");
+        Assert.Same(document, session.EditedDocument);
+        Assert.False(session.CanUndo);
+        Assert.Equal("ST-001", rejection?.Code);
+    }
+
+    [Fact]
+    public async Task GroupDropInsideLaneKeepsProcessArtifactOwnership()
+    {
+        var document = PooledDocument();
+        var editor = RenderEditor(document);
+        var session = editor.FindComponent<BpmnEditorScope>().Instance.Session;
+        _canvas.Setup<DropTarget?>("resolveDrop", _ => true)
+            .SetResult(new(new Bounds(400, 180, 300, 200), null, "Pool"));
+
+        var result = await editor.InvokeAsync(() => session.CreateAtAsync(Entry("group"), 500, 250));
+
+        Assert.NotNull(result);
+        Assert.True(result.IsApplied);
+        var group = Assert.Single(result.Document.Groups, candidate => document.Find(candidate.Id) is null);
+        Assert.Equal("Process_1", group.ContainerId);
+        Assert.Single(result.Document.Diagrams[0].Plane.Shapes, shape => shape.BpmnElement == group.Id);
+    }
+
     private static BpmnDocument PooledDocument() => new BpmnDocumentBuilder()
         .Pool("Pool", "Pool", new Bounds(0, 0, 600, 400))
         .Lane("Lane", "Lane", new Bounds(30, 0, 570, 400), ["Task", "EventSub"])
@@ -156,6 +195,7 @@ public sealed class DiagramStencilCreationTests : BunitContext
     [InlineData("flow", false)]
     [InlineData("flow", true)]
     [InlineData("annotation", false)]
+    [InlineData("group", false)]
     [InlineData("group", true)]
     [InlineData("object", false)]
     [InlineData("store", true)]

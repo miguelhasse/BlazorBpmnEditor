@@ -12,6 +12,7 @@ import {
   BpmnTextAnnotationElement,
   outlineSelectorOf,
 } from '../../src/shapes/elements.js';
+import { selectionUsesSingleStroke } from '../../src/editing/selection-view.js';
 
 /**
  * Which node the selection highlight traces.
@@ -57,5 +58,11 @@ describe('outlineSelectorOf', () => {
     // A highlight around the wrong box beats no highlight at all for a cell this module did not
     // build — a host's own shape, or a JointJS default.
     expect(outlineSelectorOf(new dia.Element())).toBe('root');
+  });
+
+  it('uses a single stroke for Groups and Swimlanes', () => {
+    expect(selectionUsesSingleStroke(new BpmnGroupElement())).toBe(true);
+    expect(selectionUsesSingleStroke(new BpmnSwimlaneElement())).toBe(true);
+    expect(selectionUsesSingleStroke(new BpmnActivityElement())).toBe(false);
   });
 });

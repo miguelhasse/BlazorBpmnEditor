@@ -43,6 +43,84 @@ public sealed class ArtifactCreationTests
     }
 
     [Fact]
+    public void RefusesAGroupOutsideEveryLane()
+    {
+        var document = PooledWithLane();
+
+        var result = BpmnDocumentEditor.Apply(
+            document,
+            new CreateArtifactCommand(
+                "Group_1",
+                BpmnArtifactKind.Group,
+                "Process_1",
+                new Bounds(700, 300, 300, 200)));
+
+        Assert.False(result.IsApplied);
+        Assert.Equal("ST-001", Assert.Single(result.Rejections).Code);
+        Assert.Same(document, result.Document);
+        Assert.Empty(result.Document.Groups);
+        Assert.DoesNotContain(result.Document.Diagrams[0].Plane.Shapes, shape => shape.BpmnElement == "Group_1");
+    }
+
+    [Fact]
+    public void AllowsAGroupWhoseCenterIsInsideALane()
+    {
+        var result = BpmnDocumentEditor.Apply(
+            PooledWithLane(),
+            new CreateArtifactCommand(
+                "Group_1",
+                BpmnArtifactKind.Group,
+                "Process_1",
+                new Bounds(100, 25, 300, 200)));
+
+        Assert.True(result.IsApplied);
+        Assert.Equal("Process_1", Assert.Single(result.Document.Groups).ContainerId);
+        Assert.Contains(result.Document.Diagrams[0].Plane.Shapes, shape => shape.BpmnElement == "Group_1");
+    }
+
+    [Fact]
+    public void DoesNotApplyLanePlacementRuleToTextAnnotations()
+    {
+        var result = BpmnDocumentEditor.Apply(
+            PooledWithLane(),
+            new CreateArtifactCommand(
+                "Note_1",
+                BpmnArtifactKind.TextAnnotation,
+                "Process_1",
+                new Bounds(700, 300, 120, 60)));
+
+        Assert.True(result.IsApplied);
+        Assert.Single(result.Document.TextAnnotations);
+    }
+
+    [Fact]
+    public void UsesTheCommandDiagramWhenCheckingForLanes()
+    {
+        var document = PooledWithLane();
+        document = document with
+        {
+            Diagrams =
+            [
+                document.Diagrams[0],
+                new BpmnDiagram("Diagram_2", new BpmnPlane("Plane_2", "Process_1", [], [])),
+            ],
+        };
+
+        var result = BpmnDocumentEditor.Apply(
+            document,
+            new CreateArtifactCommand(
+                "Group_1",
+                BpmnArtifactKind.Group,
+                "Process_1",
+                new Bounds(700, 300, 300, 200))
+            { DiagramId = "Diagram_2" });
+
+        Assert.True(result.IsApplied);
+        Assert.DoesNotContain(result.Document.Diagrams[0].Plane.Shapes, shape => shape.BpmnElement == "Group_1");
+        Assert.Contains(result.Document.Diagrams[1].Plane.Shapes, shape => shape.BpmnElement == "Group_1");
+    }
+
+    [Fact]
     public void LetsAnArtifactOverlapAFlowNode()
     {
         // DI-011 governs Events, Activities and Gateways. An annotation is meant to sit beside the
@@ -292,6 +370,12 @@ public sealed class ArtifactCreationTests
 
     private static BpmnDocument Pooled() => new BpmnDocumentBuilder("Process_1")
         .Pool("Participant_1", "Customer", new Bounds(0, 0, 600, 250))
+        .Node("Task_1", BpmnFlowNodeType.UserTask, new Bounds(220, 100, 100, 80), "Work")
+        .Build();
+
+    private static BpmnDocument PooledWithLane() => new BpmnDocumentBuilder("Process_1")
+        .Pool("Participant_1", "Customer", new Bounds(0, 0, 600, 250))
+        .Lane("Lane_1", "Sales", new Bounds(30, 0, 570, 250), ["Task_1"])
         .Node("Task_1", BpmnFlowNodeType.UserTask, new Bounds(220, 100, 100, 80), "Work")
         .Build();
 

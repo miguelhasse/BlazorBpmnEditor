@@ -20,8 +20,8 @@ import type { Selection } from './selection.js';
  * group's geometry is the box around everything in it — the label sitting outside an Event, the
  * markers along the bottom of a Task — so every selection came out as a rectangle substantially
  * larger than the shape. It is pointed at the node that draws the silhouette instead, which each
- * shape family names for itself. Swimlanes use a single stroke on that silhouette instead:
- * masking an unfilled lane draws an additional inner contour through its header.
+ * shape family names for itself. Swimlanes and Groups use a single stroke on that silhouette
+ * instead: masking their unfilled outlines can produce a second contour.
  */
 export class SelectionView {
   /** One highlighter id, so adding a second time replaces rather than stacks. */
@@ -85,27 +85,26 @@ export class SelectionView {
         view.addTools(this.#linkEdit.toolsFor());
       }
 
-      const swimlane = cell.get('type') === 'bpmn.Swimlane';
+      const strokeHighlight = selectionUsesSingleStroke(cell);
       const options = {
         // Far enough out to read as a halo around the border rather than a repaint of it, and
         // close enough not to collide with the connect handle sitting 12px off the outline.
-        // Stroke padding expands the whole width/height; match the mask's outer band center.
-        padding: swimlane ? 2 * 4 + STROKE_THIN + 2 : 4,
+        // Stroke padding expands the whole width/height; keep the halo clear of the shape.
+        padding: strokeHighlight ? 2 * 4 + STROKE_THIN + 2 : 4,
         attrs: {
           stroke: 'var(--bpmn-selection-color)',
           'stroke-width': 2,
           'stroke-linejoin': 'round',
           // An open path such as a connector would otherwise leave the contour open at both ends.
           'stroke-linecap': 'round',
-          // The mask is an outline, not a fill: a filled highlight would hide the notation it is
-          // drawing attention to.
+          // The highlight is an outline, not a fill: a filled highlight would hide the notation.
           fill: 'none',
         },
       };
-      if (swimlane) {
+      if (strokeHighlight) {
         highlighters.stroke.add(view, outlineSelectorOf(cell), SelectionView.#Id, {
           ...options,
-          // A sibling lane's header must not paint over the selection halo.
+          // A sibling shape must not paint over the selection outline.
           layer: dia.Paper.Layers.FRONT,
         });
       } else {
@@ -169,4 +168,10 @@ export class SelectionView {
   public destroy(): void {
     this.clear();
   }
+}
+
+/** Whether a cell needs one stroke rather than a mask that can produce an inner contour. */
+export function selectionUsesSingleStroke(cell: dia.Cell): boolean {
+  const type = cell.get('type') as string;
+  return type === 'bpmn.Swimlane' || type === 'bpmn.Group';
 }
