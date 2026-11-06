@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Resources;
 using System.Text.Json;
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
+using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
 using Hasseware.AspNetCore.Components.Bpmn.Model.Di;
 using Hasseware.AspNetCore.Components.Bpmn.Model.Extensions;
@@ -212,6 +213,263 @@ public sealed class BpmnDiagnosticLocalizationTests
             MessageArguments = ["Host"],
         };
         Assert.Equal("Host fehlt.", Translated(("CT-005", "Generic."), ("CT-005.Native.3", "{0} fehlt.")).Localize(diagnostic));
+    }
+
+    [Fact]
+    public void EditDiagnosticsUseTheirSpecificResourceAndArguments()
+    {
+        var diagnostic = new BpmnEditDiagnostic(
+            BpmnEditSeverity.Info,
+            "CT-001",
+            "A Call Activity never owns local flow elements; its content lives in the called Process.",
+            "Call")
+        {
+            MessageResourceKey = "CT-001.Native.2",
+        };
+        var localizer = Translated(("CT-001", "Generic."), ("CT-001.Native.2", "Ein Call Activity besitzt nie lokale Elemente."));
+
+        Assert.Equal("Ein Call Activity besitzt nie lokale Elemente.", localizer.Localize(diagnostic));
+        Assert.Equal("A Call Activity never owns local flow elements; its content lives in the called Process.", diagnostic.Message);
+        Assert.Equal(diagnostic, diagnostic with { MessageArguments = ["unused"] });
+    }
+
+    [Fact]
+    public void EditDiagnosticsFormatArgumentsAndFallBackToInvariantMessage()
+    {
+        var diagnostic = new BpmnEditDiagnostic(
+            BpmnEditSeverity.Info,
+            "CT-005",
+            "Boundary Event host 'Host' does not resolve to a flow node.",
+            "Boundary")
+        {
+            MessageResourceKey = "CT-005.Native.3",
+            MessageArguments = ["Host"],
+        };
+
+        Assert.Equal("Der Host „Host“ fehlt.", Translated(("CT-005.Native.3", "Der Host „{0}“ fehlt.")).Localize(diagnostic));
+        Assert.Equal(diagnostic.Message, Translated().Localize(diagnostic));
+    }
+
+    [Fact]
+    public void ElementInspectionCarriesInvariantLocalizationMetadataIntoEditDiagnostics()
+    {
+        var document = new BpmnDocumentBuilder()
+            .Node("Call", BpmnFlowNodeType.CallActivity, new Bounds(100, 100, 100, 80))
+            .Build();
+        document = document with
+        {
+            FlowNodes = [document.FlowNodes[0] with { FlowElementsOwned = true }],
+        };
+
+        var diagnostic = Assert.Single(
+            BpmnElementInspector.Describe(document, "Call")!.Diagnostics,
+            item => item.MessageResourceKey == "CT-001.Native.2");
+
+        Assert.Equal("CT-001.Native.2", diagnostic.MessageResourceKey);
+        Assert.Equal("A Call Activity never owns local flow elements; its content lives in the called Process.", diagnostic.Message);
+        Assert.Equal("Translated.",
+            Translated(("CT-001.Native.2", "Translated.")).Localize(diagnostic));
+    }
+
+    [Fact]
+    public void InspectorEditDiagnosticUsesTheSupportedUiTranslation()
+    {
+        var document = new BpmnDocumentBuilder()
+            .Node("Call", BpmnFlowNodeType.CallActivity, new Bounds(100, 100, 100, 80))
+            .Build();
+        document = document with
+        {
+            FlowNodes = [document.FlowNodes[0] with { FlowElementsOwned = true }],
+        };
+        var diagnostic = Assert.Single(
+            BpmnElementInspector.Describe(document, "Call")!.Diagnostics,
+            item => item.MessageResourceKey == "CT-001.Native.2");
+
+        var originalCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("de-DE");
+            using var provider = new ServiceCollection().AddBpmnComponents().BuildServiceProvider();
+
+            Assert.Equal(
+                "Eine Aufrufaktivität besitzt nie lokale Flusselemente; ihr Inhalt liegt im aufgerufenen Prozess.",
+                provider.GetRequiredService<BpmnDiagnosticLocalizer>().Localize(diagnostic));
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = originalCulture;
+        }
+    }
+
+    [Fact]
+    public void EditDiagnosticUsesRuleTranslationWhenItsInvariantMessageMatchesTheCatalog()
+    {
+        var diagnostic = new BpmnEditDiagnostic(
+            BpmnEditSeverity.Rejected,
+            "DI-002",
+            "Every BPMNEdge must have at least two waypoints.",
+            "Flow");
+        var originalCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("de-DE");
+            using var provider = new ServiceCollection().AddBpmnComponents().BuildServiceProvider();
+
+            Assert.Equal(
+                "Jede BPMNEdge muss mindestens zwei Wegpunkte haben.",
+                provider.GetRequiredService<BpmnDiagnosticLocalizer>().Localize(diagnostic));
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = originalCulture;
+        }
+    }
+
+    [Fact]
+    public void BuiltInEditDiagnosticMatchesItsSpecificLocalizedMessage()
+    {
+        var diagnostic = new BpmnEditDiagnostic(
+            BpmnEditSeverity.Rejected,
+            "COLOR-001",
+            "A color must be a six-digit RGB hex value (#RRGGBB); all channels can only be reset.");
+        var originalCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("de-DE");
+            using var provider = new ServiceCollection().AddBpmnComponents().BuildServiceProvider();
+
+            Assert.Equal(
+                "Eine Farbe muss ein sechsstelliger RGB-Hexwert (#RRGGBB) sein; nur alle Kanäle können zurückgesetzt werden.",
+                provider.GetRequiredService<BpmnDiagnosticLocalizer>().Localize(diagnostic));
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = originalCulture;
+        }
+    }
+
+    [Fact]
+    public void DynamicEditDiagnosticUsesTranslatedTemplateAndPreservesInvariantMessage()
+    {
+        const string invariantMessage = "'Task' is already used by another element.";
+        var diagnostic = new BpmnEditDiagnostic(
+            BpmnEditSeverity.Rejected,
+            "EDIT-030",
+            invariantMessage,
+            "Task")
+        {
+            MessageResourceKey = "EDITMSG.EDIT-030.DuplicateElementId",
+            MessageArguments = ["Task"],
+        };
+        var originalCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("de-DE");
+            using var provider = new ServiceCollection().AddBpmnComponents().BuildServiceProvider();
+
+            var localized = provider.GetRequiredService<BpmnDiagnosticLocalizer>().Localize(diagnostic);
+            Assert.Equal("'Task' wird bereits von einem anderen Element verwendet.", localized);
+            Assert.Equal(invariantMessage, diagnostic.Message);
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = originalCulture;
+        }
+    }
+
+    [Fact]
+    public void DynamicEditDiagnosticFindsItsTranslatedTemplateWithoutMetadata()
+    {
+        var diagnostic = new BpmnEditDiagnostic(
+            BpmnEditSeverity.Rejected,
+            "EDIT-030",
+            "'Task' is already used by another element.",
+            "Task");
+        var originalCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("de-DE");
+            using var provider = new ServiceCollection().AddBpmnComponents().BuildServiceProvider();
+
+            Assert.Equal(
+                "'Task' wird bereits von einem anderen Element verwendet.",
+                provider.GetRequiredService<BpmnDiagnosticLocalizer>().Localize(diagnostic));
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = originalCulture;
+        }
+    }
+
+    [Fact]
+    public void BuiltInDynamicEditDiagnosticsFindTheirCodeSpecificTranslation()
+    {
+        var diagnostic = new BpmnEditDiagnostic(
+            BpmnEditSeverity.Rejected,
+            "CT-010",
+            "'CalledProcess' is not a global Process or Global Task.");
+        var originalCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("de-DE");
+            using var provider = new ServiceCollection().AddBpmnComponents().BuildServiceProvider();
+
+            Assert.Equal(
+                "„CalledProcess“ ist weder ein globaler Prozess noch eine globale Aufgabe.",
+                provider.GetRequiredService<BpmnDiagnosticLocalizer>().Localize(diagnostic));
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = originalCulture;
+        }
+    }
+
+    [Fact]
+    public void ExtensionEditDiagnosticLocalizesItsNestedUnsafeContentReason()
+    {
+        var diagnostic = new BpmnEditDiagnostic(
+            BpmnEditSeverity.Rejected,
+            "EDIT-103",
+            "Extension edit refused because it introduces unsafe content: the attribute value is a 'javascript:' URL.",
+            "Task")
+        {
+            MessageResourceKey = "EDITMSG.EDIT-103.Auto.1",
+            MessageArguments =
+            [
+                BpmnDiagnosticText.Create(
+                    "EXT-010.Detail.Url",
+                    "{0}: the attribute value is a '{1}' URL.",
+                    "url",
+                    "javascript:"),
+            ],
+        };
+        var originalCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("de-DE");
+            var localizer = Translated(
+                ("EDITMSG.EDIT-103.Auto.1", "Erweiterungsbearbeitung abgelehnt: {0}"),
+                ("EXT-010.Detail.Url", "{0}: Der Attributwert ist eine URL mit dem Schema '{1}'."));
+
+            Assert.Equal(
+                "Erweiterungsbearbeitung abgelehnt: url: Der Attributwert ist eine URL mit dem Schema 'javascript:'.",
+                localizer.Localize(diagnostic));
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = originalCulture;
+        }
+    }
+
+    [Fact]
+    public void EditDiagnosticDoesNotUseAnUnrelatedResourceWithTheSameCode()
+    {
+        var diagnostic = new BpmnEditDiagnostic(
+            BpmnEditSeverity.Rejected,
+            "CT-001",
+            "No diagram 'Diagram_2' exists to edit.");
+
+        Assert.Equal(diagnostic.Message, Translated(("CT-001", "Unrelated translation.")).Localize(diagnostic));
     }
 
     [Fact]

@@ -18,13 +18,27 @@ public enum BpmnEditSeverity
 /// A stable rule code where one applies — <c>DI-011</c> for a collision, <c>CT-*</c> for
 /// containment — so the message can be replaced without breaking anything that keys off it.
 /// </param>
-/// <param name="Message">What happened, in the terms the user sees.</param>
+/// <param name="Message">Invariant English text describing what happened.</param>
 /// <param name="ElementId">The element the finding is about, when it is about one.</param>
 public sealed record BpmnEditDiagnostic(
     BpmnEditSeverity Severity,
     string Code,
     string Message,
-    string? ElementId = null);
+    string? ElementId = null)
+{
+    /// <summary>Arguments for the localized message resource.</summary>
+    public IReadOnlyList<object?>? MessageArguments { get; init; }
+
+    /// <summary>Resource key for a localized presentation of this message.</summary>
+    public string? MessageResourceKey { get; init; }
+
+    /// <summary>Compares edit findings independently of localization presentation metadata.</summary>
+    public bool Equals(BpmnEditDiagnostic? other) => other is not null
+        && Severity == other.Severity && Code == other.Code && Message == other.Message && ElementId == other.ElementId;
+
+    /// <inheritdoc />
+    public override int GetHashCode() => HashCode.Combine(Severity, Code, Message, ElementId);
+}
 
 /// <summary>
 /// The outcome of one command.

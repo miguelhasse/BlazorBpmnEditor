@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Localization;
@@ -5,6 +6,8 @@ namespace Hasseware.AspNetCore.Components.Bpmn.Tests.Localization;
 public sealed class XliffCoverageTests
 {
     private static readonly string[] Languages = ["cs", "de", "es", "fr", "it", "ja", "ko", "pl", "pt-BR", "ru", "tr", "zh-Hans", "zh-Hant"];
+    private static readonly HashSet<string> IntentionallyInvariantMessages =
+        ["EXT-010.Detail", "PROF-101.Detail.Custom", "PROF-104.Detail.Custom"];
     public static TheoryData<string, string> Resources
     {
         get
@@ -35,10 +38,31 @@ public sealed class XliffCoverageTests
         var xlf = XDocument.Load(xlfPath);
         XNamespace ns = "urn:oasis:names:tc:xliff:document:1.2";
         Assert.Equal(language, (string?)xlf.Descendants(ns + "file").Single().Attribute("target-language"));
-        var translated = xlf.Descendants(ns + "trans-unit").ToDictionary(unit => (string)unit.Attribute("id")!, unit => unit.Element(ns + "source")!.Value);
+        var units = xlf.Descendants(ns + "trans-unit").ToArray();
+        var translated = units.ToDictionary(unit => (string)unit.Attribute("id")!, unit => unit.Element(ns + "source")!.Value);
         Assert.Equal(source.Keys.Order(), translated.Keys.Order());
         foreach (var (key, value) in source) Assert.Equal(value, translated[key]);
+
+        if (relativePath == Path.Combine("src", "Bpmn", "Resources", "BpmnRuleMessages.resx"))
+            foreach (var unit in units)
+            {
+                var target = unit.Element(ns + "target");
+                Assert.NotNull(target);
+                Assert.NotEqual("new", (string?)target.Attribute("state"));
+                Assert.False(string.IsNullOrWhiteSpace(target.Value));
+                if (!IntentionallyInvariantMessages.Contains((string)unit.Attribute("id")!))
+                    Assert.NotEqual(unit.Element(ns + "source")!.Value, target.Value);
+                Assert.Equal(
+                    Placeholders(unit.Element(ns + "source")!.Value),
+                    Placeholders(target.Value));
+            }
     }
+
+    private static string[] Placeholders(string value) =>
+        Regex.Matches(value, @"\{(?<index>\d+)(?:,[^}:]+)?(?::[^}]+)?\}")
+            .Select(match => match.Groups["index"].Value)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
 
     private static string RepositoryRoot()
     {

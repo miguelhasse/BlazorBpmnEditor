@@ -142,7 +142,11 @@ public static partial class BpmnDocumentEditor
         if (converted > 0) message += string.Create(CultureInfo.InvariantCulture, $"; converted {converted} connector(s)");
         if (deleted > 0) message += string.Create(CultureInfo.InvariantCulture, $"; deleted {deleted} connector(s) that could not cross Pools");
 
-        diagnostics.Add(new BpmnEditDiagnostic(BpmnEditSeverity.Info, "EDIT-056", message + "."));
+        diagnostics.Add(new BpmnEditDiagnostic(BpmnEditSeverity.Info, "EDIT-056", message + ".")
+        {
+            MessageResourceKey = "EDITMSG.EDIT-056.PoolTransferSummary",
+            MessageArguments = [transfers.Count, converted, deleted],
+        });
 
         return next;
     }

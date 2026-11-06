@@ -4,6 +4,7 @@ using Hasseware.AspNetCore.Components.Bpmn.Editing;
 using Hasseware.AspNetCore.Components.Bpmn.Execution;
 using Hasseware.AspNetCore.Components.Bpmn.Interop;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
+using Hasseware.AspNetCore.Components.Bpmn.Validation;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -618,7 +619,7 @@ public sealed partial class BpmnEditorSession
         foreach (var rejection in result.Rejections)
         {
             await OnEditRejected
-                .InvokeAsync(new EditRejected(rejection.Code, rejection.Message, rejection.ElementId ?? string.Empty))
+                .InvokeAsync(new EditRejected(rejection.Code, LocalizeEditDiagnostic(rejection), rejection.ElementId ?? string.Empty))
                 .ConfigureAwait(true);
         }
 
@@ -633,6 +634,11 @@ public sealed partial class BpmnEditorSession
         await PublishAsync(result.Document).ConfigureAwait(true);
         NotifyStateChanged();
     }
+
+    private string LocalizeEditDiagnostic(BpmnEditDiagnostic diagnostic) =>
+        _profileServices.GetService(typeof(BpmnDiagnosticLocalizer)) is BpmnDiagnosticLocalizer localizer
+            ? localizer.Localize(diagnostic)
+            : diagnostic.Message;
 
     private async Task ReplayAsync(Func<BpmnEditHistory, BpmnDocument> step)
     {

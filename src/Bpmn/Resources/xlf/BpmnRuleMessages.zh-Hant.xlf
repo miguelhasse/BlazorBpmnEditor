@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
   <file datatype="xml" source-language="en" target-language="zh-Hant" original="../BpmnRuleMessages.resx">
     <body>
       <trans-unit id="A-002">
         <source>A flow-line endpoint requires a Text Annotation and a Sequence Flow or Message Flow.</source>
-        <target state="new">A flow-line endpoint requires a Text Annotation and a Sequence Flow or Message Flow.</target>
+        <target state="translated">連接線端點需要文字註解以及順序流程或訊息流程。</target>
         <note />
       </trans-unit>
       <trans-unit id="AN-001">
         <source>Editor policy allows one target per Text Annotation. Multiple bindings have no lifecycle owner.</source>
-        <target state="new">Editor policy allows one target per Text Annotation. Multiple bindings have no lifecycle owner.</target>
+        <target state="translated">編輯器原則允許每個文字註解只有一個目標。多個繫結沒有生命週期擁有者。</target>
         <note />
       </trans-unit>
       <trans-unit id="AN-002">
         <source>Editor policy requires a straight annotation Association with two endpoints.</source>
-        <target state="new">Editor policy requires a straight annotation Association with two endpoints.</target>
+        <target state="translated">編輯器原則要求使用具有兩個端點的直線註解關聯。</target>
         <note />
       </trans-unit>
       <trans-unit id="CT-001">
@@ -517,6 +517,136 @@
         <target state="translated">isHorizontal 僅定義於池與泳道圖形上。</target>
         <note />
       </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.2">
+        <source>The Pool must be created on its Process or Collaboration diagram.</source>
+        <target state="translated">必須在其 Process 或 Collaboration 圖上建立 Pool。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.Auto.5">
+        <source>No diagram '{0}' exists.</source>
+        <target state="translated">不存在圖「{0}」。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.Auto.6">
+        <source>'{0}' is not a root Process.</source>
+        <target state="translated">「{0}」不是根 Process。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.Auto.7">
+        <source>'{0}' already has a Pool.</source>
+        <target state="translated">「{0}」已有 Pool。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-007.Auto.1">
+        <source>'{0}' is inside this Sub-Process and is already drawn on '{1}'.</source>
+        <target state="translated">「{0}」位於此 Sub-Process 內，且已繪製在「{1}」上。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.DI-011.3">
+        <source>There is no clear space near the requested position.</source>
+        <target state="translated">要求的位置附近沒有空白區域。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-090.Auto.1">
+        <source>'{0}' is not a Flow Node in this document.</source>
+        <target state="translated">「{0}」不是此文件中的 Flow Node。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-090.Auto.2">
+        <source>No plane draws '{0}'.</source>
+        <target state="translated">沒有平面繪製「{0}」。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-090.Auto.3">
+        <source>Plane '{0}' does not draw '{1}'.</source>
+        <target state="translated">平面「{0}」未繪製「{1}」。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-091.1">
+        <source>A Call Activity has no local content to expand; it references a global Process.</source>
+        <target state="translated">Call Activity 沒有可展開的本機內容；它參照全域 Process。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-091.Auto.1">
+        <source>'{0}' is not an embedded Sub-Process.</source>
+        <target state="translated">「{0}」不是內嵌 Sub-Process。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-093.Auto.1">
+        <source>'{0}' is drawn on {1} planes; say which one.</source>
+        <target state="translated">「{0}」繪製在 {1} 個平面上；請指定其中一個。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-100.Auto.1">
+        <source>There is no element with id '{0}'.</source>
+        <target state="translated">不存在 ID 為「{0}」的元素。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-101.Auto.1">
+        <source>Element '{0}' does not carry extension content.</source>
+        <target state="translated">元素「{0}」不包含擴充內容。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-102.1">
+        <source>Extension collection specification is invalid.</source>
+        <target state="translated">擴充集合規格無效。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-102.2">
+        <source>Extension element name is invalid.</source>
+        <target state="translated">擴充元素名稱無效。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-102.3">
+        <source>Foreign attribute name is invalid.</source>
+        <target state="translated">外部屬性名稱無效。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-102.Auto.1">
+        <source>Extension path '{0}' is malformed or does not resolve.</source>
+        <target state="translated">擴充路徑「{0}」格式錯誤或無法解析。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-103.Auto.1">
+        <source>Extension edit refused because it introduces unsafe content: {0}</source>
+        <target state="translated">擴充編輯遭拒，因為它引入不安全內容：{0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-110.Auto.1">
+        <source>Template edit refused (EXT-004): {0}</source>
+        <target state="translated">範本編輯遭拒 (EXT-004)：{0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.PL-001.Auto.1">
+        <source>'{0}' is not a Flow Node in this document.</source>
+        <target state="translated">「{0}」不是此文件中的 Flow Node。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.PL-001.Auto.2">
+        <source>'{0}' is not drawn on the diagram.</source>
+        <target state="translated">「{0}」未繪製在該圖上。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.PL-002.Auto.1">
+        <source>'{0}' cannot contain Flow Nodes.</source>
+        <target state="translated">「{0}」不能包含 Flow Nodes。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.PL-002.Auto.2">
+        <source>'{0}' is not drawn expanded, so nothing inside it is visible.</source>
+        <target state="translated">「{0}」未以展開狀態繪製，因此其內部不可見。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.PL-002.Auto.3">
+        <source>'{0}' is neither a Process nor a Sub-Process.</source>
+        <target state="translated">「{0}」既不是 Process，也不是 Sub-Process。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.PL-002.Auto.4">
+        <source>'{0}' is not drawn on any diagram.</source>
+        <target state="translated">「{0}」未繪製在任何圖上。</target>
+        <note />
+      </trans-unit>
       <trans-unit id="EXT-001">
         <source>Extension content has no resolvable namespace URI (spec §6.1.2 expanded-name identity).</source>
         <target state="translated">擴充內容沒有可解析的命名空間 URI（規格 §6.1.2 展開名稱識別）。</target>
@@ -860,6 +990,546 @@
       <trans-unit id="SF-018.Detail">
         <source>{0} has {1}.</source>
         <target state="translated">{0} 有 {1}。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.MoveShapesRequired">
+        <source>A move must name at least one shape.</source>
+        <target state="translated">移動必須指定至少一個圖形。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.BoundsFinite">
+        <source>Bounds must be finite.</source>
+        <target state="translated">邊界必須是有限值。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.BoundsPositive">
+        <source>Bounds must have positive width and height.</source>
+        <target state="translated">邊界的寬度和高度必須為正數。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.ConnectorWaypointsRequired">
+        <source>A connector needs at least two waypoints.</source>
+        <target state="translated">連接器至少需要兩個路徑點。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.WaypointsFinite">
+        <source>Waypoints must be finite.</source>
+        <target state="translated">路徑點必須是有限值。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.GroupMustBeInLane">
+        <source>A Group must be placed inside a Lane when the diagram contains Lanes.</source>
+        <target state="translated">如果圖表包含泳道，則必須將群組放置在泳道內。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.ClipboardEmpty">
+        <source>The clipboard is empty.</source>
+        <target state="translated">剪貼簿是空的。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.DeleteElementsRequired">
+        <source>A delete must name at least one element.</source>
+        <target state="translated">刪除必須指定至少一個元素。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.BoundaryEventRequiresActivity">
+        <source>A Boundary Event must be attached to an Activity.</source>
+        <target state="translated">邊界事件必須附加至活動。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.OnlyBoundaryEventMayAttach">
+        <source>Only a Boundary Event may be attached to an Activity.</source>
+        <target state="translated">只有邊界事件可以附加至活動。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.ConnectorEndpointsRequired">
+        <source>A connector must keep both of its ends.</source>
+        <target state="translated">連接器必須保留兩端。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.ConnectorEndpointsMustDiffer">
+        <source>A connector may not start and end on the same element.</source>
+        <target state="translated">連接器不能在同一元素上開始和結束。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.COLOR-001.1">
+        <source>A color must be a six-digit RGB hex value (#RRGGBB); all channels can only be reset.</source>
+        <target state="translated">色彩必須是六位數 RGB 十六進位值 (#RRGGBB)；只能重設所有通道。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.COLOR-002.1">
+        <source>Every selected element must be drawn on the requested diagram.</source>
+        <target state="translated">每個選取的元素都必須繪製在指定圖表上。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.COLOR-003.1">
+        <source>Only shapes have a background color.</source>
+        <target state="translated">只有圖形具有背景色。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-054.1">
+        <source>A Lane fills its Pool and moves only with it.</source>
+        <target state="translated">泳道填滿其集區，且只能隨集區一起移動。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-051.1">
+        <source>A Lane fills its Pool and is sized with the splitter between Lanes, not on its own.</source>
+        <target state="translated">泳道填滿其集區，透過泳道之間的分隔線調整大小，而非個別調整。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-010.1">
+        <source>Only a Call Activity may reference a called element.</source>
+        <target state="translated">只有呼叫活動可以參照被呼叫的元素。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-010.2">
+        <source>A Call Activity must name the global Process or Global Task it calls.</source>
+        <target state="translated">呼叫活動必須指定它呼叫的全域程序或全域工作。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-032.1">
+        <source>A connector cannot start and end at the same element.</source>
+        <target state="translated">連接器不能在同一個元素開始和結束。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-005.1">
+        <source>A Boundary Event moves by re-attaching to a host, not by changing container.</source>
+        <target state="translated">界限事件透過重新附加至主機來移動，而不是變更容器。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-008.1">
+        <source>A container cannot be moved inside itself.</source>
+        <target state="translated">容器不能移至自身內部。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-011.1">
+        <source>A data reference must either name an existing definition or ask for exactly one new one.</source>
+        <target state="translated">資料參照必須指定現有定義，或要求恰好建立一個新定義。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.AN-002.1">
+        <source>Editor policy requires a straight annotation Association with two endpoints.</source>
+        <target state="translated">編輯器原則要求使用具有兩個端點的直線註解關聯。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.DI-001.1">
+        <source>An edge needs at least two waypoints.</source>
+        <target state="translated">邊至少需要兩個路徑點。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.DI-011.1">
+        <source>There is no clear space near the original to paste into.</source>
+        <target state="translated">原始位置附近沒有可供貼上的空白區域。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-070.1">
+        <source>A property edit that sets nothing is not an edit.</source>
+        <target state="translated">未設定任何屬性的屬性編輯不算編輯。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-082.1">
+        <source>A Multiple Event needs its individual triggers declared before it means anything.</source>
+        <target state="translated">多重事件必須先宣告個別觸發程序才有意義。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.SF-006.1">
+        <source>A default flow cannot carry a condition. Clear the condition in the same edit to make this the default.</source>
+        <target state="translated">預設流程不能帶有條件。若要將其設為預設，請在同一次編輯中清除條件。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-081.1">
+        <source>The element is already that type.</source>
+        <target state="translated">元素已是該類型。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-073.1">
+        <source>An element must have an id.</source>
+        <target state="translated">元素必須有 ID。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-092.1">
+        <source>This Sub-Process is already expanded.</source>
+        <target state="translated">此子程序已展開。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-094.1">
+        <source>This Sub-Process holds content that no diagram draws, so expanding shows an empty container.</source>
+        <target state="translated">此子程序包含沒有任何圖表繪製的內容，因此展開後會顯示空容器。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-092.2">
+        <source>This Sub-Process is already collapsed.</source>
+        <target state="translated">此子程序已摺疊。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.1">
+        <source>A Pool is a Collaboration's child, and this document has no Collaboration to hold one.</source>
+        <target state="translated">集區是協同作業的子項，但此文件沒有可容納它的協同作業。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.DI-011.2">
+        <source>A Pool cannot overlap another Pool.</source>
+        <target state="translated">集區不能與其他集區重疊。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-030.DuplicateElementId">
+        <source>'{0}' is already used by another element.</source>
+        <target state="translated">'{0}' 已由其他元素使用。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-021.MissingElement">
+        <source>No element '{0}' exists in this document.</source>
+        <target state="translated">此文件中不存在元素「{0}」。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-072.MissingRenameElement">
+        <source>There is no element with id '{0}' to rename.</source>
+        <target state="translated">沒有可重新命名且 ID 為「{0}」的元素。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-074.DuplicateId">
+        <source>'{0}' is already the id of another element.</source>
+        <target state="translated">「{0}」已是其他元素的 ID。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-030.DuplicateDiagramId">
+        <source>'{0}' is already the id of a diagram or plane.</source>
+        <target state="translated">「{0}」已是圖表或平面的 ID。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-030.DuplicateAllocatedId">
+        <source>The id '{0}' is already used.</source>
+        <target state="translated">ID「{0}」已被使用。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-011.MissingShape">
+        <source>No shape '{0}' exists on any plane.</source>
+        <target state="translated">任何平面上都不存在形狀「{0}」。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-010.InvalidCallTarget">
+        <source>'{0}' is not a global Process or Global Task.</source>
+        <target state="translated">「{0}」不是全域程序或全域工作。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.InvalidFlowContainer">
+        <source>'{0}' is not a Process or an embedded Sub-Process in this document.</source>
+        <target state="translated">「{0}」不是此文件中的程序或內嵌子程序。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.Auto.1">
+        <source>No diagram '{0}' exists to edit.</source>
+        <target state="translated">圖表「{0}」不存在，無法編輯。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-001.Auto.1">
+        <source>'{0}' is not a command this editor knows how to apply.</source>
+        <target state="translated">「{0}」不是此編輯器支援的命令。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-053.Auto.1">
+        <source>Grew {0} container(s) to keep content that was dragged past the edge.</source>
+        <target state="translated">已擴大 {0} 個容器，以保留拖曳到邊界外的內容。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-055.Auto.1">
+        <source>Moved {0} node(s) into the Lane they were dropped in.</source>
+        <target state="translated">已將 {0} 個節點移至其放置的泳道。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-050.Auto.1">
+        <source>A shape may not be smaller than {0} units.</source>
+        <target state="translated">形狀不能小於 {0} 個單位。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-053.Auto.2">
+        <source>'{0}' is not a Lane of a Pool, so it has no splitter.</source>
+        <target state="translated">「{0}」不是集區的泳道，因此沒有分隔線。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-051.Auto.1">
+        <source>A Lane may not be narrower than {0} units, and the last Lane has no splitter after it.</source>
+        <target state="translated">泳道不能窄於 {0} 個單位，且最後一條泳道後沒有分隔線。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-052.Auto.1">
+        <source>'{0}' would be left outside '{1}'.</source>
+        <target state="translated">「{0}」將位於「{1}」之外。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.DI-011.Auto.1">
+        <source>'{0}' would overlap '{1}' with the configured clearance of {2}.</source>
+        <target state="translated">「{0}」將與「{1}」重疊，設定間距為 {2}。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-031.Auto.1">
+        <source>No element '{0}' exists to connect.</source>
+        <target state="translated">要連線的元素「{0}」不存在。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-031.Auto.2">
+        <source>No shape or permitted flow draws endpoint '{0}' on diagram '{1}'.</source>
+        <target state="translated">圖表「{1}」上沒有形狀或允許的流程繪製端點「{0}」。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-033.Auto.1">
+        <source>A {0} needs an owning container, and none was given or could be derived.</source>
+        <target state="translated">{0} 需要擁有容器，但未提供且無法推導。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.Auto.2">
+        <source>No diagram '{0}' exists to draw '{1}'.</source>
+        <target state="translated">用來繪製「{1}」的圖表「{0}」不存在。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.Auto.3">
+        <source>'{0}' does not belong to the content drawn by diagram '{1}'.</source>
+        <target state="translated">「{0}」不屬於圖表「{1}」繪製的內容。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-008.Auto.1">
+        <source>No flow node '{0}' exists to move.</source>
+        <target state="translated">要移動的流程節點「{0}」不存在。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.SF-007.Auto.1">
+        <source>Moving this would leave {0} Sequence Flow(s) crossing a container boundary.</source>
+        <target state="translated">移動此項會使 {0} 個序列流程跨越容器邊界。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-008.Auto.2">
+        <source>No Lane '{0}' exists.</source>
+        <target state="translated">泳道「{0}」不存在。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-008.Auto.3">
+        <source>Lane '{0}' does not belong to '{1}'.</source>
+        <target state="translated">泳道「{0}」不屬於「{1}」。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-011.Auto.1">
+        <source>No {0} '{1}' exists.</source>
+        <target state="translated">不存在 {0}「{1}」。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-031.Auto.3">
+        <source>'{0}' cannot hold this element.</source>
+        <target state="translated">「{0}」無法容納此元素。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-060.Auto.1">
+        <source>No connector '{0}' exists.</source>
+        <target state="translated">連接器「{0}」不存在。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-062.Auto.1">
+        <source>No element '{0}' exists to connect to.</source>
+        <target state="translated">要連線的元素「{0}」不存在。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-064.Auto.1">
+        <source>No edge draws '{0}' on diagram '{1}'.</source>
+        <target state="translated">圖表「{1}」上沒有繪製「{0}」的邊。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-060.Auto.2">
+        <source>'{0}' is not a connector.</source>
+        <target state="translated">「{0}」不是連接器。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-064.Auto.2">
+        <source>No edge draws '{0}'.</source>
+        <target state="translated">沒有邊繪製「{0}」。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-041.Auto.1">
+        <source>No container '{0}' exists to paste into.</source>
+        <target state="translated">要貼上的容器「{0}」不存在。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-111.Auto.1">
+        <source>Paste transform refused: {0}</source>
+        <target state="translated">貼上轉換遭拒：{0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-042.Auto.1">
+        <source>Pasted {0} element(s).</source>
+        <target state="translated">已貼上 {0} 個元素。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.MSG-004.Auto.1">
+        <source>This Message cannot be deleted safely.</source>
+        <target state="translated">無法安全刪除此訊息。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-022.Auto.1">
+        <source>Deleting '{0}' is not supported yet; Pool and Process deletion needs its own semantics.</source>
+        <target state="translated">尚未支援刪除「{0}」；集區和程序需要個別的刪除規則。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-023.Auto.1">
+        <source>Deleted {0} further element(s) that could not outlive the selection.</source>
+        <target state="translated">已刪除 {0} 個無法脫離選取項目存在的其他元素。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.AN-001.Auto.1">
+        <source>Editor policy allows one target per Text Annotation; reconnect its existing Association instead.</source>
+        <target state="translated">編輯器原則允許每個文字註解有一個目標；請重新連接現有關聯。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.MSG-002.Auto.1">
+        <source>The id '{0}' is already used by retained document content.</source>
+        <target state="translated">ID「{0}」已由保留的文件內容使用。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-057.Auto.1">
+        <source>'{0}' is a black-box Pool with no Process to own '{1}'.</source>
+        <target state="translated">「{0}」是黑箱集區，沒有可擁有「{1}」的程序。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-056.PoolTransferSummary">
+        <source>Moved {0} element(s) into the target Pool; converted {1} connector(s); deleted {2} connector(s) that could not cross Pools.</source>
+        <target state="translated">已將 {0} 個元素移至目標集區；轉換 {1} 個連接器；刪除 {2} 個無法跨越集區的連接器。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-072.Auto.1">
+        <source>There is no element with id '{0}' to edit.</source>
+        <target state="translated">沒有可編輯的 ID 為「{0}」的元素。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-070.Auto.1">
+        <source>'{0}' is not an editable property of this element.</source>
+        <target state="translated">「{0}」不是此元素的可編輯屬性。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-070.Auto.2">
+        <source>'{0}' is shown for inspection and cannot be set.</source>
+        <target state="translated">「{0}」僅供檢視，無法設定。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-071.Auto.1">
+        <source>'{0}' is a true/false property and '{1}' is neither.</source>
+        <target state="translated">「{0}」是布林屬性，而「{1}」既非 true 也非 false。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-071.Auto.2">
+        <source>'{0}' must be a non-negative integer.</source>
+        <target state="translated">「{0}」必須是非負整數。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-071.Auto.3">
+        <source>'{0}' is not one of the values '{1}' accepts.</source>
+        <target state="translated">「{0}」不是「{1}」接受的值之一。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-082.Auto.1">
+        <source>The previous trigger's references were cleared: {0}</source>
+        <target state="translated">已清除先前觸發程序的參考：{0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.SF-006.Auto.1">
+        <source>'{0}' is no longer the default flow — a source has only one.</source>
+        <target state="translated">「{0}」不再是預設流程；來源只能有一個預設流程。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-080.Auto.1">
+        <source>'{0}' is not an element whose type can be switched.</source>
+        <target state="translated">「{0}」不是可切換類型的元素。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-081.Auto.1">
+        <source>A {0} cannot be switched to {1}: section 7 allows switching only within the same element category.</source>
+        <target state="translated">無法將 {0} 切換為 {1}：第 7 節僅允許在相同元素類別內切換。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-084.Auto.1">
+        <source>'{0}' was set to {1} because its BPMN event trigger requires that state.</source>
+        <target state="translated">由於 BPMN 事件觸發程序需要此狀態，「{0}」已設為 {1}。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-084.Auto.2">
+        <source>A {0} cannot carry a {1} trigger in this event context.</source>
+        <target state="translated">在此事件內容中，{0} 無法使用 {1} 觸發程序。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-084.Auto.3">
+        <source>'{0}' must be {1} for its {2} trigger.</source>
+        <target state="translated">對於 {2} 觸發程序，「{0}」必須為 {1}。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-083.Auto.1">
+        <source>'{0}' is a Cancel Boundary Event, which only a Transaction may carry. Remove it before changing the type.</source>
+        <target state="translated">「{0}」是僅交易可包含的取消邊界事件。變更類型前請先移除。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-083.Auto.2">
+        <source>'{0}' is a Cancel End Event inside this Transaction. Remove it before changing the type.</source>
+        <target state="translated">「{0}」是此交易中的取消結束事件。變更類型前請先移除。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-083.Auto.3">
+        <source>An Event-Based Gateway can only branch to catching Events or Receive Tasks, and '{0}' is neither.</source>
+        <target state="translated">事件型閘道只能分支至捕捉事件或接收工作，而「{0}」兩者皆非。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-082.Auto.2">
+        <source>'instantiate' was cleared: a {0} does not instantiate its Process.</source>
+        <target state="translated">已清除「instantiate」：{0} 不會具現化其程序。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-082.Auto.3">
+        <source>'messageRef' was cleared: a {0} does not send or receive a Message.</source>
+        <target state="translated">已清除「messageRef」：{0} 不會傳送或接收訊息。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-082.Auto.4">
+        <source>'scriptFormat' and the script were cleared: a {0} does not run a script.</source>
+        <target state="translated">已清除「scriptFormat」和指令碼：{0} 不會執行指令碼。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-082.Auto.5">
+        <source>The activation condition was cleared: a {0} is not a Complex Gateway.</source>
+        <target state="translated">已清除啟用條件：{0} 不是複雜閘道。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-082.Auto.6">
+        <source>The default flow was cleared: a {0} has no default branch.</source>
+        <target state="translated">已清除預設流程：{0} 沒有預設分支。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-075.Auto.1">
+        <source>'{0}' has references this editor cannot safely rewrite when renaming.</source>
+        <target state="translated">「{0}」包含此編輯器在重新命名時無法安全重寫的參考。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-073.Auto.1">
+        <source>'{0}' is not a valid BPMN id: an id must be an XML name, without spaces or a colon.</source>
+        <target state="translated">「{0}」不是有效的 BPMN ID：ID 必須是沒有空格或冒號的 XML 名稱。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.Auto.4">
+        <source>'{0}' is not a Process in this document.</source>
+        <target state="translated">「{0}」不是此文件中的程序。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-002.Auto.1">
+        <source>'{0}' is already drawn by another Pool.</source>
+        <target state="translated">「{0}」已由另一個集區繪製。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-004.Auto.1">
+        <source>'{0}' does not belong to '{1}', so this Lane cannot claim it.</source>
+        <target state="translated">「{0}」不屬於「{1}」，因此此泳道無法包含它。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-012.Auto.1">
+        <source>The editor requires a drawn Pool for Lanes in '{0}'.</source>
+        <target state="translated">編輯器要求「{0}」中的泳道具有已繪製的集區。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-012.Auto.2">
+        <source>Pool '{0}' is not drawn on diagram '{1}'.</source>
+        <target state="translated">集區「{0}」未繪製於圖表「{1}」。</target>
         <note />
       </trans-unit>
     </body>

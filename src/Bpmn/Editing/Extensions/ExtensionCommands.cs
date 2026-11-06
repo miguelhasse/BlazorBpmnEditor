@@ -125,8 +125,7 @@ public static partial class BpmnDocumentEditor
         });
         return introduced is null
             ? BpmnEditResult.Applied(edited)
-            : RejectExtension(document, command.ElementId, ExtensionUnsafeError,
-                $"Extension edit refused because it introduces unsafe content: {introduced.Reason}.");
+            : RejectUnsafeExtension(document, command.ElementId, introduced);
     }
 
     private static BpmnEditResult ApplyExtensionCollection(BpmnDocument document, ReplaceExtensionCollectionCommand command, EditingOptions options)
@@ -257,13 +256,23 @@ public static partial class BpmnDocumentEditor
             seenUnsafe[key] = ++count;
             return count > previousUnsafe.GetValueOrDefault(key);
         });
-        if (introduced is not null)
-        {
-            return RejectExtension(document, elementId, ExtensionUnsafeError,
-                $"Extension edit refused because it introduces unsafe content: {introduced.Reason}.");
-        }
+        if (introduced is not null) return RejectUnsafeExtension(document, elementId, introduced);
         return BpmnEditResult.Applied(edited);
     }
+
+    private static BpmnEditResult RejectUnsafeExtension(BpmnDocument document, string elementId, BpmnUnsafeContent content) =>
+        BpmnEditResult.Reject(document, new BpmnEditDiagnostic(
+            BpmnEditSeverity.Rejected,
+            ExtensionUnsafeError,
+            $"Extension edit refused because it introduces unsafe content: {content.Reason}.",
+            elementId)
+        {
+            MessageResourceKey = "EDITMSG.EDIT-103.Auto.1",
+            MessageArguments = [content.LocalizableDetail ?? new BpmnDiagnosticText(
+                "EXT-010.Detail",
+                $"{content.Path}: {content.Reason}.",
+                [content.Path, content.Reason])],
+        });
 
     private static bool TryGetCarrier(BpmnDocument document, string elementId, out object? element, out BpmnElementExtras extras)
     {

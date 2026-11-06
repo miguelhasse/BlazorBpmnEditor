@@ -50,7 +50,7 @@ public abstract class BpmnEditorComponentBase : ComponentBase
     /// <summary>Semantic display labels, kept separate from invariant snapshot values.</summary>
     protected BpmnDisplayLocalizer Display => field ??= new(L);
 
-    /// <summary>Localizes validation messages; falls back to the diagnostic's own text.</summary>
+    /// <summary>Localizes validation and edit diagnostic messages; falls back to invariant text.</summary>
     [Inject]
     protected BpmnDiagnosticLocalizer DiagnosticLocalizer { get; set; } = default!;
 

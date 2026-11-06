@@ -15,6 +15,26 @@ Browser installation is needed once per Playwright version. On hosts needing bro
 packages, use Playwright's `install --with-deps` option. Unit-only runs need neither the demo nor
 Playwright; see [Bpmn.Tests](../Bpmn.Tests/README.md).
 
+The repository selects Microsoft.Testing.Platform through `global.json`. Select this project
+explicitly when using `dotnet test`, rather than relying on a positional project argument:
+
+```powershell
+dotnet test --project tests\Bpmn.E2E.Tests\Hasseware.AspNetCore.Components.Bpmn.E2E.Tests.csproj -c Release --no-build
+```
+
+Visual Studio Test Explorer uses the project's xUnit adapter and the same demo fixture. To
+reproduce that adapter path outside the IDE after a matching build and Chromium installation:
+
+```powershell
+dotnet vstest tests\Bpmn.E2E.Tests\bin\Debug\net10.0\Hasseware.AspNetCore.Components.Bpmn.E2E.Tests.dll /TestCaseFilter:"FullyQualifiedName~FirstPoolAndLaneWrapContentWithoutMovingIt"
+```
+
+Run the same focused regression through Microsoft.Testing.Platform with
+`--filter-method '*FirstPoolAndLaneWrapContentWithoutMovingIt'`. The cases cover both kits,
+keyboard and drag creation, prototype-like Process IDs, and virtualized offscreen labels.
+Pool creation must measure those labels without moving existing shapes or permanently
+disabling virtualization. Failed enclosure assertions report complete label and Pool rectangles.
+
 To exercise fully linked WebAssembly output instead of development build output, publish the
 playground with `-c Release -p:TrimMode=full`, then set `BPMN_E2E_PUBLISHED_DIRECTORY` to its absolute publish directory before
 running the Release test executable. The fixture launches that directory's `Bpmn.Demo.dll`
@@ -44,6 +64,13 @@ to pure logic and everything paper-dependent lands in this project.
 | `Fixtures/DemoAppFixture.cs` | Process lifecycle: free port, launch, poll until ready, kill on dispose |
 
 ## Gotchas
+
+JointJS redraws asynchronously. After cancelling a gesture, wait for each affected cell's
+original SVG transform before reading its bounding box; a restored connector path does not
+guarantee that its attached Annotation has redrawn in the same frame.
+
+Group selection uses one stroke outline and no mask highlight. Its transparent interior stays
+click-through; the border tolerance band remains selectable and exposes resize handles.
 
 A demo host left running from an earlier session holds `bin/` locks and the next build fails with
 MSB3027. Stop only the specific host process you started before rebuilding; do not terminate unrelated

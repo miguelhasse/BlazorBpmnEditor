@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
   <file datatype="xml" source-language="en" target-language="pt-BR" original="../BpmnRuleMessages.resx">
     <body>
       <trans-unit id="A-002">
         <source>A flow-line endpoint requires a Text Annotation and a Sequence Flow or Message Flow.</source>
-        <target state="new">A flow-line endpoint requires a Text Annotation and a Sequence Flow or Message Flow.</target>
+        <target state="translated">Uma extremidade da linha de conexão exige uma Anotação de Texto e um Fluxo de Sequência ou Fluxo de Mensagem.</target>
         <note />
       </trans-unit>
       <trans-unit id="AN-001">
         <source>Editor policy allows one target per Text Annotation. Multiple bindings have no lifecycle owner.</source>
-        <target state="new">Editor policy allows one target per Text Annotation. Multiple bindings have no lifecycle owner.</target>
+        <target state="translated">A política do editor permite um destino por Anotação de Texto. Várias associações não têm proprietário de ciclo de vida.</target>
         <note />
       </trans-unit>
       <trans-unit id="AN-002">
         <source>Editor policy requires a straight annotation Association with two endpoints.</source>
-        <target state="new">Editor policy requires a straight annotation Association with two endpoints.</target>
+        <target state="translated">A política do editor exige uma Associação de anotação reta com duas extremidades.</target>
         <note />
       </trans-unit>
       <trans-unit id="CT-001">
@@ -517,6 +517,136 @@
         <target state="translated">isHorizontal é definido somente em formas de Pool e Raia.</target>
         <note />
       </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.2">
+        <source>The Pool must be created on its Process or Collaboration diagram.</source>
+        <target state="translated">O Pool deve ser criado no diagrama do seu Process ou Collaboration.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.Auto.5">
+        <source>No diagram '{0}' exists.</source>
+        <target state="translated">O diagrama “{0}” não existe.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.Auto.6">
+        <source>'{0}' is not a root Process.</source>
+        <target state="translated">“{0}” não é um Process raiz.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.Auto.7">
+        <source>'{0}' already has a Pool.</source>
+        <target state="translated">“{0}” já tem um Pool.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-007.Auto.1">
+        <source>'{0}' is inside this Sub-Process and is already drawn on '{1}'.</source>
+        <target state="translated">“{0}” está dentro deste Sub-Process e já está desenhado em “{1}”.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.DI-011.3">
+        <source>There is no clear space near the requested position.</source>
+        <target state="translated">Não há espaço livre perto da posição solicitada.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-090.Auto.1">
+        <source>'{0}' is not a Flow Node in this document.</source>
+        <target state="translated">“{0}” não é um Flow Node neste documento.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-090.Auto.2">
+        <source>No plane draws '{0}'.</source>
+        <target state="translated">Nenhum plano desenha “{0}”.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-090.Auto.3">
+        <source>Plane '{0}' does not draw '{1}'.</source>
+        <target state="translated">O plano “{0}” não desenha “{1}”.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-091.1">
+        <source>A Call Activity has no local content to expand; it references a global Process.</source>
+        <target state="translated">Uma Call Activity não tem conteúdo local para expandir; ela referencia um Process global.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-091.Auto.1">
+        <source>'{0}' is not an embedded Sub-Process.</source>
+        <target state="translated">“{0}” não é um Sub-Process incorporado.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-093.Auto.1">
+        <source>'{0}' is drawn on {1} planes; say which one.</source>
+        <target state="translated">“{0}” está desenhado em {1} planos; especifique qual deles.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-100.Auto.1">
+        <source>There is no element with id '{0}'.</source>
+        <target state="translated">Não existe elemento com o id “{0}”.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-101.Auto.1">
+        <source>Element '{0}' does not carry extension content.</source>
+        <target state="translated">O elemento “{0}” não contém conteúdo de extensão.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-102.1">
+        <source>Extension collection specification is invalid.</source>
+        <target state="translated">A especificação da coleção de extensões é inválida.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-102.2">
+        <source>Extension element name is invalid.</source>
+        <target state="translated">O nome do elemento de extensão é inválido.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-102.3">
+        <source>Foreign attribute name is invalid.</source>
+        <target state="translated">O nome do atributo externo é inválido.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-102.Auto.1">
+        <source>Extension path '{0}' is malformed or does not resolve.</source>
+        <target state="translated">O caminho da extensão “{0}” está malformado ou não pode ser resolvido.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-103.Auto.1">
+        <source>Extension edit refused because it introduces unsafe content: {0}</source>
+        <target state="translated">Edição da extensão recusada porque introduz conteúdo não seguro: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-110.Auto.1">
+        <source>Template edit refused (EXT-004): {0}</source>
+        <target state="translated">Edição do modelo recusada (EXT-004): {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.PL-001.Auto.1">
+        <source>'{0}' is not a Flow Node in this document.</source>
+        <target state="translated">“{0}” não é um Flow Node neste documento.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.PL-001.Auto.2">
+        <source>'{0}' is not drawn on the diagram.</source>
+        <target state="translated">“{0}” não está desenhado no diagrama.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.PL-002.Auto.1">
+        <source>'{0}' cannot contain Flow Nodes.</source>
+        <target state="translated">“{0}” não pode conter Flow Nodes.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.PL-002.Auto.2">
+        <source>'{0}' is not drawn expanded, so nothing inside it is visible.</source>
+        <target state="translated">“{0}” não está desenhado expandido, então seu interior não está visível.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.PL-002.Auto.3">
+        <source>'{0}' is neither a Process nor a Sub-Process.</source>
+        <target state="translated">“{0}” não é um Process nem um Sub-Process.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.PL-002.Auto.4">
+        <source>'{0}' is not drawn on any diagram.</source>
+        <target state="translated">“{0}” não está desenhado em nenhum diagrama.</target>
+        <note />
+      </trans-unit>
       <trans-unit id="EXT-001">
         <source>Extension content has no resolvable namespace URI (spec §6.1.2 expanded-name identity).</source>
         <target state="translated">O conteúdo de extensão não tem URI de namespace resolvível (identidade de nome expandido, spec §6.1.2).</target>
@@ -860,6 +990,546 @@
       <trans-unit id="SF-018.Detail">
         <source>{0} has {1}.</source>
         <target state="translated">{0} tem {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.MoveShapesRequired">
+        <source>A move must name at least one shape.</source>
+        <target state="translated">A movimentação deve indicar pelo menos uma forma.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.BoundsFinite">
+        <source>Bounds must be finite.</source>
+        <target state="translated">Os limites devem ser finitos.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.BoundsPositive">
+        <source>Bounds must have positive width and height.</source>
+        <target state="translated">Os limites devem ter largura e altura positivas.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.ConnectorWaypointsRequired">
+        <source>A connector needs at least two waypoints.</source>
+        <target state="translated">Um conector precisa de pelo menos dois pontos de passagem.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.WaypointsFinite">
+        <source>Waypoints must be finite.</source>
+        <target state="translated">Os pontos de passagem devem ser finitos.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.GroupMustBeInLane">
+        <source>A Group must be placed inside a Lane when the diagram contains Lanes.</source>
+        <target state="translated">Se o diagrama contiver raias, o grupo deverá ser colocado dentro de uma delas.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.ClipboardEmpty">
+        <source>The clipboard is empty.</source>
+        <target state="translated">A área de transferência está vazia.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.DeleteElementsRequired">
+        <source>A delete must name at least one element.</source>
+        <target state="translated">A exclusão deve indicar pelo menos um elemento.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.BoundaryEventRequiresActivity">
+        <source>A Boundary Event must be attached to an Activity.</source>
+        <target state="translated">Um evento de borda deve estar anexado a uma atividade.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.OnlyBoundaryEventMayAttach">
+        <source>Only a Boundary Event may be attached to an Activity.</source>
+        <target state="translated">Somente um evento de borda pode ser anexado a uma atividade.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.ConnectorEndpointsRequired">
+        <source>A connector must keep both of its ends.</source>
+        <target state="translated">Um conector deve manter as duas extremidades.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.ConnectorEndpointsMustDiffer">
+        <source>A connector may not start and end on the same element.</source>
+        <target state="translated">Um conector não pode começar e terminar no mesmo elemento.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.COLOR-001.1">
+        <source>A color must be a six-digit RGB hex value (#RRGGBB); all channels can only be reset.</source>
+        <target state="translated">A cor deve ser um valor hexadecimal RGB de seis dígitos (#RRGGBB); somente todos os canais podem ser redefinidos.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.COLOR-002.1">
+        <source>Every selected element must be drawn on the requested diagram.</source>
+        <target state="translated">Cada elemento selecionado deve estar desenhado no diagrama solicitado.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.COLOR-003.1">
+        <source>Only shapes have a background color.</source>
+        <target state="translated">Somente formas têm cor de fundo.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-054.1">
+        <source>A Lane fills its Pool and moves only with it.</source>
+        <target state="translated">Uma raia preenche seu Pool e se move somente com ele.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-051.1">
+        <source>A Lane fills its Pool and is sized with the splitter between Lanes, not on its own.</source>
+        <target state="translated">Uma raia preenche seu Pool e é dimensionada pelo divisor entre raias, não individualmente.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-010.1">
+        <source>Only a Call Activity may reference a called element.</source>
+        <target state="translated">Somente uma Atividade de Chamada pode fazer referência a um elemento chamado.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-010.2">
+        <source>A Call Activity must name the global Process or Global Task it calls.</source>
+        <target state="translated">Uma Atividade de Chamada deve indicar o Processo Global ou a Tarefa Global que invoca.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-032.1">
+        <source>A connector cannot start and end at the same element.</source>
+        <target state="translated">Um conector não pode começar e terminar no mesmo elemento.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-005.1">
+        <source>A Boundary Event moves by re-attaching to a host, not by changing container.</source>
+        <target state="translated">Um Evento de Borda se move ao ser reconectado a um host, não ao alterar o contêiner.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-008.1">
+        <source>A container cannot be moved inside itself.</source>
+        <target state="translated">Um contêiner não pode ser movido para dentro de si mesmo.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-011.1">
+        <source>A data reference must either name an existing definition or ask for exactly one new one.</source>
+        <target state="translated">Uma referência de dados deve indicar uma definição existente ou solicitar exatamente uma nova.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.AN-002.1">
+        <source>Editor policy requires a straight annotation Association with two endpoints.</source>
+        <target state="translated">A política do editor exige uma Associação de anotação reta com duas extremidades.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.DI-001.1">
+        <source>An edge needs at least two waypoints.</source>
+        <target state="translated">Uma aresta precisa de pelo menos dois pontos de passagem.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.DI-011.1">
+        <source>There is no clear space near the original to paste into.</source>
+        <target state="translated">Não há espaço livre perto da posição original para colar.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-070.1">
+        <source>A property edit that sets nothing is not an edit.</source>
+        <target state="translated">Uma edição que não define nenhuma propriedade não é uma edição.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-082.1">
+        <source>A Multiple Event needs its individual triggers declared before it means anything.</source>
+        <target state="translated">Um Evento Múltiplo precisa ter seus gatilhos individuais declarados para ter significado.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.SF-006.1">
+        <source>A default flow cannot carry a condition. Clear the condition in the same edit to make this the default.</source>
+        <target state="translated">Um fluxo padrão não pode ter uma condição. Limpe a condição na mesma edição para defini-lo como padrão.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-081.1">
+        <source>The element is already that type.</source>
+        <target state="translated">O elemento já é desse tipo.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-073.1">
+        <source>An element must have an id.</source>
+        <target state="translated">Um elemento precisa ter um ID.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-092.1">
+        <source>This Sub-Process is already expanded.</source>
+        <target state="translated">Este subprocesso já está expandido.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-094.1">
+        <source>This Sub-Process holds content that no diagram draws, so expanding shows an empty container.</source>
+        <target state="translated">Este subprocesso contém conteúdo que nenhum diagrama desenha; ao expandi-lo, um contêiner vazio será exibido.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-092.2">
+        <source>This Sub-Process is already collapsed.</source>
+        <target state="translated">Este subprocesso já está recolhido.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.1">
+        <source>A Pool is a Collaboration's child, and this document has no Collaboration to hold one.</source>
+        <target state="translated">Um Pool é filho de uma Colaboração, mas este documento não tem uma Colaboração para contê-lo.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.DI-011.2">
+        <source>A Pool cannot overlap another Pool.</source>
+        <target state="translated">Um Pool não pode se sobrepor a outro Pool.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-030.DuplicateElementId">
+        <source>'{0}' is already used by another element.</source>
+        <target state="translated">'{0}' já está sendo usado por outro elemento.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-021.MissingElement">
+        <source>No element '{0}' exists in this document.</source>
+        <target state="translated">O elemento '{0}' não existe neste documento.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-072.MissingRenameElement">
+        <source>There is no element with id '{0}' to rename.</source>
+        <target state="translated">Não há elemento com o ID '{0}' para renomear.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-074.DuplicateId">
+        <source>'{0}' is already the id of another element.</source>
+        <target state="translated">'{0}' já é o ID de outro elemento.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-030.DuplicateDiagramId">
+        <source>'{0}' is already the id of a diagram or plane.</source>
+        <target state="translated">'{0}' já é o ID de um diagrama ou plano.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-030.DuplicateAllocatedId">
+        <source>The id '{0}' is already used.</source>
+        <target state="translated">O ID '{0}' já está em uso.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-011.MissingShape">
+        <source>No shape '{0}' exists on any plane.</source>
+        <target state="translated">A forma '{0}' não existe em nenhum plano.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-010.InvalidCallTarget">
+        <source>'{0}' is not a global Process or Global Task.</source>
+        <target state="translated">'{0}' não é um Processo global nem uma Tarefa global.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.InvalidFlowContainer">
+        <source>'{0}' is not a Process or an embedded Sub-Process in this document.</source>
+        <target state="translated">'{0}' não é um Processo nem um Subprocesso incorporado neste documento.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.Auto.1">
+        <source>No diagram '{0}' exists to edit.</source>
+        <target state="translated">Não é possível editar o diagrama '{0}' porque ele não existe.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-001.Auto.1">
+        <source>'{0}' is not a command this editor knows how to apply.</source>
+        <target state="translated">'{0}' não é um comando que este editor saiba aplicar.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-053.Auto.1">
+        <source>Grew {0} container(s) to keep content that was dragged past the edge.</source>
+        <target state="translated">{0} contêiner(es) ampliado(s) para manter o conteúdo arrastado além da borda.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-055.Auto.1">
+        <source>Moved {0} node(s) into the Lane they were dropped in.</source>
+        <target state="translated">{0} nó(s) movido(s) para a Raia onde foram soltos.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-050.Auto.1">
+        <source>A shape may not be smaller than {0} units.</source>
+        <target state="translated">Uma forma não pode ser menor que {0} unidades.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-053.Auto.2">
+        <source>'{0}' is not a Lane of a Pool, so it has no splitter.</source>
+        <target state="translated">'{0}' não é uma Raia de um Pool, portanto não tem divisor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-051.Auto.1">
+        <source>A Lane may not be narrower than {0} units, and the last Lane has no splitter after it.</source>
+        <target state="translated">Uma Raia não pode ser mais estreita que {0} unidades, e a última não tem divisor depois dela.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-052.Auto.1">
+        <source>'{0}' would be left outside '{1}'.</source>
+        <target state="translated">'{0}' ficaria fora de '{1}'.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.DI-011.Auto.1">
+        <source>'{0}' would overlap '{1}' with the configured clearance of {2}.</source>
+        <target state="translated">'{0}' se sobreporia a '{1}' com o espaçamento configurado de {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-031.Auto.1">
+        <source>No element '{0}' exists to connect.</source>
+        <target state="translated">O elemento '{0}' a ser conectado não existe.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-031.Auto.2">
+        <source>No shape or permitted flow draws endpoint '{0}' on diagram '{1}'.</source>
+        <target state="translated">Nenhuma forma ou fluxo permitido desenha o ponto final '{0}' no diagrama '{1}'.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-033.Auto.1">
+        <source>A {0} needs an owning container, and none was given or could be derived.</source>
+        <target state="translated">Um {0} precisa de um contêiner proprietário, mas nenhum foi informado ou pôde ser derivado.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.Auto.2">
+        <source>No diagram '{0}' exists to draw '{1}'.</source>
+        <target state="translated">O diagrama '{0}' para desenhar '{1}' não existe.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.Auto.3">
+        <source>'{0}' does not belong to the content drawn by diagram '{1}'.</source>
+        <target state="translated">'{0}' não pertence ao conteúdo desenhado pelo diagrama '{1}'.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-008.Auto.1">
+        <source>No flow node '{0}' exists to move.</source>
+        <target state="translated">O nó de fluxo '{0}' a ser movido não existe.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.SF-007.Auto.1">
+        <source>Moving this would leave {0} Sequence Flow(s) crossing a container boundary.</source>
+        <target state="translated">Mover isso faria {0} fluxo(s) de sequência cruzar(em) o limite de um contêiner.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-008.Auto.2">
+        <source>No Lane '{0}' exists.</source>
+        <target state="translated">A Raia '{0}' não existe.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-008.Auto.3">
+        <source>Lane '{0}' does not belong to '{1}'.</source>
+        <target state="translated">A Raia '{0}' não pertence a '{1}'.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-011.Auto.1">
+        <source>No {0} '{1}' exists.</source>
+        <target state="translated">{0} '{1}' não existe.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-031.Auto.3">
+        <source>'{0}' cannot hold this element.</source>
+        <target state="translated">'{0}' não pode conter este elemento.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-060.Auto.1">
+        <source>No connector '{0}' exists.</source>
+        <target state="translated">O conector '{0}' não existe.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-062.Auto.1">
+        <source>No element '{0}' exists to connect to.</source>
+        <target state="translated">O elemento '{0}' ao qual conectar não existe.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-064.Auto.1">
+        <source>No edge draws '{0}' on diagram '{1}'.</source>
+        <target state="translated">Nenhuma aresta desenha '{0}' no diagrama '{1}'.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-060.Auto.2">
+        <source>'{0}' is not a connector.</source>
+        <target state="translated">'{0}' não é um conector.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-064.Auto.2">
+        <source>No edge draws '{0}'.</source>
+        <target state="translated">Nenhuma aresta desenha '{0}'.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-041.Auto.1">
+        <source>No container '{0}' exists to paste into.</source>
+        <target state="translated">O contêiner '{0}' para colar não existe.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-111.Auto.1">
+        <source>Paste transform refused: {0}</source>
+        <target state="translated">Transformação da colagem recusada: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-042.Auto.1">
+        <source>Pasted {0} element(s).</source>
+        <target state="translated">{0} elemento(s) colado(s).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.MSG-004.Auto.1">
+        <source>This Message cannot be deleted safely.</source>
+        <target state="translated">Esta mensagem não pode ser excluída com segurança.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-022.Auto.1">
+        <source>Deleting '{0}' is not supported yet; Pool and Process deletion needs its own semantics.</source>
+        <target state="translated">A exclusão de '{0}' ainda não é compatível; Pools e Processos precisam de regras próprias.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-023.Auto.1">
+        <source>Deleted {0} further element(s) that could not outlive the selection.</source>
+        <target state="translated">{0} elemento(s) adicional(is) excluído(s) porque não poderiam permanecer sem a seleção.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.AN-001.Auto.1">
+        <source>Editor policy allows one target per Text Annotation; reconnect its existing Association instead.</source>
+        <target state="translated">A política do editor permite um destino por Anotação de Texto; reconecte a Associação existente.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.MSG-002.Auto.1">
+        <source>The id '{0}' is already used by retained document content.</source>
+        <target state="translated">O id '{0}' já está sendo usado pelo conteúdo preservado do documento.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-057.Auto.1">
+        <source>'{0}' is a black-box Pool with no Process to own '{1}'.</source>
+        <target state="translated">'{0}' é um Pool opaco sem Processo para possuir '{1}'.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-056.PoolTransferSummary">
+        <source>Moved {0} element(s) into the target Pool; converted {1} connector(s); deleted {2} connector(s) that could not cross Pools.</source>
+        <target state="translated">{0} elemento(s) movido(s) para o Pool de destino; {1} conector(es) convertido(s); {2} conector(es) excluído(s) por não poderem cruzar Pools.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-072.Auto.1">
+        <source>There is no element with id '{0}' to edit.</source>
+        <target state="translated">Não existe elemento com id '{0}' para editar.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-070.Auto.1">
+        <source>'{0}' is not an editable property of this element.</source>
+        <target state="translated">'{0}' não é uma propriedade editável deste elemento.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-070.Auto.2">
+        <source>'{0}' is shown for inspection and cannot be set.</source>
+        <target state="translated">'{0}' é exibida para inspeção e não pode ser definida.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-071.Auto.1">
+        <source>'{0}' is a true/false property and '{1}' is neither.</source>
+        <target state="translated">'{0}' é uma propriedade booleana e '{1}' não é verdadeiro nem falso.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-071.Auto.2">
+        <source>'{0}' must be a non-negative integer.</source>
+        <target state="translated">'{0}' deve ser um inteiro não negativo.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-071.Auto.3">
+        <source>'{0}' is not one of the values '{1}' accepts.</source>
+        <target state="translated">'{0}' não é um dos valores aceitos por '{1}'.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-082.Auto.1">
+        <source>The previous trigger's references were cleared: {0}</source>
+        <target state="translated">As referências do gatilho anterior foram limpas: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.SF-006.Auto.1">
+        <source>'{0}' is no longer the default flow — a source has only one.</source>
+        <target state="translated">'{0}' não é mais o fluxo padrão; uma origem só pode ter um.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-080.Auto.1">
+        <source>'{0}' is not an element whose type can be switched.</source>
+        <target state="translated">'{0}' não é um elemento cujo tipo possa ser alterado.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-081.Auto.1">
+        <source>A {0} cannot be switched to {1}: section 7 allows switching only within the same element category.</source>
+        <target state="translated">Não é possível alterar {0} para {1}: a seção 7 permite alterações apenas dentro da mesma categoria de elemento.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-084.Auto.1">
+        <source>'{0}' was set to {1} because its BPMN event trigger requires that state.</source>
+        <target state="translated">'{0}' foi definido como {1} porque o gatilho de evento BPMN exige esse estado.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-084.Auto.2">
+        <source>A {0} cannot carry a {1} trigger in this event context.</source>
+        <target state="translated">Um {0} não pode usar um gatilho {1} neste contexto de evento.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-084.Auto.3">
+        <source>'{0}' must be {1} for its {2} trigger.</source>
+        <target state="translated">'{0}' deve estar {1} para o gatilho {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-083.Auto.1">
+        <source>'{0}' is a Cancel Boundary Event, which only a Transaction may carry. Remove it before changing the type.</source>
+        <target state="translated">'{0}' é um Evento de Limite Cancel, que somente uma Transação pode conter. Remova-o antes de alterar o tipo.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-083.Auto.2">
+        <source>'{0}' is a Cancel End Event inside this Transaction. Remove it before changing the type.</source>
+        <target state="translated">'{0}' é um Evento Final Cancel dentro desta Transação. Remova-o antes de alterar o tipo.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-083.Auto.3">
+        <source>An Event-Based Gateway can only branch to catching Events or Receive Tasks, and '{0}' is neither.</source>
+        <target state="translated">Um Gateway Baseado em Eventos só pode ramificar para Eventos de Captura ou Tarefas de Recebimento, e '{0}' não é nenhum deles.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-082.Auto.2">
+        <source>'instantiate' was cleared: a {0} does not instantiate its Process.</source>
+        <target state="translated">'instantiate' foi limpo: um {0} não instancia seu Processo.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-082.Auto.3">
+        <source>'messageRef' was cleared: a {0} does not send or receive a Message.</source>
+        <target state="translated">'messageRef' foi limpo: um {0} não envia nem recebe Mensagens.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-082.Auto.4">
+        <source>'scriptFormat' and the script were cleared: a {0} does not run a script.</source>
+        <target state="translated">'scriptFormat' e o script foram limpos: um {0} não executa scripts.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-082.Auto.5">
+        <source>The activation condition was cleared: a {0} is not a Complex Gateway.</source>
+        <target state="translated">A condição de ativação foi limpa: um {0} não é um Gateway Complexo.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-082.Auto.6">
+        <source>The default flow was cleared: a {0} has no default branch.</source>
+        <target state="translated">O fluxo padrão foi limpo: um {0} não tem ramificação padrão.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-075.Auto.1">
+        <source>'{0}' has references this editor cannot safely rewrite when renaming.</source>
+        <target state="translated">'{0}' tem referências que este editor não pode reescrever com segurança ao renomear.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.EDIT-073.Auto.1">
+        <source>'{0}' is not a valid BPMN id: an id must be an XML name, without spaces or a colon.</source>
+        <target state="translated">'{0}' não é um id BPMN válido: deve ser um nome XML sem espaços ou dois-pontos.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-001.Auto.4">
+        <source>'{0}' is not a Process in this document.</source>
+        <target state="translated">'{0}' não é um Processo neste documento.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-002.Auto.1">
+        <source>'{0}' is already drawn by another Pool.</source>
+        <target state="translated">'{0}' já está sendo desenhado por outro Pool.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-004.Auto.1">
+        <source>'{0}' does not belong to '{1}', so this Lane cannot claim it.</source>
+        <target state="translated">'{0}' não pertence a '{1}', portanto esta Raia não pode reivindicá-lo.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-012.Auto.1">
+        <source>The editor requires a drawn Pool for Lanes in '{0}'.</source>
+        <target state="translated">O editor exige um Pool desenhado para as Raias em '{0}'.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EDITMSG.CT-012.Auto.2">
+        <source>Pool '{0}' is not drawn on diagram '{1}'.</source>
+        <target state="translated">O Pool '{0}' não está desenhado no diagrama '{1}'.</target>
         <note />
       </trans-unit>
     </body>

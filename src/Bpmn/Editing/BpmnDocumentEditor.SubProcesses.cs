@@ -742,7 +742,11 @@ public static partial class BpmnDocumentEditor
 
         return clash is null
             ? null
-            : new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "EDIT-030", $"'{clash}' is already the id of a diagram or plane.");
+            : new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "EDIT-030", $"'{clash}' is already the id of a diagram or plane.")
+            {
+                MessageResourceKey = "EDITMSG.EDIT-030.DuplicateDiagramId",
+                MessageArguments = [clash],
+            };
     }
 
     private static BpmnShape Shift(BpmnShape shape, (double X, double Y) offset) => shape with

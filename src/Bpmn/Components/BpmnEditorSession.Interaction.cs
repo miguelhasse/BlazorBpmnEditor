@@ -340,7 +340,7 @@ public sealed partial class BpmnEditorSession
         foreach (var rejection in result.Rejections)
         {
             await OnEditRejected
-                .InvokeAsync(new EditRejected(rejection.Code, rejection.Message, rejection.ElementId ?? string.Empty))
+                .InvokeAsync(new EditRejected(rejection.Code, LocalizeEditDiagnostic(rejection), rejection.ElementId ?? string.Empty))
                 .ConfigureAwait(true);
         }
     }

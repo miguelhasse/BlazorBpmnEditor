@@ -342,7 +342,11 @@ public static class BpmnElementInspector
                 BpmnEditSeverity.Info,
                 violation.RuleId,
                 violation.Message,
-                violation.ElementId)),
+                violation.ElementId)
+            {
+                MessageResourceKey = violation.LocalizableMessage?.ResourceKey,
+                MessageArguments = violation.LocalizableMessage?.Arguments,
+            }),
     ];
 
     // --- capabilities -----------------------------------------------------------

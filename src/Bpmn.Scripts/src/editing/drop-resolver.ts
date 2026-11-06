@@ -133,21 +133,26 @@ function withProcessBounds(paper: dia.Paper, target: DropTarget, elementType: st
   if (elementType !== 'participant' && elementType !== 'poolOrLane' && elementType !== 'lane') return target;
   const bounds = new Map<string, ReturnType<dia.CellView['getNodeBBox']>>();
   paper.updateViews();
-  for (const cell of paper.model.getCells()) {
-    const metadata = cell.get('bpmn') as { containerId?: string; elementType?: string } | undefined;
-    if (metadata?.elementType === 'pool' || metadata?.elementType === 'lane') continue;
-    let container = metadata?.containerId;
-    const visited = new Set<string>();
-    while (container !== undefined && !visited.has(container)) {
-      visited.add(container);
-      const parent = findCell(paper.model, container);
-      if (parent === undefined) break;
-      container = (parent.get('bpmn') as { containerId?: string } | undefined)?.containerId;
+  try {
+    for (const cell of paper.model.getCells()) {
+      const metadata = cell.get('bpmn') as { containerId?: string; elementType?: string } | undefined;
+      if (metadata?.elementType === 'pool' || metadata?.elementType === 'lane') continue;
+      let container = metadata?.containerId;
+      const visited = new Set<string>();
+      while (container !== undefined && !visited.has(container)) {
+        visited.add(container);
+        const parent = findCell(paper.model, container);
+        if (parent === undefined) break;
+        container = (parent.get('bpmn') as { containerId?: string } | undefined)?.containerId;
+      }
+      if (container === undefined) continue;
+      // Offscreen views must be attached before their external labels can be measured.
+      const view = paper.requireView(cell);
+      const box = view.getNodeBBox(view.el);
+      bounds.set(container, bounds.get(container)?.union(box) ?? box);
     }
-    const view = paper.findViewByModel(cell) as dia.CellView | undefined;
-    if (container === undefined || view === undefined) continue;
-    const box = view.getNodeBBox(view.el);
-    bounds.set(container, bounds.get(container)?.union(box) ?? box);
+  } finally {
+    paper.updateCellsVisibility();
   }
   return { ...target, processBounds: Object.fromEntries(bounds) };
 }

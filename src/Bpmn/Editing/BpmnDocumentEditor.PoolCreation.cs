@@ -97,7 +97,11 @@ public static partial class BpmnDocumentEditor
         foreach (var id in allocated)
         {
             if (!used.Add(id))
-                return new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "EDIT-030", $"The id '{id}' is already used.", id);
+                return new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "EDIT-030", $"The id '{id}' is already used.", id)
+                {
+                    MessageResourceKey = "EDITMSG.EDIT-030.DuplicateAllocatedId",
+                    MessageArguments = [id],
+                };
         }
         return null;
     }

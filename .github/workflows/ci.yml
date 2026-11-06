@@ -156,7 +156,7 @@ jobs:
         run: pwsh tests/Bpmn.E2E.Tests/bin/Release/net10.0/playwright.ps1 install chromium --with-deps
 
       - name: End-to-end tests
-        run: dotnet test tests/Bpmn.E2E.Tests/Hasseware.AspNetCore.Components.Bpmn.E2E.Tests.csproj -c Release --no-build
+        run: dotnet test --project tests/Bpmn.E2E.Tests/Hasseware.AspNetCore.Components.Bpmn.E2E.Tests.csproj -c Release --no-build
 
       - name: Pack
         run: |

@@ -171,17 +171,24 @@ public class ContextualSwimlaneTests(DemoAppFixture app) : PageTest, IClassFixtu
     [InlineData(false, "constructor")]
     [InlineData(true, "__proto__")]
     [InlineData(false, "toString")]
-    public async Task FirstPoolAndLaneWrapContentWithoutMovingIt(bool drag, string processId)
+    [InlineData(false, "toString", true)]
+    [InlineData(true, "__proto__", true)]
+    public async Task FirstPoolAndLaneWrapContentWithoutMovingIt(bool drag, string processId, bool offscreenLabel = false)
     {
         var document = new BpmnDocumentBuilder(processId)
             .Node("A", BpmnFlowNodeType.Task, new Bounds(100, 100, 100, 80), "A")
             .Node("B", BpmnFlowNodeType.Task, new Bounds(450, 100, 100, 80), "B")
-            .DataObject("Data", "Long external data label\nsecond label line", new Bounds(330, 300, 36, 50))
+            .DataObject("Data", "Long external data label\nsecond label line", new Bounds(offscreenLabel ? 4_000 : 330, 300, 36, 50))
             .TextAnnotation("Note", "Existing note", new Bounds(100, 320, 100, 50))
             .Flow("Flow", "A", "B", [new DiPoint(200, 140), new DiPoint(450, 140)])
             .Build();
         await OpenAsync(document);
         var before = await ExportAsync();
+        if (offscreenLabel)
+        {
+            await Page.GetByRole(AriaRole.Button, new() { Name = "Reset zoom" }).ClickAsync();
+            await Expect(Page.Locator(".joint-element[model-id='Data']")).ToHaveCountAsync(0);
+        }
         var tool = Page.Locator(".bpmn-stencil__tool", new() { HasTextString = "Pool / Lane" }).First;
         await Expect(tool).ToBeEnabledAsync();
         if (drag)
@@ -204,6 +211,11 @@ public class ContextualSwimlaneTests(DemoAppFixture app) : PageTest, IClassFixtu
         Assert.Equal(processId, pool.ProcessRef);
         Assert.Single(pooled.Processes);
         Assert.All(pooled.FlowNodes, node => Assert.Equal(pool.Id, node.PoolId));
+        if (offscreenLabel)
+        {
+            await Expect(Page.Locator(".joint-element[model-id='Data']")).ToHaveCountAsync(0);
+            await Page.GetByRole(AriaRole.Button, new() { Name = "Fit" }).ClickAsync();
+        }
         var enclosure = await Page.Locator(".joint-element[model-id='Data'] [joint-selector='label']").EvaluateAsync<string>(
             """
             label => {
@@ -215,7 +227,7 @@ public class ContextualSwimlaneTests(DemoAppFixture app) : PageTest, IClassFixtu
               });
             }
             """);
-        Assert.Contains("\"enclosed\":true", enclosure);
+        Assert.True(enclosure.Contains("\"enclosed\":true", StringComparison.Ordinal), enclosure);
 
         await Page.GetByRole(AriaRole.Button, new() { Name = "Fit" }).ClickAsync();
         await Page.Locator(".joint-element[model-id='A'] [joint-selector='body']").ClickAsync();

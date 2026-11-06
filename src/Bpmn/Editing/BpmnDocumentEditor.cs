@@ -228,7 +228,10 @@ public static partial class BpmnDocumentEditor
         {
             return BpmnEditResult.Reject(
                 document,
-                new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "EDIT-010", "A move must name at least one shape."));
+                new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "EDIT-010", "A move must name at least one shape.")
+                {
+                    MessageResourceKey = "EDITMSG.MoveShapesRequired",
+                });
         }
 
         var geometry = CreationGeometry(document, command.DiagramId);
@@ -894,7 +897,10 @@ public static partial class BpmnDocumentEditor
         if (!double.IsFinite(bounds.X) || !double.IsFinite(bounds.Y)
             || !double.IsFinite(bounds.Width) || !double.IsFinite(bounds.Height))
         {
-            return new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "DI-003", "Bounds must be finite.");
+            return new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "DI-003", "Bounds must be finite.")
+            {
+                MessageResourceKey = "EDITMSG.BoundsFinite",
+            };
         }
 
         return bounds.IsPositive
@@ -902,7 +908,10 @@ public static partial class BpmnDocumentEditor
             : new BpmnEditDiagnostic(
                 BpmnEditSeverity.Rejected,
                 "DI-002",
-                "Bounds must have positive width and height.");
+                "Bounds must have positive width and height.")
+            {
+                MessageResourceKey = "EDITMSG.BoundsPositive",
+            };
     }
 
     /// <summary>
@@ -1021,7 +1030,11 @@ public static partial class BpmnDocumentEditor
                     BpmnEditSeverity.Rejected,
                     "EDIT-030",
                     $"'{command.Id}' is already used by another element.",
-                    command.Id));
+                    command.Id)
+                {
+                    MessageResourceKey = "EDITMSG.EDIT-030.DuplicateElementId",
+                    MessageArguments = [command.Id],
+                });
         }
 
         if (Invalid(command.Bounds) is { } invalidBounds)
@@ -1059,7 +1072,10 @@ public static partial class BpmnDocumentEditor
                         BpmnEditSeverity.Rejected,
                         "EV-001",
                         "A Boundary Event must be attached to an Activity.",
-                        command.Id));
+                        command.Id)
+                    {
+                        MessageResourceKey = "EDITMSG.BoundaryEventRequiresActivity",
+                    });
             }
         }
         else if (command.AttachedToRef is not null)
@@ -1070,7 +1086,10 @@ public static partial class BpmnDocumentEditor
                     BpmnEditSeverity.Rejected,
                     "EV-002",
                     "Only a Boundary Event may be attached to an Activity.",
-                    command.Id));
+                    command.Id)
+                {
+                    MessageResourceKey = "EDITMSG.OnlyBoundaryEventMayAttach",
+                });
         }
 
         /*
@@ -1239,7 +1258,11 @@ public static partial class BpmnDocumentEditor
                     BpmnEditSeverity.Rejected,
                     "EDIT-030",
                     $"'{command.Id}' is already used by another element.",
-                    command.Id));
+                    command.Id)
+                {
+                    MessageResourceKey = "EDITMSG.EDIT-030.DuplicateElementId",
+                    MessageArguments = [command.Id],
+                });
         }
 
         foreach (var endpoint in (string[])[command.SourceRef, command.TargetRef])
@@ -1276,7 +1299,10 @@ public static partial class BpmnDocumentEditor
                     BpmnEditSeverity.Rejected,
                     "DI-001",
                     "A connector needs at least two waypoints.",
-                    command.Id));
+                    command.Id)
+                {
+                    MessageResourceKey = "EDITMSG.ConnectorWaypointsRequired",
+                });
         }
 
         foreach (var point in command.Waypoints)
@@ -1285,7 +1311,10 @@ public static partial class BpmnDocumentEditor
 
             return BpmnEditResult.Reject(
                 document,
-                new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "DI-003", "Waypoints must be finite.", command.Id));
+                new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "DI-003", "Waypoints must be finite.", command.Id)
+                {
+                    MessageResourceKey = "EDITMSG.WaypointsFinite",
+                });
         }
 
         if (AnnotationConnectionProblem(document, command.Kind, command.SourceRef, command.TargetRef, command.Id) is { } connectionProblem)
@@ -1771,7 +1800,10 @@ public static partial class BpmnDocumentEditor
                                 BpmnEditSeverity.Rejected,
                                 "ST-001",
                                 "A Group must be placed inside a Lane when the diagram contains Lanes.",
-                                command.Id));
+                                command.Id)
+                            {
+                                MessageResourceKey = "EDITMSG.GroupMustBeInLane",
+                            });
                     }
                 }
             }
@@ -1992,7 +2024,10 @@ public static partial class BpmnDocumentEditor
                     BpmnEditSeverity.Rejected,
                     "EDIT-061",
                     "A connector must keep both of its ends.",
-                    command.Id));
+                    command.Id)
+                {
+                    MessageResourceKey = "EDITMSG.ConnectorEndpointsRequired",
+                });
         }
 
         foreach (var endpoint in (string[])[source, target])
@@ -2020,7 +2055,10 @@ public static partial class BpmnDocumentEditor
                     BpmnEditSeverity.Rejected,
                     "EDIT-063",
                     "A connector may not start and end on the same element.",
-                    command.Id));
+                    command.Id)
+                {
+                    MessageResourceKey = "EDITMSG.ConnectorEndpointsMustDiffer",
+                });
         }
 
         var kind = connector switch
@@ -2202,7 +2240,10 @@ public static partial class BpmnDocumentEditor
         {
             return BpmnEditResult.Reject(
                 document,
-                new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "EDIT-040", "The clipboard is empty."));
+                new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "EDIT-040", "The clipboard is empty.")
+                {
+                    MessageResourceKey = "EDITMSG.ClipboardEmpty",
+                });
         }
 
         if (document.Find(command.ContainerId) is null)
@@ -2399,7 +2440,10 @@ public static partial class BpmnDocumentEditor
         {
             return BpmnEditResult.Reject(
                 document,
-                new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "EDIT-020", "A delete must name at least one element."));
+                new BpmnEditDiagnostic(BpmnEditSeverity.Rejected, "EDIT-020", "A delete must name at least one element.")
+                {
+                    MessageResourceKey = "EDITMSG.DeleteElementsRequired",
+                });
         }
 
         var messagesToDelete = command.ElementIds
@@ -2433,7 +2477,11 @@ public static partial class BpmnDocumentEditor
                             BpmnEditSeverity.Rejected,
                             "EDIT-021",
                             $"No element '{id}' exists in this document.",
-                            id));
+                            id)
+                        {
+                            MessageResourceKey = "EDITMSG.EDIT-021.MissingElement",
+                            MessageArguments = [id],
+                        });
 
                 case BpmnLane:
                     lanes.Add(id);

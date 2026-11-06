@@ -56,7 +56,9 @@ public sealed class ArtifactCreationTests
                 new Bounds(700, 300, 300, 200)));
 
         Assert.False(result.IsApplied);
-        Assert.Equal("ST-001", Assert.Single(result.Rejections).Code);
+        var diagnostic = Assert.Single(result.Rejections);
+        Assert.Equal("ST-001", diagnostic.Code);
+        Assert.Equal("EDITMSG.GroupMustBeInLane", diagnostic.MessageResourceKey);
         Assert.Same(document, result.Document);
         Assert.Empty(result.Document.Groups);
         Assert.DoesNotContain(result.Document.Diagrams[0].Plane.Shapes, shape => shape.BpmnElement == "Group_1");

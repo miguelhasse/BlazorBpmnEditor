@@ -31,7 +31,11 @@ public static partial class BpmnDocumentEditor
                 BpmnEditSeverity.Rejected,
                 "EDIT-072",
                 $"There is no element with id '{command.ElementId}' to rename.",
-                command.ElementId));
+                command.ElementId)
+            {
+                MessageResourceKey = "EDITMSG.EDIT-072.MissingRenameElement",
+                MessageArguments = [command.ElementId],
+            });
         }
 
         if (element is not (BpmnFlowNode
@@ -95,7 +99,11 @@ public static partial class BpmnDocumentEditor
                 BpmnEditSeverity.Rejected,
                 "EDIT-074",
                 $"'{proposed}' is already the id of another element.",
-                command.ElementId));
+                command.ElementId)
+            {
+                MessageResourceKey = "EDITMSG.EDIT-074.DuplicateId",
+                MessageArguments = [proposed],
+            });
         }
 
         return BpmnEditResult.Applied(Rename(document, command.ElementId, proposed), []);

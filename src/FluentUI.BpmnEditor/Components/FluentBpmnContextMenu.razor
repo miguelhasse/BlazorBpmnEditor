@@ -23,7 +23,7 @@
                 @foreach (var diagnostic in diagnosed.Diagnostics)
                 {
                     <li class="bpmn-menu__diagnostic" @key="diagnostic.Code">
-                        <span class="bpmn-menu__code">@diagnostic.Code</span> @diagnostic.Message
+                        <span class="bpmn-menu__code">@diagnostic.Code</span> @DiagnosticLocalizer.Localize(diagnostic)
                     </li>
                 }
             </ul>

@@ -209,6 +209,8 @@ public class AnnotationConnectionTests(DemoAppFixture app) : PageTest, IClassFix
         await Expect(Page.Locator(".joint-link[model-id^='Association_']")).ToHaveCountAsync(1);
         var flow = Page.Locator("[model-id='Flow'] [joint-selector='line']");
         var beforeRoute = await flow.GetAttributeAsync("d");
+        var note = Page.Locator(".joint-element[model-id='Note']");
+        var beforeTransform = await note.GetAttributeAsync("transform");
         var before = await Page.Locator("[model-id='Note'] [joint-selector='bracket']").BoundingBoxAsync();
         var press = await FlowPointAsync(0.25);
 
@@ -222,6 +224,7 @@ public class AnnotationConnectionTests(DemoAppFixture app) : PageTest, IClassFix
         await Page.Mouse.UpAsync();
 
         await Expect(flow).ToHaveAttributeAsync("d", beforeRoute!);
+        await Expect(note).ToHaveAttributeAsync("transform", beforeTransform!);
         var restored = await Page.Locator("[model-id='Note'] [joint-selector='bracket']").BoundingBoxAsync();
         Assert.InRange(Math.Abs(restored!.Y - before.Y), 0, 0.1);
         Assert.Equal(new Bounds(280, 300, 100, 50), BpmnXmlReader.Read(await ExportAsync()).Document.Diagrams[0].Plane.Shapes.Single(shape => shape.BpmnElement == "Note").Bounds);
