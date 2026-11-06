@@ -242,7 +242,8 @@ public sealed class TemplateIntegrationTests : BunitContext
         Services.AddSingleton<IOptions<BpmnOptions>>(Options.Create(options));
         var snapshot = Describe(document, options);
         var panel = this.RenderSeeded<BpmnPropertyPanel>(seed => seed.Snapshots([snapshot]));
-        Assert.Equal(["general", "template:second", "template:first", "template:custom"], panel.FindAll("details").Take(4).Select(group => group.GetAttribute("data-group-id")));
+        Assert.Equal(["general", "activity", "loop-characteristics", "template:second", "template:first", "template:custom"],
+            panel.FindAll("details").Take(6).Select(group => group.GetAttribute("data-group-id")));
         var multi = this.RenderSeeded<BpmnPropertyPanel>(seed => seed.Snapshots([snapshot, snapshot with { ElementId = "Other" }]));
         Assert.Empty(multi.FindAll(".bpmn-templates__row"));
         Assert.DoesNotContain("Custom properties", multi.Markup, StringComparison.Ordinal);

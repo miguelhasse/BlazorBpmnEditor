@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json;
 using System.Resources;
 using AngleSharp.Dom;
 using Bunit;
@@ -319,7 +320,8 @@ public sealed class KitParityTests : BunitContext
             Assert.Equal("Work", session.EditedDocument!.FindFlowNode("Task_1")!.Name);
 
             await editor.InvokeAsync(() => session.HandleContextMenuRequestedAsync(new("element", "Task_1", Location, "pointer", ["Task_1"])));
-            Assert.Contains(editor.FindAll("[role='menuitemradio']"), option => option.TextContent.Trim() == "de:ElementType.serviceTask");
+            Assert.Contains(editor.FindAll(".bpmn-menu__type-select option, .bpmn-menu__type-select fluent-option"),
+                option => option.TextContent.Trim() == "de:ElementType.serviceTask");
         }
         finally { CultureInfo.CurrentUICulture = before; }
     }
@@ -363,7 +365,9 @@ public sealed class KitParityTests : BunitContext
         var editor = RenderEditor();
         Button(editor, label).Click();
         var invocation = Assert.Single(JSInterop.Invocations["setViewport"]);
-        Assert.Equal(command, Assert.IsType<ViewportCommand>(invocation.Arguments[0]).Kind);
+        var sent = Assert.IsType<JsonElement>(invocation.Arguments[0])
+            .Deserialize(BpmnInteropJsonContext.Default.ViewportCommand);
+        Assert.Equal(command, sent!.Kind);
     }
 
     [Fact]
@@ -396,7 +400,10 @@ public sealed class KitParityTests : BunitContext
         await editor.InvokeAsync(() => session.HandleContextMenuRequestedAsync(new("element", "Task_1", Location, "pointer", ["Task_1"])));
         var menu = editor.Find("[role='menu']");
         Assert.Equal("Work", menu.GetAttribute("aria-label"));
-        var delete = editor.FindAll("[role='menuitem']").Single(element => element.TextContent.Trim() == CoreText("ContextMenu.Command.Delete"));
+        var delete = editor.FindAll("[role='menuitem']").Single(element =>
+            element.TextContent.Trim() == CoreText("ContextMenu.Command.Delete")
+            || element.GetAttribute("aria-label") == CoreText("ContextMenu.Command.Delete")
+            || element.GetAttribute("title") == CoreText("ContextMenu.Command.Delete"));
         delete.Click();
         Assert.Empty(session.EditedDocument!.FlowNodes);
         Assert.Empty(editor.FindAll("[role='menu']"));
@@ -435,7 +442,10 @@ public sealed class KitParityTests : BunitContext
         await KitFixture.ChangeNameAsync(editor, "Forbidden");
         Assert.Equal("Changed", session.EditedDocument!.FlowNodes.Single().Name);
         await editor.InvokeAsync(() => session.HandleContextMenuRequestedAsync(new("element", "Task_1", Location, "pointer", ["Task_1"])));
-        Assert.All(editor.FindAll("[role='menuitem']").Where(element => element.TextContent.Trim() == CoreText("ContextMenu.Command.Delete")),
+        Assert.All(editor.FindAll("[role='menuitem']").Where(element =>
+                element.TextContent.Trim() == CoreText("ContextMenu.Command.Delete")
+                || element.GetAttribute("aria-label") == CoreText("ContextMenu.Command.Delete")
+                || element.GetAttribute("title") == CoreText("ContextMenu.Command.Delete")),
             element => Assert.True(element.HasAttribute("disabled")));
         Assert.False(Button(editor, "Zoom in").HasAttribute("disabled"));
         Button(editor, "Show keyboard shortcuts").Click();

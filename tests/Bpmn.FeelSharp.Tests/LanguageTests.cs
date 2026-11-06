@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Hasseware.AspNetCore.Components.Bpmn.FeelSharp.Tests;
 
 public sealed class LanguageTests
@@ -289,10 +291,10 @@ public sealed class LanguageTests
                 switch (name)
                 {
                     case "date":
-                        Assert.Equal("ValDate 2025-01-01 00:00:00", temporal);
+                        AssertDateValue(temporal, "ValDate ", new DateTime(2025, 1, 1));
                         break;
                     case "date and time":
-                        Assert.Equal("ValLocalDateTime 2025-01-01 12:00:00", temporal);
+                        AssertDateValue(temporal, "ValLocalDateTime ", new DateTime(2025, 1, 1, 12, 0, 0));
                         break;
                     case "duration":
                         Assert.Equal("ValDayTimeDuration 1.00:00:00", temporal);
@@ -307,6 +309,7 @@ public sealed class LanguageTests
                 }
                 break;
         }
+
         var expected = name switch
         {
             "abs" => 3m,
@@ -364,6 +367,14 @@ public sealed class LanguageTests
             Assert.Equal(["a", "b"], Assert.IsType<global::FeelSharp.ListValue>(result.Value).Items
                 .Select(value => Assert.IsType<global::FeelSharp.StringValue>(value).Value));
         }
+    }
+
+    private static void AssertDateValue(string actual, string prefix, DateTime expected)
+    {
+        Assert.StartsWith(prefix, actual, StringComparison.Ordinal);
+        Assert.True(DateTime.TryParse(actual[prefix.Length..], CultureInfo.CurrentCulture, DateTimeStyles.None, out var parsed),
+            $"Expected a date after '{prefix}', got '{actual}'.");
+        Assert.Equal(expected, parsed);
     }
 
     [Fact]

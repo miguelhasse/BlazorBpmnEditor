@@ -142,7 +142,7 @@ public sealed class FluentKitTests : FluentTestContext
         var view = Render<FluentBpmnPropertyEntryView>(p => p.AddCascadingValue(FluentPropertyScope.Default).Add(c => c.Context, Context(entry, value => submitted = value)));
         Task ChangeAsync() => kind switch
         {
-            BpmnPropertyEntryKind.Checkbox => view.FindComponent<FluentCheckbox>().Instance.ValueChanged.InvokeAsync(true),
+            BpmnPropertyEntryKind.Checkbox => view.FindComponent<FluentSwitch>().Instance.ValueChanged.InvokeAsync(true),
             BpmnPropertyEntryKind.Number => view.FindComponent<FluentNumberInput<double?>>().Instance.ValueChanged.InvokeAsync(2.5),
             _ => view.FindComponent<FluentSelect<BpmnPropertyChoice, string>>().Instance.ValueChanged.InvokeAsync("2"),
         };

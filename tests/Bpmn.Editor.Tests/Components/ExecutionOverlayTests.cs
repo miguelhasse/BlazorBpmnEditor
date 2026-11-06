@@ -1,5 +1,7 @@
 using Bunit;
 
+using System.Text.Json;
+
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Execution;
 using Hasseware.AspNetCore.Components.Bpmn.Interop;
@@ -51,7 +53,9 @@ public sealed class ExecutionOverlayTests : BunitContext
         await editor.InvokeAsync(() => editor.Instance.SetExecutionStateAsync(Running()));
 
         var call = Assert.Single(setState.Invocations);
-        var sent = Assert.IsType<BpmnExecutionState>(Assert.Single(call.Arguments));
+        var sent = Assert.IsType<JsonElement>(Assert.Single(call.Arguments))
+            .Deserialize(BpmnInteropJsonContext.Default.BpmnExecutionState);
+        Assert.NotNull(sent);
         Assert.Equal("instance-42", sent.InstanceId);
         Assert.Equal(2, sent.Elements.Count);
         Assert.Single(sent.Flows);

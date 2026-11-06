@@ -1,4 +1,5 @@
 using Bunit;
+using System.Text.Json;
 using Hasseware.AspNetCore.Components.Bpmn.Configuration;
 using Hasseware.AspNetCore.Components.Bpmn.Interop;
 using Hasseware.AspNetCore.Components.Bpmn.Model;
@@ -165,7 +166,9 @@ public sealed class ThemeTests : BunitContext
         // Same snapshot, theme or no theme: the canvas is told nothing about colour. Compared as
         // the canvas was given it, not as a parameter on the editor — the parameter is null in
         // both renders, so comparing that would pass however much theming leaked into the config.
-        Assert.Equal(plain, themed);
+        Assert.Equal(
+            JsonSerializer.Serialize(plain, BpmnInteropJsonContext.Default.EditorConfig),
+            JsonSerializer.Serialize(themed, BpmnInteropJsonContext.Default.EditorConfig));
     }
 
     // --- helpers ------------------------------------------------------------------
@@ -186,7 +189,10 @@ public sealed class ThemeTests : BunitContext
 
         Assert.Equal(theme?.ThemeAttribute, editor.Find("section.bpmn-editor").GetAttribute("data-bpmn-theme"));
 
-        return JSInterop.Invocations["initialize"][^1].Arguments.OfType<EditorConfig>().Single() with { Revision = 0 };
+        var config = JSInterop.Invocations["initialize"][^1].Arguments.OfType<JsonElement>()
+            .Single(argument => argument.TryGetProperty("revision", out _))
+            .Deserialize(BpmnInteropJsonContext.Default.EditorConfig);
+        return config! with { Revision = 0 };
     }
 
     private void SetupCanvas()
