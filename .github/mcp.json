@@ -5,6 +5,12 @@
             "args": [
                 "Microsoft.FluentUI.AspNetCore.McpServer"
             ]
+        },
+        "playwright": {
+            "command": "npx",
+            "args": [
+                "@playwright/mcp@latest"
+            ]
         }
     }
 }
