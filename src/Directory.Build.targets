@@ -10,4 +10,9 @@
   <ItemGroup Condition="'$(MSBuildProjectExtension)' != '.esproj' and '$(EnableXlfLocalization)' == 'true'">
     <PackageReference Include="Microsoft.DotNet.XliffTasks" PrivateAssets="all" />
   </ItemGroup>
+
+  <!-- Solution-level dotnet pack visits .esproj projects even though the JavaScript SDK has no Pack target. -->
+  <Target Name="Pack" Condition="'$(MSBuildProjectExtension)' == '.esproj'">
+    <Message Importance="Low" Text="Skipping NuGet packing for non-packable JavaScript project $(MSBuildProjectName)." />
+  </Target>
 </Project>

@@ -9,11 +9,16 @@
 
   <PropertyGroup>
     <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
-    <Authors>Hasseware</Authors>
-    <Company>Hasseware</Company>
-    <Product>Hasseware BPMN Components</Product>
-    <Copyright>Copyright © Hasseware</Copyright>
+    <PackageOutputPath>$(RepositoryRoot)Artifacts\$(Configuration)\</PackageOutputPath>
+    <Authors>Miguel Hasse</Authors>
+    <Company></Company>
+    <Product>Blazor BPMN Components</Product>
+    <Copyright>Copyright © Miguel Hasse</Copyright>
     <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/hasseware/BlazorBpmnEditor</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hasseware/BlazorBpmnEditor</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
   <!--

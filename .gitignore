@@ -54,6 +54,7 @@ BenchmarkDotNet.Artifacts/
 project.lock.json
 project.fragment.lock.json
 artifacts/
+/Artifacts/
 **/Properties/launchSettings.json
 
 # StyleCop
